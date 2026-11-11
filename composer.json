@@ -20,7 +20,7 @@
         "doctrine/doctrine-bundle": "^3.3",
         "doctrine/orm": "^3.7",
         "ergebnis/phpunit-slow-test-detector": "^2.27",
-        "phil/dev-tools": "^0.1@dev",
+        "phil/dev-tools": "^0.1@alpha",
         "phil/resource": "^0.1@dev",
         "phpunit/phpunit": "^13.4",
         "psr/clock": "^1.0",

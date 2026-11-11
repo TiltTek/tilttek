@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8e2e56bff9385cd2b29b60787856ffb1",
+    "content-hash": "ce4a263b272a0f7aff3764d36f32e902",
     "packages": [],
     "packages-dev": [
         {
@@ -1591,19 +1591,21 @@
         },
         {
             "name": "phil/dev-tools",
-            "version": "dev-main",
+            "version": "0.1.0-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/parler-haut-interagir-librement/dev-tools.git",
-                "reference": "b1aef737444ca6bada0478231f8850435a0d71c1"
+                "reference": "d43d483e0ed6c2729b05d2cd63ae8dc2df8ed7d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/parler-haut-interagir-librement/dev-tools/zipball/b1aef737444ca6bada0478231f8850435a0d71c1",
-                "reference": "b1aef737444ca6bada0478231f8850435a0d71c1",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/dev-tools/zipball/d43d483e0ed6c2729b05d2cd63ae8dc2df8ed7d6",
+                "reference": "d43d483e0ed6c2729b05d2cd63ae8dc2df8ed7d6",
                 "shasum": ""
             },
             "require": {
+                "ext-dom": "*",
+                "ext-libxml": "*",
                 "ext-mbstring": "*",
                 "php": ">=8.5",
                 "symfony/console": "^8.2"
@@ -1622,7 +1624,6 @@
                 "symfony/http-client": "For HttpRecording, to record and replay the HTTP exchanges of integration tests (8.2 or later)",
                 "symfony/phpunit-bridge": "For HttpRecording and the #[UseRecord] attribute of integration tests (8.2 or later)"
             },
-            "default-branch": true,
             "bin": [
                 "bin/phil-dev"
             ],
@@ -1665,9 +1666,9 @@
             ],
             "support": {
                 "issues": "https://github.com/parler-haut-interagir-librement/dev-tools/issues",
-                "source": "https://github.com/parler-haut-interagir-librement/dev-tools/tree/main"
+                "source": "https://github.com/parler-haut-interagir-librement/dev-tools/tree/0.1.0-alpha"
             },
-            "time": "2026-11-11T05:40:32+00:00"
+            "time": "2026-11-11T19:04:16+00:00"
         },
         {
             "name": "phil/resource",
@@ -7956,7 +7957,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "phil/dev-tools": 20,
+        "phil/dev-tools": 15,
         "phil/resource": 20
     },
     "prefer-stable": true,
