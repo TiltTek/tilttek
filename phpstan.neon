@@ -20,6 +20,8 @@ parameters:
             - packages/*/src/Infrastructure/Privacy/*
             - packages/*/tests/Unit/Infrastructure/*PrivacyTest.php
             - packages/badges-bundle/src/Infrastructure/OpenBadges/*
+            - packages/collections-bundle/src/Infrastructure/Almanac/*
+            - packages/collections-bundle/tests/Unit/Infrastructure/AlmanacDateRuleTest.php
             - packages/badges-bundle/tests/Unit/Infrastructure/BadgeCredentialsTest.php
             - packages/quests-bundle/src/Infrastructure/Almanac/*
             - packages/quests-bundle/tests/Unit/Infrastructure/AlmanacScheduleTest.php
@@ -79,6 +81,22 @@ parameters:
             identifier: class.notFound
             path: packages/badges-bundle/tests/Unit/TilttekBadgesBundleTest.php
             count: 3
+        -
+            identifier: argument.type
+            path: packages/collections-bundle/src/TilttekCollectionsBundle.php
+            count: 2
+        -
+            identifier: class.notFound
+            path: packages/collections-bundle/src/TilttekCollectionsBundle.php
+            count: 2
+        -
+            identifier: class.notFound
+            path: packages/collections-bundle/tests/Functional/CollectionsBundleTest.php
+            count: 5
+        -
+            identifier: offsetAccess.nonOffsetAccessible
+            path: packages/collections-bundle/tests/Functional/CollectionsBundleTest.php
+            count: 2
         -
             identifier: argument.type
             path: packages/points-bundle/src/TilttekPointsBundle.php

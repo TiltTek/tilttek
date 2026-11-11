@@ -1,0 +1,77 @@
+{
+    "name": "tilttek/collections-bundle",
+    "description": "Collectibles for Symfony on tilttek/collections: the catalog in configuration or the database; copies, sets, packs, chosen dice and the item of the day in Doctrine DBAL; its activity projection; the inventory tilttek/exchange trades through; dice appearance for tilttek/dice-bundle; events, Twig templates, commands, a member's export and erasure",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": [
+        "collections",
+        "collectibles",
+        "gamification",
+        "symfony-bundle"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "doctrine/dbal": "^4.5",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "psr/event-dispatcher": "^1.0",
+        "symfony/config": "^8.2",
+        "symfony/dependency-injection": "^8.2",
+        "tilttek/collections": "^0.1@dev"
+    },
+    "require-dev": {
+        "doctrine/doctrine-bundle": "^3.3",
+        "doctrine/orm": "^3.7",
+        "phpunit/phpunit": "^13.4",
+        "symfony/clock": "^8.2",
+        "symfony/console": "^8.2",
+        "symfony/event-dispatcher": "^8.2",
+        "symfony/framework-bundle": "^8.2",
+        "symfony/http-kernel": "^8.2",
+        "symfony/translation": "^8.2",
+        "symfony/twig-bundle": "^8.2",
+        "symfony/yaml": "^8.2",
+        "tilttek/activity": "^0.1@dev",
+        "tilttek/activity-bundle": "^0.1@dev",
+        "tilttek/dice-bundle": "^0.1@dev",
+        "tilttek/exchange": "^0.1@dev",
+        "twig/twig": "^3.21"
+    },
+    "suggest": {
+        "doctrine/orm": "To add the collections' tables to the schema the ORM generates, and so to the migrations",
+        "phil/almanac": "For items of the day on computed dates, such as Easter or the fourth Thursday of November",
+        "phil/privacy-bundle": "To export and erase a member's collection with the rest of their account",
+        "symfony/console": "For the commands that generate the calendar, give a copy and show an album",
+        "symfony/translation": "To translate the templates' texts",
+        "symfony/twig-bundle": "For the Twig functions and the templates of the album, the item of the day and the odds of a pack",
+        "tilttek/activity-bundle": "To keep the journal of activity the item of the day is claimed on, and catch its projection up live or by a command",
+        "tilttek/dice-bundle": "To roll the dice of a set a member owns and chose, through the appearance this bundle provides",
+        "tilttek/exchange-bundle": "To let members trade the copies of their collections, through the inventory this bundle provides"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\CollectionsBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\CollectionsBundle\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

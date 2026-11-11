@@ -1,0 +1,36 @@
+{#
+ # A member's album: each set with how many of its items they own, then every item of the catalog, owned or still to
+ # find, with its doubles. Names are read in the locale given, English by default:
+ #
+ #     {{ include('@TilttekCollections/album.html.twig', {album: tilttek_collections_album('member:44'), locale: 'fr'}) }}
+ #}
+{% set domain = tilttek_collections_domain() %}
+{% set locale = locale|default('en') %}
+<section class="tilttek-collections-album">
+    <ul class="tilttek-collections-album__sets">
+        {% for progress in album.sets %}
+            <li class="tilttek-collections-album__set{{ progress.complete ? ' tilttek-collections-album__set--complete' }}" data-set="{{ progress.set.code }}">
+                <span class="tilttek-collections-album__set-name">{{ tilttek_collections_text(progress.set.name, locale) }}</span>
+                <progress max="{{ progress.total }}" value="{{ progress.owned|length }}">{{ 'owned_of'|trans({'%owned%': progress.owned|length, '%total%': progress.total}, domain, locale) }}</progress>
+                <span class="tilttek-collections-album__set-count">{{ 'owned_of'|trans({'%owned%': progress.owned|length, '%total%': progress.total}, domain, locale) }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+    <ul class="tilttek-collections-album__items">
+        {% for holding in album.holdings %}
+            <li class="tilttek-collections-album__item tilttek-collections-album__item--{{ holding.count > 0 ? 'owned' : 'missing' }} tilttek-collections-album__item--{{ holding.item.rarity }}" data-item="{{ holding.item.code }}">
+                {% if holding.count > 0 %}
+                    {% if holding.item.image %}
+                        <img class="tilttek-collections-album__image" src="{{ holding.item.image }}" alt="" loading="lazy">
+                    {% endif %}
+                    <span class="tilttek-collections-album__name">{{ tilttek_collections_text(holding.item.name, locale) }}</span>
+                    {% if holding.doubles > 0 %}
+                        <span class="tilttek-collections-album__doubles">{{ 'doubles'|trans({'%count%': holding.doubles}, domain, locale) }}</span>
+                    {% endif %}
+                {% else %}
+                    <span class="tilttek-collections-album__name">{{ 'to_find'|trans({}, domain, locale) }}</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</section>

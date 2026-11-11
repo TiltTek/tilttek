@@ -1,0 +1,27 @@
+{#
+ # The odds a pack publishes: the chance of each item, with its rarity, as a percentage:
+ #
+ #     {{ include('@TilttekCollections/odds.html.twig', {odds: tilttek_collections_odds('booster'), locale: 'fr'}) }}
+ #}
+{% set domain = tilttek_collections_domain() %}
+{% set locale = locale|default('en') %}
+<table class="tilttek-collections-odds">
+    <caption>{{ 'odds'|trans({}, domain, locale) }}</caption>
+    <thead>
+        <tr>
+            <th scope="col">{{ 'item'|trans({}, domain, locale) }}</th>
+            <th scope="col">{{ 'rarity'|trans({}, domain, locale) }}</th>
+            <th scope="col">{{ 'chance'|trans({}, domain, locale) }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for code, chance in odds.itemOdds %}
+            {% set item = tilttek_collections_item(code) %}
+            <tr data-item="{{ code }}">
+                <td>{{ tilttek_collections_text(item.name, locale) }}</td>
+                <td>{{ item.rarity }}</td>
+                <td>{{ 'percent'|trans({'%value%': (chance * 100)|round(2)}, domain, locale) }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,49 @@
+{
+    "name": "tilttek/exchange",
+    "description": "Exchanges for gamification: rewards bought with points in two steps, a reservation that spends the points and holds the stock then a confirmation or a cancellation; points given between members; items traded by offers, counter-offers and acceptance in one transaction; guards against self-exchange, new accounts and excess; the erasure of a member",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "exchange",
+        "rewards",
+        "redemption",
+        "trading",
+        "gamification",
+        "loyalty"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "tilttek/points": "^0.1@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Exchange\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Exchange\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

@@ -1,7 +1,7 @@
 # Tilttek
 
-**Open PHP libraries and Symfony bundles for games and gamification: dice, loot, points, levels, badges, quests and
-collections.**
+**Open PHP libraries and Symfony bundles for games and gamification: dice, loot, points, levels, badges, quests,
+collections and exchanges.**
 
 Tilttek is a set of small `tilttek/*` packages, each doing one thing: a library in plain PHP, usually paired with a
 Symfony bundle that wires it into configuration, Doctrine, Twig, the console and Messenger. They follow the rules of
@@ -18,6 +18,7 @@ then split into its own **read-only** repository, from which Composer installs i
 | Package | Description |
 |---|---|
 | [`tilttek/dice`](https://github.com/TiltTek/dice) | Dice notation parsed, checked and rolled: pools, keep and drop, explosions, rerolls, successes, verifiable and replayable rolls. |
+| [`tilttek/dice-bundle`](https://github.com/TiltTek/dice-bundle) | Dice in a Symfony application: limits and custom dice in configuration, replayable rolls in Doctrine, macros, a form field, Twig and an accessible detail of a roll. |
 | [`tilttek/dice-probability`](https://github.com/TiltTek/dice-probability) | The exact odds of a dice expression, as fractions: distributions, at least and at most, mean, comparisons. |
 | [`tilttek/loot-tables`](https://github.com/TiltTek/loot-tables) | Loot tables rolled with any die, drawn in a way anyone can verify, physical dice included. |
 
@@ -36,6 +37,8 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/quests`](https://github.com/TiltTek/quests) | Quests and challenges: steps read on activity, dates that come back, chains, team quests and duels. |
 | [`tilttek/quests-bundle`](https://github.com/TiltTek/quests-bundle) | Quests in a Symfony application: in configuration or the database, with their progress, events and templates. |
 | [`tilttek/collections`](https://github.com/TiltTek/collections) | Collectible items and sets: copies and doubles, the item of the day, packs drawn with published odds. |
+| [`tilttek/collections-bundle`](https://github.com/TiltTek/collections-bundle) | Collections in a Symfony application: the catalog in configuration or the database, copies in Doctrine DBAL, an album and the item of the day in Twig. |
+| [`tilttek/exchange`](https://github.com/TiltTek/exchange) | Rewards bought with points in two steps, points given between members, and items traded by offers and counter-offers in one transaction. |
 
 Every package is at `0.x`: its API may still change between minor versions, as its CHANGELOG records.
 

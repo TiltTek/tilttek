@@ -39,6 +39,8 @@ return [
             'packages/*/src/Infrastructure/Privacy/*',
             'packages/*/tests/Unit/Infrastructure/*PrivacyTest.php',
             'packages/badges-bundle/src/Infrastructure/OpenBadges/*',
+            'packages/collections-bundle/src/Infrastructure/Almanac/*',
+            'packages/collections-bundle/tests/Unit/Infrastructure/AlmanacDateRuleTest.php',
             'packages/badges-bundle/tests/Unit/Infrastructure/BadgeCredentialsTest.php',
             'packages/quests-bundle/src/Infrastructure/Almanac/*',
             'packages/quests-bundle/tests/Unit/Infrastructure/AlmanacScheduleTest.php',

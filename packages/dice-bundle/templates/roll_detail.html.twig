@@ -1,0 +1,36 @@
+{#- Every die of a roll, and the text or list an instruction gave, escaped as any text. Each face reads without its
+    colour: its shape and its label go with it, and the label is the text a screen reader says. The states of a die —
+    dropped, rerolled, exploded, success, failure — are words, not only styles. The classes are hooks for the
+    application's stylesheet. The detail escapes its texts itself, whatever the application's autoescaping: the function
+    that renders it says its output is safe HTML. -#}
+{% autoescape 'html' -%}
+<div class="tilttek-dice-roll">
+    {%- for expression in roll %}
+    <section class="tilttek-dice-expression" aria-label="{{ expression.notation }}">
+        <p class="tilttek-dice-summary">
+            <code class="tilttek-dice-notation">{{ expression.notation }}</code>
+            {%- if expression.total is not null %} = <output class="tilttek-dice-total">{{ expression.total }}</output>{% endif %}
+            {%- if expression.text is not null %} : <output class="tilttek-dice-text">{{ expression.text }}</output>{% endif %}
+            {%- if expression.tally is not empty %} <output class="tilttek-dice-tally">{{ expression.tally|join(', ') }}</output>{% endif %}
+        </p>
+        {%- for set in expression.sets %}
+        <ul class="tilttek-dice-set" aria-label="{{ set.notation }}"
+            {%- if set.appearance is not null %} data-dice-appearance="{{ set.appearance.name }}"
+                {%- if set.appearance.material is not null %} data-dice-material="{{ set.appearance.material }}"{% endif %}
+                {%- if set.appearance.color is not null %} style="--tilttek-dice-color: {{ set.appearance.color }}"{% endif %}
+            {%- endif %}>
+            {%- for die in set.dice %}
+            <li class="tilttek-dice-die{% for class in die.classes %} {{ class }}{% endfor %}" data-value="{{ die.value }}"
+                {%- if die.color is not null %} style="--tilttek-dice-face-color: {{ die.color }}"{% endif %}>
+                {%- if die.image is not null %}<img class="tilttek-dice-image" src="{{ die.image }}" alt="">{% endif %}
+                {%- if die.shape is not null %}<span class="tilttek-dice-shape tilttek-dice-shape-{{ die.shape }}" aria-hidden="true"></span>{% endif -%}
+                <span class="tilttek-dice-face">{{ die.label }}</span>
+                {%- for state in die.states %} <span class="tilttek-dice-state">({{ state }})</span>{% endfor -%}
+            </li>
+            {%- endfor %}
+        </ul>
+        {%- endfor %}
+    </section>
+    {%- endfor %}
+</div>
+{%- endautoescape %}

@@ -1,0 +1,20 @@
+{#
+ # The item of the day, with its image, its name and its description:
+ #
+ #     {{ include('@TilttekCollections/daily.html.twig', {pick: tilttek_collections_today(), locale: 'fr'}) }}
+ #}
+{% set domain = tilttek_collections_domain() %}
+{% set locale = locale|default('en') %}
+{% set item = tilttek_collections_item(pick.item) %}
+<figure class="tilttek-collections-daily tilttek-collections-daily--{{ item.rarity }}" data-item="{{ item.code }}" data-day="{{ pick.day }}">
+    {% if item.image %}
+        <img class="tilttek-collections-daily__image" src="{{ item.image }}" alt="">
+    {% endif %}
+    <figcaption>
+        <span class="tilttek-collections-daily__label">{{ 'item_of_the_day'|trans({}, domain, locale) }}</span>
+        <span class="tilttek-collections-daily__name">{{ tilttek_collections_text(item.name, locale) }}</span>
+        {% if item.description %}
+            <span class="tilttek-collections-daily__description">{{ tilttek_collections_text(item.description, locale) }}</span>
+        {% endif %}
+    </figcaption>
+</figure>

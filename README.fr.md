@@ -1,7 +1,7 @@
 # Tilttek
 
 **Des bibliothèques PHP et des bundles Symfony ouverts pour les jeux et la ludification : dés, butin, points, niveaux,
-badges, quêtes et collections.**
+badges, quêtes, collections et échanges.**
 
 Tilttek est un ensemble de petits paquets `tilttek/*` qui font chacun une seule chose : une bibliothèque en PHP pur, le
 plus souvent accompagnée d'un bundle Symfony qui la branche à la configuration, à Doctrine, à Twig, à la console et à
@@ -18,6 +18,7 @@ ensuite copié dans son propre dépôt, en **lecture seule**, d'où Composer l'i
 | Paquet | Description |
 |---|---|
 | [`tilttek/dice`](https://github.com/TiltTek/dice) | La notation des dés lue, vérifiée et lancée : réserves, dés gardés et écartés, explosions, relances, succès, lancers vérifiables et rejouables. |
+| [`tilttek/dice-bundle`](https://github.com/TiltTek/dice-bundle) | Des dés dans une application Symfony : limites et dés personnalisés dans la configuration, lancers rejouables dans Doctrine, macros, champ de formulaire, Twig et détail accessible d'un lancer. |
 | [`tilttek/dice-probability`](https://github.com/TiltTek/dice-probability) | Les probabilités exactes d'une expression de dés, en fractions : distributions, au moins et au plus, moyenne, comparaisons. |
 | [`tilttek/loot-tables`](https://github.com/TiltTek/loot-tables) | Des tables de butin lancées avec n'importe quel dé, tirées d'une façon que chacun peut vérifier, dés physiques compris. |
 
@@ -36,6 +37,8 @@ ensuite copié dans son propre dépôt, en **lecture seule**, d'où Composer l'i
 | [`tilttek/quests`](https://github.com/TiltTek/quests) | Quêtes et défis : étapes lues dans l'activité, dates qui reviennent, enchaînements, quêtes d'équipe et duels. |
 | [`tilttek/quests-bundle`](https://github.com/TiltTek/quests-bundle) | Des quêtes dans une application Symfony : dans la configuration ou la base de données, avec leur progression, leurs événements et leurs gabarits. |
 | [`tilttek/collections`](https://github.com/TiltTek/collections) | Objets à collectionner et séries : exemplaires et doublons, l'objet du jour, paquets tirés selon des chances publiées. |
+| [`tilttek/collections-bundle`](https://github.com/TiltTek/collections-bundle) | Des collections dans une application Symfony : catalogue dans la configuration ou la base de données, exemplaires dans Doctrine DBAL, album et objet du jour dans Twig. |
+| [`tilttek/exchange`](https://github.com/TiltTek/exchange) | Des récompenses achetées avec des points en deux temps, des points donnés entre membres et des objets échangés par offres et contre-offres en une seule transaction. |
 
 Chaque paquet est en `0.x` : son API peut encore changer d'une version mineure à l'autre, comme le note son CHANGELOG.
 
