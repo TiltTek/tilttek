@@ -1,0 +1,1 @@
+floor(1d6/3);repeat(1d6,3)

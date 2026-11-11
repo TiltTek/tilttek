@@ -1,0 +1,13 @@
+{#
+ # A streak: the current run and the best one, and the grace still left. The streak's name is a translation key,
+ # `streaks.<name>`:
+ #
+ #     {{ include('@TilttekProgression/streak.html.twig', {streak: tilttek_progression_streak('member:44', 'daily-play')}) }}
+ #}
+{% set domain = tilttek_progression_domain() %}
+<div class="tilttek-progression-streak{{ streak.alive ? ' is-alive' }}" data-streak="{{ streak.streak }}">
+    <span class="tilttek-progression-streak__name">{{ ('streaks.' ~ streak.streak)|trans({}, domain) }}</span>
+    <span class="tilttek-progression-streak__current">{{ 'streak.current'|trans({'%count%': streak.current}, domain) }}</span>
+    <span class="tilttek-progression-streak__best">{{ 'streak.best'|trans({'%count%': streak.best}, domain) }}</span>
+    {% if streak.graceLeft > 0 %}<span class="tilttek-progression-streak__grace">{{ 'streak.grace'|trans({'%count%': streak.graceLeft}, domain) }}</span>{% endif %}
+</div>

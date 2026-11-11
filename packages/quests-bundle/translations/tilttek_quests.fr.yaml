@@ -1,0 +1,21 @@
+kind:
+    personal: 'Quête'
+    community: 'Défi de la communauté'
+    team: "Quête d'équipe"
+    duel: 'Duel'
+state:
+    closed: 'Fermée'
+    locked: 'Verrouillée'
+    available: 'Disponible'
+    under_way: 'En cours'
+    abandoned: 'Abandonnée'
+    completed: 'Accomplie'
+steps_done: '%done% étape(s) sur %count%'
+closes: 'Se ferme le %date%'
+completed: 'Accomplie le %date%'
+team: 'Équipe %team%'
+no_quest: 'Aucune quête en cours.'
+rewards:
+    points: '%amount% %code%'
+    badge: 'Le badge %code%'
+    item: '%amount% × %code%'

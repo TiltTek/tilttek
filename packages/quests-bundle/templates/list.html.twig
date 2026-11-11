@@ -1,0 +1,22 @@
+{#
+ # The quests of a member, open or accomplished, each with how many of its steps are done. A quest's name is a
+ # translation key, `quests.<code>.name`; the closed quests never accomplished and the locked ones are left out:
+ #
+ #     {{ include('@TilttekQuests/list.html.twig', {statuses: tilttek_quests_board('member:44')}) }}
+ #}
+{% set domain = tilttek_quests_domain() %}
+<ul class="tilttek-quests-list">
+    {% for status in statuses|filter(status => status.state.value not in ['closed', 'locked']) %}
+        <li class="tilttek-quests-list__quest tilttek-quests-list__quest--{{ status.state.value }}" data-quest="{{ status.quest.code }}">
+            <span class="tilttek-quests-list__name">{{ ('quests.' ~ status.quest.code ~ '.name')|trans({}, domain) }}</span>
+            <span class="tilttek-quests-list__kind">{{ ('kind.' ~ status.quest.kind.value)|trans({}, domain) }}</span>
+            <span class="tilttek-quests-list__state">{{ ('state.' ~ status.state.value)|trans({}, domain) }}</span>
+            <progress max="{{ status.progress.steps|length }}" value="{{ status.progress.done }}">{{ 'steps_done'|trans({'%done%': status.progress.done, '%count%': status.progress.steps|length}, domain) }}</progress>
+            {% if status.occurrence and status.occurrence.closesAt %}
+                <time class="tilttek-quests-list__closes" datetime="{{ status.occurrence.closesAt|date('c') }}">{{ 'closes'|trans({'%date%': status.occurrence.closesAt|date('Y-m-d')}, domain) }}</time>
+            {% endif %}
+        </li>
+    {% else %}
+        <li class="tilttek-quests-list__empty">{{ 'no_quest'|trans({}, domain) }}</li>
+    {% endfor %}
+</ul>

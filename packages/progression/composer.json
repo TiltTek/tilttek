@@ -1,0 +1,49 @@
+{
+    "name": "tilttek/progression",
+    "description": "Levels and streaks for gamification: experience earned by rules on members' activity, levels on a linear, quadratic, exponential or tabled curve, several tracks, seasons, milestones worth a reward, streaks of days or weeks in the member's timezone with grace and freezes, rebuilds, and the erasure of a member",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "progression",
+        "experience",
+        "levels",
+        "streaks",
+        "seasons",
+        "gamification"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "tilttek/activity": "^0.1@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Progression\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Progression\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

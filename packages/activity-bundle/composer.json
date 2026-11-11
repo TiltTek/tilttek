@@ -1,0 +1,65 @@
+{
+    "name": "tilttek/activity-bundle",
+    "description": "The journal of members' activity for Symfony on tilttek/activity: the journal and checkpoints in Doctrine DBAL, declared verbs, projections and observers kept up to date live, through Messenger or by a command, the rebuild of a projection after a rule changed, and the export and erasure of a member for phil/privacy-bundle",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": [
+        "activity",
+        "activity-log",
+        "gamification",
+        "projection",
+        "symfony-bundle"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "doctrine/dbal": "^4.5",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "symfony/config": "^8.2",
+        "symfony/dependency-injection": "^8.2",
+        "tilttek/activity": "^0.1@dev"
+    },
+    "require-dev": {
+        "doctrine/doctrine-bundle": "^3.3",
+        "doctrine/orm": "^3.7",
+        "phpunit/phpunit": "^13.4",
+        "symfony/clock": "^8.2",
+        "symfony/console": "^8.2",
+        "symfony/event-dispatcher": "^8.2",
+        "symfony/framework-bundle": "^8.2",
+        "symfony/http-kernel": "^8.2",
+        "symfony/messenger": "^8.2"
+    },
+    "suggest": {
+        "doctrine/orm": "To add the journal's tables to the schema the ORM generates, and so to the migrations",
+        "phil/privacy-bundle": "To export and erase a member's activity with the rest of their account",
+        "symfony/console": "For the commands that catch up, rebuild and list the projections",
+        "symfony/messenger": "To keep the projections up to date out of the request, by a message for each new entry"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\ActivityBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\ActivityBundle\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

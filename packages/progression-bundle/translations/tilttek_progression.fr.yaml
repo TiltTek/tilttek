@@ -1,0 +1,8 @@
+level: 'Niveau %level%'
+last_level: 'Dernier niveau atteint'
+missing: '%missing% d’expérience avant le niveau %next%'
+season: 'Saison %season%'
+streak:
+    current: '{0} Aucune série en cours|{1} 1 d’affilée|]1,Inf] %count% d’affilée'
+    best: '{0} Aucune meilleure série encore|{1} Meilleure : 1|]1,Inf] Meilleure : %count%'
+    grace: '{1} Encore 1 oubli pardonné|]1,Inf] Encore %count% oublis pardonnés'

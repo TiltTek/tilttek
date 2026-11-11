@@ -1,0 +1,8 @@
+level: 'Level %level%'
+last_level: 'Last level reached'
+missing: '%missing% experience to level %next%'
+season: 'Season %season%'
+streak:
+    current: '{0} No streak under way|{1} 1 in a row|]1,Inf] %count% in a row'
+    best: '{0} No best streak yet|{1} Best: 1|]1,Inf] Best: %count%'
+    grace: '{1} 1 missed forgiven still|]1,Inf] %count% missed forgiven still'

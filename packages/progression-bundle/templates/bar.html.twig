@@ -1,0 +1,19 @@
+{#
+ # The progress bar of a track: the level, the experience through it and the experience still missing; at the last
+ # level, the bar is full. The track's name is a translation key, `tracks.<name>`:
+ #
+ #     {{ include('@TilttekProgression/bar.html.twig', {standing: tilttek_progression_standing('member:44', 'player')}) }}
+ #}
+{% set domain = tilttek_progression_domain() %}
+{% set level = standing.level %}
+<div class="tilttek-progression-bar" data-track="{{ standing.track.name }}">
+    <span class="tilttek-progression-bar__track">{{ ('tracks.' ~ standing.track.name)|trans({}, domain) }}</span>
+    <span class="tilttek-progression-bar__level">{{ 'level'|trans({'%level%': level.number}, domain) }}</span>
+    {% if level.last %}
+        <progress max="1" value="1">{{ 'last_level'|trans({}, domain) }}</progress>
+    {% else %}
+        <progress max="{{ level.span }}" value="{{ level.gained }}">{{ level.percent }} %</progress>
+        <span class="tilttek-progression-bar__missing">{{ 'missing'|trans({'%missing%': level.missing, '%next%': level.number + 1}, domain) }}</span>
+    {% endif %}
+    {% if standing.season %}<span class="tilttek-progression-bar__season">{{ 'season'|trans({'%season%': standing.season.code}, domain) }}</span>{% endif %}
+</div>

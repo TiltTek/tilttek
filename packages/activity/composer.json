@@ -1,0 +1,48 @@
+{
+    "name": "tilttek/activity",
+    "description": "A journal of members' activity for gamification: each gesture recorded once by its idempotency key, cancellations as entries of their own, totals by member, verb, object and period, projections that keep their own state and replay the journal when a rule changes, and the erasure of a member",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "activity",
+        "activity-log",
+        "gamification",
+        "idempotency",
+        "event-sourcing",
+        "projection"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Activity\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Activity\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

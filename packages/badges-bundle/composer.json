@@ -1,0 +1,76 @@
+{
+    "name": "tilttek/badges-bundle",
+    "description": "Badges for Symfony on tilttek/badges: badges and criteria in configuration, awards and consents in Doctrine DBAL, the projection that awards them through tilttek/activity-bundle, events, Twig showcase and progress, commands, Open Badges 3.0 credentials through phil/open-badges-bundle, and member export and erasure",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": [
+        "badges",
+        "achievements",
+        "gamification",
+        "open-badges",
+        "symfony-bundle"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "doctrine/dbal": "^4.5",
+        "phil/resource": "^0.1@dev",
+        "psr/event-dispatcher": "^1.0",
+        "symfony/config": "^8.2",
+        "symfony/dependency-injection": "^8.2",
+        "tilttek/badges": "^0.1@dev"
+    },
+    "require-dev": {
+        "doctrine/doctrine-bundle": "^3.3",
+        "doctrine/orm": "^3.7",
+        "phpunit/phpunit": "^13.4",
+        "psr/clock": "^1.0",
+        "symfony/clock": "^8.2",
+        "symfony/console": "^8.2",
+        "symfony/event-dispatcher": "^8.2",
+        "symfony/framework-bundle": "^8.2",
+        "symfony/http-kernel": "^8.2",
+        "symfony/translation": "^8.2",
+        "symfony/translation-contracts": "^3.6",
+        "symfony/twig-bundle": "^8.2",
+        "symfony/uid": "^8.2",
+        "tilttek/activity": "^0.1@dev",
+        "tilttek/activity-bundle": "^0.1@dev",
+        "twig/twig": "^3.21"
+    },
+    "suggest": {
+        "doctrine/orm": "To add the badges' tables to the schema the ORM generates, and so to the migrations",
+        "phil/open-badges-bundle": "To issue a member's badges as Open Badges 3.0 credentials, secured by the application's issuer",
+        "phil/privacy-bundle": "To export and erase a member's badges with the rest of their account",
+        "symfony/console": "For the commands that award, withdraw and list a member's badges",
+        "symfony/translation": "To translate the badges' names and descriptions in the credentials",
+        "symfony/twig-bundle": "For the Twig functions and the templates of the showcase and the progress",
+        "symfony/uid": "For the Open Badges credentials of a member's badges",
+        "tilttek/activity-bundle": "To keep the journal of activity the criteria read, and catch the badges projection up live or by a command"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\BadgesBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\BadgesBundle\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

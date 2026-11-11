@@ -1,0 +1,129 @@
+# The shared PHPStan configuration of phil/dev-tools. The paths and exceptions come from phil-dev.php; what only this
+# project needs goes below.
+includes:
+    - vendor/phil/dev-tools/config/phpstan.neon
+
+parameters:
+    tmpDir: var/phpstan
+
+    # The functions of the service configurators, `service()` among them, live in the file of ContainerConfigurator,
+    # which no autoloader names: PHPStan finds them only in a worker that loaded the class first, so whether a file that
+    # calls them passes depends on how the files are shared among the workers. Scanning the file settles it.
+    scanFiles:
+        - vendor/symfony/dependency-injection/Loader/Configurator/ContainerConfigurator.php
+
+    excludePaths:
+        analyse:
+            # The integrations of the bundles with phil/privacy-bundle, phil/open-badges-bundle and phil/almanac, three
+            # packages suggested rather than required and not published yet: the classes that implement them, and their
+            # tests, are left out until those packages can be installed here.
+            - packages/*/src/Infrastructure/Privacy/*
+            - packages/*/tests/Unit/Infrastructure/*PrivacyTest.php
+            - packages/badges-bundle/src/Infrastructure/OpenBadges/*
+            - packages/badges-bundle/tests/Unit/Infrastructure/BadgeCredentialsTest.php
+            - packages/quests-bundle/src/Infrastructure/Almanac/*
+            - packages/quests-bundle/tests/Unit/Infrastructure/AlmanacScheduleTest.php
+            # The phil-dev.php of each package, read by phil/dev-tools, names Rector rules that live in vendor-bin: the
+            # full run never analyses it, the pre-commit hook would when it is staged.
+            - packages/*/phil-dev.php
+
+    # The same integrations, where the bundle class registers them and the functional tests reach them: the code checks
+    # that each package is installed before it touches it, but PHPStan reads every class name it names. Each exception
+    # goes once those packages can be installed here.
+    ignoreErrors:
+        -
+            identifier: argument.type
+            path: packages/activity-bundle/src/TilttekActivityBundle.php
+            count: 2
+        -
+            identifier: class.notFound
+            path: packages/activity-bundle/src/TilttekActivityBundle.php
+            count: 2
+        -
+            identifier: class.notFound
+            path: packages/activity-bundle/tests/Functional/ActivityBundleTest.php
+            count: 5
+        -
+            identifier: class.notFound
+            path: packages/badges-bundle/src/Infrastructure/DependencyInjection/BadgesServices.php
+            count: 2
+        -
+            identifier: argument.type
+            path: packages/badges-bundle/src/TilttekBadgesBundle.php
+            count: 2
+        -
+            identifier: class.notFound
+            path: packages/badges-bundle/src/TilttekBadgesBundle.php
+            count: 2
+        -
+            identifier: argument.type
+            path: packages/badges-bundle/tests/Functional/BadgesBundleTest.php
+            count: 1
+        -
+            identifier: class.notFound
+            path: packages/badges-bundle/tests/Functional/BadgesBundleTest.php
+            count: 9
+        -
+            identifier: method.nonObject
+            path: packages/badges-bundle/tests/Functional/BadgesBundleTest.php
+            count: 1
+        -
+            identifier: offsetAccess.nonOffsetAccessible
+            path: packages/badges-bundle/tests/Functional/BadgesBundleTest.php
+            count: 3
+        -
+            identifier: argument.type
+            path: packages/badges-bundle/tests/Unit/TilttekBadgesBundleTest.php
+            count: 1
+        -
+            identifier: class.notFound
+            path: packages/badges-bundle/tests/Unit/TilttekBadgesBundleTest.php
+            count: 3
+        -
+            identifier: argument.type
+            path: packages/points-bundle/src/TilttekPointsBundle.php
+            count: 2
+        -
+            identifier: class.notFound
+            path: packages/points-bundle/src/TilttekPointsBundle.php
+            count: 2
+        -
+            identifier: class.notFound
+            path: packages/points-bundle/tests/Functional/PointsBundleTest.php
+            count: 5
+        -
+            identifier: offsetAccess.nonOffsetAccessible
+            path: packages/points-bundle/tests/Functional/PointsBundleTest.php
+            count: 2
+        -
+            identifier: argument.type
+            path: packages/progression-bundle/src/TilttekProgressionBundle.php
+            count: 2
+        -
+            identifier: class.notFound
+            path: packages/progression-bundle/src/TilttekProgressionBundle.php
+            count: 2
+        -
+            identifier: class.notFound
+            path: packages/progression-bundle/tests/Functional/ProgressionBundleTest.php
+            count: 5
+        -
+            identifier: offsetAccess.nonOffsetAccessible
+            path: packages/progression-bundle/tests/Functional/ProgressionBundleTest.php
+            count: 2
+        -
+            identifier: argument.type
+            path: packages/quests-bundle/src/TilttekQuestsBundle.php
+            count: 2
+        -
+            identifier: class.notFound
+            path: packages/quests-bundle/src/TilttekQuestsBundle.php
+            count: 2
+        -
+            identifier: class.notFound
+            path: packages/quests-bundle/tests/Functional/QuestsBundleTest.php
+            count: 5
+        -
+            identifier: offsetAccess.nonOffsetAccessible
+            path: packages/quests-bundle/tests/Functional/QuestsBundleTest.php
+            count: 2

@@ -1,0 +1,22 @@
+{#
+ # Where a member stands with each badge, for their own page — it shows the badges they keep private and the progress
+ # towards the others, *7 of 10*; a hidden badge not earned is not listed:
+ #
+ #     {{ include('@TilttekBadges/overview.html.twig', {standings: tilttek_badges_overview('member:44')}) }}
+ #}
+{% set domain = tilttek_badges_domain() %}
+<ul class="tilttek-badges-overview">
+    {% for standing in standings %}
+        {% set badge = standing.badge %}
+        <li class="tilttek-badges-overview__badge{{ standing.earned ? ' is-earned' }}" data-badge="{{ badge.code }}">
+            {% if badge.image %}<img src="{{ badge.image }}" alt="" width="48" height="48">{% endif %}
+            <span class="tilttek-badges-overview__name">{{ badge.name|trans({}, domain) }}</span>
+            {% if badge.description %}<span class="tilttek-badges-overview__description">{{ badge.description|trans({}, domain) }}</span>{% endif %}
+            {% if standing.earned %}
+                <span class="tilttek-badges-overview__count">{{ standing.awards > 1 ? '×' ~ standing.awards }}</span>
+            {% else %}
+                <progress max="{{ standing.progress.target }}" value="{{ standing.progress.shown }}">{{ standing.progress.shown }} / {{ standing.progress.target }}</progress>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

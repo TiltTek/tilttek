@@ -1,0 +1,47 @@
+{
+    "name": "tilttek/badges",
+    "description": "Badges and achievements for gamification: criteria read from members' activity — counts, totals, first times, streaks, periods, combinations, manual awards —, tiers, progress, repeatable and hidden badges, withdrawal when the activity is cancelled, titles and showcases the member chooses, and sharing only with the member's consent",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "badges",
+        "achievements",
+        "gamification"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-mbstring": "*",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "tilttek/activity": "^0.1@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Badges\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Badges\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

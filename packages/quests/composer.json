@@ -1,0 +1,48 @@
+{
+    "name": "tilttek/quests",
+    "description": "Quests and challenges for gamification: steps read on members' activity, in order or not, quests open always, between dates or on recurring dates, chains, declared rewards, acceptance and abandonment, community challenges, team quests, duels between members, rebuilds when a rule changes, and the erasure of a member",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "quests",
+        "challenges",
+        "missions",
+        "duels",
+        "gamification"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "tilttek/activity": "^0.1@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Quests\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Quests\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

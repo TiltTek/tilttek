@@ -1,0 +1,49 @@
+{
+    "name": "tilttek/loot-tables",
+    "description": "Loot tables rolled with any die: tables of entries with a name, an image and a slot, boxes that declare the tables a product rolls, draws committed before and revealed after through tilttek/dice and verifiable by anyone, physical dice entered as they fell, texts drawn from a list, and one-character-per-die shop codes",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "loot",
+        "loot-table",
+        "loot-box",
+        "dice",
+        "provably-fair",
+        "rpg",
+        "ttrpg"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-mbstring": "*",
+        "tilttek/dice": "^0.1@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\LootTables\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\LootTables\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

@@ -1,0 +1,21 @@
+kind:
+    personal: 'Quest'
+    community: 'Community challenge'
+    team: 'Team quest'
+    duel: 'Duel'
+state:
+    closed: 'Closed'
+    locked: 'Locked'
+    available: 'Available'
+    under_way: 'Under way'
+    abandoned: 'Abandoned'
+    completed: 'Accomplished'
+steps_done: '%done% of %count% steps done'
+closes: 'Closes on %date%'
+completed: 'Accomplished on %date%'
+team: 'Team %team%'
+no_quest: 'No quest under way.'
+rewards:
+    points: '%amount% %code%'
+    badge: 'The badge %code%'
+    item: '%amount% × %code%'
