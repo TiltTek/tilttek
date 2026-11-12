@@ -82,6 +82,17 @@ final readonly class Natural implements Stringable
         return [] === $this->limbs;
     }
 
+    /**
+     * The number of limbs, at least one: what an addition of this number costs, and a multiplication the product of
+     * the sizes of its two numbers.
+     *
+     * @internal
+     */
+    public function size(): int
+    {
+        return max(1, \count($this->limbs));
+    }
+
     public function add(self $other): self
     {
         $limbs = [];
@@ -180,10 +191,17 @@ final readonly class Natural implements Stringable
             throw new InvalidArgumentException('A natural number is not divided by zero.');
         }
 
-        $digits = [];
-        $remainder = self::zero();
+        $size = \count($divisor->limbs);
 
-        for ($index = \count($this->limbs) - 1; $index >= 0; --$index) {
+        if (\count($this->limbs) < $size) {
+            return [self::zero(), $this];
+        }
+
+        $digits = [];
+        // The highest limbs, one fewer than the divisor's, stay below it: the digits of the quotient start after them.
+        $remainder = new self(self::trim(\array_slice($this->limbs, \count($this->limbs) - $size + 1)));
+
+        for ($index = \count($this->limbs) - $size; $index >= 0; --$index) {
             $remainder = new self(self::trim([$this->limbs[$index], ...$remainder->limbs]));
             // The digit of the quotient, bit by bit from the highest: the largest whose product by the divisor stays
             // within the remainder, below the base since the remainder stays below the divisor times the base.

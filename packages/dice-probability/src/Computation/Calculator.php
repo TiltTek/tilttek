@@ -221,7 +221,7 @@ final readonly class Calculator
 
             if (null === $limit || $limit > $this->depth) {
                 $cut = new Fraction($first->weightOf($trigger), $first->total)->multiply(new Fraction($again->weightOf($trigger), $again->total)->power($cap));
-                $remaining = Fraction::one()->subtract($cut->complement()->power($dice->count))->reduced();
+                $remaining = $budget->reduce(Fraction::one()->subtract($cut->complement()->power($dice->count)));
             }
         }
 
@@ -232,7 +232,7 @@ final readonly class Calculator
         };
         $result = $sum->map($this->final($modifiers), $budget);
 
-        return Weights::of($result->weights, Weights::either($result->remaining, $remaining));
+        return Weights::of($result->weights, Weights::either($result->remaining, $remaining, $budget));
     }
 
     /**
@@ -359,6 +359,8 @@ final readonly class Calculator
 
         $selection->mode->highest() ? krsort($groups) : ksort($groups);
         $binomials = Multisets::binomials($count);
+        // The ways to roll all the dice, which no weight of a state goes past: the size of the numbers multiplied.
+        $ceiling = $die->total->power($count);
         // By dice placed and dice named so far: the weights of the sums kept.
         $states = [0 => [0 => [0 => Natural::one()]]];
         // The dice the filter leaves out are no candidates: they are named by no selection, and contribute nothing.
@@ -372,6 +374,7 @@ final readonly class Calculator
             $powers = [Natural::one()];
 
             for ($dice = 1; $dice <= $count; ++$dice) {
+                $budget->spendOn(1, $powers[$dice - 1], $weight);
                 $powers[$dice] = $powers[$dice - 1]->multiply($weight);
             }
 
@@ -380,8 +383,8 @@ final readonly class Calculator
             foreach ($states as $placed => $byNamed) {
                 foreach ($byNamed as $named => $sums) {
                     for ($dice = 0; $dice <= $count - $placed; ++$dice) {
-                        $budget->spend(\count($sums));
                         $factor = $binomials[$count - $placed][$dice]->multiply($powers[$dice]);
+                        $budget->spendOn(\count($sums), $factor, $ceiling);
                         $newlyNamed = $candidate ? min($dice, $selection->count - $named) : 0;
                         $kept = $selection->mode->keeps() ? $newlyNamed : $dice - $newlyNamed;
 
@@ -451,7 +454,7 @@ final readonly class Calculator
      */
     private function reroll(Weights $faces, Reroll $reroll, Budget $budget): Weights
     {
-        $budget->spend(\count($faces->weights));
+        $budget->spendOn(\count($faces->weights), $faces->total, $faces->total);
 
         if (Repetition::Repeated === $reroll->repetition) {
             return Weights::of(array_filter($faces->weights, static fn (int $face): bool => !$reroll->on->matches($face), \ARRAY_FILTER_USE_KEY));

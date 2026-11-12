@@ -8,8 +8,8 @@ use RuntimeException;
 use Tilttek\Dice\Exception\CannotRoll;
 
 /**
- * No distribution can be given: an outcome cannot be rolled, the faces carry no value, or the input is not one
- * expression, or not one set of dice.
+ * No distribution can be given: an outcome cannot be rolled, the faces carry no value, the input is not one
+ * expression, or not one set of dice, or its estimate would roll more dice than the settings allow.
  */
 final class CannotCompute extends RuntimeException implements ProbabilityException
 {
@@ -26,6 +26,11 @@ final class CannotCompute extends RuntimeException implements ProbabilityExcepti
     public static function severalExpressions(int $count): self
     {
         return new self(\sprintf('A distribution is that of one expression; the pool holds %d.', $count));
+    }
+
+    public static function tooManyRolls(int $limit, int $samples): self
+    {
+        return new self(\sprintf('The estimate would roll more than %d dice over its %d samples: lower the samples, or raise the roll limit.', $limit, $samples));
     }
 
     public static function notASet(): self

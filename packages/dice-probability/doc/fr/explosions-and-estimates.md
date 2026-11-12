@@ -1,20 +1,23 @@
-<!-- phil-dev source-sha256=aa6744d041e680885dc94437fdfe29acfa014dfceea46f3a33573bc45a1d4aeb -->
+<!-- phil-dev source-sha256=0acb1f1e295110a8c70104115ac462c692831b6448b162d419c528c95860fc20 -->
 # Explosions et estimations
 
 ## `Settings`
 
 ```php
-new Settings(int $explosionDepth = 10, int $workLimit = 500_000, int $samples = 20_000, int $seed = 0);
+new Settings(int $explosionDepth = 10, int $workLimit = 500_000, int $samples = 20_000, int $seed = 0, int $rollLimit = 200_000);
 ```
 
 | Réglage | Ce qu'il borne |
 |---|---|
 | `explosionDepth` | Combien d'explosions par dé le calcul exact suit |
-| `workLimit` | Combien d'opérations sur les poids un calcul exact fait au plus ; chaque poids multiplié ou additionné compte pour une |
+| `workLimit` | Combien de travail un calcul exact fait au plus ; chaque poids multiplié ou additionné compte pour une opération tant que les poids sont petits, davantage à mesure qu'ils grandissent |
 | `samples` | De combien de jets une estimation est tirée |
 | `seed` | Le germe de ces jets : le même germe donne la même estimation |
+| `rollLimit` | Combien de dés une estimation lance au plus sur tous ses échantillons, explosions et relances comprises |
 
-Chaque borne vaut au moins 1.
+Chaque borne vaut au moins 1. Ensemble, la limite de travail et la limite de dés bornent le travail de toute
+expression : aux valeurs par défaut, environ une seconde de processeur pour le calcul exact, et autant pour une
+estimation.
 
 ## Explosions
 
@@ -46,5 +49,20 @@ d'un jet le permettent.
 | `TooLarge` | Le calcul exact dépasserait la limite de travail : `50d20kh10`, `100d100` avec des sélections |
 | `Unsupported` | Dés uniques, dés tous identiques qui explosent, occurrences, groupes, filtres de l'ensemble, dés précédents, une sélection parmi des dés qui explosent en dés propres, des valeurs égales qui contribuent différemment à une sélection, dés de l'application dont les faces ne sont pas connues |
 
-Le coût d'un calcul exact, à titre indicatif : `30d6` demande environ 2 400 opérations et `20d100` environ 21 000. Une
-sélection parmi de nombreux dés à nombreuses faces croît le plus vite, et `50d20kh10` dépasse la limite par défaut.
+Le coût d'un calcul exact, à titre indicatif : `30d6` demande environ 7 200 opérations et `10d6!` environ 300 000. Une
+sélection parmi de nombreux dés à nombreuses faces croît le plus vite, et `50d20kh10` dépasse la limite par défaut. Les
+poids de nombreux dés sont des nombres de nombreux membres : une opération sur eux compte une de plus par tranche de
+seize produits de membres, et une fraction ramenée à sa plus simple expression (la probabilité qu'une explosion ait été
+coupée, par exemple) le cube de sa taille en membres.
+
+## La limite de dés
+
+Une estimation lance `samples` fois, et chaque jet peut lancer de nombreux dés : `100d6!` en lance cent vingt en
+moyenne, soit 2,4 millions de dés sur vingt mille échantillons. Au-delà de `rollLimit` dés, l'estimation s'arrête et
+l'appel lève `CannotCompute` (voir [Exceptions](exceptions.md)) au lieu de continuer. Baissez les échantillons, ou
+relevez la limite de dés, pour les expressions qui en ont besoin :
+
+```php
+new Probabilities(settings: new Settings(samples: 2_000));          // 100d6!: about 240 000 dice, still too many
+new Probabilities(settings: new Settings(rollLimit: 3_000_000));    // 100d6!: allowed, about ten seconds
+```

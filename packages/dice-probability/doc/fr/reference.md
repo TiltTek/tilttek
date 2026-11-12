@@ -1,10 +1,10 @@
-<!-- phil-dev source-sha256=180520812c83a92c318491be46bdbcc646ab024052f5b1f03d9ee7ba9978300c -->
+<!-- phil-dev source-sha256=f3d307371c1bc7630a00ced216f0b90973b6b59cd48be3e0b8254eee98eb0110 -->
 # Référence
 
 | Type | Rôle |
 |---|---|
 | `Probabilities` | Le point d'entrée : `distribution()`, `compare()` et `chance()` |
-| `Settings` | La profondeur d'explosion, la limite de travail, les échantillons et le germe d'une estimation |
+| `Settings` | La profondeur d'explosion, la limite de travail, les échantillons, le germe et la limite de dés d'une estimation |
 | `Distribution` | Chaque valeur d'une expression et son poids ; probabilités, au moins, au plus, moyenne, variance, écart type |
 | `Outcome` | Une valeur d'une distribution avec sa probabilité, au moins et au plus |
 | `Versus` | Deux distributions l'une contre l'autre : la première plus haute, une égalité, la seconde plus haute |

@@ -165,8 +165,8 @@ final class EventsTest extends TestCase
         self::assertSame('1000', (string) $chance->probability->denominator);
         self::assertEqualsWithDelta(671 / 1296, $chance->probability->toFloat(), 0.05);
         self::assertSame((string) $chance->probability, (string) new Probabilities(settings: $settings)->chance(Count::atLeastOne(1), new DiceRoller()->parse('4d6'))->probability);
-        self::assertFalse(new Probabilities(settings: new Settings(workLimit: 140))->chance(Count::atLeastOne(1), new DiceRoller()->parse('4d6'))->isEstimated());
-        self::assertTrue(new Probabilities(settings: new Settings(workLimit: 130, samples: 10))->chance(Count::atLeastOne(1), new DiceRoller()->parse('4d6'))->isEstimated());
+        self::assertFalse(new Probabilities(settings: new Settings(workLimit: 1_163))->chance(Count::atLeastOne(1), new DiceRoller()->parse('4d6'))->isEstimated());
+        self::assertTrue(new Probabilities(settings: new Settings(workLimit: 1_162, samples: 10))->chance(Count::atLeastOne(1), new DiceRoller()->parse('4d6'))->isEstimated());
     }
 
     public function testAnEventIsJudgedOnASetOfDice(): void

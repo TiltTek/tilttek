@@ -3,7 +3,7 @@
 | Type | Role |
 |---|---|
 | `Probabilities` | The entry point: `distribution()`, `compare()` and `chance()` |
-| `Settings` | The explosion depth, the work limit, the samples and the seed of an estimate |
+| `Settings` | The explosion depth, the work limit, the samples, the seed and the roll limit of an estimate |
 | `Distribution` | Every value of an expression and its weight; probabilities, at least, at most, mean, variance, standard deviation |
 | `Outcome` | One value of a distribution with its probability, at least and at most |
 | `Versus` | Two distributions against each other: the first higher, a tie, the second higher |

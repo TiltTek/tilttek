@@ -3,17 +3,19 @@
 ## `Settings`
 
 ```php
-new Settings(int $explosionDepth = 10, int $workLimit = 500_000, int $samples = 20_000, int $seed = 0);
+new Settings(int $explosionDepth = 10, int $workLimit = 500_000, int $samples = 20_000, int $seed = 0, int $rollLimit = 200_000);
 ```
 
 | Setting | What it bounds |
 |---|---|
 | `explosionDepth` | How many explosions per die the exact computation follows |
-| `workLimit` | How many operations on weights an exact computation does at most — each weight multiplied or added counts one |
+| `workLimit` | How much work an exact computation does at most — each weight multiplied or added counts one while the weights are small, more as they grow |
 | `samples` | How many rolls an estimate is drawn from |
 | `seed` | The seed of those rolls: the same seed gives the same estimate |
+| `rollLimit` | How many dice an estimate rolls at most over all its samples, explosions and rerolls included |
 
-Each bound is at least 1.
+Each bound is at least 1. Together, the work limit and the roll limit bound the work of any expression: at the
+defaults, about a second of processor time for the exact computation and as much for an estimate.
 
 ## Explosions
 
@@ -45,5 +47,19 @@ them.
 | `TooLarge` | The exact computation would go past the work limit: `50d20kh10`, `100d100` with selections |
 | `Unsupported` | Unique dice, dice all the same that explode, occurrences, groups, filters of the whole set, the dice before, a selection among dice that explode into dice of their own, equal values that contribute differently to a selection, dice of the application whose faces are not known |
 
-The cost of an exact computation, as a guide: `30d6` is about 2 400 operations and `20d100` about 21 000; a selection
-among many dice of many sides grows fastest, and `50d20kh10` goes past the default limit.
+The cost of an exact computation, as a guide: `30d6` is about 7 200 operations and `10d6!` about 300 000; a selection
+among many dice of many sides grows fastest, and `50d20kh10` goes past the default limit. The weights of many dice are
+numbers of many limbs: an operation on them counts one more for every sixteen products of limbs, and a fraction brought
+to its lowest terms — the probability that an explosion was cut, for one — the cube of its size in limbs.
+
+## The roll limit
+
+An estimate rolls `samples` times, and each roll may throw many dice: `100d6!` throws a hundred and twenty on average,
+2.4 million dice over twenty thousand samples. Past `rollLimit` dice, the estimate stops and the call throws
+`CannotCompute` (see [Exceptions](exceptions.md)) rather than run on. Lower the samples, or raise the roll limit, for
+the expressions that need it:
+
+```php
+new Probabilities(settings: new Settings(samples: 2_000));          // 100d6!: about 240 000 dice, still too many
+new Probabilities(settings: new Settings(rollLimit: 3_000_000));    // 100d6!: allowed, about ten seconds
+```

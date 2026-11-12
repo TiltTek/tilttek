@@ -65,7 +65,7 @@ final readonly class Weights
      */
     public function combine(self $other, Closure $join, Budget $budget): self
     {
-        $budget->spend(\count($this->weights) * \count($other->weights));
+        $budget->spendOn(\count($this->weights) * \count($other->weights), $this->total, $other->total);
         $weights = [];
 
         foreach ($this->weights as $left => $leftWeight) {
@@ -76,7 +76,7 @@ final readonly class Weights
             }
         }
 
-        return self::of($weights, self::either($this->remaining, $other->remaining));
+        return self::of($weights, self::either($this->remaining, $other->remaining, $budget));
     }
 
     /**
@@ -86,7 +86,7 @@ final readonly class Weights
      */
     public function map(Closure $map, Budget $budget): self
     {
-        $budget->spend(\count($this->weights));
+        $budget->spendOn(\count($this->weights), $this->total);
         $weights = [];
 
         foreach ($this->weights as $value => $weight) {
@@ -111,6 +111,8 @@ final readonly class Weights
         foreach (array_keys($this->weights) as $value) {
             $inners[$value] = $inner($value);
             $total = $inners[$value]->total;
+            $budget->spendOn(1, $common, $total);
+            $budget->spendOnDivisor($total);
             $common = $common->multiply($total)->divide($common->gcd($total))[0];
         }
 
@@ -118,8 +120,8 @@ final readonly class Weights
         $remaining = Fraction::zero();
 
         foreach ($inners as $value => $distribution) {
-            $budget->spend(\count($distribution->weights));
             $scale = $this->weights[$value]->multiply($common->divide($distribution->total)[0]);
+            $budget->spendOn(\count($distribution->weights), $distribution->total, $scale);
 
             foreach ($distribution->weights as $outcome => $weight) {
                 $weight = $weight->multiply($scale);
@@ -129,7 +131,7 @@ final readonly class Weights
             $remaining = $remaining->add(new Fraction($this->weights[$value], $this->total)->multiply($distribution->remaining));
         }
 
-        return self::of($weights, self::either($this->remaining, $remaining->reduced()));
+        return self::of($weights, self::either($this->remaining, $budget->reduce($remaining), $budget));
     }
 
     /**
@@ -190,9 +192,13 @@ final readonly class Weights
     private function slide(int $count, int $lowest, int $highest, Natural $face, Budget $budget): self
     {
         $sums = [0 => Natural::one()];
+        // The total of the dice summed so far, which no sum goes past: the size of the numbers added.
+        $reach = Natural::one();
 
         for ($dice = 0; $dice < $count; ++$dice) {
-            $budget->spend(\count($sums) + $highest - $lowest);
+            $reach = $reach->multiply($this->total);
+            // Each sum adds to the window, takes from it and multiplies it: three operations.
+            $budget->spendOn(3 * (\count($sums) + $highest - $lowest), $reach);
             $window = Natural::zero();
             $next = [];
 
@@ -209,7 +215,7 @@ final readonly class Weights
             $sums = $next;
         }
 
-        return self::of($sums, Fraction::one()->subtract($this->remaining->complement()->power($count))->reduced());
+        return self::of($sums, $budget->reduce(Fraction::one()->subtract($this->remaining->complement()->power($count))));
     }
 
     /**
@@ -233,8 +239,8 @@ final readonly class Weights
     /**
      * The probability that either of two independent events happens.
      */
-    public static function either(Fraction $first, Fraction $second): Fraction
+    public static function either(Fraction $first, Fraction $second, Budget $budget = new Budget(\PHP_INT_MAX)): Fraction
     {
-        return $first->add($second)->subtract($first->multiply($second))->reduced();
+        return $budget->reduce($first->add($second)->subtract($first->multiply($second)));
     }
 }

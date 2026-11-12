@@ -34,6 +34,7 @@ final class Multisets
             $powers[$value] = [Natural::one()];
 
             for ($dice = 1; $dice <= $count; ++$dice) {
+                $budget->spendOn(1, $powers[$value][$dice - 1], $weight);
                 $powers[$value][$dice] = $powers[$value][$dice - 1]->multiply($weight);
             }
         }
@@ -52,7 +53,9 @@ final class Multisets
         $value = $values[$index];
 
         if ($index === \count($values) - 1) {
-            $budget->spend(1);
+            // The faces of the multiset, one count per value, judged by the event.
+            $budget->spend(\count($values));
+            $budget->spendOn(1, $ways, $powers[$value][$left]);
             $counts[$value] = $left;
 
             return $event->matches(new Faces($counts)) ? $ways->multiply($powers[$value][$left]) : Natural::zero();
@@ -61,6 +64,7 @@ final class Multisets
         $weight = Natural::zero();
 
         for ($dice = 0; $dice <= $left; ++$dice) {
+            $budget->spendOn(1, $ways, $powers[$value][$dice]);
             $counts[$value] = $dice;
             $weight = $weight->add(self::walk($values, $index + 1, $left - $dice, $counts, $ways->multiply($binomials[$left][$dice])->multiply($powers[$value][$dice]), $powers, $binomials, $event, $budget));
         }

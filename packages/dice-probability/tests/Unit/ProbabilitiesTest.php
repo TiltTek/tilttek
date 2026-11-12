@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tilttek\DiceProbability\Tests\Unit;
 
+use Closure;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -28,6 +29,8 @@ use Tilttek\DiceProbability\Distribution;
 use Tilttek\DiceProbability\Estimate;
 use Tilttek\DiceProbability\EstimateReason;
 use Tilttek\DiceProbability\Event\AllEqual;
+use Tilttek\DiceProbability\Exact\Fraction;
+use Tilttek\DiceProbability\Exact\Natural;
 use Tilttek\DiceProbability\Exception\CannotCompute;
 use Tilttek\DiceProbability\Outcome;
 use Tilttek\DiceProbability\Probabilities;
@@ -377,24 +380,82 @@ final class ProbabilitiesTest extends TestCase
         self::assertSame([1, 2], $distribution->values());
     }
 
+    public function testAnEstimateRollsNoMoreDiceThanItsLimit(): void
+    {
+        $pool = new DiceRoller()->parse('3d6');
+        // Ten samples of three dice: thirty dice, and as many more when the count of the dice is rolled first.
+        $estimate = new Probabilities(settings: new Settings(workLimit: 1, samples: 10, rollLimit: 30))->distribution($pool);
+        $chance = new Probabilities(settings: new Settings(workLimit: 1, samples: 10, rollLimit: 30))->chance(new AllEqual(), $pool);
+
+        self::assertSame('10', (string) $estimate->total);
+        self::assertSame('10', (string) $chance->probability->denominator);
+        self::assertTrue(new Probabilities(settings: new Settings(workLimit: 1, samples: 10, rollLimit: 40))->distribution(new DiceRoller()->parse('(1d1+2)d6'))->isEstimated());
+
+        $this->expectException(CannotCompute::class);
+        $this->expectExceptionMessageIsOrContains('The estimate would roll more than 39 dice over its 10 samples: lower the samples, or raise the roll limit.');
+
+        new Probabilities(settings: new Settings(workLimit: 1, samples: 10, rollLimit: 39))->distribution(new DiceRoller()->parse('(1d1+2)d6'));
+    }
+
+    public function testTheChanceOfAnEstimateRollsNoMoreDiceThanItsLimit(): void
+    {
+        $this->expectException(CannotCompute::class);
+        $this->expectExceptionMessageIsOrContains('The estimate would roll more than 29 dice over its 10 samples');
+
+        new Probabilities(settings: new Settings(workLimit: 1, samples: 10, rollLimit: 29))->chance(new AllEqual(), new DiceRoller()->parse('3d6'));
+    }
+
+    public function testTheWorkOfLargeWeightsIsCountedByTheirSize(): void
+    {
+        $small = Natural::of(6);
+        // Fifteen and sixteen limbs: a multiplication by a small weight costs one more operation from sixteen limbs.
+        $fifteen = Natural::of(10)->power(9 * 14);
+        $sixteen = Natural::of(10)->power(9 * 15);
+        $budget = new Budget(10);
+
+        $budget->spendOn(3, $small);
+        $budget->spendOn(2, $fifteen, $small);
+        $budget->spendOn(2, $sixteen, $small);
+        $budget->spend(1);
+
+        self::assertSame(15, $fifteen->size());
+        self::assertSame(16, $sixteen->size());
+        $this->assertTooLarge(static fn () => $budget->spend(1));
+        $this->assertTooLarge(static fn () => new Budget(9)->spendOn(5, $sixteen));
+        $this->assertTooLarge(static fn () => new Budget(9)->spendOn(5, $small, $sixteen));
+        new Budget(10)->spendOn(5, $sixteen);
+        $this->assertTooLarge(static fn () => new Budget(10)->spendOn(\PHP_INT_MAX, $sixteen));
+    }
+
+    public function testAFractionBroughtToItsLowestTermsCostsTheCubeOfItsSize(): void
+    {
+        // Three limbs: 27.
+        $fraction = new Fraction(Natural::of(10)->power(18), Natural::of(10)->power(19));
+
+        self::assertSame('1/10', (string) new Budget(27)->reduce($fraction));
+        $this->assertTooLarge(static fn (): Fraction => new Budget(26)->reduce($fraction));
+        new Budget(27)->spendOnDivisor($fraction->denominator);
+        $this->assertTooLarge(static fn () => new Budget(26)->spendOnDivisor($fraction->denominator));
+    }
+
     public function testTheWorkOfAPlainSumIsAFewOperationsPerSum(): void
     {
-        // Thirty six-sided dice: thirty windows slid along at most 151 sums.
-        $sum = new Probabilities(settings: new Settings(workLimit: 5_000))->distribution(new DiceRoller()->parse('30d6'));
+        // Thirty six-sided dice: thirty windows slid along at most 151 sums, three operations each.
+        $sum = new Probabilities(settings: new Settings(workLimit: 10_000))->distribution(new DiceRoller()->parse('30d6'));
 
         self::assertFalse($sum->isEstimated());
         self::assertSame('221073919720733357899776', (string) $sum->total);
         self::assertSame('105/1', (string) $sum->mean()->reduced());
 
         // Squaring a die that is not plain does more work.
-        self::assertTrue(new Probabilities(settings: new Settings(workLimit: 5_000))->distribution(new DiceRoller()->parse('30d6ro1'))->isEstimated());
+        self::assertTrue(new Probabilities(settings: new Settings(workLimit: 7_500, samples: 10))->distribution(new DiceRoller()->parse('30d6ro1'))->isEstimated());
         self::assertFalse(new Probabilities(settings: new Settings(workLimit: 50_000))->distribution(new DiceRoller()->parse('30d6ro1'))->isEstimated());
-        self::assertTrue(new Probabilities(settings: new Settings(workLimit: 2_000))->distribution(new DiceRoller()->parse('30d6'))->isEstimated());
+        self::assertTrue(new Probabilities(settings: new Settings(workLimit: 2_000, samples: 10))->distribution(new DiceRoller()->parse('30d6'))->isEstimated());
     }
 
     /**
-     * Each weight multiplied or added counts one: exactly at its work, a computation is exact; one operation short, it
-     * is estimated.
+     * Each weight multiplied or added counts one while the weights are small, each fraction brought to its lowest terms
+     * the cube of its size: exactly at its work, a computation is exact; one operation short, it is estimated.
      */
     #[DataProvider('work')]
     public function testTheWorkIsCountedToTheOperation(string $expression, int $work): void
@@ -411,16 +472,17 @@ final class ProbabilitiesTest extends TestCase
      */
     public static function work(): iterable
     {
-        // The faces, what each contributes, one window and the final values: 6 each.
-        yield 'one die' => ['1d6', 24];
-        yield 'plain dice' => ['3d6', 61];
-        yield 'custom dice in any order' => ['3d{shuffled}', 15];
-        yield 'rerolled' => ['1d6r1', 27];
-        yield 'rerolled once and squared' => ['2d6ro1', 76];
-        yield 'three rerolled once and squared' => ['3d6ro1', 142];
-        yield 'count rolled first' => ['(1d2)d4', 61];
-        yield 'selection' => ['4d6kh3', 292];
-        yield 'explosion' => ['1d6!', 745];
+        // The faces, what each contributes and the final values: 6 each; one window slid along 6 sums, three operations
+        // each; the probability of an explosion cut at its depth, twice brought to its lowest terms: 1 each.
+        yield 'one die' => ['1d6', 38];
+        yield 'plain dice' => ['3d6', 129];
+        yield 'custom dice in any order' => ['3d{shuffled}', 46];
+        yield 'rerolled' => ['1d6r1', 39];
+        yield 'rerolled once and squared' => ['2d6ro1', 79];
+        yield 'three rerolled once and squared' => ['3d6ro1', 146];
+        yield 'count rolled first' => ['(1d2)d4', 107];
+        yield 'selection' => ['4d6kh3', 317];
+        yield 'explosion' => ['1d6!', 909];
     }
 
     public function testTheWorkOfASelectionIsCounted(): void
@@ -433,8 +495,24 @@ final class ProbabilitiesTest extends TestCase
     {
         self::assertTrue(new Probabilities(settings: new Settings(workLimit: 100, samples: 10))->distribution(new DiceRoller()->parse('1d6!'))->isEstimated());
         self::assertTrue(new Probabilities(settings: new Settings(workLimit: 100, samples: 10))->distribution(new DiceRoller()->parse('1d100r1'))->isEstimated());
-        self::assertTrue(new Probabilities(settings: new Settings(workLimit: 150, samples: 10))->distribution(new DiceRoller()->parse('1d6+1d4+1d8*2'))->isEstimated());
-        self::assertFalse(new Probabilities(settings: new Settings(workLimit: 200, samples: 10))->distribution(new DiceRoller()->parse('1d6+1d4+1d8*2'))->isEstimated());
+        self::assertTrue(new Probabilities(settings: new Settings(workLimit: 200, samples: 10))->distribution(new DiceRoller()->parse('1d6+1d4+1d8*2'))->isEstimated());
+        self::assertFalse(new Probabilities(settings: new Settings(workLimit: 250, samples: 10))->distribution(new DiceRoller()->parse('1d6+1d4+1d8*2'))->isEstimated());
+    }
+
+    /**
+     * @param Closure(): mixed $work
+     */
+    private function assertTooLarge(Closure $work): void
+    {
+        $caught = null;
+
+        try {
+            $work();
+        } catch (TooLarge $tooLarge) {
+            $caught = $tooLarge;
+        }
+
+        self::assertInstanceOf(TooLarge::class, $caught, 'The work was expected to go past its budget.');
     }
 
     /**

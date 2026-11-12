@@ -134,6 +134,7 @@ final class NaturalTest extends TestCase
         yield 'small' => ['17', '5', '3', '2'];
         yield 'exact' => ['1296', '36', '36', '0'];
         yield 'smaller dividend' => ['3', '7', '0', '3'];
+        yield 'dividend two limbs shorter' => ['1000000000000000005', '1000000000000000000000000000000000000', '0', '1000000000000000005'];
         yield 'zero dividend' => ['0', '7', '0', '0'];
         yield 'by one' => ['123456789012345678901234567890', '1', '123456789012345678901234567890', '0'];
         yield 'large by small' => ['221073919720733357899776', '6', '36845653286788892983296', '0'];
@@ -144,6 +145,30 @@ final class NaturalTest extends TestCase
         yield 'long quotient' => ['100000000000000000000000000000000000000000000000000', '3', '33333333333333333333333333333333333333333333333333', '1'];
         yield 'long divisor' => ['340282366920938463463374607431768211456', '18446744073709551616', '18446744073709551616', '0'];
         yield 'near half' => ['999999999999999999999999999999', '500000000000000000000000000000', '1', '499999999999999999999999999999'];
+    }
+
+    public function testTheSizeIsTheNumberOfLimbs(): void
+    {
+        self::assertSame(1, Natural::zero()->size());
+        self::assertSame(1, Natural::of(999_999_999)->size());
+        self::assertSame(2, Natural::of(1_000_000_000)->size());
+        self::assertSame(96, Natural::of(6)->power(1_100)->size());
+    }
+
+    /**
+     * Euclid's algorithm on numbers of 96 limbs: the digits of a quotient start where the divisor ends, so a division
+     * of two numbers of the same size finds one digit, not 96.
+     */
+    public function testTheGreatestCommonDivisorOfLargeNumbersIsQuick(): void
+    {
+        // 1 - (1 - 1/6^11)^100, the probability that one of a hundred exploding dice was cut at its depth.
+        $denominator = Natural::of(6)->power(1_100);
+        $numerator = $denominator->subtract(Natural::of(6)->power(11)->subtract(Natural::one())->power(100));
+        $start = hrtime(true);
+
+        self::assertSame('1', (string) $numerator->gcd($denominator));
+        self::assertSame('6', (string) Natural::of(6)->power(95)->gcd(Natural::of(6)->power(96)->add(Natural::of(6))));
+        self::assertLessThan(5_000_000_000, hrtime(true) - $start);
     }
 
     public function testDivisionByZeroIsRefused(): void
