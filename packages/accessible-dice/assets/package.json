@@ -1,0 +1,26 @@
+{
+    "name": "@tilttek/accessible-dice",
+    "description": "The accessible dice's Stimulus controller: shows the expression chosen, announces the results to screen readers, and reads them aloud on request",
+    "version": "0.1.0",
+    "license": "MIT",
+    "type": "module",
+    "symfony": {
+        "controllers": {
+            "dice": {
+                "main": "src/dice_controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true,
+                "autoimport": {
+                    "@tilttek/accessible-dice/styles/accessible-dice.css": true
+                }
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0"
+    }
+}

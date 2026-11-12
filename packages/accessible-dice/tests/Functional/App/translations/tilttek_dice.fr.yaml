@@ -1,0 +1,3 @@
+coin:
+    heads: Pile
+    tails: Face

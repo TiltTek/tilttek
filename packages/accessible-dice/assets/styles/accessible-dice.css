@@ -1,0 +1,159 @@
+/*
+ * The accessible dice: targets of 48 pixels at least, a focus that shows, faces told by their shape as well as their
+ * colour, and a roll that moves only for a viewer who did not ask for reduced motion.
+ */
+.tilttek-accessible-dice {
+    --tilttek-accessible-dice-target: 3rem;
+    display: grid;
+    gap: 1rem;
+}
+
+.tilttek-accessible-dice__dice {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tilttek-accessible-dice__die,
+.tilttek-accessible-dice__number button,
+.tilttek-accessible-dice__number input,
+.tilttek-accessible-dice__speak,
+.tilttek-accessible-dice__roll {
+    min-block-size: var(--tilttek-accessible-dice-target);
+    min-inline-size: var(--tilttek-accessible-dice-target);
+    font-size: 1.125rem;
+}
+
+.tilttek-accessible-dice__die {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 2px solid currentColor;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.tilttek-accessible-dice__die:has(input:checked) {
+    outline: 3px solid currentColor;
+    outline-offset: 2px;
+    font-weight: 700;
+}
+
+.tilttek-accessible-dice__die input {
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+}
+
+.tilttek-accessible-dice :focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 3px;
+}
+
+.tilttek-accessible-dice__number {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tilttek-accessible-dice__number input {
+    inline-size: 6rem;
+}
+
+.tilttek-accessible-dice__speak {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tilttek-accessible-dice__face {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-block-size: 2rem;
+}
+
+.tilttek-accessible-dice__face img {
+    inline-size: 2rem;
+    block-size: 2rem;
+}
+
+.tilttek-accessible-dice__shape {
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    background: var(--tilttek-accessible-dice-face-color, currentColor);
+}
+
+.tilttek-accessible-dice__shape--circle {
+    border-radius: 50%;
+}
+
+.tilttek-accessible-dice__shape--triangle {
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.tilttek-accessible-dice__shape--diamond {
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.tilttek-accessible-dice__shape--pentagon {
+    clip-path: polygon(50% 0, 100% 38%, 82% 100%, 18% 100%, 0 38%);
+}
+
+.tilttek-accessible-dice__shape--hexagon {
+    clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+}
+
+.tilttek-accessible-dice__shape--star {
+    clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+.tilttek-accessible-dice__shape--cross {
+    clip-path: polygon(
+        35% 0,
+        65% 0,
+        65% 35%,
+        100% 35%,
+        100% 65%,
+        65% 65%,
+        65% 100%,
+        35% 100%,
+        35% 65%,
+        0 65%,
+        0 35%,
+        35% 35%
+    );
+}
+
+.tilttek-accessible-dice__shape--heart {
+    clip-path: polygon(50% 100%, 0 40%, 10% 10%, 35% 5%, 50% 25%, 65% 5%, 90% 10%, 100% 40%);
+}
+
+.tilttek-accessible-dice__shape--crescent {
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: inset 0.4rem 0 0 var(--tilttek-accessible-dice-face-color, currentColor);
+}
+
+.tilttek-accessible-dice__shape--blank {
+    background: transparent;
+    border: 2px dashed currentColor;
+}
+
+.tilttek-accessible-dice__result {
+    min-block-size: 1.5em;
+    font-size: 1.25rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .tilttek-accessible-dice.is-rolling .tilttek-accessible-dice__roll {
+        animation: tilttek-accessible-dice-roll 0.4s ease-out;
+    }
+}
+
+@keyframes tilttek-accessible-dice-roll {
+    50% {
+        transform: rotate(-4deg) scale(1.04);
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "name": "tilttek/advent-calendar",
+    "description": "An advent calendar for gamification: one box per day in the calendar's timezone, one surprise per box as a reference to points, a badge, content or a code the application grants, an opening policy per calendar, openings recorded once and told by an event, unopened surprises never revealed, and the erasure of a member",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "advent-calendar",
+        "gamification",
+        "rewards",
+        "calendar",
+        "timezone"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "psr/event-dispatcher": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "roave/security-advisories": "dev-latest",
+        "symfony/clock": "^8.2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\AdventCalendar\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\AdventCalendar\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

@@ -1,0 +1,36 @@
+die:
+    standard: 'dé à %sides% faces'
+face:
+    value: 'vaut %value%'
+    description: '%label% : %details%'
+shape:
+    circle: un cercle
+    square: un carré
+    triangle: un triangle
+    diamond: un losange
+    pentagon: un pentagone
+    hexagon: un hexagone
+    star: une étoile
+    cross: une croix
+    heart: un cœur
+    crescent: un croissant
+    blank: une face vierge
+roll:
+    with_dice: '%expression% : %dice%. %outcome%.'
+    without_dice: '%expression% : %outcome%.'
+    total: 'Total %total%'
+    gave: 'Résultat : %text%'
+    nothing: Aucun résultat
+    dropped: '%die% non compté'
+    by: '%name% a lancé. %roll%'
+form:
+    dice: Dé
+    faces: 'Faces du %die%'
+    count: Combien
+    fewer: Un de moins
+    more: Un de plus
+    modifier: Modificateur
+    expression: Jet
+    speak: Lire les résultats à voix haute
+    roll: Lancer les dés
+    result: Résultat

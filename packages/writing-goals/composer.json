@@ -1,0 +1,50 @@
+{
+    "name": "tilttek/writing-goals",
+    "description": "An author's writing goals: a target in words or pages up to a deadline, plans with a linear, front-loaded, back-loaded or drawn curve over chosen writing days, the daily quota recomputed from what remains, no streak counted, counts logged and corrected, the goal reached told by an event, two store ports, and the erasure of an author",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "writing",
+        "goals",
+        "word-count",
+        "gamification",
+        "planning"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "psr/event-dispatcher": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "roave/security-advisories": "dev-latest",
+        "symfony/clock": "^8.2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\WritingGoals\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\WritingGoals\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

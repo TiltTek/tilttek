@@ -21,6 +21,7 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/dice-bundle`](https://github.com/TiltTek/dice-bundle) | Dice in a Symfony application: limits and custom dice in configuration, replayable rolls in Doctrine, macros, a form field, Twig and an accessible detail of a roll. |
 | [`tilttek/dice-probability`](https://github.com/TiltTek/dice-probability) | The exact odds of a dice expression, as fractions: distributions, at least and at most, mean, comparisons. |
 | [`tilttek/loot-tables`](https://github.com/TiltTek/loot-tables) | Loot tables rolled with any die, drawn in a way anyone can verify, physical dice included. |
+| [`tilttek/accessible-dice`](https://github.com/TiltTek/accessible-dice) | An accessible dice form for Symfony, with or without JavaScript: large targets, faces spoken by label, shape and value, results announced to screen readers. |
 
 ### Gamification
 
@@ -39,6 +40,9 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/collections`](https://github.com/TiltTek/collections) | Collectible items and sets: copies and doubles, the item of the day, packs drawn with published odds. |
 | [`tilttek/collections-bundle`](https://github.com/TiltTek/collections-bundle) | Collections in a Symfony application: the catalog in configuration or the database, copies in Doctrine DBAL, an album and the item of the day in Twig. |
 | [`tilttek/exchange`](https://github.com/TiltTek/exchange) | Rewards bought with points in two steps, points given between members, and items traded by offers and counter-offers in one transaction. |
+| [`tilttek/leaderboards`](https://github.com/TiltTek/leaderboards) | Leaderboards kept up to date from the activity journal: periods and sliding windows, tie-breaks, snapshots, weekly leagues, titles and teams. |
+| [`tilttek/advent-calendar`](https://github.com/TiltTek/advent-calendar) | An advent calendar: one box per day in the calendar's timezone, an opening policy, each box opened once and told by an event. |
+| [`tilttek/writing-goals`](https://github.com/TiltTek/writing-goals) | An author's writing goals: a target in words or pages, a plan on a curve, a daily quota recomputed from what remains, no streak counted. |
 
 Every package is at `0.x`: its API may still change between minor versions, as its CHANGELOG records.
 

@@ -1,0 +1,36 @@
+die:
+    standard: '%sides%-sided die'
+face:
+    value: 'worth %value%'
+    description: '%label%: %details%'
+shape:
+    circle: a circle
+    square: a square
+    triangle: a triangle
+    diamond: a diamond
+    pentagon: a pentagon
+    hexagon: a hexagon
+    star: a star
+    cross: a cross
+    heart: a heart
+    crescent: a crescent
+    blank: a blank face
+roll:
+    with_dice: '%expression%: %dice%. %outcome%.'
+    without_dice: '%expression%: %outcome%.'
+    total: 'Total %total%'
+    gave: 'Result: %text%'
+    nothing: No result
+    dropped: '%die% not counted'
+    by: '%name% rolled. %roll%'
+form:
+    dice: Die
+    faces: 'Faces of the %die%'
+    count: How many
+    fewer: One fewer
+    more: One more
+    modifier: Modifier
+    expression: Roll
+    speak: Read the results aloud
+    roll: Roll the dice
+    result: Result

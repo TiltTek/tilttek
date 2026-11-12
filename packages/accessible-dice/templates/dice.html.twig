@@ -1,0 +1,67 @@
+{#
+ # The accessible dice form. Each die is a large choice, read with its label; each face of a custom die is described
+ # by its label, its shape and its value, never by its colour alone. How many and the modifier are fields with a button
+ # on each side. The form sends the choice itself — `field[die]`, `field[count]`, `field[modifier]` —, so that it rolls
+ # the same with or without its script; the script shows the expression they make, and announces in the live region
+ # the roll the form was answered with and each roll of a dice tower on the same page. Nothing is read aloud unless
+ # the viewer asks for it, and nothing moves for a viewer who asked for reduced motion.
+ #
+ # dice: the view of AccessibleDiceExtension::view()
+ #}
+{%- set domain = 'tilttek_accessible_dice' -%}
+{%- set controller = 'tilttek--accessible-dice--dice' -%}
+{%- set id = dice.id -%}
+<form class="tilttek-accessible-dice" method="post" action="{{ dice.action }}"
+      data-controller="{{ controller }}"
+      data-action="submit->{{ controller }}#roll tilttek--dice-tower--tower:drop@window->{{ controller }}#announce"
+      data-{{ controller }}-labels-value="{{ dice.labels|json_encode(constant('JSON_FORCE_OBJECT') b-or constant('JSON_UNESCAPED_UNICODE')) }}"
+      data-{{ controller }}-sentences-value="{{ dice.sentences|json_encode(constant('JSON_UNESCAPED_UNICODE')) }}">
+    {%- if dice.token is not null %}
+    <input type="hidden" name="{{ dice.token.name }}" value="{{ dice.token.value }}">
+    {%- endif %}
+    <fieldset class="tilttek-accessible-dice__dice">
+        <legend>{{ 'form.dice'|trans({}, domain) }}</legend>
+        {%- for choice in dice.choices %}
+        <label class="tilttek-accessible-dice__die">
+            <input type="radio" name="{{ dice.field }}[die]" value="{{ choice.name }}" data-notation="{{ choice.notation }}"
+                   data-{{ controller }}-target="die" data-action="{{ controller }}#update"
+                   {%- if choice.faces is not empty %} aria-describedby="{{ id }}-faces-{{ choice.name }}"{% endif %}
+                   {%- if loop.first %} checked{% endif %}>
+            <span>{{ choice.label }}</span>
+        </label>
+        {%- endfor %}
+    </fieldset>
+    {%- for choice in dice.choices|filter(choice => choice.faces is not empty) %}
+    <details class="tilttek-accessible-dice__faces">
+        <summary>{{ 'form.faces'|trans({'%die%': choice.label}, domain) }}</summary>
+        <ul id="{{ id }}-faces-{{ choice.name }}">
+            {%- for face in choice.faces %}
+            <li class="tilttek-accessible-dice__face"{% if face.color is not null %} style="--tilttek-accessible-dice-face-color: {{ face.color }}"{% endif %}>
+                {%- if face.image is not null %}<img src="{{ face.image }}" alt="">{% endif -%}
+                {%- if face.shape is not null %}<span class="tilttek-accessible-dice__shape tilttek-accessible-dice__shape--{{ face.shape }}" aria-hidden="true"></span>{% endif -%}
+                <span>{{ face.description }}</span>
+            </li>
+            {%- endfor %}
+        </ul>
+    </details>
+    {%- endfor %}
+    <div class="tilttek-accessible-dice__number">
+        <label for="{{ id }}-count">{{ 'form.count'|trans({}, domain) }}</label>
+        <button type="button" aria-controls="{{ id }}-count" aria-label="{{ 'form.fewer'|trans({}, domain) }}" data-action="{{ controller }}#fewer">−</button>
+        <input type="number" id="{{ id }}-count" name="{{ dice.field }}[count]" value="1" min="1" max="{{ dice.most }}" step="1" inputmode="numeric" required
+               data-{{ controller }}-target="count" data-action="input->{{ controller }}#update">
+        <button type="button" aria-controls="{{ id }}-count" aria-label="{{ 'form.more'|trans({}, domain) }}" data-action="{{ controller }}#more">+</button>
+    </div>
+    <div class="tilttek-accessible-dice__number">
+        <label for="{{ id }}-modifier">{{ 'form.modifier'|trans({}, domain) }}</label>
+        <input type="number" id="{{ id }}-modifier" name="{{ dice.field }}[modifier]" value="0" min="-{{ constant('Tilttek\\AccessibleDice\\Application\\AccessibleDice::MAX_MODIFIER') }}" max="{{ constant('Tilttek\\AccessibleDice\\Application\\AccessibleDice::MAX_MODIFIER') }}" step="1" inputmode="numeric"
+               data-{{ controller }}-target="modifier" data-action="input->{{ controller }}#update">
+    </div>
+    <p class="tilttek-accessible-dice__expression">{{ 'form.expression'|trans({}, domain) }} <output data-{{ controller }}-target="expression" for="{{ id }}-count {{ id }}-modifier">1{{ dice.choices|first.notation|default('') }}</output></p>
+    <label class="tilttek-accessible-dice__speak">
+        <input type="checkbox" data-{{ controller }}-target="speak">
+        {{ 'form.speak'|trans({}, domain) }}
+    </label>
+    <button type="submit" class="tilttek-accessible-dice__roll">{{ 'form.roll'|trans({}, domain) }}</button>
+    <div class="tilttek-accessible-dice__result" role="status" aria-live="{{ dice.politeness }}" aria-atomic="true" aria-label="{{ 'form.result'|trans({}, domain) }}" data-{{ controller }}-target="live">{{ dice.announcement }}</div>
+</form>

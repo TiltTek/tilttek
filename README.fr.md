@@ -21,6 +21,7 @@ ensuite copié dans son propre dépôt, en **lecture seule**, d'où Composer l'i
 | [`tilttek/dice-bundle`](https://github.com/TiltTek/dice-bundle) | Des dés dans une application Symfony : limites et dés personnalisés dans la configuration, lancers rejouables dans Doctrine, macros, champ de formulaire, Twig et détail accessible d'un lancer. |
 | [`tilttek/dice-probability`](https://github.com/TiltTek/dice-probability) | Les probabilités exactes d'une expression de dés, en fractions : distributions, au moins et au plus, moyenne, comparaisons. |
 | [`tilttek/loot-tables`](https://github.com/TiltTek/loot-tables) | Des tables de butin lancées avec n'importe quel dé, tirées d'une façon que chacun peut vérifier, dés physiques compris. |
+| [`tilttek/accessible-dice`](https://github.com/TiltTek/accessible-dice) | Un formulaire de dés accessible pour Symfony, avec ou sans JavaScript : grandes cibles, faces dites par libellé, forme et valeur, résultats annoncés aux lecteurs d'écran. |
 
 ### Ludification
 
@@ -39,6 +40,9 @@ ensuite copié dans son propre dépôt, en **lecture seule**, d'où Composer l'i
 | [`tilttek/collections`](https://github.com/TiltTek/collections) | Objets à collectionner et séries : exemplaires et doublons, l'objet du jour, paquets tirés selon des chances publiées. |
 | [`tilttek/collections-bundle`](https://github.com/TiltTek/collections-bundle) | Des collections dans une application Symfony : catalogue dans la configuration ou la base de données, exemplaires dans Doctrine DBAL, album et objet du jour dans Twig. |
 | [`tilttek/exchange`](https://github.com/TiltTek/exchange) | Des récompenses achetées avec des points en deux temps, des points donnés entre membres et des objets échangés par offres et contre-offres en une seule transaction. |
+| [`tilttek/leaderboards`](https://github.com/TiltTek/leaderboards) | Des classements tenus à jour à partir du journal d'activité : périodes et fenêtres glissantes, départages, instantanés, ligues hebdomadaires, titres et équipes. |
+| [`tilttek/advent-calendar`](https://github.com/TiltTek/advent-calendar) | Un calendrier de l'Avent : une case par jour dans le fuseau du calendrier, une politique d'ouverture, chaque case ouverte une seule fois et annoncée par un événement. |
+| [`tilttek/writing-goals`](https://github.com/TiltTek/writing-goals) | Les objectifs d'écriture d'un auteur : une cible en mots ou en pages, un plan sur une courbe, un quota du jour recalculé selon ce qui reste, aucune série comptée. |
 
 Chaque paquet est en `0.x` : son API peut encore changer d'une version mineure à l'autre, comme le note son CHANGELOG.
 

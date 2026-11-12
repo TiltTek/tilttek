@@ -1,0 +1,68 @@
+{
+    "name": "tilttek/accessible-dice",
+    "description": "An accessible dice interface for Symfony on tilttek/dice-bundle: large targets, the faces of custom dice spoken and described by label, shape and value, results announced to screen readers in a polite live region, rolls of a dice tower on the same page announced too, reduced motion respected and nothing read aloud unless asked",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": [
+        "dice",
+        "accessibility",
+        "a11y",
+        "screen-reader",
+        "rpg",
+        "symfony-bundle"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-filter": "*",
+        "symfony/config": "^8.2",
+        "symfony/dependency-injection": "^8.2",
+        "symfony/translation-contracts": "^3.6",
+        "tilttek/dice": "^0.1@dev",
+        "tilttek/dice-bundle": "^0.1@dev"
+    },
+    "require-dev": {
+        "php-webdriver/webdriver": "^1.16",
+        "phpunit/phpunit": "^13.4",
+        "symfony/event-dispatcher": "^8.2",
+        "symfony/framework-bundle": "^8.2",
+        "symfony/http-kernel": "^8.2",
+        "symfony/panther": "^2.4",
+        "symfony/stimulus-bundle": "^3.7",
+        "symfony/translation": "^8.2",
+        "symfony/twig-bridge": "^8.2",
+        "symfony/twig-bundle": "^8.2",
+        "symfony/yaml": "^8.2",
+        "twig/twig": "^3.21"
+    },
+    "suggest": {
+        "symfony/stimulus-bundle": "For the controller that shows the expression and announces the results",
+        "symfony/translation": "To translate the words of the form and the announcements, and the labels of the faces",
+        "symfony/twig-bundle": "For accessible_dice() and the form"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\AccessibleDice\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\AccessibleDice\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

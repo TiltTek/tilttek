@@ -1,0 +1,54 @@
+{
+    "name": "tilttek/leaderboards",
+    "description": "Leaderboards for gamification: members ranked on counts, totals, best gestures, days or reported values, over days, weeks, months, seasons or sliding windows, kept up to date from the activity journal, tie-breaks, snapshots, weekly leagues with promotion, titles, teams, stores in memory or Valkey, opt-in display and the erasure of a member",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "leaderboards",
+        "ranking",
+        "scores",
+        "privacy",
+        "leagues",
+        "gamification",
+        "valkey",
+        "tie-breaks"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "tilttek/activity": "^0.1@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4"
+    },
+    "suggest": {
+        "ext-redis": "To keep the scores in Valkey through RawCommandConnection; Relay or Predis do as well"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Leaderboards\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Leaderboards\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}
