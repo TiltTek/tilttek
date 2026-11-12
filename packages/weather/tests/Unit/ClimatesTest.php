@@ -127,8 +127,8 @@ final class ClimatesTest extends TestCase
     public function testTheMovesOfTheWeatherTablesAreBounded(): void
     {
         $labels = ['en' => 'label'];
-        $ids = array_map(static fn (int $i): string => 'c'.$i, range(1, 50));
-        $linked = array_map(static fn (string $id): Condition => new Condition($id, $labels, 0, array_values(array_diff($ids, [$id]))), $ids);
+        $ids = array_map(static fn (int $i): string => 'c'.$i, range(1, 63));
+        $linked = array_map(static fn (string $id): Condition => new Condition($id, $labels, 0, array_values(array_diff(\array_slice($ids, 0, 50), [$id]))), \array_slice($ids, 0, 50));
         $zones = static fn (array $sizes): array => array_map(static fn (int $zone, int $size): Zone => new Zone('z'.$zone, $labels, [new SeasonalClimate('s', 0, 1, array_fill_keys(\array_slice($ids, 0, $size), 1))]), array_keys($sizes), $sizes);
 
         // Fifty conditions next to one another: a season with fifty of them holds fifty moves from each, 2 500 in all.
@@ -137,9 +137,11 @@ final class ClimatesTest extends TestCase
 
         $this->refused(['en'], $linked, $zones([...array_fill(0, 8, 50), 1]));
 
-        // Conditions next to none: a condition the season does not bring moves to every condition it brings.
-        $alone = array_map(static fn (int $i): Condition => new Condition('c'.$i, $labels), range(1, 64));
-        $this->refused(['en'], $alone, $zones(array_fill(0, 19, 32)));
+        // Sixty-three conditions next to none: a season with m of them holds one move from each of those, and m moves
+        // from each of the others, m × (64 − m) in all.
+        $alone = array_map(static fn (int $i): Condition => new Condition('c'.$i, $labels), range(1, 63));
+        self::assertCount(20, new Climates(['en'], $alone, [new Season('s', $labels)], $zones(array_fill(0, 20, 40)))->zones());
+        $this->refused(['en'], $alone, $zones([...array_fill(0, 19, 32), 63, 63, 62, 59]));
     }
 
     /**

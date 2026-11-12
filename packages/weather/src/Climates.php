@@ -280,7 +280,7 @@ final readonly class Climates
         foreach ($this->zones as $zone) {
             foreach ($zone->seasons as $climate) {
                 foreach ($this->neighbours as $from => $neighbours) {
-                    $targets = \count(array_intersect_key($climate->conditions, [$from => true] + array_flip($neighbours)));
+                    $targets = \count(array_intersect_key($climate->conditions, array_flip([$from, ...$neighbours])));
                     $moves += 0 === $targets ? \count($climate->conditions) : $targets;
                 }
 
