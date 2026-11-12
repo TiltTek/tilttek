@@ -1,0 +1,84 @@
+# A solo play oracle: yes-or-no answers weighed by the odds of the question and by a chaos factor, random events,
+# and inspiration from an action and a theme. The chaos factor (1 to 9) and the odds (certain, likely, even, unlikely
+# or impossible) are state values the application sets and keeps from one draw to the next; a first draw without a
+# state asks an even question at chaos 5.
+lists:
+  table.oracle.action:
+    - abandon
+    - attack
+    - betray
+    - build
+    - deceive
+    - discover
+    - escape
+    - guard
+    - heal
+    - hunt
+    - inherit
+    - negotiate
+    - oppose
+    - protect
+    - reveal
+    - steal
+    - summon
+    - travel
+    - trust
+    - wake
+  table.oracle.theme:
+    - a bargain
+    - a crowd
+    - a dream
+    - a family
+    - a fire
+    - a journey
+    - a law
+    - a machine
+    - a memory
+    - a messenger
+    - a monster
+    - an omen
+    - a plague
+    - a relic
+    - a rival
+    - a ruin
+    - a secret
+    - a storm
+    - a stranger
+    - a weapon
+  table.oracle.event:
+    - { text: a new character arrives, weight: 2 }
+    - { text: an enemy makes a move, weight: 2 }
+    - { text: a friend needs help, weight: 1 }
+    - { text: something is lost, weight: 1 }
+    - { text: a thread comes to an end, weight: 1 }
+    - { text: something remote happens, weight: 2 }
+    - { text: an unexpected ally appears, weight: 1 }
+  table.oracle.simple:
+    - { text: "Yes, and…", weight: 1 }
+    - { text: "Yes", weight: 3 }
+    - { text: "Yes, but…", weight: 2 }
+    - { text: "No, but…", weight: 2 }
+    - { text: "No", weight: 3 }
+    - { text: "No, and…", weight: 1 }
+generators:
+  table.oracle:
+    state:
+      chaos: "5"
+      odds: even
+    vars:
+      chance: >-
+        {% set base = {certain: 90, likely: 70, even: 50, unlikely: 30, impossible: 10}[state.odds]|default(50) %}
+        {% set chaos = state.chaos %}{% if chaos < 1 %}{% set chaos = 1 %}{% elseif chaos > 9 %}{% set chaos = 9 %}{% endif %}
+        {% set chance = base + (chaos - 5) * 5 %}{{ chance < 1 ? 1 : (chance > 99 ? 99 : chance) }}
+    fields:
+      roll: "{{ roll('1d100') }}"
+      answer: >-
+        {% if roll <= chance // 5 %}Yes, and…{% elseif roll <= chance %}Yes{% elseif roll > 100 - (100 - chance) // 5
+        %}No, and…{% else %}No{% endif %}
+      event: >-
+        {% if roll % 11 == 0 and roll // 11 <= state.chaos %}{{ pick('table.oracle.event')|upper_first }}:
+        {{ pick('table.oracle.action') }} {{ pick('table.oracle.theme') }}{% endif %}
+  table.oracle.yes-no:
+    templates: "{{ pick('table.oracle.simple') }}"
+  table.oracle.inspiration:
+    templates: "{{ pick('table.oracle.action')|upper_first }} {{ pick('table.oracle.theme') }}"

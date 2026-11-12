@@ -1,0 +1,32 @@
+# Rumours of a place: what people say about it, and how much of it is true. The place is a state value the application
+# sets and keeps from one draw to the next; a first draw without a state talks about "the village".
+lists:
+  table.rumour.subject:
+    - the miller
+    - the old priest
+    - the mayor's daughter
+    - a stranger in a grey cloak
+    - the blacksmith
+    - the twins at the farm
+    - the night watch
+    - the woman who sells herbs
+  table.rumour.claim:
+    - has been seen digging at night near
+    - owes a fortune to someone outside
+    - knows the hidden way under
+    - was born in a house that burned in
+    - meets a creature from the woods behind
+    - keeps a chest of old coins somewhere in
+    - is planning to leave
+    - has not slept since the last full moon in
+  table.rumour.truth:
+    - { text: "true", weight: 2 }
+    - { text: partly true, weight: 3 }
+    - { text: "false", weight: 2 }
+generators:
+  table.rumour:
+    state:
+      place: the village
+    fields:
+      rumour: "They say {{ pick('table.rumour.subject') }} {{ pick('table.rumour.claim') }} {{ state.place }}."
+      truth: "{{ pick('table.rumour.truth') }}"

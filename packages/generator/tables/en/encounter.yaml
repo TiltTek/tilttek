@@ -1,0 +1,60 @@
+# Random encounters: who the party meets where it is, how many, what they are doing and how they take the meeting.
+# The terrain is a state value the application sets — forest, road, hills, swamp, ruins or underground — and keeps
+# from one draw to the next; a first draw without a state meets on the road.
+lists:
+  table.encounter.creature:
+    - { text: wolf, plural: wolves, number: 2d4, tags: { terrain: [forest, hills] } }
+    - { text: wild boar, plural: wild boars, number: 1d3, tags: { terrain: [forest] } }
+    - { text: giant spider, plural: giant spiders, number: 1d4, tags: { terrain: [forest, underground, ruins] } }
+    - { text: woodcutter, plural: woodcutters, number: 1d4, tags: { terrain: [forest] } }
+    - { text: bandit, plural: bandits, number: 2d4, weight: 2, tags: { terrain: [road, hills, forest] } }
+    - { text: travelling merchant, plural: travelling merchants, number: 1d2, weight: 2, tags: { terrain: [road] } }
+    - { text: pilgrim, plural: pilgrims, number: 2d6, tags: { terrain: [road] } }
+    - { text: guard on patrol, plural: guards on patrol, number: 1d4+2, tags: { terrain: [road] } }
+    - { text: shepherd, plural: shepherds, number: 1d2, tags: { terrain: [hills] } }
+    - { text: hill giant, plural: hill giants, number: "1", tags: { terrain: [hills] } }
+    - { text: griffon, plural: griffons, number: 1d2, tags: { terrain: [hills] } }
+    - { text: giant leech, plural: giant leeches, number: 1d6, tags: { terrain: [swamp] } }
+    - { text: bog witch, plural: bog witches, number: "1", tags: { terrain: [swamp] } }
+    - { text: lizard folk hunter, plural: lizard folk hunters, number: 1d6, tags: { terrain: [swamp] } }
+    - { text: will-o'-the-wisp, plural: will-o'-the-wisps, number: 1d3, tags: { terrain: [swamp, ruins] } }
+    - { text: skeleton, plural: skeletons, number: 2d4, tags: { terrain: [ruins, underground] } }
+    - { text: ghost, plural: ghosts, number: "1", tags: { terrain: [ruins] } }
+    - { text: treasure hunter, plural: treasure hunters, number: 1d4, tags: { terrain: [ruins] } }
+    - { text: goblin, plural: goblins, number: 2d6, weight: 2, tags: { terrain: [underground, hills, ruins] } }
+    - { text: cave bear, plural: cave bears, number: "1", tags: { terrain: [underground] } }
+    - { text: swarm of bats, plural: swarms of bats, number: 1d2, tags: { terrain: [underground] } }
+    - { text: lost miner, plural: lost miners, number: 1d3, tags: { terrain: [underground] } }
+  table.encounter.activity:
+    - camping
+    - eating
+    - fighting among themselves
+    - hunting
+    - lost
+    - on the move
+    - resting
+    - setting an ambush
+    - fleeing from something worse
+    - wounded
+  table.encounter.reaction:
+    - { text: hostile, weight: 2 }
+    - { text: wary, weight: 3 }
+    - { text: indifferent, weight: 3 }
+    - { text: curious, weight: 2 }
+    - { text: friendly, weight: 1 }
+  table.encounter.distance:
+    - { text: close enough to touch, weight: 1 }
+    - { text: a stone's throw away, weight: 3 }
+    - { text: within bowshot, weight: 3 }
+    - { text: barely in sight, weight: 1 }
+generators:
+  table.encounter:
+    state:
+      terrain: road
+    templates:
+      - >-
+        {% set creature = pick('table.encounter.creature', where: {terrain: state.terrain}) %}
+        {% set number = roll(creature.number) %}
+        {{ number }} {{ creature|plural(number) }}, {{ pick('table.encounter.activity') }},
+        {{ pick('table.encounter.distance') }}: {{ number > 1 ? 'they are' : 'it is' }}
+        {{ pick('table.encounter.reaction') }}.

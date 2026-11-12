@@ -1,0 +1,14 @@
+# A yes-or-no oracle for solo play, whose answers lean towards surprise as the chaos factor grows.
+lists:
+  oracle.answer:
+    - { text: 'Yes', weight: 3, tags: { tone: [calm, wild] } }
+    - { text: 'No', weight: 3, tags: { tone: [calm, wild] } }
+    - { text: 'Yes, and something more', tags: { tone: wild } }
+    - { text: 'No, and something worse', tags: { tone: wild } }
+    - { text: 'Yes, but at a cost', tags: { tone: [calm, wild] } }
+generators:
+  oracle.yes-no:
+    vars:
+      chaos: "{{ roll('1d6') }}"
+    templates:
+      - "{{ pick('oracle.answer', where: {tone: chaos > 3 ? 'wild' : 'calm'}) }}"

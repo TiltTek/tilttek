@@ -1,0 +1,85 @@
+# Shops: their kind and sign, their merchant, and what they have in stock today with its price in silver.
+lists:
+  table.shop.kind:
+    - { text: smithy, tags: { type: [smithy] } }
+    - { text: apothecary, tags: { type: [apothecary] } }
+    - { text: general store, weight: 2, tags: { type: [general] } }
+    - { text: bookshop, tags: { type: [books] } }
+  table.shop.adjective:
+    - Golden
+    - Rusty
+    - Crooked
+    - Laughing
+    - Silent
+    - Wandering
+    - Lucky
+    - Sleeping
+  table.shop.noun:
+    - Anvil
+    - Kettle
+    - Lantern
+    - Goose
+    - Barrel
+    - Quill
+    - Mortar
+    - Key
+  table.shop.item:
+    - { text: horseshoes, price: 1d4, tags: { type: [smithy] } }
+    - { text: a hand axe, price: 2d6, tags: { type: [smithy, general] } }
+    - { text: a longsword, price: 6d6, tags: { type: [smithy] } }
+    - { text: a chain shirt, price: 10d10, tags: { type: [smithy] } }
+    - { text: nails by the pound, price: "1", tags: { type: [smithy, general] } }
+    - { text: a healing salve, price: 2d4, tags: { type: [apothecary] } }
+    - { text: a sleeping draught, price: 3d4, tags: { type: [apothecary] } }
+    - { text: dried moonflower, price: 1d6, tags: { type: [apothecary] } }
+    - { text: an antidote, price: 4d6, tags: { type: [apothecary] } }
+    - { text: smelling salts, price: 1d4, tags: { type: [apothecary, general] } }
+    - { text: fifty feet of rope, price: 1d4, tags: { type: [general] } }
+    - { text: a lantern, price: 1d6, tags: { type: [general] } }
+    - { text: travel rations for a week, price: 1d6, tags: { type: [general] } }
+    - { text: a bedroll, price: 1d4, tags: { type: [general] } }
+    - { text: a tinderbox, price: "1", tags: { type: [general] } }
+    - { text: a blank journal, price: 1d6, tags: { type: [books, general] } }
+    - { text: a map of the region, price: 2d6, tags: { type: [books] } }
+    - { text: a bestiary with missing pages, price: 3d6, tags: { type: [books] } }
+    - { text: a book of old songs, price: 1d8, tags: { type: [books] } }
+    - { text: a treatise on the stars, price: 2d8, tags: { type: [books] } }
+  table.shop.merchant:
+    - Abel
+    - Brune
+    - Corin
+    - Dalla
+    - Edrick
+    - Fenna
+    - Gaspard
+    - Hilde
+  table.shop.trait:
+    - talks too much
+    - counts every coin twice
+    - is half deaf and proud of it
+    - remembers every customer's name
+    - hums while working
+    - distrusts anyone in armour
+    - gives a discount to anyone who makes them laugh
+    - is secretly in debt to a thieves' guild
+  table.shop.mood:
+    - { text: cheerful, weight: 2 }
+    - { text: grumpy, weight: 2 }
+    - { text: busy, weight: 2 }
+    - { text: nervous, weight: 1 }
+generators:
+  table.shop:
+    vars:
+      type: "{{ pick('table.shop.kind').tags.type|first }}"
+    fields:
+      kind: "{{ pick('table.shop.kind', where: {type: type}) }}"
+      sign: "The {{ pick('table.shop.adjective') }} {{ pick('table.shop.noun') }}"
+      merchant: { generate: table.shop.merchant }
+      stock: >-
+        {% for item in pick('table.shop.item', 5, where: {type: type}) %}{% if loop.index0 > 0 %}; {% endif %}{{ item }}
+        ({{ roll(item.price) }} silver){% endfor %}
+  table.shop.merchant:
+    fields:
+      name: "{{ pick('table.shop.merchant') }}"
+      trait: "{{ name }} {{ pick('table.shop.trait') }}"
+      mood: "{{ pick('table.shop.mood') }}"

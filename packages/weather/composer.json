@@ -1,0 +1,50 @@
+{
+    "name": "tilttek/weather",
+    "description": "Weather in the game world as a table with a memory of tilttek/generator: declared seasons and climate zones, conditions that follow the day before through their neighbours and persist by zone, temperatures moved by a roll of tilttek/dice, labels in English and French, reproducible from a seed",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "weather",
+        "random-tables",
+        "procedural-generation",
+        "rpg",
+        "ttrpg",
+        "hexcrawl"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-mbstring": "*",
+        "symfony/yaml": "^8.2",
+        "tilttek/dice": "^0.1@dev",
+        "tilttek/generator": "^0.1@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Weather\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Weather\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

@@ -1,0 +1,69 @@
+# Objets magiques : une forme, un pouvoir, une apparence, une manie, et le nombre de charges qu'il contient.
+lists:
+  table.magic-item.form:
+    - { text: anneau, gender: m, tags: { id: [anneau] } }
+    - { text: amulette, gender: f, tags: { id: [amulette] } }
+    - { text: cape, gender: f, tags: { id: [cape] } }
+    - { text: baguette, gender: f, tags: { id: [baguette] } }
+    - { text: bâton, gender: m, tags: { id: [bâton] } }
+    - { text: dague, gender: f, tags: { id: [dague] } }
+    - { text: épée, gender: f, tags: { id: [épée] } }
+    - { text: bouclier, gender: m, tags: { id: [bouclier] } }
+    - { text: lanterne, gender: f, tags: { id: [lanterne] } }
+    - { text: paire de gants, gender: f, tags: { id: [paire de gants] } }
+    - { text: paire de bottes, gender: f, tags: { id: [paire de bottes] } }
+    - { text: chapeau, gender: m, tags: { id: [chapeau] } }
+    - { text: miroir, gender: m, tags: { id: [miroir] } }
+    - { text: cloche, gender: f, tags: { id: [cloche] } }
+  table.magic-item.power:
+    - { text: de Chaleur, effect: garde au chaud par les pires froids }
+    - { text: des Profondeurs, effect: permet de respirer sous l'eau }
+    - { text: des Murmures, effect: porte la voix jusqu'à un auditeur lointain }
+    - { text: de Célérité, effect: double la vitesse pendant une minute }
+    - { text: de la Chouette, effect: permet de voir dans le noir }
+    - { text: du Foyer, effect: allume un petit feu sur commande }
+    - { text: de la Mule, effect: rend légères les charges les plus lourdes }
+    - { text: des Échos, effect: répète les dernières paroles prononcées dans son voisinage }
+    - { text: de la Marée, effect: repousse l'eau et la boue tout autour }
+    - { text: de Réparation, effect: répare tout objet brisé à son contact }
+    - { text: de la Phalène, effect: fait planer doucement en cas de chute }
+    - { text: de Vérité, effect: se refroidit quand un mensonge est prononcé tout près }
+  table.magic-item.material:
+    - d'argent
+    - de fer noir
+    - d'os
+    - de bois flotté
+    - de cuivre
+    - de verre
+    - de pierre
+    - de cuir tressé
+  table.magic-item.detail:
+    - { text: serti d'une gemme trouble, f: sertie d'une gemme trouble }
+    - { text: couvert de runes minuscules, f: couverte de runes minuscules }
+    - { text: enveloppé de soie fanée, f: enveloppée de soie fanée }
+    - { text: "à la fêlure qui luit faiblement", f: "à la fêlure qui luit faiblement" }
+    - { text: qui sent la pluie, f: qui sent la pluie }
+    - { text: marqué du sceau de son artisan, f: marquée du sceau de son artisan }
+  table.magic-item.quirk:
+    - Un vieil air s'en échappe quand on s'en sert.
+    - Son contact est toujours un peu humide.
+    - Son pouvoir reste muet les jours saints.
+    - Sans un polissage chaque soir, son pouvoir faiblit.
+    - Les chats suivent son porteur.
+    - Son poids augmente quand son porteur ment.
+    - Une lueur l'habite quand de l'or est proche.
+    - Personne ne lui a encore trouvé de manie.
+generators:
+  table.magic-item:
+    locale: fr
+    vars:
+      form: "{{ pick('table.magic-item.form') }}"
+    fields:
+      name: >-
+        {% set item = pick('table.magic-item.form', where: {id: form}) %}{% set power = pick('table.magic-item.power') %}
+        {{ form|upper_first }} {{ power }} : {{ item.gender == 'f' ? 'elle' : 'il' }} {{ power.effect }}
+      appearance: >-
+        {% set item = pick('table.magic-item.form', where: {id: form}) %}{{ (item|article('indefinite') ~ ' '
+        ~ pick('table.magic-item.material') ~ ' ' ~ pick('table.magic-item.detail')|agree(item))|upper_first }}
+      quirk: "{{ pick('table.magic-item.quirk') }}"
+      charges: "{{ roll('1d6') + 1 }}"

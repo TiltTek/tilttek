@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tilttek\Generator;
+
+use Tilttek\Generator\Exception\InvalidDefinition;
+
+/**
+ * The bounds that stop a generator gone wild: the depth of calls from one generator to another, the picks and the
+ * time spent on one result, the attempts at a unique result, the results of one draw, the cells of one map, and the
+ * time spent on a whole draw — its results and every attempt of a unique draw.
+ */
+final readonly class Limits
+{
+    public function __construct(
+        public int $depth = 8,
+        public int $picks = 1000,
+        public int $milliseconds = 250,
+        public int $attempts = 10,
+        public int $results = 100,
+        public int $cells = 2500,
+        public int $drawMilliseconds = 1000,
+    ) {
+        foreach (get_object_vars($this) as $name => $value) {
+            if ($value < 1) {
+                throw InvalidDefinition::at('limits', \sprintf('the limit "%s" is a whole number of at least 1', $name));
+            }
+        }
+    }
+}

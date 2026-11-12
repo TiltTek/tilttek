@@ -1,7 +1,7 @@
 # Tilttek
 
-**Open PHP libraries and Symfony bundles for games and gamification: dice, loot, points, levels, badges, quests,
-collections and exchanges.**
+**Open PHP libraries and Symfony bundles for games and gamification: dice, loot, random generators, weather, points,
+levels, badges, quests, collections and exchanges.**
 
 Tilttek is a set of small `tilttek/*` packages, each doing one thing: a library in plain PHP, usually paired with a
 Symfony bundle that wires it into configuration, Doctrine, Twig, the console and Messenger. They follow the rules of
@@ -22,6 +22,14 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/dice-probability`](https://github.com/TiltTek/dice-probability) | The exact odds of a dice expression, as fractions: distributions, at least and at most, mean, comparisons. |
 | [`tilttek/loot-tables`](https://github.com/TiltTek/loot-tables) | Loot tables rolled with any die, drawn in a way anyone can verify, physical dice included. |
 | [`tilttek/accessible-dice`](https://github.com/TiltTek/accessible-dice) | An accessible dice form for Symfony, with or without JavaScript: large targets, faces spoken by label, shape and value, results announced to screen readers. |
+
+### Generators
+
+| Package | Description |
+|---|---|
+| [`tilttek/generator`](https://github.com/TiltTek/generator) | Random generators written as data: weighted lists, Markov names, Twig templates in a sandbox, grammar in six languages, maps, tables with a memory, replayable draws. |
+| [`tilttek/generator-bundle`](https://github.com/TiltTek/generator-bundle) | Random generators in a Symfony application: lists from YAML and JSON, ready-made random tables, commands, Twig, a Stimulus controller and a rate-limited draw API. |
+| [`tilttek/weather`](https://github.com/TiltTek/weather) | Weather in the game world: seasons and climate zones, conditions that follow the day before, temperatures rolled within the season, reproducible from a seed. |
 
 ### Gamification
 

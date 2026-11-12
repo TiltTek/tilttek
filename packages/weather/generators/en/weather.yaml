@@ -1,0 +1,1078 @@
+# The weather written from declared climates by tilttek/weather, in "en": WeatherTable::yaml().
+lists:
+  weather.condition:
+    - { text: clear, label: 'clear skies', shift: 2, tags: { id: [clear] } }
+    - { text: fair, label: 'fair, with a few clouds', shift: 1, tags: { id: [fair] } }
+    - { text: muggy, label: 'hot and muggy', shift: 2, tags: { id: [muggy] } }
+    - { text: overcast, label: overcast, shift: -1, tags: { id: [overcast] } }
+    - { text: fog, label: fog, shift: -1, tags: { id: [fog] } }
+    - { text: drizzle, label: drizzle, shift: -1, tags: { id: [drizzle] } }
+    - { text: rain, label: 'steady rain', shift: -2, tags: { id: [rain] } }
+    - { text: downpour, label: downpour, shift: -2, tags: { id: [downpour] } }
+    - { text: thunderstorm, label: thunderstorm, shift: -3, tags: { id: [thunderstorm] } }
+    - { text: wind, label: 'strong wind', shift: -2, tags: { id: [wind] } }
+    - { text: sleet, label: sleet, shift: -3, tags: { id: [sleet] } }
+    - { text: snow, label: snowfall, shift: -3, tags: { id: [snow] } }
+    - { text: blizzard, label: blizzard, shift: -5, tags: { id: [blizzard] } }
+    - { text: frost, label: 'hard frost', shift: -4, tags: { id: [frost] } }
+    - { text: heatwave, label: heatwave, shift: 5, tags: { id: [heatwave] } }
+    - { text: sandstorm, label: sandstorm, shift: 2, tags: { id: [sandstorm] } }
+  weather.season.temperate:
+    - { text: spring }
+  weather.climate.temperate.spring:
+    - { text: spring, low: 3, high: 16, middle: 9, change: 1d5-3 }
+  weather.start.temperate.spring:
+    - { text: clear, weight: 2 }
+    - { text: fair, weight: 4 }
+    - { text: overcast, weight: 4 }
+    - { text: fog, weight: 2 }
+    - { text: drizzle, weight: 3 }
+    - { text: rain, weight: 3 }
+    - { text: downpour, weight: 1 }
+    - { text: thunderstorm, weight: 1 }
+    - { text: wind, weight: 2 }
+    - { text: frost, weight: 1 }
+  weather.transition.temperate.spring:
+    - { text: clear, weight: 6, tags: { from: [clear] } }
+    - { text: fair, weight: 4, tags: { from: [clear] } }
+    - { text: frost, weight: 1, tags: { from: [clear] } }
+    - { text: fair, weight: 12, tags: { from: [fair] } }
+    - { text: clear, weight: 2, tags: { from: [fair] } }
+    - { text: overcast, weight: 4, tags: { from: [fair] } }
+    - { text: fog, weight: 2, tags: { from: [fair] } }
+    - { text: wind, weight: 2, tags: { from: [fair] } }
+    - { text: fair, weight: 4, tags: { from: [muggy] } }
+    - { text: overcast, weight: 4, tags: { from: [muggy] } }
+    - { text: downpour, weight: 1, tags: { from: [muggy] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [muggy] } }
+    - { text: overcast, weight: 12, tags: { from: [overcast] } }
+    - { text: fair, weight: 4, tags: { from: [overcast] } }
+    - { text: fog, weight: 2, tags: { from: [overcast] } }
+    - { text: drizzle, weight: 3, tags: { from: [overcast] } }
+    - { text: rain, weight: 3, tags: { from: [overcast] } }
+    - { text: wind, weight: 2, tags: { from: [overcast] } }
+    - { text: fog, weight: 6, tags: { from: [fog] } }
+    - { text: fair, weight: 4, tags: { from: [fog] } }
+    - { text: overcast, weight: 4, tags: { from: [fog] } }
+    - { text: drizzle, weight: 3, tags: { from: [fog] } }
+    - { text: frost, weight: 1, tags: { from: [fog] } }
+    - { text: drizzle, weight: 9, tags: { from: [drizzle] } }
+    - { text: overcast, weight: 4, tags: { from: [drizzle] } }
+    - { text: fog, weight: 2, tags: { from: [drizzle] } }
+    - { text: rain, weight: 3, tags: { from: [drizzle] } }
+    - { text: rain, weight: 9, tags: { from: [rain] } }
+    - { text: overcast, weight: 4, tags: { from: [rain] } }
+    - { text: drizzle, weight: 3, tags: { from: [rain] } }
+    - { text: downpour, weight: 1, tags: { from: [rain] } }
+    - { text: downpour, weight: 3, tags: { from: [downpour] } }
+    - { text: rain, weight: 3, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 3, tags: { from: [thunderstorm] } }
+    - { text: downpour, weight: 1, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 2, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 6, tags: { from: [wind] } }
+    - { text: fair, weight: 4, tags: { from: [wind] } }
+    - { text: overcast, weight: 4, tags: { from: [wind] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [wind] } }
+    - { text: overcast, weight: 4, tags: { from: [sleet] } }
+    - { text: rain, weight: 3, tags: { from: [sleet] } }
+    - { text: overcast, weight: 4, tags: { from: [snow] } }
+    - { text: clear, weight: 2, tags: { from: [blizzard] } }
+    - { text: fair, weight: 4, tags: { from: [blizzard] } }
+    - { text: overcast, weight: 4, tags: { from: [blizzard] } }
+    - { text: fog, weight: 2, tags: { from: [blizzard] } }
+    - { text: drizzle, weight: 3, tags: { from: [blizzard] } }
+    - { text: rain, weight: 3, tags: { from: [blizzard] } }
+    - { text: downpour, weight: 1, tags: { from: [blizzard] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [blizzard] } }
+    - { text: wind, weight: 2, tags: { from: [blizzard] } }
+    - { text: frost, weight: 1, tags: { from: [blizzard] } }
+    - { text: frost, weight: 3, tags: { from: [frost] } }
+    - { text: clear, weight: 2, tags: { from: [frost] } }
+    - { text: fog, weight: 2, tags: { from: [frost] } }
+    - { text: clear, weight: 2, tags: { from: [heatwave] } }
+    - { text: wind, weight: 2, tags: { from: [sandstorm] } }
+  weather.climate.temperate.summer:
+    - { text: summer, low: 14, high: 30, middle: 22, change: 1d5-3 }
+  weather.start.temperate.summer:
+    - { text: clear, weight: 5 }
+    - { text: fair, weight: 5 }
+    - { text: muggy, weight: 2 }
+    - { text: overcast, weight: 2 }
+    - { text: fog, weight: 1 }
+    - { text: drizzle, weight: 1 }
+    - { text: rain, weight: 2 }
+    - { text: downpour, weight: 2 }
+    - { text: thunderstorm, weight: 2 }
+    - { text: wind, weight: 1 }
+    - { text: heatwave, weight: 1 }
+  weather.transition.temperate.summer:
+    - { text: clear, weight: 15, tags: { from: [clear] } }
+    - { text: fair, weight: 5, tags: { from: [clear] } }
+    - { text: heatwave, weight: 1, tags: { from: [clear] } }
+    - { text: fair, weight: 15, tags: { from: [fair] } }
+    - { text: clear, weight: 5, tags: { from: [fair] } }
+    - { text: muggy, weight: 2, tags: { from: [fair] } }
+    - { text: overcast, weight: 2, tags: { from: [fair] } }
+    - { text: fog, weight: 1, tags: { from: [fair] } }
+    - { text: wind, weight: 1, tags: { from: [fair] } }
+    - { text: muggy, weight: 6, tags: { from: [muggy] } }
+    - { text: fair, weight: 5, tags: { from: [muggy] } }
+    - { text: overcast, weight: 2, tags: { from: [muggy] } }
+    - { text: downpour, weight: 2, tags: { from: [muggy] } }
+    - { text: thunderstorm, weight: 2, tags: { from: [muggy] } }
+    - { text: heatwave, weight: 1, tags: { from: [muggy] } }
+    - { text: overcast, weight: 6, tags: { from: [overcast] } }
+    - { text: fair, weight: 5, tags: { from: [overcast] } }
+    - { text: muggy, weight: 2, tags: { from: [overcast] } }
+    - { text: fog, weight: 1, tags: { from: [overcast] } }
+    - { text: drizzle, weight: 1, tags: { from: [overcast] } }
+    - { text: rain, weight: 2, tags: { from: [overcast] } }
+    - { text: wind, weight: 1, tags: { from: [overcast] } }
+    - { text: fog, weight: 3, tags: { from: [fog] } }
+    - { text: fair, weight: 5, tags: { from: [fog] } }
+    - { text: overcast, weight: 2, tags: { from: [fog] } }
+    - { text: drizzle, weight: 1, tags: { from: [fog] } }
+    - { text: drizzle, weight: 3, tags: { from: [drizzle] } }
+    - { text: overcast, weight: 2, tags: { from: [drizzle] } }
+    - { text: fog, weight: 1, tags: { from: [drizzle] } }
+    - { text: rain, weight: 2, tags: { from: [drizzle] } }
+    - { text: rain, weight: 6, tags: { from: [rain] } }
+    - { text: overcast, weight: 2, tags: { from: [rain] } }
+    - { text: drizzle, weight: 1, tags: { from: [rain] } }
+    - { text: downpour, weight: 2, tags: { from: [rain] } }
+    - { text: downpour, weight: 6, tags: { from: [downpour] } }
+    - { text: muggy, weight: 2, tags: { from: [downpour] } }
+    - { text: rain, weight: 2, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 2, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 6, tags: { from: [thunderstorm] } }
+    - { text: muggy, weight: 2, tags: { from: [thunderstorm] } }
+    - { text: downpour, weight: 2, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 1, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 3, tags: { from: [wind] } }
+    - { text: fair, weight: 5, tags: { from: [wind] } }
+    - { text: overcast, weight: 2, tags: { from: [wind] } }
+    - { text: thunderstorm, weight: 2, tags: { from: [wind] } }
+    - { text: overcast, weight: 2, tags: { from: [sleet] } }
+    - { text: rain, weight: 2, tags: { from: [sleet] } }
+    - { text: overcast, weight: 2, tags: { from: [snow] } }
+    - { text: clear, weight: 5, tags: { from: [blizzard] } }
+    - { text: fair, weight: 5, tags: { from: [blizzard] } }
+    - { text: muggy, weight: 2, tags: { from: [blizzard] } }
+    - { text: overcast, weight: 2, tags: { from: [blizzard] } }
+    - { text: fog, weight: 1, tags: { from: [blizzard] } }
+    - { text: drizzle, weight: 1, tags: { from: [blizzard] } }
+    - { text: rain, weight: 2, tags: { from: [blizzard] } }
+    - { text: downpour, weight: 2, tags: { from: [blizzard] } }
+    - { text: thunderstorm, weight: 2, tags: { from: [blizzard] } }
+    - { text: wind, weight: 1, tags: { from: [blizzard] } }
+    - { text: heatwave, weight: 1, tags: { from: [blizzard] } }
+    - { text: clear, weight: 5, tags: { from: [frost] } }
+    - { text: fog, weight: 1, tags: { from: [frost] } }
+    - { text: heatwave, weight: 3, tags: { from: [heatwave] } }
+    - { text: clear, weight: 5, tags: { from: [heatwave] } }
+    - { text: muggy, weight: 2, tags: { from: [heatwave] } }
+    - { text: wind, weight: 1, tags: { from: [sandstorm] } }
+    - { text: heatwave, weight: 1, tags: { from: [sandstorm] } }
+  weather.climate.temperate.autumn:
+    - { text: autumn, low: 4, high: 17, middle: 10, change: 1d5-3 }
+  weather.start.temperate.autumn:
+    - { text: clear, weight: 2 }
+    - { text: fair, weight: 3 }
+    - { text: overcast, weight: 5 }
+    - { text: fog, weight: 4 }
+    - { text: drizzle, weight: 3 }
+    - { text: rain, weight: 4 }
+    - { text: downpour, weight: 1 }
+    - { text: thunderstorm, weight: 1 }
+    - { text: wind, weight: 3 }
+    - { text: frost, weight: 1 }
+  weather.transition.temperate.autumn:
+    - { text: clear, weight: 6, tags: { from: [clear] } }
+    - { text: fair, weight: 3, tags: { from: [clear] } }
+    - { text: frost, weight: 1, tags: { from: [clear] } }
+    - { text: fair, weight: 9, tags: { from: [fair] } }
+    - { text: clear, weight: 2, tags: { from: [fair] } }
+    - { text: overcast, weight: 5, tags: { from: [fair] } }
+    - { text: fog, weight: 4, tags: { from: [fair] } }
+    - { text: wind, weight: 3, tags: { from: [fair] } }
+    - { text: fair, weight: 3, tags: { from: [muggy] } }
+    - { text: overcast, weight: 5, tags: { from: [muggy] } }
+    - { text: downpour, weight: 1, tags: { from: [muggy] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [muggy] } }
+    - { text: overcast, weight: 15, tags: { from: [overcast] } }
+    - { text: fair, weight: 3, tags: { from: [overcast] } }
+    - { text: fog, weight: 4, tags: { from: [overcast] } }
+    - { text: drizzle, weight: 3, tags: { from: [overcast] } }
+    - { text: rain, weight: 4, tags: { from: [overcast] } }
+    - { text: wind, weight: 3, tags: { from: [overcast] } }
+    - { text: fog, weight: 12, tags: { from: [fog] } }
+    - { text: fair, weight: 3, tags: { from: [fog] } }
+    - { text: overcast, weight: 5, tags: { from: [fog] } }
+    - { text: drizzle, weight: 3, tags: { from: [fog] } }
+    - { text: frost, weight: 1, tags: { from: [fog] } }
+    - { text: drizzle, weight: 9, tags: { from: [drizzle] } }
+    - { text: overcast, weight: 5, tags: { from: [drizzle] } }
+    - { text: fog, weight: 4, tags: { from: [drizzle] } }
+    - { text: rain, weight: 4, tags: { from: [drizzle] } }
+    - { text: rain, weight: 12, tags: { from: [rain] } }
+    - { text: overcast, weight: 5, tags: { from: [rain] } }
+    - { text: drizzle, weight: 3, tags: { from: [rain] } }
+    - { text: downpour, weight: 1, tags: { from: [rain] } }
+    - { text: downpour, weight: 3, tags: { from: [downpour] } }
+    - { text: rain, weight: 4, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 3, tags: { from: [thunderstorm] } }
+    - { text: downpour, weight: 1, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 3, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 9, tags: { from: [wind] } }
+    - { text: fair, weight: 3, tags: { from: [wind] } }
+    - { text: overcast, weight: 5, tags: { from: [wind] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [wind] } }
+    - { text: overcast, weight: 5, tags: { from: [sleet] } }
+    - { text: rain, weight: 4, tags: { from: [sleet] } }
+    - { text: overcast, weight: 5, tags: { from: [snow] } }
+    - { text: clear, weight: 2, tags: { from: [blizzard] } }
+    - { text: fair, weight: 3, tags: { from: [blizzard] } }
+    - { text: overcast, weight: 5, tags: { from: [blizzard] } }
+    - { text: fog, weight: 4, tags: { from: [blizzard] } }
+    - { text: drizzle, weight: 3, tags: { from: [blizzard] } }
+    - { text: rain, weight: 4, tags: { from: [blizzard] } }
+    - { text: downpour, weight: 1, tags: { from: [blizzard] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [blizzard] } }
+    - { text: wind, weight: 3, tags: { from: [blizzard] } }
+    - { text: frost, weight: 1, tags: { from: [blizzard] } }
+    - { text: frost, weight: 3, tags: { from: [frost] } }
+    - { text: clear, weight: 2, tags: { from: [frost] } }
+    - { text: fog, weight: 4, tags: { from: [frost] } }
+    - { text: clear, weight: 2, tags: { from: [heatwave] } }
+    - { text: wind, weight: 3, tags: { from: [sandstorm] } }
+  weather.climate.temperate.winter:
+    - { text: winter, low: -8, high: 6, middle: -1, change: 1d5-3 }
+  weather.start.temperate.winter:
+    - { text: clear, weight: 2 }
+    - { text: fair, weight: 1 }
+    - { text: overcast, weight: 5 }
+    - { text: fog, weight: 3 }
+    - { text: drizzle, weight: 1 }
+    - { text: rain, weight: 2 }
+    - { text: wind, weight: 2 }
+    - { text: sleet, weight: 2 }
+    - { text: snow, weight: 4 }
+    - { text: blizzard, weight: 1 }
+    - { text: frost, weight: 3 }
+  weather.transition.temperate.winter:
+    - { text: clear, weight: 6, tags: { from: [clear] } }
+    - { text: fair, weight: 1, tags: { from: [clear] } }
+    - { text: frost, weight: 3, tags: { from: [clear] } }
+    - { text: fair, weight: 3, tags: { from: [fair] } }
+    - { text: clear, weight: 2, tags: { from: [fair] } }
+    - { text: overcast, weight: 5, tags: { from: [fair] } }
+    - { text: fog, weight: 3, tags: { from: [fair] } }
+    - { text: wind, weight: 2, tags: { from: [fair] } }
+    - { text: fair, weight: 1, tags: { from: [muggy] } }
+    - { text: overcast, weight: 5, tags: { from: [muggy] } }
+    - { text: overcast, weight: 15, tags: { from: [overcast] } }
+    - { text: fair, weight: 1, tags: { from: [overcast] } }
+    - { text: fog, weight: 3, tags: { from: [overcast] } }
+    - { text: drizzle, weight: 1, tags: { from: [overcast] } }
+    - { text: rain, weight: 2, tags: { from: [overcast] } }
+    - { text: wind, weight: 2, tags: { from: [overcast] } }
+    - { text: sleet, weight: 2, tags: { from: [overcast] } }
+    - { text: snow, weight: 4, tags: { from: [overcast] } }
+    - { text: fog, weight: 9, tags: { from: [fog] } }
+    - { text: fair, weight: 1, tags: { from: [fog] } }
+    - { text: overcast, weight: 5, tags: { from: [fog] } }
+    - { text: drizzle, weight: 1, tags: { from: [fog] } }
+    - { text: frost, weight: 3, tags: { from: [fog] } }
+    - { text: drizzle, weight: 3, tags: { from: [drizzle] } }
+    - { text: overcast, weight: 5, tags: { from: [drizzle] } }
+    - { text: fog, weight: 3, tags: { from: [drizzle] } }
+    - { text: rain, weight: 2, tags: { from: [drizzle] } }
+    - { text: rain, weight: 6, tags: { from: [rain] } }
+    - { text: overcast, weight: 5, tags: { from: [rain] } }
+    - { text: drizzle, weight: 1, tags: { from: [rain] } }
+    - { text: sleet, weight: 2, tags: { from: [rain] } }
+    - { text: rain, weight: 2, tags: { from: [downpour] } }
+    - { text: wind, weight: 2, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 6, tags: { from: [wind] } }
+    - { text: fair, weight: 1, tags: { from: [wind] } }
+    - { text: overcast, weight: 5, tags: { from: [wind] } }
+    - { text: sleet, weight: 6, tags: { from: [sleet] } }
+    - { text: overcast, weight: 5, tags: { from: [sleet] } }
+    - { text: rain, weight: 2, tags: { from: [sleet] } }
+    - { text: snow, weight: 4, tags: { from: [sleet] } }
+    - { text: snow, weight: 12, tags: { from: [snow] } }
+    - { text: overcast, weight: 5, tags: { from: [snow] } }
+    - { text: sleet, weight: 2, tags: { from: [snow] } }
+    - { text: blizzard, weight: 1, tags: { from: [snow] } }
+    - { text: blizzard, weight: 3, tags: { from: [blizzard] } }
+    - { text: snow, weight: 4, tags: { from: [blizzard] } }
+    - { text: frost, weight: 9, tags: { from: [frost] } }
+    - { text: clear, weight: 2, tags: { from: [frost] } }
+    - { text: fog, weight: 3, tags: { from: [frost] } }
+    - { text: clear, weight: 2, tags: { from: [heatwave] } }
+    - { text: wind, weight: 2, tags: { from: [sandstorm] } }
+  weather.season.boreal:
+    - { text: spring }
+  weather.climate.boreal.spring:
+    - { text: spring, low: -5, high: 10, middle: 2, change: 1d7-4 }
+  weather.start.boreal.spring:
+    - { text: clear, weight: 3 }
+    - { text: fair, weight: 3 }
+    - { text: overcast, weight: 4 }
+    - { text: fog, weight: 2 }
+    - { text: drizzle, weight: 2 }
+    - { text: rain, weight: 2 }
+    - { text: wind, weight: 2 }
+    - { text: sleet, weight: 2 }
+    - { text: snow, weight: 2 }
+    - { text: frost, weight: 3 }
+  weather.transition.boreal.spring:
+    - { text: clear, weight: 12, tags: { from: [clear] } }
+    - { text: fair, weight: 3, tags: { from: [clear] } }
+    - { text: frost, weight: 3, tags: { from: [clear] } }
+    - { text: fair, weight: 12, tags: { from: [fair] } }
+    - { text: clear, weight: 3, tags: { from: [fair] } }
+    - { text: overcast, weight: 4, tags: { from: [fair] } }
+    - { text: fog, weight: 2, tags: { from: [fair] } }
+    - { text: wind, weight: 2, tags: { from: [fair] } }
+    - { text: fair, weight: 3, tags: { from: [muggy] } }
+    - { text: overcast, weight: 4, tags: { from: [muggy] } }
+    - { text: overcast, weight: 16, tags: { from: [overcast] } }
+    - { text: fair, weight: 3, tags: { from: [overcast] } }
+    - { text: fog, weight: 2, tags: { from: [overcast] } }
+    - { text: drizzle, weight: 2, tags: { from: [overcast] } }
+    - { text: rain, weight: 2, tags: { from: [overcast] } }
+    - { text: wind, weight: 2, tags: { from: [overcast] } }
+    - { text: sleet, weight: 2, tags: { from: [overcast] } }
+    - { text: snow, weight: 2, tags: { from: [overcast] } }
+    - { text: fog, weight: 8, tags: { from: [fog] } }
+    - { text: fair, weight: 3, tags: { from: [fog] } }
+    - { text: overcast, weight: 4, tags: { from: [fog] } }
+    - { text: drizzle, weight: 2, tags: { from: [fog] } }
+    - { text: frost, weight: 3, tags: { from: [fog] } }
+    - { text: drizzle, weight: 8, tags: { from: [drizzle] } }
+    - { text: overcast, weight: 4, tags: { from: [drizzle] } }
+    - { text: fog, weight: 2, tags: { from: [drizzle] } }
+    - { text: rain, weight: 2, tags: { from: [drizzle] } }
+    - { text: rain, weight: 8, tags: { from: [rain] } }
+    - { text: overcast, weight: 4, tags: { from: [rain] } }
+    - { text: drizzle, weight: 2, tags: { from: [rain] } }
+    - { text: sleet, weight: 2, tags: { from: [rain] } }
+    - { text: rain, weight: 2, tags: { from: [downpour] } }
+    - { text: wind, weight: 2, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 8, tags: { from: [wind] } }
+    - { text: fair, weight: 3, tags: { from: [wind] } }
+    - { text: overcast, weight: 4, tags: { from: [wind] } }
+    - { text: sleet, weight: 8, tags: { from: [sleet] } }
+    - { text: overcast, weight: 4, tags: { from: [sleet] } }
+    - { text: rain, weight: 2, tags: { from: [sleet] } }
+    - { text: snow, weight: 2, tags: { from: [sleet] } }
+    - { text: snow, weight: 8, tags: { from: [snow] } }
+    - { text: overcast, weight: 4, tags: { from: [snow] } }
+    - { text: sleet, weight: 2, tags: { from: [snow] } }
+    - { text: snow, weight: 2, tags: { from: [blizzard] } }
+    - { text: frost, weight: 12, tags: { from: [frost] } }
+    - { text: clear, weight: 3, tags: { from: [frost] } }
+    - { text: fog, weight: 2, tags: { from: [frost] } }
+    - { text: clear, weight: 3, tags: { from: [heatwave] } }
+    - { text: wind, weight: 2, tags: { from: [sandstorm] } }
+  weather.climate.boreal.summer:
+    - { text: summer, low: 8, high: 24, middle: 16, change: 1d7-4 }
+  weather.start.boreal.summer:
+    - { text: clear, weight: 4 }
+    - { text: fair, weight: 5 }
+    - { text: overcast, weight: 3 }
+    - { text: fog, weight: 2 }
+    - { text: drizzle, weight: 2 }
+    - { text: rain, weight: 3 }
+    - { text: downpour, weight: 1 }
+    - { text: thunderstorm, weight: 2 }
+    - { text: wind, weight: 1 }
+  weather.transition.boreal.summer:
+    - { text: clear, weight: 16, tags: { from: [clear] } }
+    - { text: fair, weight: 5, tags: { from: [clear] } }
+    - { text: fair, weight: 20, tags: { from: [fair] } }
+    - { text: clear, weight: 4, tags: { from: [fair] } }
+    - { text: overcast, weight: 3, tags: { from: [fair] } }
+    - { text: fog, weight: 2, tags: { from: [fair] } }
+    - { text: wind, weight: 1, tags: { from: [fair] } }
+    - { text: fair, weight: 5, tags: { from: [muggy] } }
+    - { text: overcast, weight: 3, tags: { from: [muggy] } }
+    - { text: downpour, weight: 1, tags: { from: [muggy] } }
+    - { text: thunderstorm, weight: 2, tags: { from: [muggy] } }
+    - { text: overcast, weight: 12, tags: { from: [overcast] } }
+    - { text: fair, weight: 5, tags: { from: [overcast] } }
+    - { text: fog, weight: 2, tags: { from: [overcast] } }
+    - { text: drizzle, weight: 2, tags: { from: [overcast] } }
+    - { text: rain, weight: 3, tags: { from: [overcast] } }
+    - { text: wind, weight: 1, tags: { from: [overcast] } }
+    - { text: fog, weight: 8, tags: { from: [fog] } }
+    - { text: fair, weight: 5, tags: { from: [fog] } }
+    - { text: overcast, weight: 3, tags: { from: [fog] } }
+    - { text: drizzle, weight: 2, tags: { from: [fog] } }
+    - { text: drizzle, weight: 8, tags: { from: [drizzle] } }
+    - { text: overcast, weight: 3, tags: { from: [drizzle] } }
+    - { text: fog, weight: 2, tags: { from: [drizzle] } }
+    - { text: rain, weight: 3, tags: { from: [drizzle] } }
+    - { text: rain, weight: 12, tags: { from: [rain] } }
+    - { text: overcast, weight: 3, tags: { from: [rain] } }
+    - { text: drizzle, weight: 2, tags: { from: [rain] } }
+    - { text: downpour, weight: 1, tags: { from: [rain] } }
+    - { text: downpour, weight: 4, tags: { from: [downpour] } }
+    - { text: rain, weight: 3, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 2, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 8, tags: { from: [thunderstorm] } }
+    - { text: downpour, weight: 1, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 1, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 4, tags: { from: [wind] } }
+    - { text: fair, weight: 5, tags: { from: [wind] } }
+    - { text: overcast, weight: 3, tags: { from: [wind] } }
+    - { text: thunderstorm, weight: 2, tags: { from: [wind] } }
+    - { text: overcast, weight: 3, tags: { from: [sleet] } }
+    - { text: rain, weight: 3, tags: { from: [sleet] } }
+    - { text: overcast, weight: 3, tags: { from: [snow] } }
+    - { text: clear, weight: 4, tags: { from: [blizzard] } }
+    - { text: fair, weight: 5, tags: { from: [blizzard] } }
+    - { text: overcast, weight: 3, tags: { from: [blizzard] } }
+    - { text: fog, weight: 2, tags: { from: [blizzard] } }
+    - { text: drizzle, weight: 2, tags: { from: [blizzard] } }
+    - { text: rain, weight: 3, tags: { from: [blizzard] } }
+    - { text: downpour, weight: 1, tags: { from: [blizzard] } }
+    - { text: thunderstorm, weight: 2, tags: { from: [blizzard] } }
+    - { text: wind, weight: 1, tags: { from: [blizzard] } }
+    - { text: clear, weight: 4, tags: { from: [frost] } }
+    - { text: fog, weight: 2, tags: { from: [frost] } }
+    - { text: clear, weight: 4, tags: { from: [heatwave] } }
+    - { text: wind, weight: 1, tags: { from: [sandstorm] } }
+  weather.climate.boreal.autumn:
+    - { text: autumn, low: -6, high: 10, middle: 2, change: 1d7-4 }
+  weather.start.boreal.autumn:
+    - { text: clear, weight: 2 }
+    - { text: fair, weight: 2 }
+    - { text: overcast, weight: 5 }
+    - { text: fog, weight: 3 }
+    - { text: drizzle, weight: 2 }
+    - { text: rain, weight: 3 }
+    - { text: wind, weight: 3 }
+    - { text: sleet, weight: 3 }
+    - { text: snow, weight: 3 }
+    - { text: frost, weight: 3 }
+  weather.transition.boreal.autumn:
+    - { text: clear, weight: 8, tags: { from: [clear] } }
+    - { text: fair, weight: 2, tags: { from: [clear] } }
+    - { text: frost, weight: 3, tags: { from: [clear] } }
+    - { text: fair, weight: 8, tags: { from: [fair] } }
+    - { text: clear, weight: 2, tags: { from: [fair] } }
+    - { text: overcast, weight: 5, tags: { from: [fair] } }
+    - { text: fog, weight: 3, tags: { from: [fair] } }
+    - { text: wind, weight: 3, tags: { from: [fair] } }
+    - { text: fair, weight: 2, tags: { from: [muggy] } }
+    - { text: overcast, weight: 5, tags: { from: [muggy] } }
+    - { text: overcast, weight: 20, tags: { from: [overcast] } }
+    - { text: fair, weight: 2, tags: { from: [overcast] } }
+    - { text: fog, weight: 3, tags: { from: [overcast] } }
+    - { text: drizzle, weight: 2, tags: { from: [overcast] } }
+    - { text: rain, weight: 3, tags: { from: [overcast] } }
+    - { text: wind, weight: 3, tags: { from: [overcast] } }
+    - { text: sleet, weight: 3, tags: { from: [overcast] } }
+    - { text: snow, weight: 3, tags: { from: [overcast] } }
+    - { text: fog, weight: 12, tags: { from: [fog] } }
+    - { text: fair, weight: 2, tags: { from: [fog] } }
+    - { text: overcast, weight: 5, tags: { from: [fog] } }
+    - { text: drizzle, weight: 2, tags: { from: [fog] } }
+    - { text: frost, weight: 3, tags: { from: [fog] } }
+    - { text: drizzle, weight: 8, tags: { from: [drizzle] } }
+    - { text: overcast, weight: 5, tags: { from: [drizzle] } }
+    - { text: fog, weight: 3, tags: { from: [drizzle] } }
+    - { text: rain, weight: 3, tags: { from: [drizzle] } }
+    - { text: rain, weight: 12, tags: { from: [rain] } }
+    - { text: overcast, weight: 5, tags: { from: [rain] } }
+    - { text: drizzle, weight: 2, tags: { from: [rain] } }
+    - { text: sleet, weight: 3, tags: { from: [rain] } }
+    - { text: rain, weight: 3, tags: { from: [downpour] } }
+    - { text: wind, weight: 3, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 12, tags: { from: [wind] } }
+    - { text: fair, weight: 2, tags: { from: [wind] } }
+    - { text: overcast, weight: 5, tags: { from: [wind] } }
+    - { text: sleet, weight: 12, tags: { from: [sleet] } }
+    - { text: overcast, weight: 5, tags: { from: [sleet] } }
+    - { text: rain, weight: 3, tags: { from: [sleet] } }
+    - { text: snow, weight: 3, tags: { from: [sleet] } }
+    - { text: snow, weight: 12, tags: { from: [snow] } }
+    - { text: overcast, weight: 5, tags: { from: [snow] } }
+    - { text: sleet, weight: 3, tags: { from: [snow] } }
+    - { text: snow, weight: 3, tags: { from: [blizzard] } }
+    - { text: frost, weight: 12, tags: { from: [frost] } }
+    - { text: clear, weight: 2, tags: { from: [frost] } }
+    - { text: fog, weight: 3, tags: { from: [frost] } }
+    - { text: clear, weight: 2, tags: { from: [heatwave] } }
+    - { text: wind, weight: 3, tags: { from: [sandstorm] } }
+  weather.climate.boreal.winter:
+    - { text: winter, low: -35, high: -5, middle: -20, change: 1d7-4 }
+  weather.start.boreal.winter:
+    - { text: clear, weight: 4 }
+    - { text: fair, weight: 1 }
+    - { text: overcast, weight: 4 }
+    - { text: fog, weight: 1 }
+    - { text: wind, weight: 2 }
+    - { text: snow, weight: 5 }
+    - { text: blizzard, weight: 3 }
+    - { text: frost, weight: 4 }
+  weather.transition.boreal.winter:
+    - { text: clear, weight: 16, tags: { from: [clear] } }
+    - { text: fair, weight: 1, tags: { from: [clear] } }
+    - { text: frost, weight: 4, tags: { from: [clear] } }
+    - { text: fair, weight: 4, tags: { from: [fair] } }
+    - { text: clear, weight: 4, tags: { from: [fair] } }
+    - { text: overcast, weight: 4, tags: { from: [fair] } }
+    - { text: fog, weight: 1, tags: { from: [fair] } }
+    - { text: wind, weight: 2, tags: { from: [fair] } }
+    - { text: fair, weight: 1, tags: { from: [muggy] } }
+    - { text: overcast, weight: 4, tags: { from: [muggy] } }
+    - { text: overcast, weight: 16, tags: { from: [overcast] } }
+    - { text: fair, weight: 1, tags: { from: [overcast] } }
+    - { text: fog, weight: 1, tags: { from: [overcast] } }
+    - { text: wind, weight: 2, tags: { from: [overcast] } }
+    - { text: snow, weight: 5, tags: { from: [overcast] } }
+    - { text: fog, weight: 4, tags: { from: [fog] } }
+    - { text: fair, weight: 1, tags: { from: [fog] } }
+    - { text: overcast, weight: 4, tags: { from: [fog] } }
+    - { text: frost, weight: 4, tags: { from: [fog] } }
+    - { text: overcast, weight: 4, tags: { from: [drizzle] } }
+    - { text: fog, weight: 1, tags: { from: [drizzle] } }
+    - { text: overcast, weight: 4, tags: { from: [rain] } }
+    - { text: clear, weight: 4, tags: { from: [downpour] } }
+    - { text: fair, weight: 1, tags: { from: [downpour] } }
+    - { text: overcast, weight: 4, tags: { from: [downpour] } }
+    - { text: fog, weight: 1, tags: { from: [downpour] } }
+    - { text: wind, weight: 2, tags: { from: [downpour] } }
+    - { text: snow, weight: 5, tags: { from: [downpour] } }
+    - { text: blizzard, weight: 3, tags: { from: [downpour] } }
+    - { text: frost, weight: 4, tags: { from: [downpour] } }
+    - { text: wind, weight: 2, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 8, tags: { from: [wind] } }
+    - { text: fair, weight: 1, tags: { from: [wind] } }
+    - { text: overcast, weight: 4, tags: { from: [wind] } }
+    - { text: overcast, weight: 4, tags: { from: [sleet] } }
+    - { text: snow, weight: 5, tags: { from: [sleet] } }
+    - { text: snow, weight: 20, tags: { from: [snow] } }
+    - { text: overcast, weight: 4, tags: { from: [snow] } }
+    - { text: blizzard, weight: 3, tags: { from: [snow] } }
+    - { text: blizzard, weight: 12, tags: { from: [blizzard] } }
+    - { text: snow, weight: 5, tags: { from: [blizzard] } }
+    - { text: frost, weight: 16, tags: { from: [frost] } }
+    - { text: clear, weight: 4, tags: { from: [frost] } }
+    - { text: fog, weight: 1, tags: { from: [frost] } }
+    - { text: clear, weight: 4, tags: { from: [heatwave] } }
+    - { text: wind, weight: 2, tags: { from: [sandstorm] } }
+  weather.season.mediterranean:
+    - { text: spring }
+  weather.climate.mediterranean.spring:
+    - { text: spring, low: 10, high: 22, middle: 16, change: 1d5-3 }
+  weather.start.mediterranean.spring:
+    - { text: clear, weight: 5 }
+    - { text: fair, weight: 5 }
+    - { text: overcast, weight: 3 }
+    - { text: drizzle, weight: 1 }
+    - { text: rain, weight: 2 }
+    - { text: downpour, weight: 1 }
+    - { text: thunderstorm, weight: 1 }
+    - { text: wind, weight: 2 }
+  weather.transition.mediterranean.spring:
+    - { text: clear, weight: 20, tags: { from: [clear] } }
+    - { text: fair, weight: 5, tags: { from: [clear] } }
+    - { text: fair, weight: 20, tags: { from: [fair] } }
+    - { text: clear, weight: 5, tags: { from: [fair] } }
+    - { text: overcast, weight: 3, tags: { from: [fair] } }
+    - { text: wind, weight: 2, tags: { from: [fair] } }
+    - { text: fair, weight: 5, tags: { from: [muggy] } }
+    - { text: overcast, weight: 3, tags: { from: [muggy] } }
+    - { text: downpour, weight: 1, tags: { from: [muggy] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [muggy] } }
+    - { text: overcast, weight: 12, tags: { from: [overcast] } }
+    - { text: fair, weight: 5, tags: { from: [overcast] } }
+    - { text: drizzle, weight: 1, tags: { from: [overcast] } }
+    - { text: rain, weight: 2, tags: { from: [overcast] } }
+    - { text: wind, weight: 2, tags: { from: [overcast] } }
+    - { text: fair, weight: 5, tags: { from: [fog] } }
+    - { text: overcast, weight: 3, tags: { from: [fog] } }
+    - { text: drizzle, weight: 1, tags: { from: [fog] } }
+    - { text: drizzle, weight: 4, tags: { from: [drizzle] } }
+    - { text: overcast, weight: 3, tags: { from: [drizzle] } }
+    - { text: rain, weight: 2, tags: { from: [drizzle] } }
+    - { text: rain, weight: 8, tags: { from: [rain] } }
+    - { text: overcast, weight: 3, tags: { from: [rain] } }
+    - { text: drizzle, weight: 1, tags: { from: [rain] } }
+    - { text: downpour, weight: 1, tags: { from: [rain] } }
+    - { text: downpour, weight: 4, tags: { from: [downpour] } }
+    - { text: rain, weight: 2, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 4, tags: { from: [thunderstorm] } }
+    - { text: downpour, weight: 1, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 2, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 8, tags: { from: [wind] } }
+    - { text: fair, weight: 5, tags: { from: [wind] } }
+    - { text: overcast, weight: 3, tags: { from: [wind] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [wind] } }
+    - { text: overcast, weight: 3, tags: { from: [sleet] } }
+    - { text: rain, weight: 2, tags: { from: [sleet] } }
+    - { text: overcast, weight: 3, tags: { from: [snow] } }
+    - { text: clear, weight: 5, tags: { from: [blizzard] } }
+    - { text: fair, weight: 5, tags: { from: [blizzard] } }
+    - { text: overcast, weight: 3, tags: { from: [blizzard] } }
+    - { text: drizzle, weight: 1, tags: { from: [blizzard] } }
+    - { text: rain, weight: 2, tags: { from: [blizzard] } }
+    - { text: downpour, weight: 1, tags: { from: [blizzard] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [blizzard] } }
+    - { text: wind, weight: 2, tags: { from: [blizzard] } }
+    - { text: clear, weight: 5, tags: { from: [frost] } }
+    - { text: clear, weight: 5, tags: { from: [heatwave] } }
+    - { text: wind, weight: 2, tags: { from: [sandstorm] } }
+  weather.climate.mediterranean.summer:
+    - { text: summer, low: 20, high: 36, middle: 28, change: 1d5-3 }
+  weather.start.mediterranean.summer:
+    - { text: clear, weight: 9 }
+    - { text: fair, weight: 4 }
+    - { text: muggy, weight: 1 }
+    - { text: wind, weight: 2 }
+    - { text: heatwave, weight: 3 }
+    - { text: thunderstorm, weight: 1 }
+  weather.transition.mediterranean.summer:
+    - { text: clear, weight: 36, tags: { from: [clear] } }
+    - { text: fair, weight: 4, tags: { from: [clear] } }
+    - { text: heatwave, weight: 3, tags: { from: [clear] } }
+    - { text: fair, weight: 16, tags: { from: [fair] } }
+    - { text: clear, weight: 9, tags: { from: [fair] } }
+    - { text: muggy, weight: 1, tags: { from: [fair] } }
+    - { text: wind, weight: 2, tags: { from: [fair] } }
+    - { text: muggy, weight: 4, tags: { from: [muggy] } }
+    - { text: fair, weight: 4, tags: { from: [muggy] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [muggy] } }
+    - { text: heatwave, weight: 3, tags: { from: [muggy] } }
+    - { text: fair, weight: 4, tags: { from: [overcast] } }
+    - { text: muggy, weight: 1, tags: { from: [overcast] } }
+    - { text: wind, weight: 2, tags: { from: [overcast] } }
+    - { text: fair, weight: 4, tags: { from: [fog] } }
+    - { text: clear, weight: 9, tags: { from: [drizzle] } }
+    - { text: fair, weight: 4, tags: { from: [drizzle] } }
+    - { text: muggy, weight: 1, tags: { from: [drizzle] } }
+    - { text: wind, weight: 2, tags: { from: [drizzle] } }
+    - { text: heatwave, weight: 3, tags: { from: [drizzle] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [drizzle] } }
+    - { text: clear, weight: 9, tags: { from: [rain] } }
+    - { text: fair, weight: 4, tags: { from: [rain] } }
+    - { text: muggy, weight: 1, tags: { from: [rain] } }
+    - { text: wind, weight: 2, tags: { from: [rain] } }
+    - { text: heatwave, weight: 3, tags: { from: [rain] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [rain] } }
+    - { text: muggy, weight: 1, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 4, tags: { from: [thunderstorm] } }
+    - { text: muggy, weight: 1, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 2, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 8, tags: { from: [wind] } }
+    - { text: fair, weight: 4, tags: { from: [wind] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [wind] } }
+    - { text: clear, weight: 9, tags: { from: [sleet] } }
+    - { text: fair, weight: 4, tags: { from: [sleet] } }
+    - { text: muggy, weight: 1, tags: { from: [sleet] } }
+    - { text: wind, weight: 2, tags: { from: [sleet] } }
+    - { text: heatwave, weight: 3, tags: { from: [sleet] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [sleet] } }
+    - { text: clear, weight: 9, tags: { from: [snow] } }
+    - { text: fair, weight: 4, tags: { from: [snow] } }
+    - { text: muggy, weight: 1, tags: { from: [snow] } }
+    - { text: wind, weight: 2, tags: { from: [snow] } }
+    - { text: heatwave, weight: 3, tags: { from: [snow] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [snow] } }
+    - { text: clear, weight: 9, tags: { from: [blizzard] } }
+    - { text: fair, weight: 4, tags: { from: [blizzard] } }
+    - { text: muggy, weight: 1, tags: { from: [blizzard] } }
+    - { text: wind, weight: 2, tags: { from: [blizzard] } }
+    - { text: heatwave, weight: 3, tags: { from: [blizzard] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [blizzard] } }
+    - { text: clear, weight: 9, tags: { from: [frost] } }
+    - { text: heatwave, weight: 12, tags: { from: [heatwave] } }
+    - { text: clear, weight: 9, tags: { from: [heatwave] } }
+    - { text: muggy, weight: 1, tags: { from: [heatwave] } }
+    - { text: wind, weight: 2, tags: { from: [sandstorm] } }
+    - { text: heatwave, weight: 3, tags: { from: [sandstorm] } }
+  weather.climate.mediterranean.autumn:
+    - { text: autumn, low: 12, high: 25, middle: 18, change: 1d5-3 }
+  weather.start.mediterranean.autumn:
+    - { text: clear, weight: 4 }
+    - { text: fair, weight: 4 }
+    - { text: overcast, weight: 3 }
+    - { text: drizzle, weight: 1 }
+    - { text: rain, weight: 3 }
+    - { text: downpour, weight: 2 }
+    - { text: thunderstorm, weight: 2 }
+    - { text: wind, weight: 2 }
+  weather.transition.mediterranean.autumn:
+    - { text: clear, weight: 16, tags: { from: [clear] } }
+    - { text: fair, weight: 4, tags: { from: [clear] } }
+    - { text: fair, weight: 16, tags: { from: [fair] } }
+    - { text: clear, weight: 4, tags: { from: [fair] } }
+    - { text: overcast, weight: 3, tags: { from: [fair] } }
+    - { text: wind, weight: 2, tags: { from: [fair] } }
+    - { text: fair, weight: 4, tags: { from: [muggy] } }
+    - { text: overcast, weight: 3, tags: { from: [muggy] } }
+    - { text: downpour, weight: 2, tags: { from: [muggy] } }
+    - { text: thunderstorm, weight: 2, tags: { from: [muggy] } }
+    - { text: overcast, weight: 12, tags: { from: [overcast] } }
+    - { text: fair, weight: 4, tags: { from: [overcast] } }
+    - { text: drizzle, weight: 1, tags: { from: [overcast] } }
+    - { text: rain, weight: 3, tags: { from: [overcast] } }
+    - { text: wind, weight: 2, tags: { from: [overcast] } }
+    - { text: fair, weight: 4, tags: { from: [fog] } }
+    - { text: overcast, weight: 3, tags: { from: [fog] } }
+    - { text: drizzle, weight: 1, tags: { from: [fog] } }
+    - { text: drizzle, weight: 4, tags: { from: [drizzle] } }
+    - { text: overcast, weight: 3, tags: { from: [drizzle] } }
+    - { text: rain, weight: 3, tags: { from: [drizzle] } }
+    - { text: rain, weight: 12, tags: { from: [rain] } }
+    - { text: overcast, weight: 3, tags: { from: [rain] } }
+    - { text: drizzle, weight: 1, tags: { from: [rain] } }
+    - { text: downpour, weight: 2, tags: { from: [rain] } }
+    - { text: downpour, weight: 8, tags: { from: [downpour] } }
+    - { text: rain, weight: 3, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 2, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 8, tags: { from: [thunderstorm] } }
+    - { text: downpour, weight: 2, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 2, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 8, tags: { from: [wind] } }
+    - { text: fair, weight: 4, tags: { from: [wind] } }
+    - { text: overcast, weight: 3, tags: { from: [wind] } }
+    - { text: thunderstorm, weight: 2, tags: { from: [wind] } }
+    - { text: overcast, weight: 3, tags: { from: [sleet] } }
+    - { text: rain, weight: 3, tags: { from: [sleet] } }
+    - { text: overcast, weight: 3, tags: { from: [snow] } }
+    - { text: clear, weight: 4, tags: { from: [blizzard] } }
+    - { text: fair, weight: 4, tags: { from: [blizzard] } }
+    - { text: overcast, weight: 3, tags: { from: [blizzard] } }
+    - { text: drizzle, weight: 1, tags: { from: [blizzard] } }
+    - { text: rain, weight: 3, tags: { from: [blizzard] } }
+    - { text: downpour, weight: 2, tags: { from: [blizzard] } }
+    - { text: thunderstorm, weight: 2, tags: { from: [blizzard] } }
+    - { text: wind, weight: 2, tags: { from: [blizzard] } }
+    - { text: clear, weight: 4, tags: { from: [frost] } }
+    - { text: clear, weight: 4, tags: { from: [heatwave] } }
+    - { text: wind, weight: 2, tags: { from: [sandstorm] } }
+  weather.climate.mediterranean.winter:
+    - { text: winter, low: 2, high: 15, middle: 8, change: 1d5-3 }
+  weather.start.mediterranean.winter:
+    - { text: clear, weight: 3 }
+    - { text: fair, weight: 3 }
+    - { text: overcast, weight: 4 }
+    - { text: fog, weight: 2 }
+    - { text: drizzle, weight: 2 }
+    - { text: rain, weight: 4 }
+    - { text: downpour, weight: 1 }
+    - { text: wind, weight: 3 }
+    - { text: frost, weight: 1 }
+  weather.transition.mediterranean.winter:
+    - { text: clear, weight: 12, tags: { from: [clear] } }
+    - { text: fair, weight: 3, tags: { from: [clear] } }
+    - { text: frost, weight: 1, tags: { from: [clear] } }
+    - { text: fair, weight: 12, tags: { from: [fair] } }
+    - { text: clear, weight: 3, tags: { from: [fair] } }
+    - { text: overcast, weight: 4, tags: { from: [fair] } }
+    - { text: fog, weight: 2, tags: { from: [fair] } }
+    - { text: wind, weight: 3, tags: { from: [fair] } }
+    - { text: fair, weight: 3, tags: { from: [muggy] } }
+    - { text: overcast, weight: 4, tags: { from: [muggy] } }
+    - { text: downpour, weight: 1, tags: { from: [muggy] } }
+    - { text: overcast, weight: 16, tags: { from: [overcast] } }
+    - { text: fair, weight: 3, tags: { from: [overcast] } }
+    - { text: fog, weight: 2, tags: { from: [overcast] } }
+    - { text: drizzle, weight: 2, tags: { from: [overcast] } }
+    - { text: rain, weight: 4, tags: { from: [overcast] } }
+    - { text: wind, weight: 3, tags: { from: [overcast] } }
+    - { text: fog, weight: 8, tags: { from: [fog] } }
+    - { text: fair, weight: 3, tags: { from: [fog] } }
+    - { text: overcast, weight: 4, tags: { from: [fog] } }
+    - { text: drizzle, weight: 2, tags: { from: [fog] } }
+    - { text: frost, weight: 1, tags: { from: [fog] } }
+    - { text: drizzle, weight: 8, tags: { from: [drizzle] } }
+    - { text: overcast, weight: 4, tags: { from: [drizzle] } }
+    - { text: fog, weight: 2, tags: { from: [drizzle] } }
+    - { text: rain, weight: 4, tags: { from: [drizzle] } }
+    - { text: rain, weight: 16, tags: { from: [rain] } }
+    - { text: overcast, weight: 4, tags: { from: [rain] } }
+    - { text: drizzle, weight: 2, tags: { from: [rain] } }
+    - { text: downpour, weight: 1, tags: { from: [rain] } }
+    - { text: downpour, weight: 4, tags: { from: [downpour] } }
+    - { text: rain, weight: 4, tags: { from: [downpour] } }
+    - { text: downpour, weight: 1, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 3, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 12, tags: { from: [wind] } }
+    - { text: fair, weight: 3, tags: { from: [wind] } }
+    - { text: overcast, weight: 4, tags: { from: [wind] } }
+    - { text: overcast, weight: 4, tags: { from: [sleet] } }
+    - { text: rain, weight: 4, tags: { from: [sleet] } }
+    - { text: overcast, weight: 4, tags: { from: [snow] } }
+    - { text: clear, weight: 3, tags: { from: [blizzard] } }
+    - { text: fair, weight: 3, tags: { from: [blizzard] } }
+    - { text: overcast, weight: 4, tags: { from: [blizzard] } }
+    - { text: fog, weight: 2, tags: { from: [blizzard] } }
+    - { text: drizzle, weight: 2, tags: { from: [blizzard] } }
+    - { text: rain, weight: 4, tags: { from: [blizzard] } }
+    - { text: downpour, weight: 1, tags: { from: [blizzard] } }
+    - { text: wind, weight: 3, tags: { from: [blizzard] } }
+    - { text: frost, weight: 1, tags: { from: [blizzard] } }
+    - { text: frost, weight: 4, tags: { from: [frost] } }
+    - { text: clear, weight: 3, tags: { from: [frost] } }
+    - { text: fog, weight: 2, tags: { from: [frost] } }
+    - { text: clear, weight: 3, tags: { from: [heatwave] } }
+    - { text: wind, weight: 3, tags: { from: [sandstorm] } }
+  weather.season.arid:
+    - { text: hot }
+  weather.climate.arid.hot:
+    - { text: hot, low: 25, high: 45, middle: 35, change: 1d5-3 }
+  weather.start.arid.hot:
+    - { text: clear, weight: 8 }
+    - { text: fair, weight: 3 }
+    - { text: wind, weight: 3 }
+    - { text: heatwave, weight: 4 }
+    - { text: sandstorm, weight: 2 }
+    - { text: overcast, weight: 1 }
+    - { text: thunderstorm, weight: 1 }
+  weather.transition.arid.hot:
+    - { text: clear, weight: 40, tags: { from: [clear] } }
+    - { text: fair, weight: 3, tags: { from: [clear] } }
+    - { text: heatwave, weight: 4, tags: { from: [clear] } }
+    - { text: fair, weight: 15, tags: { from: [fair] } }
+    - { text: clear, weight: 8, tags: { from: [fair] } }
+    - { text: overcast, weight: 1, tags: { from: [fair] } }
+    - { text: wind, weight: 3, tags: { from: [fair] } }
+    - { text: fair, weight: 3, tags: { from: [muggy] } }
+    - { text: overcast, weight: 1, tags: { from: [muggy] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [muggy] } }
+    - { text: heatwave, weight: 4, tags: { from: [muggy] } }
+    - { text: overcast, weight: 5, tags: { from: [overcast] } }
+    - { text: fair, weight: 3, tags: { from: [overcast] } }
+    - { text: wind, weight: 3, tags: { from: [overcast] } }
+    - { text: fair, weight: 3, tags: { from: [fog] } }
+    - { text: overcast, weight: 1, tags: { from: [fog] } }
+    - { text: overcast, weight: 1, tags: { from: [drizzle] } }
+    - { text: overcast, weight: 1, tags: { from: [rain] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 5, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 3, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 15, tags: { from: [wind] } }
+    - { text: fair, weight: 3, tags: { from: [wind] } }
+    - { text: overcast, weight: 1, tags: { from: [wind] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [wind] } }
+    - { text: sandstorm, weight: 2, tags: { from: [wind] } }
+    - { text: overcast, weight: 1, tags: { from: [sleet] } }
+    - { text: overcast, weight: 1, tags: { from: [snow] } }
+    - { text: clear, weight: 8, tags: { from: [blizzard] } }
+    - { text: fair, weight: 3, tags: { from: [blizzard] } }
+    - { text: wind, weight: 3, tags: { from: [blizzard] } }
+    - { text: heatwave, weight: 4, tags: { from: [blizzard] } }
+    - { text: sandstorm, weight: 2, tags: { from: [blizzard] } }
+    - { text: overcast, weight: 1, tags: { from: [blizzard] } }
+    - { text: thunderstorm, weight: 1, tags: { from: [blizzard] } }
+    - { text: clear, weight: 8, tags: { from: [frost] } }
+    - { text: heatwave, weight: 20, tags: { from: [heatwave] } }
+    - { text: clear, weight: 8, tags: { from: [heatwave] } }
+    - { text: sandstorm, weight: 2, tags: { from: [heatwave] } }
+    - { text: sandstorm, weight: 10, tags: { from: [sandstorm] } }
+    - { text: wind, weight: 3, tags: { from: [sandstorm] } }
+    - { text: heatwave, weight: 4, tags: { from: [sandstorm] } }
+  weather.climate.arid.cool:
+    - { text: cool, low: 5, high: 25, middle: 15, change: 1d5-3 }
+  weather.start.arid.cool:
+    - { text: clear, weight: 7 }
+    - { text: fair, weight: 4 }
+    - { text: overcast, weight: 2 }
+    - { text: wind, weight: 3 }
+    - { text: sandstorm, weight: 1 }
+    - { text: frost, weight: 2 }
+    - { text: rain, weight: 1 }
+  weather.transition.arid.cool:
+    - { text: clear, weight: 35, tags: { from: [clear] } }
+    - { text: fair, weight: 4, tags: { from: [clear] } }
+    - { text: frost, weight: 2, tags: { from: [clear] } }
+    - { text: fair, weight: 20, tags: { from: [fair] } }
+    - { text: clear, weight: 7, tags: { from: [fair] } }
+    - { text: overcast, weight: 2, tags: { from: [fair] } }
+    - { text: wind, weight: 3, tags: { from: [fair] } }
+    - { text: fair, weight: 4, tags: { from: [muggy] } }
+    - { text: overcast, weight: 2, tags: { from: [muggy] } }
+    - { text: overcast, weight: 10, tags: { from: [overcast] } }
+    - { text: fair, weight: 4, tags: { from: [overcast] } }
+    - { text: rain, weight: 1, tags: { from: [overcast] } }
+    - { text: wind, weight: 3, tags: { from: [overcast] } }
+    - { text: fair, weight: 4, tags: { from: [fog] } }
+    - { text: overcast, weight: 2, tags: { from: [fog] } }
+    - { text: frost, weight: 2, tags: { from: [fog] } }
+    - { text: overcast, weight: 2, tags: { from: [drizzle] } }
+    - { text: rain, weight: 1, tags: { from: [drizzle] } }
+    - { text: rain, weight: 5, tags: { from: [rain] } }
+    - { text: overcast, weight: 2, tags: { from: [rain] } }
+    - { text: rain, weight: 1, tags: { from: [downpour] } }
+    - { text: wind, weight: 3, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 15, tags: { from: [wind] } }
+    - { text: fair, weight: 4, tags: { from: [wind] } }
+    - { text: overcast, weight: 2, tags: { from: [wind] } }
+    - { text: sandstorm, weight: 1, tags: { from: [wind] } }
+    - { text: overcast, weight: 2, tags: { from: [sleet] } }
+    - { text: rain, weight: 1, tags: { from: [sleet] } }
+    - { text: overcast, weight: 2, tags: { from: [snow] } }
+    - { text: clear, weight: 7, tags: { from: [blizzard] } }
+    - { text: fair, weight: 4, tags: { from: [blizzard] } }
+    - { text: overcast, weight: 2, tags: { from: [blizzard] } }
+    - { text: wind, weight: 3, tags: { from: [blizzard] } }
+    - { text: sandstorm, weight: 1, tags: { from: [blizzard] } }
+    - { text: frost, weight: 2, tags: { from: [blizzard] } }
+    - { text: rain, weight: 1, tags: { from: [blizzard] } }
+    - { text: frost, weight: 10, tags: { from: [frost] } }
+    - { text: clear, weight: 7, tags: { from: [frost] } }
+    - { text: clear, weight: 7, tags: { from: [heatwave] } }
+    - { text: sandstorm, weight: 1, tags: { from: [heatwave] } }
+    - { text: sandstorm, weight: 5, tags: { from: [sandstorm] } }
+    - { text: wind, weight: 3, tags: { from: [sandstorm] } }
+  weather.season.tropical:
+    - { text: wet }
+  weather.climate.tropical.wet:
+    - { text: wet, low: 23, high: 32, middle: 27, change: 1d3-2 }
+  weather.start.tropical.wet:
+    - { text: muggy, weight: 4 }
+    - { text: overcast, weight: 4 }
+    - { text: drizzle, weight: 2 }
+    - { text: rain, weight: 4 }
+    - { text: downpour, weight: 5 }
+    - { text: thunderstorm, weight: 4 }
+    - { text: fair, weight: 2 }
+    - { text: wind, weight: 1 }
+  weather.transition.tropical.wet:
+    - { text: fair, weight: 2, tags: { from: [clear] } }
+    - { text: fair, weight: 6, tags: { from: [fair] } }
+    - { text: muggy, weight: 4, tags: { from: [fair] } }
+    - { text: overcast, weight: 4, tags: { from: [fair] } }
+    - { text: wind, weight: 1, tags: { from: [fair] } }
+    - { text: muggy, weight: 12, tags: { from: [muggy] } }
+    - { text: fair, weight: 2, tags: { from: [muggy] } }
+    - { text: overcast, weight: 4, tags: { from: [muggy] } }
+    - { text: downpour, weight: 5, tags: { from: [muggy] } }
+    - { text: thunderstorm, weight: 4, tags: { from: [muggy] } }
+    - { text: overcast, weight: 12, tags: { from: [overcast] } }
+    - { text: fair, weight: 2, tags: { from: [overcast] } }
+    - { text: muggy, weight: 4, tags: { from: [overcast] } }
+    - { text: drizzle, weight: 2, tags: { from: [overcast] } }
+    - { text: rain, weight: 4, tags: { from: [overcast] } }
+    - { text: wind, weight: 1, tags: { from: [overcast] } }
+    - { text: fair, weight: 2, tags: { from: [fog] } }
+    - { text: overcast, weight: 4, tags: { from: [fog] } }
+    - { text: drizzle, weight: 2, tags: { from: [fog] } }
+    - { text: drizzle, weight: 6, tags: { from: [drizzle] } }
+    - { text: overcast, weight: 4, tags: { from: [drizzle] } }
+    - { text: rain, weight: 4, tags: { from: [drizzle] } }
+    - { text: rain, weight: 12, tags: { from: [rain] } }
+    - { text: overcast, weight: 4, tags: { from: [rain] } }
+    - { text: drizzle, weight: 2, tags: { from: [rain] } }
+    - { text: downpour, weight: 5, tags: { from: [rain] } }
+    - { text: downpour, weight: 15, tags: { from: [downpour] } }
+    - { text: muggy, weight: 4, tags: { from: [downpour] } }
+    - { text: rain, weight: 4, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 4, tags: { from: [downpour] } }
+    - { text: thunderstorm, weight: 12, tags: { from: [thunderstorm] } }
+    - { text: muggy, weight: 4, tags: { from: [thunderstorm] } }
+    - { text: downpour, weight: 5, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 1, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 3, tags: { from: [wind] } }
+    - { text: fair, weight: 2, tags: { from: [wind] } }
+    - { text: overcast, weight: 4, tags: { from: [wind] } }
+    - { text: thunderstorm, weight: 4, tags: { from: [wind] } }
+    - { text: overcast, weight: 4, tags: { from: [sleet] } }
+    - { text: rain, weight: 4, tags: { from: [sleet] } }
+    - { text: overcast, weight: 4, tags: { from: [snow] } }
+    - { text: muggy, weight: 4, tags: { from: [blizzard] } }
+    - { text: overcast, weight: 4, tags: { from: [blizzard] } }
+    - { text: drizzle, weight: 2, tags: { from: [blizzard] } }
+    - { text: rain, weight: 4, tags: { from: [blizzard] } }
+    - { text: downpour, weight: 5, tags: { from: [blizzard] } }
+    - { text: thunderstorm, weight: 4, tags: { from: [blizzard] } }
+    - { text: fair, weight: 2, tags: { from: [blizzard] } }
+    - { text: wind, weight: 1, tags: { from: [blizzard] } }
+    - { text: muggy, weight: 4, tags: { from: [frost] } }
+    - { text: overcast, weight: 4, tags: { from: [frost] } }
+    - { text: drizzle, weight: 2, tags: { from: [frost] } }
+    - { text: rain, weight: 4, tags: { from: [frost] } }
+    - { text: downpour, weight: 5, tags: { from: [frost] } }
+    - { text: thunderstorm, weight: 4, tags: { from: [frost] } }
+    - { text: fair, weight: 2, tags: { from: [frost] } }
+    - { text: wind, weight: 1, tags: { from: [frost] } }
+    - { text: muggy, weight: 4, tags: { from: [heatwave] } }
+    - { text: wind, weight: 1, tags: { from: [sandstorm] } }
+  weather.climate.tropical.dry:
+    - { text: dry, low: 20, high: 31, middle: 25, change: 1d3-2 }
+  weather.start.tropical.dry:
+    - { text: clear, weight: 5 }
+    - { text: fair, weight: 5 }
+    - { text: muggy, weight: 3 }
+    - { text: overcast, weight: 2 }
+    - { text: fog, weight: 1 }
+    - { text: wind, weight: 2 }
+    - { text: heatwave, weight: 1 }
+  weather.transition.tropical.dry:
+    - { text: clear, weight: 15, tags: { from: [clear] } }
+    - { text: fair, weight: 5, tags: { from: [clear] } }
+    - { text: heatwave, weight: 1, tags: { from: [clear] } }
+    - { text: fair, weight: 15, tags: { from: [fair] } }
+    - { text: clear, weight: 5, tags: { from: [fair] } }
+    - { text: muggy, weight: 3, tags: { from: [fair] } }
+    - { text: overcast, weight: 2, tags: { from: [fair] } }
+    - { text: fog, weight: 1, tags: { from: [fair] } }
+    - { text: wind, weight: 2, tags: { from: [fair] } }
+    - { text: muggy, weight: 9, tags: { from: [muggy] } }
+    - { text: fair, weight: 5, tags: { from: [muggy] } }
+    - { text: overcast, weight: 2, tags: { from: [muggy] } }
+    - { text: heatwave, weight: 1, tags: { from: [muggy] } }
+    - { text: overcast, weight: 6, tags: { from: [overcast] } }
+    - { text: fair, weight: 5, tags: { from: [overcast] } }
+    - { text: muggy, weight: 3, tags: { from: [overcast] } }
+    - { text: fog, weight: 1, tags: { from: [overcast] } }
+    - { text: wind, weight: 2, tags: { from: [overcast] } }
+    - { text: fog, weight: 3, tags: { from: [fog] } }
+    - { text: fair, weight: 5, tags: { from: [fog] } }
+    - { text: overcast, weight: 2, tags: { from: [fog] } }
+    - { text: overcast, weight: 2, tags: { from: [drizzle] } }
+    - { text: fog, weight: 1, tags: { from: [drizzle] } }
+    - { text: overcast, weight: 2, tags: { from: [rain] } }
+    - { text: muggy, weight: 3, tags: { from: [downpour] } }
+    - { text: muggy, weight: 3, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 2, tags: { from: [thunderstorm] } }
+    - { text: wind, weight: 6, tags: { from: [wind] } }
+    - { text: fair, weight: 5, tags: { from: [wind] } }
+    - { text: overcast, weight: 2, tags: { from: [wind] } }
+    - { text: overcast, weight: 2, tags: { from: [sleet] } }
+    - { text: overcast, weight: 2, tags: { from: [snow] } }
+    - { text: clear, weight: 5, tags: { from: [blizzard] } }
+    - { text: fair, weight: 5, tags: { from: [blizzard] } }
+    - { text: muggy, weight: 3, tags: { from: [blizzard] } }
+    - { text: overcast, weight: 2, tags: { from: [blizzard] } }
+    - { text: fog, weight: 1, tags: { from: [blizzard] } }
+    - { text: wind, weight: 2, tags: { from: [blizzard] } }
+    - { text: heatwave, weight: 1, tags: { from: [blizzard] } }
+    - { text: clear, weight: 5, tags: { from: [frost] } }
+    - { text: fog, weight: 1, tags: { from: [frost] } }
+    - { text: heatwave, weight: 3, tags: { from: [heatwave] } }
+    - { text: clear, weight: 5, tags: { from: [heatwave] } }
+    - { text: muggy, weight: 3, tags: { from: [heatwave] } }
+    - { text: wind, weight: 2, tags: { from: [sandstorm] } }
+    - { text: heatwave, weight: 1, tags: { from: [sandstorm] } }
+generators:
+  weather:
+    state:
+      zone: temperate
+      season: "{{ pick('weather.season.' ~ state.zone) }}"
+      condition: { start: "{{ pick('weather.start.' ~ state.zone ~ '.' ~ state.season) }}", next: "{{ pick('weather.transition.' ~ state.zone ~ '.' ~ state.season, where: {from: state.condition}) }}" }
+      temperature: { start: "{% set c = pick('weather.climate.' ~ state.zone ~ '.' ~ state.season) %}{% set target = c.middle + pick('weather.condition', where: {id: state.condition}).shift %}{{ target > c.high ? c.high : (target < c.low ? c.low : target) }}", next: "{% set c = pick('weather.climate.' ~ state.zone ~ '.' ~ state.season) %}{% set target = c.middle + pick('weather.condition', where: {id: state.condition}).shift %}{% set before = state.temperature %}{% if before > c.high %}{% set t = before - 2 < c.high ? c.high : before - 2 %}{% elseif before < c.low %}{% set t = before + 2 > c.low ? c.low : before + 2 %}{% else %}{% set t = before + roll(c.change) + (target > before ? 1 : (target < before ? -1 : 0)) %}{% set t = t > c.high ? c.high : (t < c.low ? c.low : t) %}{% endif %}{{ t }}" }
+    fields:
+      condition: '{{ state.condition }}'
+      label: "{{ pick('weather.condition', where: {id: state.condition}).label }}"
+      temperature: '{{ state.temperature }}'

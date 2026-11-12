@@ -1,0 +1,51 @@
+# Loot and treasure: coins, gems, a work of art, and an item whose nature the party does not know yet — what it looks
+# like, what it really is, and a clue that points to it.
+lists:
+  table.loot.gem:
+    - { text: agate, value: "10" }
+    - { text: garnet, value: "50" }
+    - { text: moonstone, value: "50" }
+    - { text: pearl, value: "100" }
+    - { text: amethyst, value: "100" }
+    - { text: topaz, value: "500" }
+    - { text: emerald, value: "1000" }
+  table.loot.art:
+    - a silver goblet engraved with hunting scenes
+    - a small painting of a forgotten queen
+    - a carved bone flute
+    - a gold-threaded tapestry, moth-eaten
+    - a porcelain mask with a chipped smile
+    - a brass astrolabe that still turns
+    - a jade figurine of a sleeping cat
+  table.loot.item:
+    - { text: "a plain iron ring, warm to the touch", identity: "a ring that keeps its wearer warm in any cold", tags: { n: ["1"] } }
+    - { text: "a dented tin flask that never feels empty", identity: "a flask that fills with clean water at dawn", tags: { n: ["2"] } }
+    - { text: "a feather quill whose ink is always wet", identity: "a quill that writes what was last said near it", tags: { n: ["3"] } }
+    - { text: "a grey stone with a hole through it", identity: "a seeing stone that shows the invisible", tags: { n: ["4"] } }
+    - { text: "a child's wooden sword, oddly heavy", identity: "a blade that grows to a real sword when drawn in anger", tags: { n: ["5"] } }
+    - { text: "a rusty key with no lock in sight", identity: "a key that opens any door once, then crumbles", tags: { n: ["6"] } }
+    - { text: "a cloak the colour of dusk", identity: "a cloak that hides its wearer in shadow", tags: { n: ["7"] } }
+    - { text: "a pair of worn boots, silent on stone", identity: "boots that leave no tracks", tags: { n: ["8"] } }
+  table.loot.clue:
+    - it hums when danger is near
+    - a name is scratched inside it in an old script
+    - animals avoid it
+    - it is never cold, even in snow
+    - it casts a shadow a little too long
+    - the last owner's diary mentions it
+generators:
+  table.loot:
+    fields:
+      coins: "{{ roll('3d6') * 10 }} copper, {{ roll('2d6') * 5 }} silver and {{ roll('1d6') - 1 }} gold"
+      gems: >-
+        {% set count = roll('1d4') - 1 %}{% if count > 0 %}{% for gem in pick('table.loot.gem', count) %}{% if loop.index0
+        > 0 %}, {% endif %}{{ gem }} ({{ gem.value }} gold){% endfor %}{% else %}none{% endif %}
+      art: "{{ roll('1d6') > 4 ? pick('table.loot.art') : 'none' }}"
+      unidentified: { generate: table.loot.unidentified }
+  table.loot.unidentified:
+    vars:
+      n: "{{ roll('1d8') }}"
+    fields:
+      looks_like: "{{ pick('table.loot.item', where: {n: n}) }}"
+      really_is: "{{ pick('table.loot.item', where: {n: n}).identity }}"
+      clue: "{{ pick('table.loot.clue') }}"

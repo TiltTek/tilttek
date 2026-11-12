@@ -1,0 +1,40 @@
+# Exploring a map of hexagons: the state holds where the party is, in axial coordinates, the heading the application
+# sets, and the terrain of the hex it is in, which the next hex follows: a forest goes on as forest more often than it
+# turns to lake. Each draw enters the next hex on the heading.
+lists:
+  hexcrawl.terrain:
+    - { text: plains, weight: 4, tags: { from: [plains] } }
+    - { text: plains, weight: 2, tags: { from: [forest, hills, swamp, lake] } }
+    - { text: forest, weight: 4, tags: { from: [forest] } }
+    - { text: forest, weight: 2, tags: { from: [plains, hills, swamp] } }
+    - { text: hills, weight: 3, tags: { from: [hills] } }
+    - { text: hills, weight: 2, tags: { from: [plains, forest, mountains] } }
+    - { text: mountains, weight: 3, tags: { from: [mountains] } }
+    - { text: mountains, weight: 1, tags: { from: [hills] } }
+    - { text: swamp, weight: 2, tags: { from: [swamp] } }
+    - { text: swamp, weight: 1, tags: { from: [plains, forest, lake] } }
+    - { text: lake, weight: 1, tags: { from: [plains, swamp, forest, lake] } }
+  hexcrawl.feature:
+    - a ruined watchtower
+    - a hermit's hut
+    - a standing stone
+    - a camp of hunters
+    - a cave mouth
+    - a burned village
+generators:
+  hexcrawl:
+    state:
+      heading: se
+      q:
+        start: "0"
+        next: "{{ state.q + {n: 0, ne: 1, se: 1, s: 0, sw: -1, nw: -1}[state.heading]|default(0) }}"
+      r:
+        start: "0"
+        next: "{{ state.r + {n: -1, ne: -1, se: 0, s: 1, sw: 1, nw: 0}[state.heading]|default(0) }}"
+      terrain:
+        start: plains
+        next: "{{ pick('hexcrawl.terrain', where: {from: state.terrain}) }}"
+    fields:
+      hex: "{{ state.q }},{{ state.r }}"
+      terrain: "{{ state.terrain }}"
+      feature: "{{ roll('1d6') == 6 ? pick('hexcrawl.feature') : 'nothing of note' }}"

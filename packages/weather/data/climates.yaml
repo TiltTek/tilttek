@@ -1,0 +1,168 @@
+# The climates tilttek/weather ships: the weather conditions, the seasons, and five climate zones whose seasons give a
+# range of temperatures in degrees Celsius and how often each condition comes. A condition moves only to itself or to a
+# neighbour that the season knows; a neighbour goes both ways.
+locales: [en, fr]
+
+conditions:
+  clear:
+    labels: { en: clear skies, fr: ciel dégagé }
+    temperature: 2
+    next_to: [fair, frost, heatwave]
+  fair:
+    labels: { en: "fair, with a few clouds", fr: "beau temps, quelques nuages" }
+    temperature: 1
+    next_to: [overcast, fog, wind, muggy]
+  muggy:
+    labels: { en: hot and muggy, fr: temps lourd et humide }
+    temperature: 2
+    next_to: [overcast, downpour, thunderstorm, heatwave]
+  overcast:
+    labels: { en: overcast, fr: ciel couvert }
+    temperature: -1
+    next_to: [fog, drizzle, rain, sleet, snow, wind]
+  fog:
+    labels: { en: fog, fr: brouillard }
+    temperature: -1
+    next_to: [drizzle, frost]
+  drizzle:
+    labels: { en: drizzle, fr: bruine }
+    temperature: -1
+    next_to: [rain]
+  rain:
+    labels: { en: steady rain, fr: pluie continue }
+    temperature: -2
+    next_to: [downpour, sleet]
+  downpour:
+    labels: { en: downpour, fr: averse }
+    temperature: -2
+    next_to: [thunderstorm]
+  thunderstorm:
+    labels: { en: thunderstorm, fr: orage }
+    temperature: -3
+    next_to: [wind]
+  wind:
+    labels: { en: strong wind, fr: grand vent }
+    temperature: -2
+    next_to: [sandstorm]
+  sleet:
+    labels: { en: sleet, fr: neige fondue }
+    temperature: -3
+    next_to: [snow]
+  snow:
+    labels: { en: snowfall, fr: chute de neige }
+    temperature: -3
+    next_to: [blizzard]
+  blizzard:
+    labels: { en: blizzard, fr: blizzard }
+    temperature: -5
+  frost:
+    labels: { en: hard frost, fr: gelée blanche }
+    temperature: -4
+  heatwave:
+    labels: { en: heatwave, fr: canicule }
+    temperature: 5
+    next_to: [sandstorm]
+  sandstorm:
+    labels: { en: sandstorm, fr: tempête de sable }
+    temperature: 2
+
+seasons:
+  spring: { labels: { en: spring, fr: printemps } }
+  summer: { labels: { en: summer, fr: été } }
+  autumn: { labels: { en: autumn, fr: automne } }
+  winter: { labels: { en: winter, fr: hiver } }
+  wet: { labels: { en: wet season, fr: saison des pluies } }
+  dry: { labels: { en: dry season, fr: saison sèche } }
+  hot: { labels: { en: hot season, fr: saison chaude } }
+  cool: { labels: { en: cool season, fr: saison fraîche } }
+
+zones:
+  temperate:
+    labels: { en: temperate, fr: tempéré }
+    persistence: 3
+    change: 1d5-3
+    seasons:
+      spring:
+        low: 3
+        high: 16
+        conditions: { clear: 2, fair: 4, overcast: 4, fog: 2, drizzle: 3, rain: 3, downpour: 1, thunderstorm: 1, wind: 2, frost: 1 }
+      summer:
+        low: 14
+        high: 30
+        conditions: { clear: 5, fair: 5, muggy: 2, overcast: 2, fog: 1, drizzle: 1, rain: 2, downpour: 2, thunderstorm: 2, wind: 1, heatwave: 1 }
+      autumn:
+        low: 4
+        high: 17
+        conditions: { clear: 2, fair: 3, overcast: 5, fog: 4, drizzle: 3, rain: 4, downpour: 1, thunderstorm: 1, wind: 3, frost: 1 }
+      winter:
+        low: -8
+        high: 6
+        conditions: { clear: 2, fair: 1, overcast: 5, fog: 3, drizzle: 1, rain: 2, wind: 2, sleet: 2, snow: 4, blizzard: 1, frost: 3 }
+  boreal:
+    labels: { en: boreal, fr: boréal }
+    persistence: 4
+    change: 1d7-4
+    seasons:
+      spring:
+        low: -5
+        high: 10
+        conditions: { clear: 3, fair: 3, overcast: 4, fog: 2, drizzle: 2, rain: 2, wind: 2, sleet: 2, snow: 2, frost: 3 }
+      summer:
+        low: 8
+        high: 24
+        conditions: { clear: 4, fair: 5, overcast: 3, fog: 2, drizzle: 2, rain: 3, downpour: 1, thunderstorm: 2, wind: 1 }
+      autumn:
+        low: -6
+        high: 10
+        conditions: { clear: 2, fair: 2, overcast: 5, fog: 3, drizzle: 2, rain: 3, wind: 3, sleet: 3, snow: 3, frost: 3 }
+      winter:
+        low: -35
+        high: -5
+        conditions: { clear: 4, fair: 1, overcast: 4, fog: 1, wind: 2, snow: 5, blizzard: 3, frost: 4 }
+  mediterranean:
+    labels: { en: mediterranean, fr: méditerranéen }
+    persistence: 4
+    change: 1d5-3
+    seasons:
+      spring:
+        low: 10
+        high: 22
+        conditions: { clear: 5, fair: 5, overcast: 3, drizzle: 1, rain: 2, downpour: 1, thunderstorm: 1, wind: 2 }
+      summer:
+        low: 20
+        high: 36
+        conditions: { clear: 9, fair: 4, muggy: 1, wind: 2, heatwave: 3, thunderstorm: 1 }
+      autumn:
+        low: 12
+        high: 25
+        conditions: { clear: 4, fair: 4, overcast: 3, drizzle: 1, rain: 3, downpour: 2, thunderstorm: 2, wind: 2 }
+      winter:
+        low: 2
+        high: 15
+        conditions: { clear: 3, fair: 3, overcast: 4, fog: 2, drizzle: 2, rain: 4, downpour: 1, wind: 3, frost: 1 }
+  arid:
+    labels: { en: arid, fr: aride }
+    persistence: 5
+    change: 1d5-3
+    seasons:
+      hot:
+        low: 25
+        high: 45
+        conditions: { clear: 8, fair: 3, wind: 3, heatwave: 4, sandstorm: 2, overcast: 1, thunderstorm: 1 }
+      cool:
+        low: 5
+        high: 25
+        conditions: { clear: 7, fair: 4, overcast: 2, wind: 3, sandstorm: 1, frost: 2, rain: 1 }
+  tropical:
+    labels: { en: tropical, fr: tropical }
+    persistence: 3
+    change: 1d3-2
+    seasons:
+      wet:
+        low: 23
+        high: 32
+        conditions: { muggy: 4, overcast: 4, drizzle: 2, rain: 4, downpour: 5, thunderstorm: 4, fair: 2, wind: 1 }
+      dry:
+        low: 20
+        high: 31
+        conditions: { clear: 5, fair: 5, muggy: 3, overcast: 2, fog: 1, wind: 2, heatwave: 1 }

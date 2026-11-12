@@ -1,0 +1,13 @@
+lists:
+  name.syllable: [ka, ri, to]
+generators:
+  name.short:
+    templates: "{% set a = pick('name.syllable') %}{{ a }}{{ pick('name.syllable', not: a) }}"
+    filters: [capitalize]
+  inn:
+    fields:
+      name: "The {{ generate('name.short') }}"
+      sign: Café
+      staff: { generate: name.short, count: 2 }
+  broken:
+    templates: "{{ nothing }}"

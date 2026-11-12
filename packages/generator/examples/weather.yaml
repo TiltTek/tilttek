@@ -1,0 +1,38 @@
+# The weather of a campaign as a hex flower: nineteen hexagons, each a weather, and a state that says which one the
+# weather is in. Each draw moves one step in a direction drawn by weight, staying in place at the edge, so that the
+# weather of one day follows from the day before. The application keeps the state between the days.
+lists:
+  weather.cell:
+    - { text: storm, n: "1", ne: "1", se: "3", s: "5", sw: "2", nw: "1", tags: { cell: ["1"] } }
+    - { text: heavy rain, n: "2", ne: "1", se: "5", s: "7", sw: "4", nw: "2", tags: { cell: ["2"] } }
+    - { text: heavy rain, n: "3", ne: "3", se: "6", s: "8", sw: "5", nw: "1", tags: { cell: ["3"] } }
+    - { text: fog, n: "4", ne: "2", se: "7", s: "9", sw: "4", nw: "4", tags: { cell: ["4"] } }
+    - { text: rain, n: "1", ne: "3", se: "8", s: "10", sw: "7", nw: "2", tags: { cell: ["5"] } }
+    - { text: strong wind, n: "6", ne: "6", se: "6", s: "11", sw: "8", nw: "3", tags: { cell: ["6"] } }
+    - { text: drizzle, n: "2", ne: "5", se: "10", s: "12", sw: "9", nw: "4", tags: { cell: ["7"] } }
+    - { text: overcast, n: "3", ne: "6", se: "11", s: "13", sw: "10", nw: "5", tags: { cell: ["8"] } }
+    - { text: fog, n: "4", ne: "7", se: "12", s: "14", sw: "9", nw: "9", tags: { cell: ["9"] } }
+    - { text: fair, n: "5", ne: "8", se: "13", s: "15", sw: "12", nw: "7", tags: { cell: ["10"] } }
+    - { text: strong wind, n: "6", ne: "11", se: "11", s: "16", sw: "13", nw: "8", tags: { cell: ["11"] } }
+    - { text: overcast, n: "7", ne: "10", se: "15", s: "17", sw: "14", nw: "9", tags: { cell: ["12"] } }
+    - { text: sunny, n: "8", ne: "11", se: "16", s: "18", sw: "15", nw: "10", tags: { cell: ["13"] } }
+    - { text: mist, n: "9", ne: "12", se: "17", s: "14", sw: "14", nw: "14", tags: { cell: ["14"] } }
+    - { text: sunny, n: "10", ne: "13", se: "18", s: "19", sw: "17", nw: "12", tags: { cell: ["15"] } }
+    - { text: dry wind, n: "11", ne: "16", se: "16", s: "16", sw: "18", nw: "13", tags: { cell: ["16"] } }
+    - { text: warm, n: "12", ne: "15", se: "19", s: "17", sw: "17", nw: "14", tags: { cell: ["17"] } }
+    - { text: hot, n: "13", ne: "16", se: "18", s: "18", sw: "19", nw: "15", tags: { cell: ["18"] } }
+    - { text: heatwave, n: "15", ne: "18", se: "19", s: "19", sw: "19", nw: "17", tags: { cell: ["19"] } }
+  weather.direction:
+    - { text: n, weight: 6 }
+    - { text: ne, weight: 5 }
+    - { text: se, weight: 7 }
+    - { text: s, weight: 6 }
+    - { text: sw, weight: 5 }
+    - { text: nw, weight: 7 }
+generators:
+  weather:
+    state:
+      cell:
+        start: "10"
+        next: "{{ pick('weather.cell', where: {cell: state.cell})[pick('weather.direction').text] }}"
+    templates: "{{ pick('weather.cell', where: {cell: state.cell})|upper_first }}"

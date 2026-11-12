@@ -1,0 +1,53 @@
+# Butin et trésors : des pièces, des gemmes, une œuvre d'art, et un objet dont le groupe ignore encore la nature — ce à
+# quoi il ressemble, ce qu'il est vraiment, et un indice qui y mène.
+lists:
+  table.loot.gem:
+    - { text: agate, value: "10" }
+    - { text: grenat, value: "50" }
+    - { text: pierre de lune, value: "50" }
+    - { text: perle, value: "100" }
+    - { text: améthyste, value: "100" }
+    - { text: topaze, value: "500" }
+    - { text: émeraude, value: "1000" }
+  table.loot.art:
+    - un gobelet d'argent gravé de scènes de chasse
+    - le petit portrait d'une reine oubliée
+    - une flûte en os sculpté
+    - une tapisserie brodée d'or, rongée par les mites
+    - un masque de porcelaine au sourire ébréché
+    - un astrolabe de laiton qui tourne encore
+    - une figurine de jade, un chat endormi
+  table.loot.item:
+    - { text: "un simple anneau de fer, tiède au toucher", identity: "un anneau qui garde son porteur au chaud par tous les froids", tags: { n: ["1"] } }
+    - { text: "une gourde d'étain cabossée qui ne semble jamais vide", identity: "une gourde qui se remplit d'eau claire à l'aube", tags: { n: ["2"] } }
+    - { text: "une plume dont l'encre ne sèche jamais", identity: "une plume qui écrit les dernières paroles prononcées près d'elle", tags: { n: ["3"] } }
+    - { text: "une pierre grise percée d'un trou", identity: "une pierre de vision qui montre l'invisible", tags: { n: ["4"] } }
+    - { text: "une épée de bois d'enfant, étrangement lourde", identity: "une lame qui devient une vraie épée quand on la tire sous le coup de la colère", tags: { n: ["5"] } }
+    - { text: "une clé rouillée sans serrure en vue", identity: "une clé qui ouvre n'importe quelle porte une fois, puis tombe en poussière", tags: { n: ["6"] } }
+    - { text: "une cape couleur de crépuscule", identity: "une cape qui cache son porteur dans l'ombre", tags: { n: ["7"] } }
+    - { text: "une paire de bottes usées, muettes sur la pierre", identity: "des bottes qui ne laissent aucune trace", tags: { n: ["8"] } }
+  table.loot.clue:
+    - un bourdonnement s'en échappe quand un danger approche
+    - un nom est gravé à l'intérieur dans une écriture ancienne
+    - les animaux l'évitent
+    - même dans la neige, son contact reste tiède
+    - son ombre est un peu trop longue
+    - le journal de son dernier propriétaire en parle
+generators:
+  table.loot:
+    locale: fr
+    fields:
+      coins: "{{ roll('3d6') * 10 }} pièces de cuivre, {{ roll('2d6') * 5 }} d'argent et {{ roll('1d6') - 1 }} d'or"
+      gems: >-
+        {% set count = roll('1d4') - 1 %}{% if count > 0 %}{% for gem in pick('table.loot.gem', count) %}{% if loop.index0
+        > 0 %}, {% endif %}{{ gem }} ({{ gem.value }} pièces d'or){% endfor %}{% else %}aucune{% endif %}
+      art: "{{ roll('1d6') > 4 ? pick('table.loot.art') : 'aucune' }}"
+      unidentified: { generate: table.loot.unidentified }
+  table.loot.unidentified:
+    locale: fr
+    vars:
+      n: "{{ roll('1d8') }}"
+    fields:
+      looks_like: "{{ pick('table.loot.item', where: {n: n}) }}"
+      really_is: "{{ pick('table.loot.item', where: {n: n}).identity }}"
+      clue: "{{ pick('table.loot.clue') }}"

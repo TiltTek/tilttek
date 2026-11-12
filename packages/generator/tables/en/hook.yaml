@@ -1,0 +1,64 @@
+# Adventure hooks: who asks, what for, why, and what the party does not know yet.
+lists:
+  table.hook.patron:
+    - a worried innkeeper
+    - a retired adventurer
+    - a temple scribe
+    - a merchant guild
+    - a frightened child
+    - a disgraced knight
+    - a village elder
+    - a travelling scholar
+    - a masked stranger
+    - a local lord
+  table.hook.task:
+    - { text: find, weight: 2 }
+    - { text: escort, weight: 1 }
+    - { text: steal back, weight: 1 }
+    - { text: destroy, weight: 1 }
+    - { text: deliver, weight: 1 }
+    - { text: rescue, weight: 2 }
+    - { text: investigate, weight: 2 }
+  table.hook.target:
+    - a missing heir
+    - a sealed letter
+    - a stolen relic
+    - the source of a sickness
+    - a caravan of spices
+    - an old map
+    - a cursed bell
+    - the last of a line of witches
+    - a herd of enchanted goats
+  table.hook.place:
+    - in the drowned quarter
+    - beyond the old border stones
+    - beneath the abbey
+    - in the abandoned mine
+    - on the island no map shows
+    - in the forest that moves
+  table.hook.reason:
+    - an old debt must be repaid
+    - a prophecy names the party
+    - nobody else will do it
+    - the reward is a title of land
+    - a rival is already on the way
+    - it was promised to a dying friend
+  table.hook.twist:
+    - { text: the patron lied about the reward, weight: 2 }
+    - { text: someone else hired a second party, weight: 2 }
+    - { text: the target does not want to be found, weight: 2 }
+    - { text: the patron is the real culprit, weight: 1 }
+    - { text: the deadline is shorter than they said, weight: 2 }
+    - { text: nothing is as it seems, and that is all, weight: 1 }
+generators:
+  table.hook:
+    templates:
+      - template: >-
+          {{ pick('table.hook.patron')|upper_first }} asks the party to {{ pick('table.hook.task') }}
+          {{ pick('table.hook.target') }} {{ pick('table.hook.place') }}, because {{ pick('table.hook.reason') }};
+          but {{ pick('table.hook.twist') }}.
+        weight: 3
+      - template: >-
+          {{ pick('table.hook.target')|upper_first }} {{ pick('table.hook.place') }} is all anyone talks about, and
+          {{ pick('table.hook.patron') }} will pay to have someone {{ pick('table.hook.task') }} it.
+        weight: 1

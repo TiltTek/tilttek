@@ -1,0 +1,23 @@
+{
+    "name": "@tilttek/generator-bundle",
+    "description": "The generator's Stimulus controller: asks the draw API for new results and shows them in place",
+    "version": "0.1.0",
+    "license": "MIT",
+    "type": "module",
+    "symfony": {
+        "controllers": {
+            "generator": {
+                "main": "src/generator_controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0"
+    }
+}

@@ -1,7 +1,7 @@
 # Tilttek
 
-**Des bibliothèques PHP et des bundles Symfony ouverts pour les jeux et la ludification : dés, butin, points, niveaux,
-badges, quêtes, collections et échanges.**
+**Des bibliothèques PHP et des bundles Symfony ouverts pour les jeux et la ludification : dés, butin, générateurs
+aléatoires, météo, points, niveaux, badges, quêtes, collections et échanges.**
 
 Tilttek est un ensemble de petits paquets `tilttek/*` qui font chacun une seule chose : une bibliothèque en PHP pur, le
 plus souvent accompagnée d'un bundle Symfony qui la branche à la configuration, à Doctrine, à Twig, à la console et à
@@ -22,6 +22,14 @@ ensuite copié dans son propre dépôt, en **lecture seule**, d'où Composer l'i
 | [`tilttek/dice-probability`](https://github.com/TiltTek/dice-probability) | Les probabilités exactes d'une expression de dés, en fractions : distributions, au moins et au plus, moyenne, comparaisons. |
 | [`tilttek/loot-tables`](https://github.com/TiltTek/loot-tables) | Des tables de butin lancées avec n'importe quel dé, tirées d'une façon que chacun peut vérifier, dés physiques compris. |
 | [`tilttek/accessible-dice`](https://github.com/TiltTek/accessible-dice) | Un formulaire de dés accessible pour Symfony, avec ou sans JavaScript : grandes cibles, faces dites par libellé, forme et valeur, résultats annoncés aux lecteurs d'écran. |
+
+### Générateurs
+
+| Paquet | Description |
+|---|---|
+| [`tilttek/generator`](https://github.com/TiltTek/generator) | Des générateurs aléatoires écrits comme des données : listes pondérées, noms de Markov, gabarits Twig dans un bac à sable, grammaire en six langues, cartes, tables à mémoire, tirages rejouables. |
+| [`tilttek/generator-bundle`](https://github.com/TiltTek/generator-bundle) | Les générateurs aléatoires dans une application Symfony : listes en YAML et JSON, tables aléatoires prêtes à tirer, commandes, Twig, contrôleur Stimulus et API de tirage sous limite de débit. |
+| [`tilttek/weather`](https://github.com/TiltTek/weather) | La météo du monde de jeu : saisons et zones climatiques, conditions qui suivent la veille, températures tirées dans la plage de la saison, reproductible à partir d'une graine. |
 
 ### Ludification
 

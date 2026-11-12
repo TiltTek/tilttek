@@ -1,0 +1,88 @@
+# Un oracle de jeu en solo : des réponses par oui ou par non pesées par les chances de la question et par un facteur de
+# chaos, des événements aléatoires, et de l'inspiration par une action et un thème. Le facteur de chaos (1 à 9) et les
+# chances (certain, likely, even, unlikely ou impossible, les mêmes identifiants qu'en anglais) sont des valeurs de
+# l'état que l'application fixe et garde d'un tirage au suivant ; un premier tirage sans état pose une question à
+# chances égales, au chaos 5.
+lists:
+  table.oracle.action:
+    - abandonner
+    - attaquer
+    - trahir
+    - bâtir
+    - tromper
+    - découvrir
+    - fuir
+    - garder
+    - soigner
+    - traquer
+    - convoiter
+    - négocier
+    - combattre
+    - protéger
+    - révéler
+    - voler
+    - invoquer
+    - suivre
+    - croire
+    - réveiller
+  table.oracle.theme:
+    - un marché
+    - une foule
+    - un rêve
+    - une famille
+    - un incendie
+    - un voyage
+    - une loi
+    - une machine
+    - un souvenir
+    - un messager
+    - un monstre
+    - un présage
+    - une épidémie
+    - une relique
+    - un rival
+    - une ruine
+    - un secret
+    - une tempête
+    - un inconnu
+    - une arme
+  table.oracle.event:
+    - { text: un nouveau personnage arrive, weight: 2 }
+    - { text: un ennemi passe à l'action, weight: 2 }
+    - { text: un ami a besoin d'aide, weight: 1 }
+    - { text: quelque chose se perd, weight: 1 }
+    - { text: une intrigue prend fin, weight: 1 }
+    - { text: quelque chose arrive au loin, weight: 2 }
+    - { text: un allié inattendu se présente, weight: 1 }
+  table.oracle.simple:
+    - { text: "Oui, et…", weight: 1 }
+    - { text: "Oui", weight: 3 }
+    - { text: "Oui, mais…", weight: 2 }
+    - { text: "Non, mais…", weight: 2 }
+    - { text: "Non", weight: 3 }
+    - { text: "Non, et…", weight: 1 }
+generators:
+  table.oracle:
+    locale: fr
+    state:
+      chaos: "5"
+      odds: even
+    vars:
+      chance: >-
+        {% set base = {certain: 90, likely: 70, even: 50, unlikely: 30, impossible: 10}[state.odds]|default(50) %}
+        {% set chaos = state.chaos %}{% if chaos < 1 %}{% set chaos = 1 %}{% elseif chaos > 9 %}{% set chaos = 9 %}{% endif %}
+        {% set chance = base + (chaos - 5) * 5 %}{{ chance < 1 ? 1 : (chance > 99 ? 99 : chance) }}
+    fields:
+      roll: "{{ roll('1d100') }}"
+      answer: >-
+        {% if roll <= chance // 5 %}Oui, et…{% elseif roll <= chance %}Oui{% elseif roll > 100 - (100 - chance) // 5
+        %}Non, et…{% else %}Non{% endif %}
+      event: >-
+        {% if roll % 11 == 0 and roll // 11 <= state.chaos %}{{ pick('table.oracle.event')|upper_first }} :
+        {{ pick('table.oracle.action') }} {{ pick('table.oracle.theme') }}{% endif %}
+  table.oracle.yes-no:
+    locale: fr
+    templates: "{{ pick('table.oracle.simple') }}"
+  table.oracle.inspiration:
+    locale: fr
+    templates: "{{ pick('table.oracle.action')|upper_first }} {{ pick('table.oracle.theme') }}"

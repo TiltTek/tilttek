@@ -1,0 +1,89 @@
+# Les boutiques : leur genre et leur enseigne, leur marchand, et ce qu'elles ont en stock aujourd'hui avec son prix en
+# pièces d'argent.
+lists:
+  table.shop.kind:
+    - { text: forge, tags: { type: [smithy] } }
+    - { text: apothicairerie, tags: { type: [apothecary] } }
+    - { text: bazar, weight: 2, tags: { type: [general] } }
+    - { text: librairie, tags: { type: [books] } }
+  table.shop.adjective:
+    - doré
+    - rouillé
+    - tordu
+    - { text: rieur, f: rieuse }
+    - silencieux
+    - errant
+    - chanceux
+    - endormi
+  table.shop.noun:
+    - { text: enclume, gender: f }
+    - { text: chaudron, gender: m }
+    - { text: lanterne, gender: f }
+    - { text: oie, gender: f }
+    - { text: tonneau, gender: m }
+    - { text: plume, gender: f }
+    - { text: mortier, gender: m }
+    - { text: clé, gender: f }
+  table.shop.item:
+    - { text: des fers à cheval, price: 1d4, tags: { type: [smithy] } }
+    - { text: une hachette, price: 2d6, tags: { type: [smithy, general] } }
+    - { text: une épée longue, price: 6d6, tags: { type: [smithy] } }
+    - { text: une chemise de mailles, price: 10d10, tags: { type: [smithy] } }
+    - { text: des clous à la livre, price: "1", tags: { type: [smithy, general] } }
+    - { text: un baume de soin, price: 2d4, tags: { type: [apothecary] } }
+    - { text: un somnifère, price: 3d4, tags: { type: [apothecary] } }
+    - { text: de la fleur de lune séchée, price: 1d6, tags: { type: [apothecary] } }
+    - { text: un antidote, price: 4d6, tags: { type: [apothecary] } }
+    - { text: des sels à respirer, price: 1d4, tags: { type: [apothecary, general] } }
+    - { text: quinze mètres de corde, price: 1d4, tags: { type: [general] } }
+    - { text: une lanterne, price: 1d6, tags: { type: [general] } }
+    - { text: des rations pour une semaine, price: 1d6, tags: { type: [general] } }
+    - { text: un sac de couchage, price: 1d4, tags: { type: [general] } }
+    - { text: un briquet à amadou, price: "1", tags: { type: [general] } }
+    - { text: un carnet vierge, price: 1d6, tags: { type: [books, general] } }
+    - { text: une carte de la région, price: 2d6, tags: { type: [books] } }
+    - { text: un bestiaire aux pages arrachées, price: 3d6, tags: { type: [books] } }
+    - { text: un recueil de vieilles chansons, price: 1d8, tags: { type: [books] } }
+    - { text: un traité sur les étoiles, price: 2d8, tags: { type: [books] } }
+  table.shop.merchant:
+    - Armand
+    - Bérénice
+    - Clovis
+    - Delphine
+    - Eudes
+    - Firmine
+    - Gaspard
+    - Hortense
+  table.shop.trait:
+    - parle trop
+    - compte chaque pièce deux fois
+    - entend mal et en tire une certaine fierté
+    - retient le nom de chaque client
+    - fredonne en travaillant
+    - se méfie de quiconque porte une armure
+    - fait un rabais à qui sait le faire rire
+    - doit secrètement de l'argent à une guilde de voleurs
+  table.shop.mood:
+    - { text: de bonne humeur, weight: 2 }
+    - { text: de mauvaise humeur, weight: 2 }
+    - { text: sans une minute à soi, weight: 2 }
+    - { text: sur les nerfs, weight: 1 }
+generators:
+  table.shop:
+    locale: fr
+    vars:
+      type: "{{ pick('table.shop.kind').tags.type|first }}"
+    fields:
+      kind: "{{ pick('table.shop.kind', where: {type: type}) }}"
+      sign: >-
+        {% set noun = pick('table.shop.noun') %}{{ ('à ' ~ noun|article ~ ' ' ~ pick('table.shop.adjective')|agree(noun))|elide|upper_first }}
+      merchant: { generate: table.shop.merchant }
+      stock: >-
+        {% for item in pick('table.shop.item', 5, where: {type: type}) %}{% if loop.index0 > 0 %} ; {% endif %}{{ item }}
+        ({% set price = roll(item.price) %}{{ price }} {{ 'pièce'|plural(price) }} d'argent){% endfor %}
+  table.shop.merchant:
+    locale: fr
+    fields:
+      name: "{{ pick('table.shop.merchant') }}"
+      trait: "{{ name }} {{ pick('table.shop.trait') }}"
+      mood: "{{ pick('table.shop.mood') }}"

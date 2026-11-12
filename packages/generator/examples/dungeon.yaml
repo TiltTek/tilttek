@@ -1,0 +1,24 @@
+# Rooms joined by passages: every room can be reached, and a few extra passages make loops.
+lists:
+  dungeon.room:
+    - hall
+    - cell
+    - shrine
+    - storeroom
+    - well room
+  dungeon.feature:
+    - a locked chest
+    - an empty pedestal
+    - a sleeping guard
+    - nothing at all
+generators:
+  dungeon.room:
+    fields:
+      kind: "{{ pick('dungeon.room') }}"
+      feature: "{{ pick('dungeon.feature') }}"
+  dungeon:
+    map:
+      layout: graph
+      nodes: '1d4+3'
+      extra_edges: 2
+      cell: { generate: dungeon.room }

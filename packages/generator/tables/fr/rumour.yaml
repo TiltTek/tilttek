@@ -1,0 +1,33 @@
+# Les rumeurs d'un lieu : ce qu'on en dit, et la part de vrai. Le lieu est une valeur de l'état que l'application fixe
+# et garde d'un tirage au suivant, écrit avec son article ; un premier tirage sans état parle du « village ».
+lists:
+  table.rumour.subject:
+    - le meunier
+    - le vieux prêtre
+    - la fille du maire
+    - un inconnu en cape grise
+    - la forgeronne
+    - l'un des jumeaux de la ferme
+    - le guet de nuit
+    - la femme qui vend des herbes
+  table.rumour.claim:
+    - creuse la nuit près de
+    - doit une fortune à quelqu'un qui n'est pas de
+    - connaît le passage caché sous
+    - a vu le jour dans une maison qui a brûlé dans
+    - rencontre une créature des bois derrière
+    - cache un coffre de vieilles pièces quelque part dans
+    - prépare en secret son départ de
+    - erre chaque nuit dans les rues de
+  table.rumour.truth:
+    - { text: vrai, weight: 2 }
+    - { text: en partie vrai, weight: 3 }
+    - { text: faux, weight: 2 }
+generators:
+  table.rumour:
+    locale: fr
+    state:
+      place: le village
+    fields:
+      rumour: "{{ ('On dit que ' ~ pick('table.rumour.subject') ~ ' ' ~ pick('table.rumour.claim') ~ ' ' ~ state.place)|elide }}."
+      truth: "{{ pick('table.rumour.truth') }}"

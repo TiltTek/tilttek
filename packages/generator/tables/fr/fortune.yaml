@@ -1,0 +1,65 @@
+# La bonne aventure, par les cartes ou par les tables : un tirage de trois cartes d'un jeu de vingt-deux, chacune à
+# l'endroit ou à l'envers ; une carte du jour ; et une prophétie faite de trois tables.
+lists:
+  table.fortune.card:
+    - { text: La Lanterne, upright: une vérité éclate, reversed: un secret gardé trop longtemps }
+    - { text: Le Corbeau, upright: des nouvelles de loin, reversed: une rumeur qui égare }
+    - { text: La Clé, upright: un chemin s'ouvre, reversed: une porte se ferme derrière vous }
+    - { text: Le Pont, upright: une alliance, reversed: une promesse rompue }
+    - { text: Le Masque, upright: un déguisement utile, reversed: un ami qui n'en est pas un }
+    - { text: Le Puits, upright: la patience récompensée, reversed: un don qui se tarit }
+    - { text: La Cloche du beffroi, upright: un avertissement entendu, reversed: une alarme trop tardive }
+    - { text: Le Voyageur, upright: un voyage commence, reversed: une route qui revient sur ses pas }
+    - { text: Le Foyer, upright: un toit et du repos, reversed: une querelle à table }
+    - { text: L'Épine, upright: une petite douleur qui protège, reversed: une plaie qui s'envenime }
+    - { text: La Couronne, upright: une autorité méritée, reversed: l'orgueil avant la chute }
+    - { text: Le Serpent, upright: une sagesse cachée, reversed: une trahison }
+    - { text: La Balance, upright: un jugement équitable, reversed: une dette arrive à échéance }
+    - { text: L'Orage, upright: un changement soudain, reversed: un calme qui ne durera pas }
+    - { text: Le Miroir, upright: se connaître soi-même, reversed: la vanité }
+    - { text: Le Limier, upright: la loyauté, reversed: être traqué }
+    - { text: Le Métier à tisser, upright: les projets se nouent, reversed: les fils se défont }
+    - { text: La Porte de lune, upright: des rêves qui guident, reversed: des illusions }
+    - { text: La Forge, upright: le travail paie, reversed: quelque chose cède sous l'effort }
+    - { text: Le Festin, upright: l'abondance, reversed: le gaspillage }
+    - { text: Le Hibou, upright: un bon conseil, reversed: un conseil ignoré }
+    - { text: La Dernière Braise, upright: l'espoir demeure, reversed: une fin }
+  table.fortune.who:
+    - un inconnu balafré
+    - une vieille amie
+    - quelqu'un qui vous doit une faveur
+    - une enfant qui en sait trop
+    - un rival
+    - une messagère
+  table.fortune.where:
+    - à un carrefour
+    - au bord d'une eau vive
+    - sous la pleine lune
+    - dans un marché bondé
+    - à la porte d'un temple
+    - là où la route s'arrête
+  table.fortune.what:
+    - vous offrira un choix
+    - vous demandera votre aide
+    - vous apportera une clé
+    - prononcera votre vrai nom
+    - vous mentira
+    - vous sauvera la vie
+generators:
+  table.fortune:
+    locale: fr
+    templates:
+      - >-
+        {% set positions = ['Ce qui fut', 'Ce qui est', 'Ce qui sera'] %}
+        {% for card in pick('table.fortune.card', 3) %}
+        {{ positions[loop.index0] }} : {{ card }}{% if roll('1d6') == 1 %}, à l'envers — {{ card.reversed }}{% else %}
+        — {{ card.upright }}{% endif %}.
+        {% endfor %}
+  table.fortune.day:
+    locale: fr
+    templates:
+      - "{% set card = pick('table.fortune.card') %}{{ card }} — {{ card.upright }}."
+  table.fortune.prophecy:
+    locale: fr
+    templates:
+      - "{{ (pick('table.fortune.who') ~ ' ' ~ pick('table.fortune.where') ~ ' ' ~ pick('table.fortune.what'))|upper_first }}."

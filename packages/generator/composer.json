@@ -1,0 +1,51 @@
+{
+    "name": "tilttek/generator",
+    "description": "Random generators written as data: weighted, tagged lists or words from a Markov chain, Twig templates in a sandbox that pick, generate and roll, grammar in six languages, structured results, generated maps, tables with a memory, unique and replayable draws, and limits against runaway generators",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "generator",
+        "random-tables",
+        "name-generator",
+        "procedural-generation",
+        "rpg",
+        "ttrpg",
+        "twig"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-mbstring": "*",
+        "symfony/yaml": "^8.2",
+        "tilttek/dice": "^0.1@dev",
+        "twig/twig": "^3.21"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Generator\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Generator\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

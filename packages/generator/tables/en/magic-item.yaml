@@ -1,0 +1,66 @@
+# Magic items: a form, a power, what it looks like, a quirk, and how many charges it holds.
+lists:
+  table.magic-item.form:
+    - ring
+    - amulet
+    - cloak
+    - wand
+    - staff
+    - dagger
+    - sword
+    - shield
+    - lantern
+    - pair of gloves
+    - pair of boots
+    - hat
+    - mirror
+    - bell
+  table.magic-item.power:
+    - { text: Warmth, effect: keeps its bearer warm in the worst cold }
+    - { text: the Deep, effect: lets its bearer breathe under water }
+    - { text: Whispers, effect: carries its bearer's voice to one listener far away }
+    - { text: Swiftness, effect: doubles its bearer's speed for a minute }
+    - { text: the Owl, effect: lets its bearer see in the dark }
+    - { text: the Hearth, effect: lights a small fire on command }
+    - { text: the Mule, effect: makes heavy loads feel light }
+    - { text: Echoes, effect: repeats the last words spoken near it }
+    - { text: the Tide, effect: pushes back water and mud around its bearer }
+    - { text: Mending, effect: repairs a broken object it touches }
+    - { text: the Moth, effect: lets its bearer glide gently down any fall }
+    - { text: Truth, effect: grows cold when a lie is spoken nearby }
+  table.magic-item.material:
+    - silver
+    - black iron
+    - bone
+    - driftwood
+    - copper
+    - glass
+    - stone
+    - braided leather
+  table.magic-item.detail:
+    - set with a cloudy gem
+    - covered in tiny runes
+    - wrapped in faded silk
+    - with a crack that glows faintly
+    - that smells of rain
+    - marked with a maker's sigil
+  table.magic-item.quirk:
+    - It hums an old tune when used.
+    - It is always slightly damp.
+    - It refuses to work on holy days.
+    - It insists on being polished every night.
+    - Cats follow its bearer.
+    - It grows heavier when its bearer lies.
+    - It glows when gold is near.
+    - It has no quirk anyone has noticed.
+generators:
+  table.magic-item:
+    vars:
+      form: "{{ pick('table.magic-item.form') }}"
+    fields:
+      name: "{% set power = pick('table.magic-item.power') %}{{ form|title }} of {{ power }}: it {{ power.effect }}"
+      appearance: >-
+        {{ ((pick('table.magic-item.material') ~ ' ' ~ form)|article('indefinite') ~ ' '
+        ~ pick('table.magic-item.detail'))|upper_first }}
+      quirk: "{{ pick('table.magic-item.quirk') }}"
+      charges: "{{ roll('1d6') + 1 }}"

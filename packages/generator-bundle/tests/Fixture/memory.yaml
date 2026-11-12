@@ -1,0 +1,6 @@
+generators:
+  days:
+    state:
+      day: { start: '1', next: '{{ state.day + 1 }}' }
+      season: spring
+    templates: 'Day {{ state.day }} of {{ state.season }}'

@@ -1,0 +1,23 @@
+# A journey day by day: the state counts the days and the miles left, which the application sets when the journey
+# starts; each draw is one day of travel, with what happens on the road.
+lists:
+  travel.event:
+    - { text: an uneventful day, weight: 4 }
+    - { text: a bridge is out and the party must ford the river, weight: 1 }
+    - { text: a fellow traveller shares the road, weight: 2 }
+    - { text: the road is muddy and slow, weight: 2 }
+    - { text: a wayside shrine offers shelter for the night, weight: 1 }
+    - { text: tracks of something large cross the road, weight: 1 }
+generators:
+  travel:
+    state:
+      day:
+        start: "1"
+        next: "{{ state.day + 1 }}"
+      remaining:
+        start: "60"
+        next: "{% set left = state.remaining - 12 - roll('2d6') %}{{ left < 0 ? 0 : left }}"
+    templates: >-
+      Day {{ state.day }}: {{ pick('travel.event') }}.
+      {% if state.remaining > 0 %}{{ previous.remaining|default(state.remaining) - state.remaining }} miles covered,
+      {{ state.remaining }} to go.{% else %}The party arrives.{% endif %}

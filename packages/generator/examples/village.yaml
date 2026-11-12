@@ -1,0 +1,15 @@
+# A village on a square grid: each cell is a building, a field or a path.
+lists:
+  village.place:
+    - { text: house, weight: 4 }
+    - { text: field, weight: 3 }
+    - { text: path, weight: 2 }
+    - { text: well }
+    - { text: smithy }
+generators:
+  village:
+    map:
+      layout: square
+      width: 4
+      height: 3
+      cell: "{{ pick('village.place') }}"

@@ -1,0 +1,23 @@
+{#
+ # Results of a generator, drawn again in place by the Stimulus controller:
+ #
+ #     {{ include('@TilttekGenerator/draw.html.twig', {
+ #         result: tilttek_draw('name.elf', 5, true),
+ #         url: path('tilttek_generator_draw', {generator: 'name.elf'}),
+ #         again: 'Again',
+ #     }) }}
+ #
+ # A structured result shows its `name` field, or its JSON; the application writes its own template to show more.
+ #}
+{% set controller = 'tilttek--generator-bundle--generator' %}
+<div class="tilttek-generator" data-controller="{{ controller }}"
+     data-{{ controller }}-url-value="{{ url }}"
+     data-{{ controller }}-count-value="{{ result.requested }}">
+    <ul data-{{ controller }}-target="results">
+        {% for value in result.results %}
+            <li>{{ value is iterable ? (value.name ?? value|json_encode) : value }}</li>
+        {% endfor %}
+    </ul>
+    <p data-{{ controller }}-target="status" role="status">{{ result.short ? short|default('Fewer results than asked were found.') }}</p>
+    <button type="button" data-action="{{ controller }}#draw">{{ again|default('Again') }}</button>
+</div>

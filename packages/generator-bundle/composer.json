@@ -1,0 +1,77 @@
+{
+    "name": "tilttek/generator-bundle",
+    "description": "Random generators for Symfony on tilttek/generator: lists read from YAML and JSON files and cached, the library's random tables, the states of tables with a memory in a cache pool or the application's store, commands, a Twig function, a Stimulus controller that draws again, and a rate-limited draw API off by default",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": [
+        "generator",
+        "random-tables",
+        "procedural-generation",
+        "rpg",
+        "ttrpg",
+        "symfony-bundle",
+        "stimulus"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-ctype": "*",
+        "ext-mbstring": "*",
+        "symfony/config": "^8.2",
+        "symfony/dependency-injection": "^8.2",
+        "tilttek/dice": "^0.1@dev",
+        "tilttek/generator": "^0.1@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "psr/cache": "^3.0",
+        "psr/clock": "^1.0",
+        "symfony/asset-mapper": "^8.2",
+        "symfony/cache": "^8.2",
+        "symfony/clock": "^8.2",
+        "symfony/console": "^8.2",
+        "symfony/event-dispatcher": "^8.2",
+        "symfony/framework-bundle": "^8.2",
+        "symfony/http-foundation": "^8.2",
+        "symfony/http-kernel": "^8.2",
+        "symfony/lock": "^8.2",
+        "symfony/rate-limiter": "^8.2",
+        "symfony/routing": "^8.2",
+        "symfony/twig-bundle": "^8.2",
+        "twig/twig": "^3.21"
+    },
+    "suggest": {
+        "symfony/asset-mapper": "For the Stimulus controller",
+        "symfony/cache": "For the states of the tables with a memory, kept in a cache pool",
+        "symfony/console": "For the commands that validate, create and draw",
+        "symfony/framework-bundle": "For the draw API and its routes",
+        "symfony/lock": "For a lock that keeps two draws on the same state apart",
+        "symfony/rate-limiter": "For the rate limits of the draw API",
+        "symfony/twig-bundle": "For the tilttek_draw function and the template that draws again"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\GeneratorBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\GeneratorBundle\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

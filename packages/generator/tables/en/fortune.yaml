@@ -1,0 +1,62 @@
+# Fortunes, told from cards or from tables: a spread of three cards from a deck of twenty-two, each upright or
+# reversed; a card of the day; and a prophecy made of three tables.
+lists:
+  table.fortune.card:
+    - { text: The Lantern, upright: a truth comes to light, reversed: a secret is kept too long }
+    - { text: The Crow, upright: news from far away, reversed: a rumour that misleads }
+    - { text: The Key, upright: a way opens, reversed: a door closes behind you }
+    - { text: The Bridge, upright: an alliance, reversed: a broken promise }
+    - { text: The Mask, upright: a useful disguise, reversed: a friend who is not one }
+    - { text: The Well, upright: patience is rewarded, reversed: a gift that runs dry }
+    - { text: The Tower Bell, upright: a warning heeded, reversed: an alarm too late }
+    - { text: The Wanderer, upright: a journey begins, reversed: a road that turns back }
+    - { text: The Hearth, upright: home and rest, reversed: a quarrel at the table }
+    - { text: The Thorn, upright: a small pain that protects, reversed: a wound that festers }
+    - { text: The Crown, upright: authority earned, reversed: pride before a fall }
+    - { text: The Serpent, upright: hidden wisdom, reversed: a betrayal }
+    - { text: The Scales, upright: a fair judgment, reversed: a debt comes due }
+    - { text: The Storm, upright: sudden change, reversed: a calm that will not last }
+    - { text: The Mirror, upright: knowing yourself, reversed: vanity }
+    - { text: The Hound, upright: loyalty, reversed: being hunted }
+    - { text: The Loom, upright: plans come together, reversed: threads unravel }
+    - { text: The Moon Gate, upright: dreams that guide, reversed: illusions }
+    - { text: The Forge, upright: hard work pays, reversed: something breaks under strain }
+    - { text: The Feast, upright: plenty, reversed: waste }
+    - { text: The Owl, upright: good counsel, reversed: advice ignored }
+    - { text: The Last Ember, upright: hope endures, reversed: an ending }
+  table.fortune.who:
+    - a stranger with a scar
+    - an old friend
+    - someone who owes you
+    - a child who knows too much
+    - a rival
+    - a messenger
+  table.fortune.where:
+    - at a crossroads
+    - by running water
+    - under a full moon
+    - in a crowded market
+    - at the door of a temple
+    - where the road ends
+  table.fortune.what:
+    - will offer you a choice
+    - will ask for your help
+    - will bring you a key
+    - will speak your true name
+    - will lie to you
+    - will save your life
+generators:
+  table.fortune:
+    templates:
+      - >-
+        {% set positions = ['What was', 'What is', 'What will be'] %}
+        {% for card in pick('table.fortune.card', 3) %}
+        {{ positions[loop.index0] }}: {{ card }}{% if roll('1d6') == 1 %}, reversed — {{ card.reversed }}{% else %}
+        — {{ card.upright }}{% endif %}.
+        {% endfor %}
+  table.fortune.day:
+    templates:
+      - "{% set card = pick('table.fortune.card') %}{{ card }} — {{ card.upright }}."
+  table.fortune.prophecy:
+    templates:
+      - "{{ (pick('table.fortune.who') ~ ' ' ~ pick('table.fortune.where') ~ ' ' ~ pick('table.fortune.what'))|upper_first }}."

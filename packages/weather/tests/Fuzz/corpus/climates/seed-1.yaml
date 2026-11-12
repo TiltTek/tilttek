@@ -1,0 +1,13 @@
+locales: [en]
+conditions:
+  clear: { labels: { en: clear }, temperature: 2, next_to: [fair] }
+  fair: { labels: { en: fair } }
+seasons:
+  summer: { labels: { en: summer } }
+zones:
+  plain:
+    labels: { en: plain }
+    persistence: 3
+    change: 1d5-3
+    seasons:
+      summer: { low: 10, high: 25, conditions: { clear: 3, fair: 2 } }

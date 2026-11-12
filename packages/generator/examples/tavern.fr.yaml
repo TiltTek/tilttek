@@ -1,0 +1,43 @@
+# Une auberge en français : son nom accordé et élidé, son aubergiste, son personnel et sa carte.
+lists:
+  tavern.animal:
+    - { text: sanglier, gender: m }
+    - { text: ours, gender: m }
+    - { text: oie, gender: f }
+    - { text: hibou, gender: m }
+    - { text: chouette, gender: f }
+  tavern.adjective:
+    - { text: doré }
+    - { text: joyeux }
+    - { text: vieux, f: vieille }
+    - { text: blanc, f: blanche }
+  tavern.first-name:
+    - Aline
+    - Bastien
+    - Corentin
+    - Hélène
+    - Odile
+  tavern.dish:
+    - { text: soupe aux pois, price: 2 }
+    - { text: tourte au gibier, price: 5 }
+    - { text: pain et fromage, price: 1 }
+    - { text: ragoût, price: 4 }
+generators:
+  tavern.name:
+    locale: fr
+    templates:
+      - "{% set animal = pick('tavern.animal') %}{{ ('à ' ~ animal|article ~ ' ' ~ pick('tavern.adjective')|agree(animal))|elide }}"
+    filters: [upper_first]
+  tavern.dish:
+    locale: fr
+    templates:
+      - "{% set dish = pick('tavern.dish') %}{{ dish|upper_first }} — {{ dish.price }} {{ 'pièce'|plural(dish.price) }}"
+  tavern:
+    locale: fr
+    vars:
+      keeper: "{{ pick('tavern.first-name') }}"
+    fields:
+      name: "{{ generate('tavern.name') }}"
+      keeper: "{{ keeper }}"
+      description: "{{ ('Une auberge que ' ~ keeper ~ ' tient depuis ' ~ roll('2d10') ~ ' ans')|elide }}"
+      menu: { generate: tavern.dish, count: 3 }

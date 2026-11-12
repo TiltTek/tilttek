@@ -1,0 +1,3 @@
+generators:
+  g:
+    fields: {a: "{{ roll('2d6') }}"}

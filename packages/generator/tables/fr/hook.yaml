@@ -1,0 +1,65 @@
+# Accroches d'aventure : qui demande, pour quoi faire, pourquoi, et ce que le groupe ignore encore.
+lists:
+  table.hook.patron:
+    - un aubergiste inquiet
+    - une aventurière à la retraite
+    - un scribe du temple
+    - une guilde marchande
+    - une enfant apeurée
+    - un chevalier déchu
+    - la doyenne du village
+    - un érudit de passage
+    - un inconnu masqué
+    - le seigneur du lieu
+  table.hook.task:
+    - { text: retrouver, weight: 2 }
+    - { text: escorter, weight: 1 }
+    - { text: reprendre, weight: 1 }
+    - { text: détruire, weight: 1 }
+    - { text: livrer, weight: 1 }
+    - { text: sauver, weight: 2 }
+    - { text: enquêter sur, weight: 2 }
+  table.hook.target:
+    - un héritier disparu
+    - une lettre scellée
+    - une relique volée
+    - la source d'une maladie
+    - une caravane d'épices
+    - une vieille carte
+    - une cloche maudite
+    - la dernière d'une lignée de sorcières
+    - un troupeau de chèvres enchantées
+  table.hook.place:
+    - dans le quartier englouti
+    - au-delà des vieilles bornes
+    - sous l'abbaye
+    - dans la mine abandonnée
+    - sur l'île qu'aucune carte ne montre
+    - dans la forêt qui se déplace
+  table.hook.reason:
+    - une vieille dette doit être payée
+    - une prophétie désigne le groupe
+    - personne d'autre ne s'en chargera
+    - la récompense est un fief
+    - un rival est déjà en route
+    - c'est une promesse faite à un ami mourant
+  table.hook.twist:
+    - { text: le commanditaire a menti sur la récompense, weight: 2 }
+    - { text: quelqu'un d'autre a engagé un second groupe, weight: 2 }
+    - { text: la cible ne veut pas être retrouvée, weight: 2 }
+    - { text: le commanditaire est le vrai coupable, weight: 1 }
+    - { text: le délai est plus court qu'annoncé, weight: 2 }
+    - { text: rien n'est ce qu'il paraît, et voilà tout, weight: 1 }
+generators:
+  table.hook:
+    locale: fr
+    templates:
+      - template: >-
+          {{ (pick('table.hook.patron') ~ ' demande au groupe de ' ~ pick('table.hook.task') ~ ' '
+          ~ pick('table.hook.target') ~ ' ' ~ pick('table.hook.place') ~ ', car ' ~ pick('table.hook.reason')
+          ~ ' ; mais ' ~ pick('table.hook.twist'))|elide|upper_first }}.
+        weight: 3
+      - template: >-
+          {{ ('on ne parle que de ' ~ pick('table.hook.target') ~ ' ' ~ pick('table.hook.place') ~ ', et '
+          ~ pick('table.hook.patron') ~ " paiera qui voudra bien s'en charger")|elide|upper_first }}.
+        weight: 1

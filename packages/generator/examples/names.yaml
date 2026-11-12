@@ -1,0 +1,41 @@
+# Names built from syllables: two different syllables, sometimes three, the first one capitalised; and names invented
+# from examples by a Markov chain.
+lists:
+  name.syllable:
+    - ka
+    - ri
+    - { text: to, weight: 2 }
+    - mu
+    - sel
+    - an
+  # Names invented by a Markov chain of letters learnt from the entries, never one of them: the chain reads two
+  # letters to choose the next one, and writes names of four to nine letters.
+  name.invented:
+    markov: { order: 2, min_length: 4, max_length: 9 }
+    entries:
+      - { text: Aldrin, tags: { gender: [m] } }
+      - { text: Belisar, tags: { gender: [m] } }
+      - { text: Corvane, tags: { gender: [m] } }
+      - { text: Doran, tags: { gender: [m] } }
+      - { text: Edrimar, tags: { gender: [m] } }
+      - { text: Falkor, tags: { gender: [m] } }
+      - { text: Garamond, tags: { gender: [m] } }
+      - { text: Halvard, tags: { gender: [m] } }
+      - { text: Alessa, tags: { gender: [f] } }
+      - { text: Brienne, tags: { gender: [f] } }
+      - { text: Celandra, tags: { gender: [f] } }
+      - { text: Delphine, tags: { gender: [f] } }
+      - { text: Elowen, tags: { gender: [f] } }
+      - { text: Florimel, tags: { gender: [f] } }
+      - { text: Gwendara, tags: { gender: [f] } }
+      - { text: Isolde, tags: { gender: [f] } }
+generators:
+  name.syllabic:
+    templates:
+      - "{% set first = pick('name.syllable') %}{{ first }}{{ pick('name.syllable', not: first) }}"
+      - { template: "{{ pick('name.syllable', 3)|join }}", weight: 1 }
+    filters: [capitalize]
+  name.invented:
+    templates: "{{ pick('name.invented') }}"
+  name.invented.pair:
+    templates: "{{ pick('name.invented', where: {gender: 'f'}) }} and {{ pick('name.invented', where: {gender: 'm'}) }}"

@@ -1,0 +1,62 @@
+# Rencontres aléatoires : qui le groupe croise là où il se trouve, combien, ce qu'ils font et comment ils prennent la
+# rencontre. Le terrain est une valeur de l'état que l'application fixe — forest, road, hills, swamp, ruins ou
+# underground, les mêmes identifiants qu'en anglais — et garde d'un tirage au suivant ; un premier tirage sans état se
+# fait sur la route.
+lists:
+  table.encounter.creature:
+    - { text: loup, plural: loups, gender: m, number: 2d4, tags: { terrain: [forest, hills] } }
+    - { text: sanglier, plural: sangliers, gender: m, number: 1d3, tags: { terrain: [forest] } }
+    - { text: araignée géante, plural: araignées géantes, gender: f, number: 1d4, tags: { terrain: [forest, underground, ruins] } }
+    - { text: bûcheron, plural: bûcherons, gender: m, number: 1d4, tags: { terrain: [forest] } }
+    - { text: brigand, plural: brigands, gender: m, number: 2d4, weight: 2, tags: { terrain: [road, hills, forest] } }
+    - { text: marchand ambulant, plural: marchands ambulants, gender: m, number: 1d2, weight: 2, tags: { terrain: [road] } }
+    - { text: pèlerin, plural: pèlerins, gender: m, number: 2d6, tags: { terrain: [road] } }
+    - { text: garde en patrouille, plural: gardes en patrouille, gender: m, number: 1d4+2, tags: { terrain: [road] } }
+    - { text: bergère, plural: bergères, gender: f, number: 1d2, tags: { terrain: [hills] } }
+    - { text: géant des collines, plural: géants des collines, gender: m, number: "1", tags: { terrain: [hills] } }
+    - { text: griffon, plural: griffons, gender: m, number: 1d2, tags: { terrain: [hills] } }
+    - { text: sangsue géante, plural: sangsues géantes, gender: f, number: 1d6, tags: { terrain: [swamp] } }
+    - { text: sorcière des tourbières, plural: sorcières des tourbières, gender: f, number: "1", tags: { terrain: [swamp] } }
+    - { text: chasseur homme-lézard, plural: chasseurs hommes-lézards, gender: m, number: 1d6, tags: { terrain: [swamp] } }
+    - { text: feu follet, plural: feux follets, gender: m, number: 1d3, tags: { terrain: [swamp, ruins] } }
+    - { text: squelette, plural: squelettes, gender: m, number: 2d4, tags: { terrain: [ruins, underground] } }
+    - { text: fantôme, plural: fantômes, gender: m, number: "1", tags: { terrain: [ruins] } }
+    - { text: chasseuse de trésors, plural: chasseuses de trésors, gender: f, number: 1d4, tags: { terrain: [ruins] } }
+    - { text: gobelin, plural: gobelins, gender: m, number: 2d6, weight: 2, tags: { terrain: [underground, hills, ruins] } }
+    - { text: ours des cavernes, plural: ours des cavernes, gender: m, number: "1", tags: { terrain: [underground] } }
+    - { text: nuée de chauves-souris, plural: nuées de chauves-souris, gender: f, number: 1d2, tags: { terrain: [underground] } }
+    - { text: mineur égaré, plural: mineurs égarés, gender: m, number: 1d3, tags: { terrain: [underground] } }
+  table.encounter.activity:
+    - en train de camper
+    - en plein repas
+    - en pleine querelle
+    - en chasse
+    - à la recherche de leur chemin
+    - en route
+    - au repos
+    - en embuscade
+    - en fuite devant une menace plus grave
+    - mal en point
+  table.encounter.reaction:
+    - { text: hostile, weight: 2 }
+    - { text: méfiant, weight: 3 }
+    - { text: indifférent, weight: 3 }
+    - { text: curieux, weight: 2 }
+    - { text: amical, mp: amicaux, weight: 1 }
+  table.encounter.distance:
+    - { text: à portée de main, weight: 1 }
+    - { text: à un jet de pierre, weight: 3 }
+    - { text: à portée d'arc, weight: 3 }
+    - { text: tout juste en vue, weight: 1 }
+generators:
+  table.encounter:
+    locale: fr
+    state:
+      terrain: road
+    templates:
+      - >-
+        {% set creature = pick('table.encounter.creature', where: {terrain: state.terrain}) %}
+        {% set number = roll(creature.number) %}
+        {% set pronoun = creature.gender == 'f' ? (number > 1 ? 'elles sont' : 'elle est') : (number > 1 ? 'ils sont' : 'il est') %}
+        {{ number }} {{ creature|plural(number) }}, {{ pick('table.encounter.activity') }},
+        {{ pick('table.encounter.distance') }} : {{ pronoun }} {{ pick('table.encounter.reaction')|agree(creature, number > 1) }}.

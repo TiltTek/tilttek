@@ -1,0 +1,9 @@
+lists:
+  l: [a, {text: b, weight: 2, tags: {k: x}}]
+  m:
+    markov: true
+    entries: [Aldrin, Doran]
+generators:
+  g:
+    state: {n: {start: "1", next: "{{ state.n + 1 }}"}}
+    templates: "{{ pick('l') }}{{ pick('m') }}"

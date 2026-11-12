@@ -1,0 +1,13 @@
+locales: [en, fr]
+conditions:
+  snow: { labels: { en: snow, fr: neige }, temperature: -3 }
+seasons:
+  winter: { labels: { en: winter, fr: hiver } }
+  spring: { labels: { en: spring, fr: printemps } }
+zones:
+  north:
+    labels: { en: north, fr: nord }
+    change: 1d3-2
+    seasons:
+      winter: { low: -30, high: -5, conditions: { snow: 1 } }
+      spring: { low: -5, high: 5, conditions: { snow: 2 } }
