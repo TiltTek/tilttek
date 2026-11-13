@@ -1,6 +1,6 @@
 {
     "name": "tilttek/table-safety",
-    "description": "Table safety tools for tabletop and live-action role-playing games: lines and veils on the themes of phil/content-warnings, a green, yellow and red consent checklist with the anonymous agreement of a table, session zero with its built-in templates and its pact, the X-card, Script Change and the open door as anonymous signals seen by the table or by the game master alone, check-ins, stars and wishes, and the export and erasure of a participant",
+    "description": "Table safety tools for tabletop and live-action role-playing games: lines and veils, a consent checklist with a table's anonymous agreement, session zero and its pact, the X-card, Script Change and the open door as anonymous signals, check-ins, stars and wishes, and a participant's export and erasure",
     "license": "MIT",
     "type": "library",
     "keywords": [

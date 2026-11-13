@@ -1,6 +1,6 @@
 {
     "name": "tilttek/game-engine",
-    "description": "A generic state machine for online table games, initiative turns and the phases of a role-playing scene, without game rules: phases and transitions on Symfony Workflow, sequential, initiative, simultaneous or free turns, table options checked by the OptionsResolver, each table a log of moves with its seed and its state a cache rebuilt by replaying the log, deterministic chance, undo of a move that revealed nothing, optimistic concurrency, and a port to publish each change, through Mercure or otherwise",
+    "description": "A generic state machine for online table games and role-playing scenes, without game rules: phases on Symfony Workflow, sequential, initiative, simultaneous or free turns, each table a log of moves with its seed and its state rebuilt by replay, deterministic chance, undo, optimistic concurrency and a publishing port",
     "license": "MIT",
     "type": "library",
     "keywords": [
