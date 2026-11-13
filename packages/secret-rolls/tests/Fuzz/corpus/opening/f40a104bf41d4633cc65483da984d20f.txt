@@ -1,0 +1,1 @@
+{"commitment":"a24d9622fdd3ef25fe7ad39d974107991102a26aed569148349197c1bcb318f2","roll":"b0f99e058e3ccbd18e62eb8d90e86706","scene":"c","position":1,"expression":"1d","rounding":"y","seed":"5a6906afa27a89fb1f533d39230ed7bf77154a7a83c421cb9b7e8791c63a0a09","result":[{"extal":{"":"+"}}],"context":"Pen"}

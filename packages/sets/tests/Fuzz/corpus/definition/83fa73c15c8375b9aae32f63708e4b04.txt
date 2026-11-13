@@ -1,0 +1,1 @@
+{"code":"i","version":2,"members":["d4","8"],"tiers":[{"code":"bronze","required":4},{"code":"gold","level":2,"rewards":[{"kind":"bdge","reference":"ice"}]}],"rewards":[{"kind":"ts","reference":"xp","quantity":50}]}

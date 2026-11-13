@@ -1,0 +1,1 @@
+{"code":"dice","version":2,"members":["d4","d6","d4"],"tiers":[{"code":"brd","level":2,"rewards":[{"kind":"badge","reference":"goldice"}]}]}

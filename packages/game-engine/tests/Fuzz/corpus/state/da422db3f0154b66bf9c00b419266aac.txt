@@ -1,0 +1,1 @@
+{"game_id":"ene:-kon","turn":{"":["gm","ann"],"crent":0,"waiting":[],"movstics":{"table":{"nco(unters":{"actions":0},"ann":{"actioes":0}}}}}

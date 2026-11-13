@@ -1,0 +1,84 @@
+{
+    "name": "tilttek/game-engine-bundle",
+    "description": "Online tables for Symfony on tilttek/game-engine: the games collected from the container, the logs kept by Doctrine DBAL on MySQL, PostgreSQL or SQLite, the states cached in a PSR-6 pool as plain values, a lock per table, every change published on the Mercure topic of its table with identifiers only, the endpoint of a seat's view and of the log of a finished table, commands that create the tables and verify a log, and a Stimulus controller that reads the view again at each update",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": [
+        "game-engine",
+        "turn-based",
+        "event-sourcing",
+        "mercure",
+        "doctrine-dbal",
+        "ttrpg",
+        "symfony-bundle",
+        "stimulus"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "doctrine/dbal": "^4.5",
+        "symfony/config": "^8.2",
+        "symfony/dependency-injection": "^8.2",
+        "tilttek/game-engine": "^0.1@dev"
+    },
+    "require-dev": {
+        "doctrine/doctrine-bundle": "^3.3",
+        "doctrine/orm": "^3.7",
+        "phpunit/phpunit": "^13.4",
+        "psr/cache": "^3.0",
+        "psr/log": "^3.0",
+        "symfony/asset-mapper": "^8.2",
+        "symfony/cache": "^8.2",
+        "symfony/clock": "^8.2",
+        "symfony/console": "^8.2",
+        "symfony/event-dispatcher": "^8.2",
+        "symfony/framework-bundle": "^8.2",
+        "symfony/http-foundation": "^8.2",
+        "symfony/http-kernel": "^8.2",
+        "symfony/lock": "^8.2",
+        "symfony/mercure": "^0.10",
+        "symfony/routing": "^8.2",
+        "symfony/translation": "^8.2",
+        "symfony/twig-bundle": "^8.2",
+        "symfony/ux-twig-component": "^3.7",
+        "symfony/yaml": "^8.2",
+        "twig/twig": "^3.21"
+    },
+    "suggest": {
+        "doctrine/orm": "To add the tables of the logs to the schema the ORM generates, and so to the migrations",
+        "phil/ux-kit": "For the recipes Card and Badge the template of a table is built of, through the Symfony UX Toolkit",
+        "symfony/asset-mapper": "For the Stimulus controller that reads the view again at each update",
+        "symfony/cache": "To cache the states of the tables in a pool shared by every process",
+        "symfony/console": "For the commands that create the tables of the logs and verify a log",
+        "symfony/framework-bundle": "For the endpoints of the views and of the logs, and their routes",
+        "symfony/lock": "For the lock that keeps two moves at one table apart",
+        "symfony/mercure-bundle": "To publish every change of a table on its Mercure topic",
+        "symfony/twig-bundle": "For the Twig functions and the template of a table",
+        "symfony/ux-twig-component": "For the template of a table, built of the recipes of a kit of the Symfony UX Toolkit"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\GameEngineBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\GameEngineBundle\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

@@ -1,0 +1,29 @@
+{#-
+ # A batch of bingo cards to print. `cards` is a list of `Tilttek\Bingo\View\PrintedCardView`; `labels` may give the
+ # words of the page, in its language: `caption`, `free` and `check`, in English by default.
+ #
+ # Each card is a section of its own, with its grid and the label the organiser checks with `Bingo::verifyLabel()`.
+ # The application's style sheet gives each section a page: `@media print { .isBingoPrintedCard { break-after: page; } }`.
+ # The block `footer` of each card, empty by default, takes the words of the application: the rules, the prize.
+ #}
+{%- set labels = {caption: 'Bingo card', free: 'Free', check: 'Check code'}|merge(labels|default({})) -%}
+<div class="isBingoPrint">
+    {%- for card in cards -%}
+        <section class="isBingoPrintedCard" data-game="{{ card.game }}" data-serial="{{ card.serial }}">
+            <table class="isBingoGrid">
+                <caption>{{ labels.caption }} <data value="{{ card.serial }}">{{ card.serial }}</data></caption>
+                <tbody>
+                    {%- for row in card.rows -%}
+                        <tr>
+                            {%- for cell in row -%}
+                                <td class="isBingoCell{{ cell.free ? ' isFree' }}">{{ cell.free ? labels.free : cell.label }}</td>
+                            {%- endfor -%}
+                        </tr>
+                    {%- endfor -%}
+                </tbody>
+            </table>
+            <p class="isBingoLabel">{{ labels.check }} <code>{{ card.label }}</code></p>
+            {%- block footer %}{% endblock -%}
+        </section>
+    {%- endfor -%}
+</div>

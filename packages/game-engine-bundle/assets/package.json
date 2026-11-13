@@ -1,0 +1,23 @@
+{
+    "name": "@tilttek/game-engine-bundle",
+    "description": "The game table's Stimulus controller: reads the view of the reader's seat again at each update the Mercure hub pushes",
+    "version": "0.1.0",
+    "license": "MIT",
+    "type": "module",
+    "symfony": {
+        "controllers": {
+            "game-table": {
+                "main": "src/game_table_controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0"
+    }
+}

@@ -1,0 +1,1 @@
+[{"id":"harvest","timezone":"America/Toronto","yearly":{"from":"2026-11-26","days":4,"rule":"FREQ=YEARLY;BYMONTH=11;BYDAY=4TH"},"quests":["quest:share"]}]

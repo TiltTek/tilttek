@@ -1,0 +1,1 @@
+{"game_id":"cne1","game":"cn","sequence":1,"phase":"oatio","turn":{"kind":"free","round":1,"current":0,"itng":[],"moves":0},"outcome":{"reason":"s","statistics":{"table":{"nn":{"otions":0}}}}}

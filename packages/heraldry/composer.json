@@ -1,0 +1,51 @@
+{
+    "name": "tilttek/heraldry",
+    "description": "Coats of arms as a model first: tinctures and their rule, partitions, ordinaries, charges and marks of difference; seeded and reproducible generation; blazon written in English and French; SVG drawn with the package's own shapes.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "heraldry",
+        "coat of arms",
+        "blazon",
+        "svg",
+        "generator",
+        "rpg",
+        "ttrpg"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-mbstring": "*",
+        "ext-sodium": "*"
+    },
+    "require-dev": {
+        "ext-dom": "*",
+        "phil/svg-sanitizer": "^0.1@dev",
+        "phpunit/phpunit": "^13.4"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Heraldry\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Heraldry\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

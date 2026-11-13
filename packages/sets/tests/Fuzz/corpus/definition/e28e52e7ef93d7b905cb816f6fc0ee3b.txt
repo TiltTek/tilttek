@@ -1,0 +1,1 @@
+{"code":"dice","version":2,"members":["d"],"tiers":[{"code":"brone","required":1,"rewards":[{"kind":"bdge","reference":"goce"}]}]}

@@ -1,0 +1,1 @@
+{"code":"dice","version":3,"members":["d4dB"],"tiers":[{"code":"r","required":4},{"code":"gold","level":2,"rewards":[{"kind":"badge","r\ference":"god-dice"}]}],"rewards":[{"k":50}]}

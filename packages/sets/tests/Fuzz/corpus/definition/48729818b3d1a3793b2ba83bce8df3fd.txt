@@ -1,0 +1,1 @@
+{"code":"dice","version":2,"members":["d","d8"],"tiers":[{"code":"bronze","required":1},{"code":"gld","level":2,"rewards":[{"kind":"badge","reference":"gold-dice"}]}]}

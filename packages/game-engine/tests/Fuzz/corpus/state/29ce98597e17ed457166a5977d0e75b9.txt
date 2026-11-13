@@ -1,0 +1,1 @@
+{"game_id":"scen","game":"re","sequence":1,"spdions":{"":true},"phase":"ea","turn":{"kind":"free","round":1,"order":["gm","n"],"current":0,"aiwitng":[],"moves":0},"inta":{"acted":true},"outcome":{"statistics":{"t":{"encns":0},"seats":{"":{"aons":0},"ann":{"actio":0,"ns":0}}}}}

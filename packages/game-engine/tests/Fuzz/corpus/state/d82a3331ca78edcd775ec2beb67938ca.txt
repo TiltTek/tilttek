@@ -1,0 +1,1 @@
+{"game_id":"s","game":"re","sequence":1,"s":["gan"],"opo":{"ler":true},"phase":"t*on","turn":{"kind":"free","round":1,"@r":["m","ann"],"current":0,"waitn":[],"moves":0},"at":[],"data":{"ter":true},"outcome":{"reason":"scen&-ended","statistics":{"table":{"entes":-1},"seats":{"":{"ac":1}}}}}

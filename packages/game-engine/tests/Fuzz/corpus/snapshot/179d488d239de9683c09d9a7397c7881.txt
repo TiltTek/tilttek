@@ -1,0 +1,1 @@
+{"state":{"game_id":"s","game":"ene","sequence":1,"seats":["g","a"],"options":{"r":true},"phase":"an","turn":{"kind":"free","round":2,"order":["gm",""],"current":0},"e":null}}

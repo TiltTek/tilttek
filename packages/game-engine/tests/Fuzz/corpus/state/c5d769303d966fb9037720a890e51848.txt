@@ -1,0 +1,1 @@
+{"game_id":"sc","game":"n","sequence":0,"phase":"n","turn":{"kind":"free"}}

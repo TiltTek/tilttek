@@ -1,0 +1,1 @@
+{"game_id":"scen","game":"repln","sequence":3,"phase":"eion","turn":{"kind":"free","round":1,"or":["gm","n"],"current":0,"wa":[],"moves":0},"outcome":{"son":"","statistics":{"te":{"s":0},"seats":{"wting":[],"g*":{"fo":1,"ns":0}}}}}

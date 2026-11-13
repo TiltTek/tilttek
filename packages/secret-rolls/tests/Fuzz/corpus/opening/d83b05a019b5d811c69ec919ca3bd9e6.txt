@@ -1,0 +1,1 @@
+{"roll":"b0f99e058e3cbcd81e61eb8d90e86706","scene":"e","position":1,"expression":"2","rounding":"t","seed":"","result":[{"":{}}],"context":"n"}

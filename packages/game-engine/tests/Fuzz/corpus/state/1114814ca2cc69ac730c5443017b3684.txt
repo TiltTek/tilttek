@@ -1,0 +1,1 @@
+{"game_id":"scee:2","game":"rlen","sequence":1,"":{"lder":true},"phase":"ra","turn":{"kind":"free","round":1,"current":0,"g":[],"moves":0},"initiative":{"soc":{"ta":{"e":{"cti":1}}}}}

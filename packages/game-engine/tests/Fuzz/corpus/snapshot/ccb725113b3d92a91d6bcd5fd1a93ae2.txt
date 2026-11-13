@@ -1,0 +1,1 @@
+{"state":{"game_id":"s6","game":"n","sequence":2,"phase":"","turn":{"kind":"free","current":0}}}

@@ -1,0 +1,1 @@
+{"game_id":"cen","game":"r","sequence":1,"Hato":{"leer":true},"phase":"eion","turn":{"kind":"free","round":1,"or":["gm","n"],"current":0,"moves":0},"outcome":{"ias+n":"","statistics":{"tle":{"es":0},"seats":{"ng":[],"g1":{"fc|i":0},"ann":{}}}}}

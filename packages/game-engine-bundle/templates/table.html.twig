@@ -1,0 +1,75 @@
+{#
+ # A table as anyone at it may see it — its number of moves, phase, round, the seats that may act, its outcome once
+ # over, the commitment to its seed —, and the place where the Stimulus controller shows the view of the reader's seat,
+ # read again from the view endpoint at each update the Mercure hub pushes. It is built of the recipes Card and Badge of
+ # the kit, under the names `tilttek_game_engine_kit()` gives; the application renders the view itself by listening to
+ # the controller's `view` event:
+ #
+ #     {{ include('@TilttekGameEngine/table.html.twig', {
+ #         table: tilttek_game_table('table:42'),
+ #         view_url: path('tilttek_game_engine_view', {table: 'table:42'}),
+ #         hub_url: mercure(tilttek_game_table('table:42').topic, {subscribe: tilttek_game_table('table:42').topic}),
+ #     }) }}
+ #
+ # `hub_url` is left out when the hub is not used: the controller then reads the view once.
+ #}
+{% set domain = tilttek_game_engine_domain() %}
+{% set controller = 'tilttek--game-engine-bundle--game-table' %}
+{% component (tilttek_game_engine_kit('Card')) with {as: 'section', class: 'tilttek-game-table', 'data-table': table.table, 'data-controller': controller, ('data-' ~ controller ~ '-view-url-value'): view_url, ('data-' ~ controller ~ '-hub-url-value'): hub_url|default(''), ('data-' ~ controller ~ '-sequence-value'): table.sequence} %}
+    {% block content %}
+        {% component (tilttek_game_engine_kit('Card:Header')) %}
+            {% block content %}
+                {% component (tilttek_game_engine_kit('Card:Title')) with {level: 2} %}
+                    {% block content %}{{ ('games.' ~ table.game)|trans({}, domain) }}{% endblock %}
+                {% endcomponent %}
+                {% component (tilttek_game_engine_kit('Card:Description')) %}
+                    {% block content %}
+                        <span data-{{ controller }}-target="moves">{{ 'moves'|trans({'%count%': table.sequence}, domain) }}</span>
+                        · <span data-{{ controller }}-target="phase">{{ 'phase'|trans({'%phase%': table.phase}, domain) }}</span>
+                        · <span data-{{ controller }}-target="round">{{ 'round'|trans({'%round%': table.round}, domain) }}</span>
+                    {% endblock %}
+                {% endcomponent %}
+            {% endblock %}
+        {% endcomponent %}
+        {% component (tilttek_game_engine_kit('Card:Content')) %}
+            {% block content %}
+                {% if table.over %}
+                    <p>{{ 'over'|trans({}, domain) }}</p>
+                    <p>
+                        {% if table.outcome.winners is empty %}
+                            {{ 'no_winner'|trans({}, domain) }}
+                        {% else %}
+                            {{ 'winners'|trans({}, domain) }}
+                            {% for winner in table.outcome.winners %}
+                                {% component (tilttek_game_engine_kit('Badge')) with {variant: 'secondary', 'data-seat': winner} %}{% block content %}{{ winner }}{% endblock %}{% endcomponent %}
+                            {% endfor %}
+                        {% endif %}
+                        · {{ 'reason'|trans({'%reason%': table.outcome.reason}, domain) }}
+                    </p>
+                {% else %}
+                    <p>
+                        {{ 'to_act'|trans({}, domain) }}
+                        <span data-{{ controller }}-target="toAct">
+                            {% for seat in table.to_act %}
+                                {% component (tilttek_game_engine_kit('Badge')) with {variant: 'outline', 'data-seat': seat} %}{% block content %}{{ seat }}{% endblock %}{% endcomponent %}
+                            {% else %}
+                                {{ 'nobody'|trans({}, domain) }}
+                            {% endfor %}
+                        </span>
+                    </p>
+                {% endif %}
+                <div class="tilttek-game-table__view" data-{{ controller }}-target="view" aria-live="polite" aria-busy="true">{{ 'loading'|trans({}, domain) }}</div>
+                <p class="tilttek-game-table__status" data-{{ controller }}-target="status" role="status"></p>
+            {% endblock %}
+        {% endcomponent %}
+        {% component (tilttek_game_engine_kit('Card:Footer')) %}
+            {% block content %}
+                <details class="tilttek-game-table__commitment">
+                    <summary>{{ 'commitment'|trans({}, domain) }}</summary>
+                    <p>{{ 'commitment_help'|trans({}, domain) }}</p>
+                    <code>{{ table.commitment }}</code>
+                </details>
+            {% endblock %}
+        {% endcomponent %}
+    {% endblock %}
+{% endcomponent %}

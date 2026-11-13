@@ -1,0 +1,2 @@
+{% set table = tilttek_game_table(game_id) %}
+{{ include('@TilttekGameEngine/table.html.twig', {table: table, view_url: path('tilttek_game_engine_view', {table: game_id}), hub_url: 'https://hub.test/.well-known/mercure?topic=' ~ table.topic|url_encode}) }}

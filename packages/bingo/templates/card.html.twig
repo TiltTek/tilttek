@@ -1,0 +1,29 @@
+{#-
+ # A bingo card. `card` is a `Tilttek\Bingo\View\CardView`; `labels` may give the words of the page, in its language:
+ # `caption`, `ticked` and `free`, in English by default.
+ #
+ # Each cell says its label and, to screen readers, whether it is ticked. The Stimulus controller
+ # `tilttek--bingo--card` dispatches the DOM event `bingo:won` on the window once the card won, once per card in a
+ # browser tab. The block `won` is drawn only for a card that won: the place of a celebration, empty by default.
+ #}
+{%- set labels = {caption: 'Bingo card', ticked: 'ticked', free: 'Free'}|merge(labels|default({})) -%}
+<section class="isBingoCard" data-controller="tilttek--bingo--card" data-tilttek--bingo--card-game-value="{{ card.game }}" data-tilttek--bingo--card-serial-value="{{ card.serial }}" data-tilttek--bingo--card-pattern-value="{{ card.pattern ?? '' }}">
+    <table class="isBingoGrid">
+        <caption>{{ labels.caption }} <data value="{{ card.serial }}">{{ card.serial }}</data></caption>
+        <tbody>
+            {%- for row in card.rows -%}
+                <tr>
+                    {%- for cell in row -%}
+                        <td class="isBingoCell{{ cell.ticked ? ' isTicked' }}{{ cell.free ? ' isFree' }}">
+                            {{- cell.free ? labels.free : cell.label -}}
+                            {%- if cell.ticked %} <span class="isVisuallyHidden">({{ labels.ticked }})</span>{% endif -%}
+                        </td>
+                    {%- endfor -%}
+                </tr>
+            {%- endfor -%}
+        </tbody>
+    </table>
+    {%- if card.hasWon -%}
+        {%- block won %}{% endblock -%}
+    {%- endif -%}
+</section>

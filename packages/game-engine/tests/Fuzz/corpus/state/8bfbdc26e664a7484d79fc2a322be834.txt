@@ -1,0 +1,1 @@
+{"game_id":"s:1","game":"e","sequence":1,"seans":{"er":true},"phase":"explorn","turn":{"kind":"free","round":1,"order":["","ann"],"current":0,"moves":1},"":[],"data":{"acti":true},"outcome":{"winers":[],"reason":"sded","statistics":{"table":{"eune":1,"se1t":["gm","ann"],"ons":{"er":true},"phase":"exploron","t":-1,"ntes":0},"seats":{"gm":{"actions":0},"aln":{"_ons":0}}}}}

@@ -1,0 +1,1 @@
+{"sticker":"n","surface":"o:4","x":1,"y":0}

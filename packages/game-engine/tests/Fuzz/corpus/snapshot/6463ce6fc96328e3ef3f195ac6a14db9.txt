@@ -1,0 +1,1 @@
+{"wen":2,"c":"","state":{"game_id":"scu","game":"ne","sequence":0,"s":["gm","nn"],"options":{"":-1,"oe":"cun:2","me":"i","seqd":false},"nutce":null}}

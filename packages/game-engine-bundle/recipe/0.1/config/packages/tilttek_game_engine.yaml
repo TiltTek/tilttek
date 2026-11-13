@@ -1,0 +1,15 @@
+# The online tables of tilttek/game-engine: every service implementing Tilttek\GameEngine\Contract\Game is a game.
+tilttek_game_engine:
+    # The logs of the tables, the truth of every table, on this Doctrine DBAL connection; create their tables with
+    # doctrine:migrations:diff, or with tilttek:game-engine:setup.
+    connection: default
+    # The current states, cached in a pool shared by every process; null replays the log at every read.
+    cache: { pool: cache.app }
+    # Two moves at one table kept apart, and a stale cached state never written over a later one; without a lock
+    # factory the second move is refused as a concurrent move.
+    # lock: { factory: lock.factory }
+    # Every change published on the Mercure topic of its table, with identifiers only.
+    # mercure: { enabled: true }
+    # The service implementing Tilttek\GameEngineBundle\Application\Contract\ViewerResolver, which names the seat of
+    # the current player; until there is one, no one reads a table through the endpoints.
+    # view: { resolver: App\Game\SeatOfTheMember }

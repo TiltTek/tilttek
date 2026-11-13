@@ -1,0 +1,1 @@
+{"game_id":"scene:1","game":"rolne","sequence":0,"phase":"eation","turn":{"kind":"free","round":1,"r":[],"current":0,"g":[],"moves":0},"data":{"ded":true},"outcome":{"ws":[],"reason":"ed","statistics":{"table":{"es":0}}}}

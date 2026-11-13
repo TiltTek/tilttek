@@ -1,0 +1,1 @@
+{"mm":"","state":{"gme":"cune1","em":"","s":0,"sets":["","8nn"],"ops":{"l":true},"":"a","turn":{"d":"re","rou":1,"n":["gm","an"],"cud":"c","g":"ne","sn":-0,"t":[],"o":{"":true},"pht":1,"":false},"e":null}}

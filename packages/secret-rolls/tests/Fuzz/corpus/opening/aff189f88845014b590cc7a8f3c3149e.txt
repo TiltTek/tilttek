@@ -1,0 +1,1 @@
+{"commitment":"9","roll":"b0f99e058e3ccbd18e62eb8d90e86706","scene":"s1","position":1,"expression":"60","rounding":"Neg","seed":"4a6947afa26a89fb1f533d39230ed7bf77154a7a83c442bbc97e8791c63a0a09","result":[{"p":{"":{"":3}}}],"context":"Pc"}

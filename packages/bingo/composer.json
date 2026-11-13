@@ -1,0 +1,53 @@
+{
+    "name": "tilttek/bingo",
+    "description": "Bingo cards for a convention or a session: unique cards drawn from a pool by a server seed, squares ticked by recorded gestures or called by the host, win patterns, server-verified wins, printed batches with checked labels, live updates through Mercure, and the events and Stimulus hook of a celebration.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "bingo",
+        "game",
+        "convention",
+        "gamification",
+        "symfony-ux"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "psr/clock": "^1.0",
+        "psr/event-dispatcher": "^1.0",
+        "tilttek/activity": "^0.1@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "symfony/mercure": "^0.10",
+        "twig/twig": "^3.21"
+    },
+    "suggest": {
+        "symfony/mercure": "To push the squares called, the squares ticked and the wins to the players' screens, as private updates naming identifiers only"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Bingo\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Bingo\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

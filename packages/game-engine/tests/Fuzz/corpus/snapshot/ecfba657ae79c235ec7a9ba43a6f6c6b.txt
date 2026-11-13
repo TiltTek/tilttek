@@ -1,0 +1,1 @@
+{"w":"9281","state":{"game_id":"sc1","game":"nne","sequence":0,"ti":{"lad":true},"phase":"e","turn":{"kind":"free","current":-1,"ed":false},"e":null}}

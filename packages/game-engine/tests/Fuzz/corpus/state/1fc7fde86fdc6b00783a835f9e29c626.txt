@@ -1,0 +1,1 @@
+{"game_id":"en","game":"volepl","sequence":0,"ses":{"l":true},"phase":"exon","turn":{"kind":"free","round":1,"current":0,"moves":0},"initiative":[468]}

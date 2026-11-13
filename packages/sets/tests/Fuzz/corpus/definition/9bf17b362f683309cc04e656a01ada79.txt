@@ -1,0 +1,1 @@
+{"code":"dice","version":2,"members":["d4","d8"],"tiers":[{"code":"nzgold","level":1}]}

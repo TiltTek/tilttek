@@ -1,0 +1,1 @@
+{"code":"dice","version":2,"members":["d6","d8"],"tiers":[{"code":"bd","level":2,"rewards":[{"kind":"e","reference":"g@ld"}]}]}

@@ -1,0 +1,1 @@
+{"game_id":"cen","game":"rose","sequence":0,"sea":{"lr":true},"phase":"exploon","turn":{"kind":"free","round":1,"orer":["gm","ann"],"current":0,"ing":[],"moves":0},"initiatve":[],"data":{"a_id":"scen","game":"rolse","seqn":0,"seats":["gm"],"options":{},"phse":"exploration","turn":{"nd":1},"initiatve":[],"ata":{"s":0},"is":{"gs":0},"wotes":0,"Enc":false},"tcome":null}

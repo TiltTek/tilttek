@@ -1,0 +1,1 @@
+{"game_id":"e:1","game":"lg","sequence":1,"phase":"expan","turn":{"kind":"free","round":1,"":[""],"current":0,"g":[],"moves":0},"ia":{"ctd":true},"outcome":{"cs":{"tale":{"e":{"s":0}}}}}

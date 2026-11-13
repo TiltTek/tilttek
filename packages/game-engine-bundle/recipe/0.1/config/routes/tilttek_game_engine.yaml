@@ -1,0 +1,4 @@
+# The endpoints of the view of a seat and of the log of a finished table.
+tilttek_game_engine:
+    resource: '@TilttekGameEngineBundle/config/routes.php'
+    prefix: /game-tables

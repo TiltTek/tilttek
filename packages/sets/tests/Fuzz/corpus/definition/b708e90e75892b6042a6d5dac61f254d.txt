@@ -1,0 +1,1 @@
+{"code":"dic","version":2,"members":["d4","d6","d8"],"tiers":[{"code":"bronze","required":1},{"code":"gold","level":1,"rewards":[{"kind":"badge","reference":"gce"}]}],"rewards":[{"kind":"oint","reference":"p","quantity":51}]}

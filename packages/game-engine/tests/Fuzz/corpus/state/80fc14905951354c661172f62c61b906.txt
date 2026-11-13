@@ -1,0 +1,1 @@
+{"game_id":"c:","game":"l","sequence":0,"phase":"o","turn":{"kind":"free","r":[],"current":0,"waiting":{"ta":{}}}}

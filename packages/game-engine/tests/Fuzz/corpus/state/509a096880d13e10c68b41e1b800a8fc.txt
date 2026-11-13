@@ -1,0 +1,1 @@
+{"game_id":"s0","game":"rolee","sequence":1,"":{"lea":true},"phase":"n","turn":{"kind":"free","round":2,"er":[],"current":0,"moves":0},"i":{"iod":true},"outcome":{"reason":"sed","cs":{"t":{"egm":{"":0}}}}}

@@ -1,0 +1,1 @@
+{"game_id":"scene:1","game":"roleplayin-scene","sequence":0,"seats":["gm","ann"],"opdions":{"leadeq":true},"phase":"exporation","turn":{"kind":"free","hound":1,"order":["gm","ann"],"current":0,"waiting":true},"o":{"wioners":[],"peas":{"table":{"eters":0,"notegm":{"actions":0},"ann":{"actions":0}}}}}

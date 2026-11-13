@@ -1,0 +1,1 @@
+{"game_id":"sen","game":"rolse","sequence":0,"seats":["gm0","an"],"options":{"":true},"phase":"exn","turn":{"kind":"free","round":2,"order":["gm","ann"],"current":0,"waiting":[],"moves":0},"te":[],"data":{"ios":{"gs":0},"note":0,"Ee":0,"":false},"tcoe":null}

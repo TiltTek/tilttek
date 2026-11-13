@@ -1,0 +1,1 @@
+{"game_id":"scene:1","game":"rocene","sequence":1,"seats":["gm","ann"],"options":{"lekind":"ded","statistics":{"table":{"encounters":0,"notes":0},"seats":{"gann":{"ans":0}}}}}

@@ -22,6 +22,7 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/dice-probability`](https://github.com/TiltTek/dice-probability) | The exact odds of a dice expression, as fractions: distributions, at least and at most, mean, comparisons. |
 | [`tilttek/loot-tables`](https://github.com/TiltTek/loot-tables) | Loot tables rolled with any die, drawn in a way anyone can verify, physical dice included. |
 | [`tilttek/accessible-dice`](https://github.com/TiltTek/accessible-dice) | An accessible dice form for Symfony, with or without JavaScript: large targets, faces spoken by label, shape and value, results announced to screen readers. |
+| [`tilttek/secret-rolls`](https://github.com/TiltTek/secret-rolls) | The game master's hidden rolls, committed before they are made and verifiable by the players after the reveal. |
 
 ### Generators
 
@@ -30,6 +31,7 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/generator`](https://github.com/TiltTek/generator) | Random generators written as data: weighted lists, Markov names, Twig templates in a sandbox, grammar in six languages, maps, tables with a memory, replayable draws. |
 | [`tilttek/generator-bundle`](https://github.com/TiltTek/generator-bundle) | Random generators in a Symfony application: lists from YAML and JSON, ready-made random tables, commands, Twig, a Stimulus controller and a rate-limited draw API. |
 | [`tilttek/weather`](https://github.com/TiltTek/weather) | Weather in the game world: seasons and climate zones, conditions that follow the day before, temperatures rolled within the season, reproducible from a seed. |
+| [`tilttek/heraldry`](https://github.com/TiltTek/heraldry) | Coats of arms drawn from a seed, blazoned in English and French, and written as safe SVG. |
 
 ### Gamification
 
@@ -51,6 +53,13 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/leaderboards`](https://github.com/TiltTek/leaderboards) | Leaderboards kept up to date from the activity journal: periods and sliding windows, tie-breaks, snapshots, weekly leagues, titles and teams. |
 | [`tilttek/advent-calendar`](https://github.com/TiltTek/advent-calendar) | An advent calendar: one box per day in the calendar's timezone, an opening policy, each box opened once and told by an event. |
 | [`tilttek/writing-goals`](https://github.com/TiltTek/writing-goals) | An author's writing goals: a target in words or pages, a plan on a curve, a daily quota recomputed from what remains, no streak counted. |
+| [`tilttek/seasonal-events`](https://github.com/TiltTek/seasonal-events) | Yearly seasons by RFC 5545 rule, with their contents and the multipliers they announce. |
+| [`tilttek/sets`](https://github.com/TiltTek/sets) | Versioned sets with tiers and rewards: a neutral building block that collections and badges build on. |
+| [`tilttek/stickers`](https://github.com/TiltTek/stickers) | Stickers placed on surfaces, with limits per surface and per holder, and moderation. |
+| [`tilttek/bingo`](https://github.com/TiltTek/bingo) | Bingo with cards drawn from a server secret, printed cards that can be verified, and wins checked on the server. |
+| [`tilttek/game-engine`](https://github.com/TiltTek/game-engine) | Turn-based games as a log of moves: seeded randomness committed in advance, undo, snapshots and replay. |
+| [`tilttek/game-engine-bundle`](https://github.com/TiltTek/game-engine-bundle) | Game tables in Symfony: opaque seat identifiers, the log in DBAL, a lock, and private Mercure updates. |
+| [`tilttek/table-safety`](https://github.com/TiltTek/table-safety) | Safety tools for tabletop games: lines and veils, anonymous signals, and the credits of each tool. |
 
 Every package is at `0.x`: its API may still change between minor versions, as its CHANGELOG records.
 

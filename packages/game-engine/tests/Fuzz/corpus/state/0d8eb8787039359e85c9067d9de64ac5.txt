@@ -1,0 +1,1 @@
+{"game_id":"sc1","game":"aying-se","sequence":1,"seopdions":{"lead":true},"phase":"exploration","turn":{"kind":"free","round":1,"current":0,"waiting":[],"moves":0},"inta":{"acuntended":true},"outcome":{"wi":"scen","statistics":{"tble":{"euns":0},"seats":{"gm":{"actions":0},"ann":{"actions":0}}}}}

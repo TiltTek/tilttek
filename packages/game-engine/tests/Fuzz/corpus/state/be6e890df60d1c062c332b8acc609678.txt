@@ -1,0 +1,1 @@
+{"game_id":"s:1","game":"e","sequence":1,"seat":["gm","nn"],"options":{"er":true},"phase":"exploron","turn":{"kind":"free","round":1,"oer":["","ann"],"current":0,"moves":1},"iniative":[],"data":{"acti":true},"outcome":{"winers":[],"reason":"sended","statistics":{"table":{"enc":-1,"ntes":0},"seats":{"gm":{"actions":0},"ann":{"_ons":0}}}}}

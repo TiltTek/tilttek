@@ -1,0 +1,1 @@
+[{"id":"once","timezone":"UTC","once":{"from":"2027-03-20","through":"2027-04-03"},"events":[{"id":"x","from_day":3,"days":2,"announce_days":1,"multiplier":{"ledger":"points","percent":150}}]}]

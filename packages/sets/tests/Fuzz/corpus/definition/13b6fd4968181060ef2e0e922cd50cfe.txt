@@ -1,0 +1,1 @@
+{"code":"dice","version":2,"members":["dd8"],"tiers":[{"code":"bze","required":4},{"code":"goldze","required":4},{}]}

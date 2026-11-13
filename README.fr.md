@@ -22,6 +22,7 @@ ensuite copié dans son propre dépôt, en **lecture seule**, d'où Composer l'i
 | [`tilttek/dice-probability`](https://github.com/TiltTek/dice-probability) | Les probabilités exactes d'une expression de dés, en fractions : distributions, au moins et au plus, moyenne, comparaisons. |
 | [`tilttek/loot-tables`](https://github.com/TiltTek/loot-tables) | Des tables de butin lancées avec n'importe quel dé, tirées d'une façon que chacun peut vérifier, dés physiques compris. |
 | [`tilttek/accessible-dice`](https://github.com/TiltTek/accessible-dice) | Un formulaire de dés accessible pour Symfony, avec ou sans JavaScript : grandes cibles, faces dites par libellé, forme et valeur, résultats annoncés aux lecteurs d'écran. |
+| [`tilttek/secret-rolls`](https://github.com/TiltTek/secret-rolls) | Les jets cachés du meneur, engagés avant d'être faits et vérifiables par les joueurs après leur dévoilement. |
 
 ### Générateurs
 
@@ -30,6 +31,7 @@ ensuite copié dans son propre dépôt, en **lecture seule**, d'où Composer l'i
 | [`tilttek/generator`](https://github.com/TiltTek/generator) | Des générateurs aléatoires écrits comme des données : listes pondérées, noms de Markov, gabarits Twig dans un bac à sable, grammaire en six langues, cartes, tables à mémoire, tirages rejouables. |
 | [`tilttek/generator-bundle`](https://github.com/TiltTek/generator-bundle) | Les générateurs aléatoires dans une application Symfony : listes en YAML et JSON, tables aléatoires prêtes à tirer, commandes, Twig, contrôleur Stimulus et API de tirage sous limite de débit. |
 | [`tilttek/weather`](https://github.com/TiltTek/weather) | La météo du monde de jeu : saisons et zones climatiques, conditions qui suivent la veille, températures tirées dans la plage de la saison, reproductible à partir d'une graine. |
+| [`tilttek/heraldry`](https://github.com/TiltTek/heraldry) | Des armoiries tirées d'une graine, blasonnées en anglais et en français, et écrites en SVG sûr. |
 
 ### Ludification
 
@@ -51,6 +53,13 @@ ensuite copié dans son propre dépôt, en **lecture seule**, d'où Composer l'i
 | [`tilttek/leaderboards`](https://github.com/TiltTek/leaderboards) | Des classements tenus à jour à partir du journal d'activité : périodes et fenêtres glissantes, départages, instantanés, ligues hebdomadaires, titres et équipes. |
 | [`tilttek/advent-calendar`](https://github.com/TiltTek/advent-calendar) | Un calendrier de l'Avent : une case par jour dans le fuseau du calendrier, une politique d'ouverture, chaque case ouverte une seule fois et annoncée par un événement. |
 | [`tilttek/writing-goals`](https://github.com/TiltTek/writing-goals) | Les objectifs d'écriture d'un auteur : une cible en mots ou en pages, un plan sur une courbe, un quota du jour recalculé selon ce qui reste, aucune série comptée. |
+| [`tilttek/seasonal-events`](https://github.com/TiltTek/seasonal-events) | Des saisons annuelles par règle RFC 5545, avec leurs contenus et les multiplicateurs qu'elles annoncent. |
+| [`tilttek/sets`](https://github.com/TiltTek/sets) | Des ensembles versionnés à paliers et à récompenses : une brique neutre sur laquelle collections et badges se bâtissent. |
+| [`tilttek/stickers`](https://github.com/TiltTek/stickers) | Des autocollants posés sur des surfaces, avec des limites par surface et par détenteur, et la modération. |
+| [`tilttek/bingo`](https://github.com/TiltTek/bingo) | Un bingo aux cartes tirées d'un secret du serveur, aux cartes imprimées vérifiables, et aux victoires vérifiées sur le serveur. |
+| [`tilttek/game-engine`](https://github.com/TiltTek/game-engine) | Des jeux au tour par tour en journal de coups : hasard semé et engagé d'avance, annulation, instantanés et rejeu. |
+| [`tilttek/game-engine-bundle`](https://github.com/TiltTek/game-engine-bundle) | Des tables de jeu dans Symfony : identifiants de siège opaques, journal en DBAL, verrou et mises à jour Mercure privées. |
+| [`tilttek/table-safety`](https://github.com/TiltTek/table-safety) | Des outils de sécurité pour les jeux de table : lignes et voiles, signaux anonymes, et le crédit de chaque outil. |
 
 Chaque paquet est en `0.x` : son API peut encore changer d'une version mineure à l'autre, comme le note son CHANGELOG.
 

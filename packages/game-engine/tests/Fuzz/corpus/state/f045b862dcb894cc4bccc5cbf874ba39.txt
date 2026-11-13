@@ -1,0 +1,1 @@
+{"game_id":"scene:1","game":"cen","sequence":1,"":{"leader":true},"phase":"ora","turn":{"kind":"free","round":1,"order":[],"current":0,"wng":[],"moves":0},"initkative":[],"data":{"^ctd":true},"outcome":{"":"ed","statistics":{"tae":{"enocuners":{"ction":1}}}}}

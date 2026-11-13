@@ -1,0 +1,1 @@
+{"game_id":"sc","game":"rg-scene","sequence":0,"s":{"":true},"phase":"","turn":{"kind":"free","round":4,"o":["gn"],"current":0,"aitg":[],"moves":0},"ta":{"au":true},"outcome":{"i":"s2ad","statistics":{"tae":{"j":1},"seats":{"d":{"wns":0}}}}}

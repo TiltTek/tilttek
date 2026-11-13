@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "73836561d71364845d7c72f6bbc40394",
+    "content-hash": "1d764d84412f2c4209cd2de9cfd80337",
     "packages": [],
     "packages-dev": [
         {
@@ -1590,6 +1590,134 @@
             "time": "2022-02-21T01:04:05+00:00"
         },
         {
+            "name": "phil/content-warnings",
+            "version": "0.1.0-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/content-warnings.git",
+                "reference": "b9ece0b1f7f075eb81215c5c461deb66a86af408"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/content-warnings/zipball/b9ece0b1f7f075eb81215c5c461deb66a86af408",
+                "reference": "b9ece0b1f7f075eb81215c5c461deb66a86af408",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": ">=8.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\ContentWarnings\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Content warnings for PHP: a translated catalogue of warning themes each application completes or replaces, the warnings of a game, a book, an article or an event, and the themes a member folds or hides",
+            "homepage": "https://ph-il.ca",
+            "keywords": [
+                "accessibility",
+                "content-warnings",
+                "safety",
+                "trigger-warnings",
+                "value-object"
+            ],
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/content-warnings/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/content-warnings/tree/0.1.0-alpha"
+            },
+            "time": "2026-11-11T06:11:30+00:00",
+            "published-time": "2026-11-11T13:31:59+00:00"
+        },
+        {
+            "name": "phil/css-sanitizer",
+            "version": "0.1.0-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/css-sanitizer.git",
+                "reference": "36fc0cd3818ef90c44656d2b7fa8d7577d50a388"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/css-sanitizer/zipball/36fc0cd3818ef90c44656d2b7fa8d7577d50a388",
+                "reference": "36fc0cd3818ef90c44656d2b7fa8d7577d50a388",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=8.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.4",
+                "symfony/validator": "^8.2"
+            },
+            "suggest": {
+                "symfony/validator": "For the SafeCss constraint"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\CssSanitizer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "CSS written by people made safe to serve, written from scratch: a tokenizer and parser that follow CSS Syntax Level 3, allow lists of properties, functions, selectors and at-rules (@media, @supports, @page and its margin boxes, @font-face), url() rewritten to allowed files, @import, expression(), javascript: and bindings refused, a serializer back to CSS, and a Symfony validator constraint",
+            "homepage": "https://ph-il.ca",
+            "keywords": [
+                "css",
+                "css-syntax",
+                "paged-media",
+                "parser",
+                "sanitizer",
+                "security",
+                "tokenizer",
+                "validator"
+            ],
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/css-sanitizer/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/css-sanitizer/tree/0.1.0-alpha"
+            },
+            "time": "2026-11-11T04:09:09+00:00",
+            "published-time": "2026-11-11T05:15:51+00:00"
+        },
+        {
             "name": "phil/dev-tools",
             "version": "0.1.0-alpha",
             "source": {
@@ -1671,6 +1799,66 @@
             "time": "2026-11-11T19:04:16+00:00"
         },
         {
+            "name": "phil/recurrence",
+            "version": "0.1.0-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/recurrence.git",
+                "reference": "43dddb09278218491ddf6a54d14a13fd6c0758dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/recurrence/zipball/43dddb09278218491ddf6a54d14a13fd6c0758dc",
+                "reference": "43dddb09278218491ddf6a54d14a13fd6c0758dc",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=8.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\Recurrence\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Recurrence rules for PHP: RFC 5545 RRULEs — yearly, monthly, weekly and daily, by day, month day, month and set position — read, written, and expanded into occurrences in their time zone, with exceptions",
+            "homepage": "https://ph-il.ca",
+            "keywords": [
+                "iCalendar",
+                "recurrence",
+                "rfc5545",
+                "rrule",
+                "value-object"
+            ],
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/recurrence/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/recurrence/tree/0.1.0-alpha"
+            },
+            "time": "2026-11-11T04:05:26+00:00",
+            "published-time": "2026-11-11T05:16:25+00:00"
+        },
+        {
             "name": "phil/resource",
             "version": "0.1.0-alpha",
             "source": {
@@ -1725,6 +1913,75 @@
                 "source": "https://github.com/parler-haut-interagir-librement/resource/tree/0.1.0-alpha"
             },
             "time": "2026-11-11T04:05:26+00:00"
+        },
+        {
+            "name": "phil/svg-sanitizer",
+            "version": "0.1.0-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/svg-sanitizer.git",
+                "reference": "ca5b7d7ecde0f65a6c99ad15be706c2d7a39dd35"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/svg-sanitizer/zipball/ca5b7d7ecde0f65a6c99ad15be706c2d7a39dd35",
+                "reference": "ca5b7d7ecde0f65a6c99ad15be706c2d7a39dd35",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "ext-mbstring": "*",
+                "phil/css-sanitizer": "^0.1@dev",
+                "php": ">=8.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.4",
+                "symfony/validator": "^8.2"
+            },
+            "suggest": {
+                "symfony/validator": "For the SafeSvg constraint"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\SvgSanitizer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "SVG images written by people made safe to serve: XML read without network, document type or entities, elements and attributes rewritten from allow lists, no script, event handler, foreignObject or external reference, styles through phil/css-sanitizer, size and depth limits, safe inline by default, removals reported, and a validator constraint",
+            "homepage": "https://ph-il.ca",
+            "keywords": [
+                "images",
+                "sanitizer",
+                "security",
+                "svg",
+                "upload",
+                "validator",
+                "xss"
+            ],
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/svg-sanitizer/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/svg-sanitizer/tree/0.1.0-alpha"
+            },
+            "time": "2026-11-11T06:11:30+00:00",
+            "published-time": "2026-11-11T13:33:37+00:00"
         },
         {
             "name": "php-webdriver/webdriver",
@@ -2468,6 +2725,63 @@
                 "source": "https://github.com/php-fig/event-dispatcher/tree/1.0.0"
             },
             "time": "2019-01-08T18:20:26+00:00"
+        },
+        {
+            "name": "psr/link",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/link.git",
+                "reference": "84b159194ecfd7eaa472280213976e96415433f7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/link/zipball/84b159194ecfd7eaa472280213976e96415433f7",
+                "reference": "84b159194ecfd7eaa472280213976e96415433f7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.0"
+            },
+            "suggest": {
+                "fig/link-util": "Provides some useful PSR-13 utilities"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Link\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for HTTP links",
+            "homepage": "https://github.com/php-fig/link",
+            "keywords": [
+                "http",
+                "http-link",
+                "link",
+                "psr",
+                "psr-13",
+                "rest"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/link/tree/2.0.1"
+            },
+            "time": "2021-03-11T23:00:27+00:00",
+            "published-time": "2021-03-11T23:05:05+00:00"
         },
         {
             "name": "psr/log",
@@ -5830,6 +6144,94 @@
             "published-time": "2026-11-04T12:39:12+00:00"
         },
         {
+            "name": "symfony/mercure",
+            "version": "v0.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/mercure.git",
+                "reference": "b6d218603ddd14fa80fe3cad1361e40879514ca0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/mercure/zipball/b6d218603ddd14fa80fe3cad1361e40879514ca0",
+                "reference": "b6d218603ddd14fa80fe3cad1361e40879514ca0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "symfony/deprecation-contracts": "^2.0|^3.0",
+                "symfony/http-client": "^6.4|^7.3|^8.0",
+                "symfony/http-foundation": "^6.4|^7.3|^8.0",
+                "symfony/web-link": "^6.4|^7.3|^8.0"
+            },
+            "require-dev": {
+                "lcobucci/jwt": "^3.4|^4.0|^5.0",
+                "symfony/event-dispatcher": "^6.4|^7.3|^8.0",
+                "symfony/http-kernel": "^6.4|^7.3|^8.0",
+                "symfony/phpunit-bridge": "^7.3.4|^8.0",
+                "symfony/stopwatch": "^6.4|^7.3|^8.0",
+                "twig/twig": "^2.0|^3.0|^4.0",
+                "web-token/jwt-library": "^4.1"
+            },
+            "suggest": {
+                "symfony/stopwatch": "Integration with the profiler performances",
+                "web-token/jwt-library": "To build Mercure protocol 1.0-compatible JSON Web Tokens with WebTokenFactory"
+            },
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "url": "https://github.com/dunglas/mercure",
+                    "name": "dunglas/mercure"
+                },
+                "branch-alias": {
+                    "dev-main": "0.10.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Mercure\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kévin Dunglas",
+                    "email": "dunglas@gmail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Mercure Component",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "mercure",
+                "push",
+                "sse",
+                "updates"
+            ],
+            "support": {
+                "issues": "https://github.com/symfony/mercure/issues",
+                "source": "https://github.com/symfony/mercure/tree/v0.10.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/dunglas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/mercure",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-11-03T07:27:54+00:00",
+            "published-time": "2026-11-03T07:27:59+00:00"
+        },
+        {
             "name": "symfony/messenger",
             "version": "v8.2.0-BETA1",
             "source": {
@@ -8127,6 +8529,195 @@
             "time": "2026-10-22T14:30:01+00:00"
         },
         {
+            "name": "symfony/web-link",
+            "version": "v8.2.0-BETA1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/web-link.git",
+                "reference": "1eb3e7913f6ada66243b50ec618c19d849d2fe49"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/web-link/zipball/1eb3e7913f6ada66243b50ec618c19d849d2fe49",
+                "reference": "1eb3e7913f6ada66243b50ec618c19d849d2fe49",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4.1",
+                "psr/link": "^1.1|^2.0"
+            },
+            "conflict": {
+                "symfony/dependency-injection": "<8.1"
+            },
+            "provide": {
+                "psr/link-implementation": "1.0|2.0"
+            },
+            "require-dev": {
+                "symfony/config": "^7.4|^8.0",
+                "symfony/dependency-injection": "^8.1",
+                "symfony/http-kernel": "^7.4|^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\WebLink\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kévin Dunglas",
+                    "email": "dunglas@gmail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Manages links between resources",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "dns-prefetch",
+                "http",
+                "http2",
+                "link",
+                "linkset",
+                "performance",
+                "prefetch",
+                "preload",
+                "prerender",
+                "psr13",
+                "push"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/web-link/tree/v8.2.0-BETA1"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-10-09T14:10:13+00:00",
+            "published-time": "2026-11-04T12:38:06+00:00"
+        },
+        {
+            "name": "symfony/workflow",
+            "version": "v8.2.0-BETA1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/workflow.git",
+                "reference": "aab3b4d34d3fc9534e4828f44e728e24d210961c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/workflow/zipball/aab3b4d34d3fc9534e4828f44e728e24d210961c",
+                "reference": "aab3b4d34d3fc9534e4828f44e728e24d210961c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4.1"
+            },
+            "conflict": {
+                "symfony/config": "<8.2",
+                "symfony/console": "<8.2",
+                "symfony/dependency-injection": "<8.1",
+                "symfony/event-dispatcher": "<8.2"
+            },
+            "require-dev": {
+                "psr/log": "^1|^2|^3",
+                "symfony/config": "^8.2",
+                "symfony/console": "^8.2",
+                "symfony/dependency-injection": "^8.1",
+                "symfony/error-handler": "^7.4|^8.0",
+                "symfony/event-dispatcher": "^8.2",
+                "symfony/expression-language": "^7.4|^8.0",
+                "symfony/finder": "^7.4|^8.0",
+                "symfony/http-kernel": "^7.4|^8.0",
+                "symfony/security-core": "^7.4|^8.0",
+                "symfony/stopwatch": "^7.4|^8.0",
+                "symfony/validator": "^7.4|^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Workflow\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Grégoire Pineau",
+                    "email": "lyrixx@lyrixx.info"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides tools for managing a workflow or finite state machine",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "petrinet",
+                "place",
+                "state",
+                "statemachine",
+                "transition",
+                "workflow"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/workflow/tree/v8.2.0-BETA1"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-11-01T19:30:44+00:00",
+            "published-time": "2026-11-04T12:34:57+00:00"
+        },
+        {
             "name": "symfony/yaml",
             "version": "v8.2.0-BETA1",
             "source": {
@@ -8355,8 +8946,11 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "phil/content-warnings": 20,
         "phil/dev-tools": 15,
-        "phil/resource": 20
+        "phil/recurrence": 20,
+        "phil/resource": 20,
+        "phil/svg-sanitizer": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -8365,6 +8959,7 @@
     },
     "platform-dev": {
         "ext-ctype": "*",
+        "ext-dom": "*",
         "ext-iconv": "*",
         "ext-intl": "*",
         "ext-mbstring": "*",
