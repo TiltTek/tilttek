@@ -61,6 +61,14 @@ ensuite copié dans son propre dépôt, en **lecture seule**, d'où Composer l'i
 | [`tilttek/game-engine-bundle`](https://github.com/TiltTek/game-engine-bundle) | Des tables de jeu dans Symfony : identifiants de siège opaques, journal en DBAL, verrou et mises à jour Mercure privées. |
 | [`tilttek/table-safety`](https://github.com/TiltTek/table-safety) | Des outils de sécurité pour les jeux de table : lignes et voiles, signaux anonymes, et le crédit de chaque outil. |
 
+### Construction de jeux
+
+| Paquet | Description |
+|---|---|
+| [`tilttek/deck-builder`](https://github.com/TiltTek/deck-builder) | Des paquets de cartes construits selon les règles déclarées d'un format : tailles, exemplaires, cartes bannies et listes taboues, chaque infraction lisible, sans catalogue d'éditeur. |
+| [`tilttek/wargame-army`](https://github.com/TiltTek/wargame-army) | Des listes d'armée pour des jeux de figurines sur un moteur générique : unités, options, points et emplacements de détachement vérifiés contre un catalogue que fournit l'application. |
+| [`tilttek/puzzle-builder`](https://github.com/TiltTek/puzzle-builder) | Des énigmes pour un scénario, vérifiées sur le serveur : réponses normalisées et partielles, propositions bornées, indices par paliers et graphe de déverrouillage validé. |
+
 Chaque paquet est en `0.x` : son API peut encore changer d'une version mineure à l'autre, comme le note son CHANGELOG.
 
 ## Installer un paquet

@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bat>","catalogue":"emberle","catalogue_version":"26/9","points_limit":31,"detachments":[{"type":"vangud","name":null,"units":[{"unit":"ptaiuts","models":5,"options":4,"options":[]}]}]}

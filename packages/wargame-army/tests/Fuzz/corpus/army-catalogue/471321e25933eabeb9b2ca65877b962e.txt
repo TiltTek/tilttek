@@ -1,0 +1,1 @@
+{"code":"ember-~a.e","name":"Ember Vale Skirmish","version":"223.1","units":[{"code":"capd","nacodtr":[{"catax":1},{"category":"troo6s","min":0,"max":2}],"m0ax":null}],"m'nts":1,"matraints":[{"typercent":25}]}

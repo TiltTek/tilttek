@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bad <lis>","catalogue":"er-vae","catalogue_version":"2025.9","points_limit":31,"detachments":[{"type":"vanguar","name":null,"units":[{"unit":"2aptain","models":2,"options":{"banse":1,"ner":3,"horse":1,"ax":1}},{"unit":"oggocotsuards","options":[]}]}]}

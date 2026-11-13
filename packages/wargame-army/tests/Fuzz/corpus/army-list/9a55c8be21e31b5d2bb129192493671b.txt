@@ -1,0 +1,1 @@
+{"id":"l","name":"L","catalogue":"c","catalogue_version":"2","points_limit":50,"detachments":[{"type":"h","units":[{"unit":"r","models":6,"options":{"o":2}}]}]}

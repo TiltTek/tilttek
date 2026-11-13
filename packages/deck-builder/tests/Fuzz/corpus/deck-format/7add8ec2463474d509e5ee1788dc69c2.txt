@@ -1,0 +1,1 @@
+{"code":"f","name":"F","banned":["t","(eff","anneda"],"restricted":{"b":1},"taboo_lists":[]}

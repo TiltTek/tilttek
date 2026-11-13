@@ -1,0 +1,1 @@
+{"id":"list-2","name":"B","catalogue":"emble","catalogue_version":"","points_limit":7,"detachments":[{"type":"vanrd","name":null,"units":[{},{"u@s":[]}]}]}

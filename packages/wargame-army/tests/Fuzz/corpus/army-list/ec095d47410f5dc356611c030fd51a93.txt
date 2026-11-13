@@ -1,0 +1,1 @@
+{"id":"lis2","name":"Ba","catalogue":"c","catalogue_version":"2","points_limit":50,"detachments":[{"type":"h","units":[{"unit":"u","models":4,"options":[]}]}]}

@@ -1,0 +1,1 @@
+{"code":"f","name":"F","taboo_lists":[{"code":"t","effective_from":"2026-01-01","banned":["c"],"restricted":{"d":2}}]}

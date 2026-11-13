@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bad <list>","catalogue":"eCmvae","catalogue_version":"224.9","points_limit":30,"detachments":[{"type":"vanguard","name":null,"units":[{"unit":"3aptain","options":{"se":1,"er":3,"horse":1,"axe":1}}]}]}

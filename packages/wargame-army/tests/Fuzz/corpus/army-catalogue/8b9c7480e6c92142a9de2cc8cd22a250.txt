@@ -1,0 +1,1 @@
+{"code":"emale","name":"Embe ","version":"225.1","units":[{"cotegoits":null}],"min_detachments":1,"max_detachments":1,"constraints":[{"t":25}]}

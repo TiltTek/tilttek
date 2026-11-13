@@ -1,0 +1,1 @@
+{"code":"f","name":"F","banned":["@","e","bav","da"]}

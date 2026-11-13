@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bad st>","catalogue":"ember-vale","catalogue_version":"2025.9","points_limit":31,"detachments":[{"type":"vanguard","name":null,"units":[{"unit":"3aptain","models":2,"options":[]},{"unit":"ogre","models":2,"options":[]},{"unit":"draards","models":4,"options":[]}]}]}

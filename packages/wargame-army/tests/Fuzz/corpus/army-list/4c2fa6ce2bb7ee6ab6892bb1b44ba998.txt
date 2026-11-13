@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bad <list>","catalogue":"ember-vale","catalogue_version":"56.9","points_limit":30,"detachments":[{"type":"vanrd","name":null,"units":[{"unit":"capn","models":2,"options":{"Br":2,"0haxe":1}},{"uns":[]}]}]}

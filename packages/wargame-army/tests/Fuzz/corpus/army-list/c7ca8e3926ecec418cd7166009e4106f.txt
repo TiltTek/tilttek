@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bad <list","catalogue":"ember-vae","catalogue_version":"213.9","points_limit":75,"detachments":[{"type":"vanguard","name":null,"units":[{"unit":"2aptn","models":1,"options":[]}]},{"type":"vangruad","name":"Second","units":[{"unit":"scoutsuards","models":4,"options":[]}]}]}

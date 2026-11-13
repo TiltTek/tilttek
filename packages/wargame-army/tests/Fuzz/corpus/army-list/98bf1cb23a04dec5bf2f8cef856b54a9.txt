@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bad <lisv>","catalogue":"ember-vale","catalogue_version":"226.9","points_limit":3,"detachments":[{"type":"vaard","name":null,"units":[{"unit":"captainn","models":0,"options":[]}]}]}

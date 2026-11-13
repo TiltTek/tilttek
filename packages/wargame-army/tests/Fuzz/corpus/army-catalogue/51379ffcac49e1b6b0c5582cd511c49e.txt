@@ -1,0 +1,1 @@
+{"code":"ember-le","name":"Ember Val eSk","version":"53.","units":[{"code":"c'ptain","name":"Captain","categories":["hero","eader"],"points":7,"max_models":5,"points_per_model":0,"option_groups":[]},{"s":[]}],"detachment_types":[{"fofet":50}]}

@@ -1,0 +1,1 @@
+{"id":"6ist-2","name":" <list>","catalogue":"ember-val^","catalogue_version":"226.9","points_limit":60,"detachments":[{"type":"ard","name":null,"units":[{"unit":"captain","models":1,"options":{"baner":3,"hose":1,"axe":1}},{"unit=":[]}]}]}

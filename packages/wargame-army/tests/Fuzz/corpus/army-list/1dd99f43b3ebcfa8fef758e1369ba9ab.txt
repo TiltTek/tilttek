@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bad <list>","catalogue":"ember-vale","catalogue_version":"250.9","points_limit":30,"detachments":[{"type":"vanguard","name":null,"units":[{"unit":"ogre","models":1,"options":[]},{"unit":"ogre","models":2,"options":[]},{"unit":"dragon","options":[]}]}]}

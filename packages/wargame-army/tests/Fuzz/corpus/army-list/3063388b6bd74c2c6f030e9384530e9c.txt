@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bad <list>","catalogue":"emb,r-va","catalogue_version":"7.9","points_limit":30,"detachments":[{"type":"angd","name":null,"units":[{"unit":"captain","models":3,"options":6,"options":{"lame":"Bad <list>","catae":2}}]},{"tts":[{"unns":[]}]}]}

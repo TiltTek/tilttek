@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bad>","catalogue":"bale","catalogue_version":"56.9","points_limit":30,"detachments":[{"type":"vanguard","name":null,"units":[{"unit":"captain","models":2,"options":{"n":1,"axe":1}},{"unit":"guas","models":8,"options":[]}]}]}

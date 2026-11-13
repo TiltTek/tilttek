@@ -1,0 +1,1 @@
+{"code":"ember-vale","name":"Mmb","version":"32.1","units":[{"code":"","categopoi":[]}],"detachment_types":1,"max_detachments":2,"constraints":[{"type":"count","t":52}]}

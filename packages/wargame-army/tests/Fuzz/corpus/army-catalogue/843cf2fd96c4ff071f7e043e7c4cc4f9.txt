@@ -1,0 +1,1 @@
+{"version":"2.5","min_detachments":2,"ctran":[{"":6}]}

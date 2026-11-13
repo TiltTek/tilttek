@@ -1,0 +1,48 @@
+{
+    "name": "tilttek/puzzle-builder",
+    "description": "Puzzles for a scenario, checked on the server: normalized answers, partial answers, bounded guesses, tiered hints and a validated unlock graph.",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-intl": "*",
+        "ext-mbstring": "*",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "psr/event-dispatcher": "^1.0",
+        "symfony/clock": "^8.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "symfony/rate-limiter": "^8.2"
+    },
+    "suggest": {
+        "symfony/rate-limiter": "To count the guesses of each team and puzzle in a store every worker reads, through RateLimiterGuessLimiter"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\PuzzleBuilder\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\PuzzleBuilder\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

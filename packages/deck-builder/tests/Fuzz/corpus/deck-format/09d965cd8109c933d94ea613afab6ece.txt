@@ -1,0 +1,1 @@
+{"code":"f","name":"JJ","banned":["a"],"restricted":{"e":40,"m":39}}

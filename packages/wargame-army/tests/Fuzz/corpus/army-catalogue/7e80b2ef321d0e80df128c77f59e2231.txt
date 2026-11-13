@@ -1,0 +1,1 @@
+{"code":"embe-~ale","name":"Embh","version":"5","units":[{"code":"captain","name":"ain","points":30,"min_models":1,"points_per_model":0,"option_groups":[]}],"detachment_types":[{"ccent":50}]}

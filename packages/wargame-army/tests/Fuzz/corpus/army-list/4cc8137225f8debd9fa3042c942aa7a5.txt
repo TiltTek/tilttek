@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bad <lsti>","catalogue":"eber-ale","catalogue_version":"57.9","points_limit":30,"detachments":[{"type":"vanguard","name":null,"units":[{"unit":"captain","models":2,"options":{"baner":3,"hose":1,"axe":1}},{"unit":"guards","models":4,"options":[]}]}]}

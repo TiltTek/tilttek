@@ -1,0 +1,1 @@
+{"code":"f","name":"M","min_size":443922,"banned":["a"],"taboo_lists":[]}

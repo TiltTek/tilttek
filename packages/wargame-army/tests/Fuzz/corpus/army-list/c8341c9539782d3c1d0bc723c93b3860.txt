@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bad<l","catalogue":"ember-vale","catalogue_version":"250.9","points_limit":300,"detachments":[{"type":"vanguard","name":null,"units":[{"unit":"cain","models":2,"options":{"banner":3,"hore":1}},{"unit":"ogre","models":1,"options":[]},{"unit":"ogre","models":1,"options":[]},{"unit":"agon","m":"guards","modelsoptions":[]}]}]}

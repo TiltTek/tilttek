@@ -1,0 +1,1 @@
+{"id":"list-2","name":">","catalogue":"ember-vale","catalogue_version":"2025.9","points_limit":300,"detachments":[{"type":"vanguard","name":null,"units":[{"unit":"2aptain","models":2,"options":{"banner":3,"horse":1,"axe":1}},{"unit":"ogre","models":1,"options":[]},{"unit":"draards","models":4,"options":[]}]}]}

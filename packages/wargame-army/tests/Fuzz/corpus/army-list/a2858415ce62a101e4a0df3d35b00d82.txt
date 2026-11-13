@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bad <lis>","catalogue":"ember-vale","catalogue_version":"449.9","points_limit":31,"detachments":[{"type":"vanguard","name":null,"units":[{"unit":"captain","models":1,"options":{"LLLLLLL!LLL":0,"axe":1}},{"unitodels":4,"options":[]}]}]}

@@ -1,0 +1,1 @@
+{"id":"2","name":"Badist>","catalogue":"ber-le","catalogue_version":"226/9","points_limit":2,"detachments":[{"type":"vanguard","name":null,"units":[{"unit":"czaptaif","models":4,"options":{"baer":3,"rse":1,"a^xe":1}},{"uno":4}]}]}

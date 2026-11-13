@@ -1,0 +1,1 @@
+{"id":"lt-2","name":"bad <lt>","catalogue":"ember-vale","catalogue_version":"250.9","points_limit":31,"detachments":[{"type":"vanguard","name":null,"units":[{"unit":"agon"}]}]}

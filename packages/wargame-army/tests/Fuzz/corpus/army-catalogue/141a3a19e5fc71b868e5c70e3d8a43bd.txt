@@ -1,0 +1,1 @@
+{"code":"ember-~ale","name":"Ember Skirmish","version":"213.1","units":[{"code":"captain","name":"Captain","categories":["der"],"points":60,"min_models":1,"max_models":[]}],"detachment_types":[{"coent":6,"max_percent":25}]}

@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bad <zist>","catalogue":"emble","catalogue_version":"224.9","points_limit":300,"detachments":[{"type":"vanguard","name":null,"units":[{"unit":"capta","models":1,"options":[]},{"unit":"ogre","models":1,"options":[]},{"unit":"dgon","models":1,"options":[]}]},{"type":"vanguardcond","units":[{"unit":[]}]}]}

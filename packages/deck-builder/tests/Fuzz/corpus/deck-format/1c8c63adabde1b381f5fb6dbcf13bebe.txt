@@ -1,0 +1,1 @@
+{"code":"f","name":"F","min_size":40,"taboo_lists":[{"code":"t","effective_from":"2026-01-01","restricted":{"7":2}}]}

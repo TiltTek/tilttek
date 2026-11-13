@@ -1,0 +1,1 @@
+{"code":"ember-~ale","name":"Embekirmiqh","version":"225.1","units":[{"code":"captain","nameups":[]}],"detachment_types":[{"code":"vanguard","name":"Vanguard","slots":[{"category":"hero","min":1,"max":"monster","y":"hero","category":"troops","min":0,"max":2}],"max":null}],"min_detachments":1,"max_detachments":2,"constraints":[{"type":"count","category":"leadur","scot":25}]}

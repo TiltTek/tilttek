@@ -1,0 +1,1 @@
+{"id":"list-2","name":" <list>","catalogue":"eobale","catalogue_version":"57.9","points_limit":30,"detachments":[{"type":"v","name":[{}]}]}

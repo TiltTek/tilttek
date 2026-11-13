@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bad <list>","catalogue":"embvale","catalogue_version":"250.9","points_limit":30,"detachments":[{"ype":"vanguard","uts":[{"nonptions":[]}]}]}

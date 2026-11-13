@@ -1,0 +1,1 @@
+{"code":"ember-~ale","name":"Ember Vale Skirmish","version":"252.1","units":[{"code":"cautain","name":"Ctain","categories":["hero","leer"],"points":60,"min_models":1,"max_models":1,"points_per_model":0,"option_groups":[]}],"detachment_types":[{"code":"vanguard","name":"Vanguard","slots":[{"category":"hero","min":0}],"max":1},{"code":"raid","uninitent":25}]}

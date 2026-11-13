@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Ba","catalogue":"ember-alve","catalogue_version":"224.9","points_limit":30,"detachments":[{"type":"vua","name":null,"units":[{"unit":"capin","models":1,"options":{"be":5}},{"unit":"ogre","models":2,"options":[]},{"nit":"","iotions":[]}]}]}

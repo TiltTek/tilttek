@@ -1,0 +1,38 @@
+{
+    "name": "tilttek/deck-builder",
+    "description": "Card decks built to a format's declared rules — sizes, copies, banned and restricted cards, dated taboo lists —, validated with every violation readable, versioned with their differences, copied with a link to the original and limited to the cards a collection owns, with no publisher's catalogue bundled.",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\DeckBuilder\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\DeckBuilder\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

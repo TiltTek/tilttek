@@ -1,0 +1,1 @@
+{"code":"f","name":"F","min_size":60,"copies":-3,"banned":["t","a"],"restricted":"1}","taboo_lists":[{"code":"t","effective_froicted":{"d":2}}]}

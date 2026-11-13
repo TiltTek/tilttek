@@ -1,0 +1,1 @@
+{"id":"d","name":"","format":"f","cards":{"a":1},"copied_from":{"deck":"e","version":0}}

@@ -61,6 +61,14 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/game-engine-bundle`](https://github.com/TiltTek/game-engine-bundle) | Game tables in Symfony: opaque seat identifiers, the log in DBAL, a lock, and private Mercure updates. |
 | [`tilttek/table-safety`](https://github.com/TiltTek/table-safety) | Safety tools for tabletop games: lines and veils, anonymous signals, and the credits of each tool. |
 
+### Game building
+
+| Package | Description |
+|---|---|
+| [`tilttek/deck-builder`](https://github.com/TiltTek/deck-builder) | Card decks built to a format's declared rules: sizes, copies, banned cards and taboo lists, every violation readable, no publisher's catalogue bundled. |
+| [`tilttek/wargame-army`](https://github.com/TiltTek/wargame-army) | Army lists for miniatures games on a generic engine: units, options, points and detachment slots checked against a catalogue the application provides. |
+| [`tilttek/puzzle-builder`](https://github.com/TiltTek/puzzle-builder) | Puzzles for a scenario, checked on the server: normalized and partial answers, bounded guesses, tiered hints and a validated unlock graph. |
+
 Every package is at `0.x`: its API may still change between minor versions, as its CHANGELOG records.
 
 ## Installing a package

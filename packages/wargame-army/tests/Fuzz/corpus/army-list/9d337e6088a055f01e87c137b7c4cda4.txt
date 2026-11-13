@@ -1,0 +1,1 @@
+{"id":"list-2","name":"Bas>","catalogue":"embee","catalogue_version":"25-1.9","points_limit":30,"detachments":[{"type":"rd","name":null,"units":[{"unit":"captain","models":3,"options":{"banner":3,"hox":0}},{"u":[]}]}]}
