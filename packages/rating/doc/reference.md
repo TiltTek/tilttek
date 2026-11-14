@@ -2,7 +2,7 @@
 
 | Type | Role |
 |---|---|
-| `Ratings` | Records each result once, gives ratings, says which are provisional, gives standings with or without them, publishes and hides, replays, exports and forgets |
+| `Ratings` | Records each result once and delivers its events again after a failed listener, gives ratings, says which are provisional, gives standings with or without them, publishes and hides, replays, exports and forgets |
 | `GameResult` | One game played: its sides and their ranks; written and read back as plain values |
 | `MemberRating` | A member's rating of a game, as the store keeps it, at a version |
 | `RatingChange` | How a recorded result moved one member's score |

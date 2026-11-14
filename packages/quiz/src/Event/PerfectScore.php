@@ -9,6 +9,8 @@ namespace Tilttek\Quiz\Event;
  * rather than confetti, or for a badge. At one's own pace, it is dispatched once per quiz and member by default, for
  * the play that counts; `practice` is true only when the application asked for every perfect play. It carries
  * identifiers only.
+ *
+ * It is dispatched at least once: a listener is idempotent, keyed by `key()`.
  */
 final readonly class PerfectScore
 {
@@ -18,5 +20,11 @@ final readonly class PerfectScore
         public string $player,
         public bool $practice = false,
     ) {
+    }
+
+    /** The same each time this perfect run is dispatched again. */
+    public function key(): string
+    {
+        return \sprintf('%s/%s/%s/perfect', $this->quiz, $this->run, $this->player);
     }
 }

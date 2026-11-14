@@ -21,6 +21,23 @@ use Tilttek\Quiz\Tests\Unit\Fixture\Quizzes;
 #[CoversClass(InMemoryPlayStore::class)]
 final class StoresTest extends TestCase
 {
+    public function testAPinIsHeldByOneSessionNotOverAtMost(): void
+    {
+        $store = new InMemoryLiveSessionStore();
+        $first = LiveSession::open('s1', Quizzes::trivia(), '123456');
+
+        self::assertTrue($store->add($first));
+        self::assertFalse($store->add(LiveSession::open('s2', Quizzes::trivia(), '123456')));
+        self::assertNull($store->find('s2'));
+        self::assertTrue($store->add(LiveSession::open('s3', Quizzes::trivia(), '654321')));
+
+        $first->finish();
+        $store->save($first);
+
+        self::assertTrue($store->add(LiveSession::open('s2', Quizzes::trivia(), '123456')));
+        self::assertSame('s2', $store->findByPin('123456')?->id);
+    }
+
     public function testASessionChangedAndNotSavedLeavesTheStoredOneAsItWas(): void
     {
         $store = new InMemoryLiveSessionStore();

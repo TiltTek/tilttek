@@ -46,7 +46,9 @@ final readonly class LootDrawer
 
     /**
      * Whether a published proof is an honest draw of the box: the seed matches the commitment, rolling the dice of the
-     * box again gives the published roll, and the faces are those of the roll. A proof that does not read is false.
+     * box again gives the published roll, and the faces are those of the roll. A proof that does not read is false, and
+     * so is a proof whose client seed a reveal refuses — empty, longer than 256 bytes or not UTF-8 text —, checked
+     * before any roll is made again.
      *
      * @param array<array-key, mixed> $proof as `RevealedDraw::proof()` wrote it
      */
@@ -71,8 +73,8 @@ final readonly class LootDrawer
         $claimed = $proof['result'];
 
         try {
-            return $this->roller->verify(Commitment::fromHex($proof['commitment']), Seed::fromHex($proof['seed']), $proof['client_seed'], $proof['nonce'], $pool, $claimed);
-        } catch (DiceException) {
+            return $this->roller->verify(Commitment::fromHex($proof['commitment']), Seed::fromHex($proof['seed']), PendingDraw::clientSeed($proof['client_seed']), $proof['nonce'], $pool, $claimed);
+        } catch (DiceException|InvalidLoot) {
             return false;
         }
     }

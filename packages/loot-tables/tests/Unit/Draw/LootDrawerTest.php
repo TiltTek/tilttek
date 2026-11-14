@@ -7,6 +7,8 @@ namespace Tilttek\LootTables\Tests\Unit\Draw;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Tilttek\Dice\Fairness\FairRoller;
+use Tilttek\Dice\Fairness\Seed;
 use Tilttek\LootTables\Draw\DrawSource;
 use Tilttek\LootTables\Draw\LootDrawer;
 use Tilttek\LootTables\Draw\PendingDraw;
@@ -149,5 +151,44 @@ final class LootDrawerTest extends TestCase
 
         self::assertFalse($drawer->verify(Loot::box([20, 6]), $proof));
         self::assertFalse($drawer->verify(Loot::box([20, 8], 'other'), $proof));
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function clientSeedsARevealRefuses(): iterable
+    {
+        yield 'empty' => [''];
+        yield 'longer than 256 bytes' => [str_repeat('b', 257)];
+        yield 'not UTF-8' => ["\xff\xfe"];
+    }
+
+    /**
+     * A proof whose roll was made with a client seed the reveal refuses — none at all, or one too long — is no honest
+     * draw of the box, even when the roll matches it: the proof is checked as the reveal checks the seed, before any
+     * roll is made again.
+     */
+    #[DataProvider('clientSeedsARevealRefuses')]
+    public function testAProofWithAClientSeedTheRevealRefusesIsFalse(string $clientSeed): void
+    {
+        $box = Loot::box([20, 8]);
+        $drawer = new LootDrawer();
+        $proof = $drawer->reveal($box, PendingDraw::restore(self::SEED, 4), 'buyer')->proof();
+        $seed = Seed::fromHex(self::SEED);
+        $roll = new FairRoller()->roll($box->pool(), $seed, \strlen($clientSeed) <= 256 ? $clientSeed : 'too long to roll with', 4);
+        $proof['client_seed'] = $clientSeed;
+        $proof['result'] = $roll->result->toArray();
+        $proof['faces'] = array_column($proof['result'], 'total');
+
+        self::assertFalse($drawer->verify($box, $proof));
+    }
+
+    public function testAClientSeedOfTwoHundredFiftySixBytesIsVerified(): void
+    {
+        $box = Loot::box([20, 8]);
+        $drawer = new LootDrawer();
+        $proof = $drawer->reveal($box, PendingDraw::restore(self::SEED, 4), str_repeat('é', 128))->proof();
+
+        self::assertTrue($drawer->verify($box, $proof));
     }
 }

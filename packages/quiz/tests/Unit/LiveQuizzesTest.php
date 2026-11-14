@@ -244,6 +244,26 @@ final class LiveQuizzesTest extends TestCase
         self::assertNotSame($first->pin, $second->pin);
     }
 
+    /**
+     * Two hosts open a session at once and draw the same PIN: the PIN goes to the first session kept, and the other
+     * session draws another, rather than both answering to one PIN.
+     */
+    public function testTwoSessionsOpenedAtOnceNeverShareAPin(): void
+    {
+        $other = $this->live(new Randomizer(new Xoshiro256StarStar(7)));
+        $opened = [];
+        $this->store->meanwhile = static function () use ($other, &$opened): void {
+            $opened[] = $other->open('two', 'trivia');
+        };
+
+        $first = $this->live(new Randomizer(new Xoshiro256StarStar(7)))->open('one', 'trivia');
+
+        self::assertCount(1, $opened);
+        self::assertNotSame($opened[0]->pin, $first->pin);
+        self::assertSame('two', $this->store->findByPin($opened[0]->pin)?->id);
+        self::assertSame('one', $this->store->findByPin($first->pin)?->id);
+    }
+
     public function testAPinIsSixDigitsWithLeadingZeros(): void
     {
         $randomizer = new Randomizer(new class implements Engine {
@@ -347,13 +367,15 @@ final class LiveQuizzesTest extends TestCase
         }));
         $live->open('one', 'trivia');
 
-        $this->store->pinReads = 0;
+        $this->store->adds = 0;
 
         try {
             $live->open('two', 'trivia');
             self::fail('A taken PIN was given twice.');
         } catch (QuizRefused) {
-            self::assertSame(LiveQuizzes::PIN_DRAWS, $this->store->pinReads);
+            self::assertSame(LiveQuizzes::PIN_DRAWS, $this->store->adds);
+            self::assertSame(0, $this->store->pinReads);
+            self::assertNull($this->store->find('two'));
         }
     }
 

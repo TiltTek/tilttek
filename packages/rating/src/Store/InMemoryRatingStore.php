@@ -6,6 +6,8 @@ namespace Tilttek\Rating\Store;
 
 use Override;
 use Tilttek\Rating\Contract\RatingStore;
+use Tilttek\Rating\Event\PeakReached;
+use Tilttek\Rating\Event\RatingChanged;
 use Tilttek\Rating\Exception\RatingConflict;
 use Tilttek\Rating\Exception\ResultAlreadyRecorded;
 use Tilttek\Rating\MemberRating;
@@ -22,6 +24,9 @@ final class InMemoryRatingStore implements RatingStore
     /** @var array<string, array<string, true>> the results counted, by game */
     private array $results = [];
 
+    /** @var array<string, array<string, array<string, RatingChanged|PeakReached>>> by game, result, then key */
+    private array $undelivered = [];
+
     #[Override]
     public function hasRecorded(string $game, string $result): bool
     {
@@ -35,7 +40,7 @@ final class InMemoryRatingStore implements RatingStore
     }
 
     #[Override]
-    public function save(array $ratings, ?string $result = null): void
+    public function save(array $ratings, ?string $result = null, array $events = []): void
     {
         $game = $ratings[0]->game ?? null;
 
@@ -55,7 +60,23 @@ final class InMemoryRatingStore implements RatingStore
 
         if (null !== $result && null !== $game) {
             $this->results[$game][$result] = true;
+
+            foreach ($events as $event) {
+                $this->undelivered[$game][$result][$event->key()] = $event;
+            }
         }
+    }
+
+    #[Override]
+    public function undelivered(string $game, string $result): array
+    {
+        return array_values($this->undelivered[$game][$result] ?? []);
+    }
+
+    #[Override]
+    public function markDelivered(string $game, string $result, string ...$keys): void
+    {
+        $this->undelivered[$game][$result] = array_diff_key($this->undelivered[$game][$result] ?? [], array_flip($keys));
     }
 
     #[Override]
@@ -105,6 +126,12 @@ final class InMemoryRatingStore implements RatingStore
     {
         foreach (array_keys($this->ratings) as $game) {
             unset($this->ratings[$game][$member]);
+        }
+
+        foreach ($this->undelivered as $game => $results) {
+            foreach ($results as $result => $events) {
+                $this->undelivered[$game][$result] = array_filter($events, static fn (RatingChanged|PeakReached $event): bool => $event->member !== $member);
+            }
         }
     }
 }

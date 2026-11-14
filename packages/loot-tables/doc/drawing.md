@@ -17,7 +17,9 @@ A draw is verifiable when the result could not have been chosen. The library fol
    commitment, the seed, the client seed, the nonce, the expression, the rounding and the roll.
 5. **Verify.** `LootDrawer::verify($box, $proof)` is true when the seed matches the commitment, the expression is the
    box's, rolling the dice again gives the published roll, and the faces are those of the roll. A proof that does not
-   read — a field missing, of another type, a seed that is not hexadecimal — is false, never an exception.
+   read — a field missing, of another type, a seed that is not hexadecimal — is false, never an exception. So is a
+   proof whose client seed a reveal refuses — empty, longer than 256 bytes or not UTF-8 text —: it is checked before
+   the dice are rolled again, so that a proof sent in a public request costs no more than a reveal.
 
 The draw is made once: whoever draws keeps the result and gives it again when asked, rather than revealing a second
 time.

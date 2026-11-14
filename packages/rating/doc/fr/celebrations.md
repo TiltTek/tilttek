@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=735d11891802c31d2c839ad712a89b491c1daec623a3d270c174b73b4b9c00ea -->
+<!-- phil-dev source-sha256=570ea7d974a836613e1fda88399687eb5e45b47f43e3616c0bb2b54c9e4f8bd9 -->
 # Célébrations
 
 Une cote qui monte est un moment à célébrer, et une nouvelle cote record l'est encore plus. La bibliothèque dit quand ;
@@ -15,6 +15,10 @@ Chaque événement ne porte que des identifiants, jamais une cote : un écouteur
 ne la montre qu'au membre, sauf si le membre l'a rendue publique. Un résultat amical et une relecture n'envoient rien.
 `celebrateAfter`, à 5 par défaut, évite que les premières parties d'un membre — celles où une cote bouge le plus — soient
 célébrées chaque fois.
+
+Un événement est envoyé au moins une fois : celui dont l'écouteur a échoué est envoyé de nouveau quand le résultat est
+enregistré de nouveau ou remis, voir [Enregistrer des résultats](recording-results.md#les-événements). Un écouteur qui
+joue une célébration ou donne quelque chose le fait une fois par `key()`.
 
 ## Avec le kit PHIL UX
 
