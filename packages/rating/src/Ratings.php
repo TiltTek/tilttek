@@ -6,6 +6,7 @@ namespace Tilttek\Rating;
 
 use DateTimeImmutable;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Throwable;
 use Tilttek\Rating\Contract\PlaySource;
 use Tilttek\Rating\Contract\RatingStore;
 use Tilttek\Rating\Contract\RatingSystem;
@@ -26,6 +27,12 @@ use Tilttek\Rating\Exception\ResultAlreadyRecorded;
  * uncertain; `isProvisional()` says so, and `standings()` may leave such ratings out. A rating is private until its
  * member makes it public with `publish()`; `standings()` lists the public ones only. `export()` and `forget()` give and
  * erase every rating of a member.
+ *
+ * The events of a result are kept with it in the store, in the same write as the ratings, and each stays there until
+ * it was dispatched without an exception: a listener that throws leaves it there, the other events are dispatched all
+ * the same, and the first exception is thrown again at the end. `record()` called again with the result, or
+ * `deliver()`, dispatches what is left, without rating the result again. An event may thus be dispatched more than
+ * once: the listeners are idempotent, keyed by the event's `key()`.
  *
  * The service keeps nothing between calls: the store holds the state.
  */
@@ -61,12 +68,14 @@ final readonly class Ratings
     }
 
     /**
-     * Rates a result and keeps the new ratings of its members, all at once, with the result counted for its game. A
-     * friendly result changes no rating and gives no change.
+     * Rates a result and keeps the new ratings of its members, all at once, with the result counted for its game and
+     * its events, then dispatches them. A friendly result changes no rating and gives no change. A result counted
+     * already whose events are not all delivered is not rated again: its events left are dispatched, and no change is
+     * given.
      *
      * @return list<RatingChange> in the order of the members of the result
      *
-     * @throws ResultAlreadyRecorded when the result is counted already; nothing is kept
+     * @throws ResultAlreadyRecorded when the result is counted already and its events are all delivered; nothing is kept
      * @throws RatingRefused         when the ratings of the game were computed by another system
      * @throws RatingConflict        when the ratings of a member changed since they were read; nothing is kept
      */
@@ -77,7 +86,15 @@ final readonly class Ratings
         }
 
         if ($this->store->hasRecorded($result->game, $result->id)) {
-            throw ResultAlreadyRecorded::of($result->game, $result->id);
+            $left = $this->store->undelivered($result->game, $result->id);
+
+            if ([] === $left) {
+                throw ResultAlreadyRecorded::of($result->game, $result->id);
+            }
+
+            $this->dispatch($result->game, $result->id, $left);
+
+            return [];
         }
 
         $current = $this->current($result->game, $result->members());
@@ -92,17 +109,30 @@ final readonly class Ratings
             $changes[] = new RatingChange($member, $before->score, $score, $before->peaksAt($score) && $before->games + 1 >= $this->celebrateAfter);
         }
 
-        $this->store->save($kept, $result->id);
+        $events = [];
 
-        foreach ($changes as $change) {
-            $this->events?->dispatch(new RatingChanged($result->game, $change->member, $result->id));
+        foreach ($this->events instanceof EventDispatcherInterface ? $changes : [] as $change) {
+            $events[] = new RatingChanged($result->game, $change->member, $result->id);
 
             if ($change->peak) {
-                $this->events?->dispatch(new PeakReached($result->game, $change->member, $result->id));
+                $events[] = new PeakReached($result->game, $change->member, $result->id);
             }
         }
 
+        $this->store->save($kept, $result->id, $events);
+        $this->dispatch($result->game, $result->id, $events);
+
         return $changes;
+    }
+
+    /**
+     * Dispatches again the events of the result not delivered yet, to resume after a listener failed.
+     *
+     * @return int how many were delivered
+     */
+    public function deliver(string $game, string $result): int
+    {
+        return $this->dispatch($game, $result, $this->store->undelivered($game, $result));
     }
 
     /**
@@ -316,5 +346,47 @@ final readonly class Ratings
         }
 
         return $current;
+    }
+
+    /**
+     * Dispatches the events, marks delivered those dispatched without an exception, and throws the first exception
+     * again once every event was tried.
+     *
+     * @param list<RatingChanged|PeakReached> $events
+     *
+     * @return int how many were delivered
+     */
+    private function dispatch(string $game, string $result, array $events): int
+    {
+        $dispatcher = $this->events;
+
+        if (!$dispatcher instanceof EventDispatcherInterface) {
+            return 0;
+        }
+
+        $keys = [];
+        $failure = null;
+
+        foreach ($events as $event) {
+            try {
+                $dispatcher->dispatch($event);
+            } catch (Throwable $thrown) {
+                $failure ??= $thrown;
+
+                continue;
+            }
+
+            $keys[] = $event->key();
+        }
+
+        if ([] !== $keys) {
+            $this->store->markDelivered($game, $result, ...$keys);
+        }
+
+        if ($failure instanceof Throwable) {
+            throw $failure;
+        }
+
+        return \count($keys);
     }
 }

@@ -26,9 +26,12 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
   the games, the highest score, the visibility, private by default, the last result and the version —, written and read
   back as plain values.
 - `Contract\Rating`, `Contract\RatingSystem`, `Contract\RatingStore` — keeping the results each game counts beside
-  the ratings — and `Contract\PlaySource`, with `Store\InMemoryRatingStore`.
-- `Event\RatingChanged` and `Event\PeakReached`, carrying identifiers only, for a celebration once a member has played
-  the rated games asked for.
+  the ratings, with the events of each result not delivered yet — and `Contract\PlaySource`, with
+  `Store\InMemoryRatingStore`.
+- `Event\RatingChanged` and `Event\PeakReached`, carrying identifiers only and a stable `key()`, for a celebration once
+  a member has played the rated games asked for; kept with the result until each was dispatched without an exception,
+  the events left dispatched by recording the result again — which rates nothing again — or by `Ratings::deliver()`,
+  a failed listener never stopping the others.
 - `Exception\RatingException`, with `InvalidRating`, `RatingRefused`, `ResultAlreadyRecorded` and `RatingConflict`.
 - A fuzz target for the computation of a rating, and benchmarks of a replay of 10 000 results by each system.
 - The documentation in `doc/`, one file per topic, indexed by the README.

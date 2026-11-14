@@ -14,6 +14,10 @@ Every event carries identifiers only, never a rating: a listener reads the ratin
 member alone unless the member made it public. A friendly result and a replay dispatch nothing. `celebrateAfter`, 5 by
 default, keeps the first games of a member — where a rating moves the most — from being celebrated each time.
 
+An event is dispatched at least once: one whose listener failed is dispatched again when the result is recorded
+again or delivered, see [Recording results](recording-results.md#the-events). A listener that plays a celebration or
+awards something does it once per `key()`.
+
 ## With the PHIL UX kit
 
 A listener keeps the moment for the member's next page — in the session, or as a notification — and the page plays the

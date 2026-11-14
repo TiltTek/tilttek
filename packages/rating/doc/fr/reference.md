@@ -1,9 +1,9 @@
-<!-- phil-dev source-sha256=ad93f10f0a7ac351332f819b5f2757b2335d6280d6b66478e8dded5349676403 -->
+<!-- phil-dev source-sha256=35e411319a5677d5d60bd57facaff44b2ac15605458625d2214d9d9e236bfade -->
 # Référence
 
 | Type | Rôle |
 |---|---|
-| `Ratings` | Enregistre chaque résultat une fois, donne les cotes, dit lesquelles sont provisoires, donne le classement avec ou sans elles, publie et masque, rejoue, exporte et efface |
+| `Ratings` | Enregistre chaque résultat une fois et remet de nouveau ses événements après un écouteur en échec, donne les cotes, dit lesquelles sont provisoires, donne le classement avec ou sans elles, publie et masque, rejoue, exporte et efface |
 | `GameResult` | Une partie jouée : ses camps et leurs rangs ; écrite et relue en valeurs simples |
 | `MemberRating` | La cote d'un membre à un jeu, telle que le dépôt de stockage la garde, à une version |
 | `RatingChange` | Comment un résultat enregistré a fait bouger le score d'un membre |

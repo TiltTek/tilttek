@@ -34,9 +34,9 @@ final class SpyStore implements RatingStore
     }
 
     #[Override]
-    public function save(array $ratings, ?string $result = null): void
+    public function save(array $ratings, ?string $result = null, array $events = []): void
     {
-        $this->store->save($ratings, $result);
+        $this->store->save($ratings, $result, $events);
     }
 
     #[Override]
@@ -69,5 +69,17 @@ final class SpyStore implements RatingStore
     public function forget(string $member): void
     {
         $this->store->forget($member);
+    }
+
+    #[Override]
+    public function undelivered(string $game, string $result): array
+    {
+        return $this->store->undelivered($game, $result);
+    }
+
+    #[Override]
+    public function markDelivered(string $game, string $result, string ...$keys): void
+    {
+        $this->store->markDelivered($game, $result, ...$keys);
     }
 }

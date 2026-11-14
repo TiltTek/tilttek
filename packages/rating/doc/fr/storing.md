@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=806ebd84672322324e0b85baa14d5c47f84702ef10784ed8e9eb1b95542fa29e -->
+<!-- phil-dev source-sha256=20466b406bd4ecc1891d774608ecce463c3ff2956f890222c2a9dbc9744bf29f -->
 # Stockage
 
 `Contract\RatingStore` garde un `MemberRating` par membre et par jeu :
@@ -7,12 +7,14 @@
 |---|---|
 | `find($game, $members)` | Les cotes de ces membres pour le jeu, par membre ; un membre sans cote est omis |
 | `hasRecorded($game, $result)` | Si le jeu compte déjà le résultat |
-| `save($ratings, $result)` | Garde les cotes d'un coup, chacune à sa version suivante, et compte le résultat pour leur jeu ; `ResultAlreadyRecorded` quand il est déjà compté, `RatingConflict` quand une cote a changé depuis sa lecture |
+| `save($ratings, $result, $events)` | Garde les cotes d'un coup, chacune à sa version suivante, et compte le résultat pour leur jeu avec ses événements à remettre ; `ResultAlreadyRecorded` quand il est déjà compté, `RatingConflict` quand une cote a changé depuis sa lecture |
+| `undelivered($game, $result)` | Les événements du résultat pas encore remis, dans l'ordre |
+| `markDelivered($game, $result, ...$keys)` | Oublie les événements de ces clés, envoyés sans exception |
 | `standings($game, $limit, $minGames)` | Les cotes publiques qui ont au moins `$minGames` parties cotées, et une au moins, le score le plus haut d'abord, puis par membre |
 | `ofGame($game)` | Chaque cote du jeu |
 | `replace($game, $ratings, $results)` | Remplace d'un coup chaque cote du jeu, et les résultats qu'il compte : ce qu'une relecture a calculé |
 | `ofMember($member)` | Chaque cote du membre |
-| `forget($member)` | Efface chaque cote du membre |
+| `forget($member)` | Efface chaque cote du membre, et les événements à son sujet pas encore remis |
 
 Une cote lue à la version 0 est nouvelle : le dépôt de stockage ne la garde que s'il n'en détient aucune pour ce membre
 et ce jeu. Toute autre n'est gardée que si le dépôt la détient à la version où elle a été lue. Deux résultats des mêmes
@@ -25,6 +27,10 @@ Les résultats qu'un jeu compte sont gardés à côté des cotes : dans une base
 l'identifiant du résultat avec une clé unique sur les deux, écrite dans la même transaction que les cotes, pour qu'un
 second enregistrement du résultat échoue sur la clé et ne garde rien ; `replace()` vide les lignes du jeu et écrit
 celles de la relecture. Les identifiants sont des références opaques aux résultats, jamais un membre.
+
+Les événements d'un résultat pas encore remis sont gardés dans la même transaction : dans une base de données, une
+table du jeu, du résultat, de la clé de l'événement, du membre et de son genre (`changed` ou `peak`), avec une clé
+unique sur le jeu, le résultat et la clé ; `markDelivered()` supprime ses lignes, et `forget()` celles du membre.
 
 `MemberRating::toArray()` donne les valeurs simples à garder — la cote elle-même en nombres entiers, par nom — et
 `MemberRating::fromArray($data, $system)` les relit avec le système qui les a calculées, en refusant une cote d'un autre

@@ -36,10 +36,11 @@ reached, once they played the rated games `celebrateAfter` asks for.
 
 A result is recorded once. The store counts the identifier of each result it rated, game by game, in the same write as
 the ratings: recording the same result again — a double click, a message delivered twice — throws
-`Exception\ResultAlreadyRecorded`, keeps nothing and dispatches nothing. Two recordings of the same result at once never
-both count: the first write counts the result, and the second is refused, by the result or by the versions of the
-ratings. A replay counts the results it rated again, from its source; a friendly result is never counted, so recording
-it twice changes nothing twice.
+`Exception\ResultAlreadyRecorded`, keeps nothing and dispatches nothing, once the events of the result are all
+delivered; while some are left, it dispatches them instead, rates nothing again and returns no change. Two recordings
+of the same result at once never both count: the first write counts the result, and the second is refused, by the
+result or by the versions of the ratings. A replay counts the results it rated again, from its source; a friendly
+result is never counted, so recording it twice changes nothing twice.
 
 ## Friendly results
 
@@ -50,3 +51,21 @@ dispatches nothing. A replay reads it in its place in the order, and skips it.
 
 Once the ratings are kept, `record()` dispatches, member by member in the order of the result, `Event\RatingChanged`,
 then `Event\PeakReached` for a member whose change is a new highest score. See [Celebrations](celebrations.md).
+
+The events are kept with the result, in the same write as the ratings, and each one stays in the store until it was
+dispatched without an exception. A listener that throws leaves its event there; the other events are dispatched all
+the same, and the first exception is thrown again once every event was tried. The ratings are kept: the application
+makes up the failure by recording the same result again, which dispatches the events left without rating anything
+again, or by `deliver($game, $result)`, which returns how many went.
+
+```php
+try {
+    $ratings->record($result);
+} catch (ListenerFailed $failure) {   // whatever the listener threw
+    $ratings->deliver($result->game, $result->id);
+}
+```
+
+An event may thus be dispatched more than once. The listeners are idempotent: each event carries a `key()`, the same
+each time it is dispatched again — `chess/r1/ann/changed`, `chess/r1/ann/peak` — and a listener that awards points or
+sends a message does it once per key. Without a dispatcher, nothing is kept to deliver.

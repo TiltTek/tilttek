@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=26d32e38c5a9a6d07a77c496339e0c907a2f45bfe1509d4e68e51b7741835a8f -->
+<!-- phil-dev source-sha256=fb34e7bb378cc257942b36d322ed1263fc0e5fdbccf291fbf79a9c36be92521e -->
 # Enregistrer des résultats
 
 ## Un résultat
@@ -37,10 +37,12 @@ qu'il avait atteint, une fois qu'il a joué les parties cotées que demande `cel
 
 Un résultat s'enregistre une fois. Le dépôt de stockage compte l'identifiant de chaque résultat qu'il a coté, jeu par
 jeu, dans la même écriture que les cotes : enregistrer de nouveau le même résultat — un double clic, un message livré
-deux fois — lance `Exception\ResultAlreadyRecorded`, ne garde rien et n'envoie rien. Deux enregistrements du même
-résultat en même temps ne comptent jamais tous les deux : la première écriture compte le résultat, et la seconde est
-refusée, par le résultat ou par les versions des cotes. Une relecture compte de nouveau les résultats qu'elle a cotés,
-à partir de sa source ; un résultat amical n'est jamais compté, donc l'enregistrer deux fois ne change rien deux fois.
+deux fois — lance `Exception\ResultAlreadyRecorded`, ne garde rien et n'envoie rien, une fois tous les événements du
+résultat remis ; tant qu'il en reste, il les envoie à la place, ne recote rien et ne renvoie aucun changement. Deux
+enregistrements du même résultat en même temps ne comptent jamais tous les deux : la première écriture compte le
+résultat, et la seconde est refusée, par le résultat ou par les versions des cotes. Une relecture compte de nouveau les
+résultats qu'elle a cotés, à partir de sa source ; un résultat amical n'est jamais compté, donc l'enregistrer deux fois
+ne change rien deux fois.
 
 ## Résultats amicaux
 
@@ -51,3 +53,21 @@ n'envoie rien. Une relecture le lit à sa place dans l'ordre, et le saute.
 
 Une fois les cotes gardées, `record()` envoie, membre par membre dans l'ordre du résultat, `Event\RatingChanged`, puis
 `Event\PeakReached` pour un membre dont le changement est un nouveau score record. Voir [Célébrations](celebrations.md).
+
+Les événements sont gardés avec le résultat, dans la même écriture que les cotes, et chacun reste dans le dépôt de
+stockage jusqu'à ce qu'il ait été envoyé sans exception. Un écouteur qui lance une exception y laisse son événement ;
+les autres événements sont envoyés quand même, et la première exception est relancée une fois chaque événement essayé.
+Les cotes restent gardées : l'application rattrape l'échec en enregistrant de nouveau le même résultat, ce qui envoie
+les événements restants sans rien recoter, ou par `deliver($game, $result)`, qui renvoie combien sont partis.
+
+```php
+try {
+    $ratings->record($result);
+} catch (ListenerFailed $failure) {   // whatever the listener threw
+    $ratings->deliver($result->game, $result->id);
+}
+```
+
+Un événement peut donc être envoyé plus d'une fois. Les écouteurs sont idempotents : chaque événement porte une
+`key()`, la même chaque fois qu'il est envoyé de nouveau (`chess/r1/ann/changed`, `chess/r1/ann/peak`), et un écouteur
+qui donne des points ou envoie un message le fait une fois par clé. Sans répartiteur, rien n'est gardé à remettre.
