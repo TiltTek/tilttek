@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=5f666c4a6731a1eb81af298401ec46d3ea773dfceca3f20828d75aa4e0090b12 -->
+<!-- phil-dev source-sha256=8ef0aeb53faa0be553cb77ad64c9bd90c9804e41a1f6e9ddada47d5dd4b68143 -->
 # Attribuer
 
 ## La projection
@@ -58,9 +58,11 @@ Quand l'observateur échoue, l'avis reste dû, et il est donné :
 - par `BadgeProjection::deliver($member)`, qui donne tous les avis dus au membre, les retraits d'abord, et renvoie
   combien il en a réglé. L'avis d'un badge que le catalogue ne contient plus est abandonné sans l'observateur.
 
-Une attribution retirée avant que son propre avis soit donné n'appelle aucun avis. Comme un avis peut être redonné après
-un échec, un observateur doit être idempotent : il reconnaît une attribution à son badge, son membre et son numéro, et
-ne fait rien pour un avis sur lequel il a déjà agi.
+Une attribution retirée appelle toujours l'avis de son retrait, même quand son propre avis n'a pas encore été donné :
+cet avis peut être en cours dans un autre processus, et l'observateur peut donc être averti du retrait d'une
+attribution dont il n'a jamais été averti. Comme un avis peut être redonné après un échec, un observateur doit être
+idempotent : il reconnaît une attribution à son badge, son membre et son numéro, et ne fait rien pour un avis sur lequel
+il a déjà agi.
 
 ## Quand une règle change
 

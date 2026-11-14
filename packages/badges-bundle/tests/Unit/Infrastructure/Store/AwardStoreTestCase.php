@@ -123,21 +123,44 @@ abstract class AwardStoreTestCase extends TestCase
         self::assertTrue($store->withdraw(self::award('gold', '1', 1, '2026-11-09 10:00:00')));
         self::assertFalse($store->withdraw(self::award('gold', '1', 1, '2026-11-09 10:00:00')));
         self::assertTrue($store->withdraw(self::award('gold', '2', 1, '2026-11-09 10:00:00')));
-        // Withdrawn before its notice was given, an award is removed at once.
-        self::assertFalse($store->withdraw(self::award('silver', '1', 1, '2026-11-09 10:00:00')));
+        // Withdrawn before its own notice was given, an award is owed the notice of its withdrawal all the same.
+        self::assertTrue($store->withdraw(self::award('silver', '1', 1, '2026-11-09 10:00:00')));
         self::assertFalse($store->withdraw(self::award('bronze', '1', 1, '2026-11-09 10:00:00')));
 
         self::assertSame([], $store->of($member));
         self::assertSame([], $store->undelivered($member));
-        self::assertSame([['gold', 'member:1', 1, '2026-11-01T10:00:00+00:00', 'b', false], ['gold', 'member:1', 2, '2026-11-01T10:00:00+00:00', 'a', false]], array_map($this->plain(...), $store->withdrawn($member)));
+        self::assertSame([['gold', 'member:1', 1, '2026-11-01T10:00:00+00:00', 'b', false], ['gold', 'member:1', 2, '2026-11-01T10:00:00+00:00', 'a', false], ['silver', 'member:1', 1, '2026-11-01T10:00:00+00:00', 'd', false]], array_map($this->plain(...), $store->withdrawn($member)));
         self::assertFalse($store->add(self::award('gold', '1', 1, '2026-11-09 10:00:00')));
-        self::assertTrue($store->add(self::award('silver', '1', 1, '2026-11-09 10:00:00')));
+        self::assertFalse($store->add(self::award('silver', '1', 1, '2026-11-09 10:00:00')));
 
         $store->remove(self::award('gold', '1', 1, '2026-11-09 10:00:00'));
+        $store->remove(self::award('silver', '1', 1, '2026-11-09 10:00:00'));
         self::assertSame([['gold', 2]], $this->numbers($store->withdrawn($member)));
         self::assertSame([['gold', 1]], $this->numbers($store->withdrawn(ResourceReference::of('member', '2'))));
         self::assertTrue($store->add(self::award('gold', '1', 1, '2026-11-09 10:00:00')));
+        self::assertTrue($store->add(self::award('silver', '1', 1, '2026-11-09 10:00:00')));
         self::assertSame([['gold', 1], ['silver', 1]], $this->numbers($store->undelivered($member)));
+    }
+
+    public function testAnAwardWithdrawnWhileItsNoticeIsUnderWayIsOwedTheNoticeOfItsWithdrawal(): void
+    {
+        $store = $this->store();
+        $member = ResourceReference::of('member', '1');
+        $store->add(self::award('gold', '1', 1, '2026-11-01 10:00:00', 'a'));
+        $store->add(self::award('gold', '1', 2, '2026-11-01 10:00:00', 'b'));
+
+        // A process announces the first award; another withdraws it before the first notes its notice given.
+        self::assertTrue($store->withdraw(self::award('gold', '1', 1, '2026-11-09 10:00:00')));
+        $store->markDelivered(self::award('gold', '1', 1, '2026-11-09 10:00:00'));
+        // The second is announced and noted, then withdrawn.
+        $store->markDelivered(self::award('gold', '1', 2, '2026-11-09 10:00:00'));
+        self::assertTrue($store->withdraw(self::award('gold', '1', 2, '2026-11-09 10:00:00')));
+        $store->markDelivered(self::award('gold', '1', 2, '2026-11-09 10:00:00'));
+
+        self::assertSame([], $store->of($member));
+        self::assertSame([], $store->undelivered($member));
+        self::assertSame([['gold', 1], ['gold', 2]], $this->numbers($store->withdrawn($member)));
+        self::assertFalse($store->withdraw(self::award('gold', '1', 1, '2026-11-09 10:00:00')));
     }
 
     public function testAMemberIsErased(): void

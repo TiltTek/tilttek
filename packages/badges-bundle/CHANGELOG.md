@@ -11,6 +11,9 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 - `DbalAwardStore` implements the notices of `AwardStore`: the `notice` column of `tilttek_badges_award` holds
   `awarded` for an award whose event is still due and `revoked` for a withdrawn award whose event is still due. An
   existing table gains the column through the application's next migration.
+- `DbalAwardStore::withdraw()` marks the award withdrawn in one conditional statement, whether or not its own event was
+  dispatched: an award withdrawn while another process dispatches its `BadgeAwarded` always leaves a `BadgeRevoked`
+  due, rather than being deleted with no event left to dispatch.
 - `BadgeAwarded` and `BadgeRevoked` are dispatched at least once: a listener that failed is called again when the
   projection is handed the entry again, before the member's next activity, or through `BadgeProjection::deliver()`.
   Listeners must be idempotent.

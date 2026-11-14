@@ -60,11 +60,9 @@ final readonly class DbalAwardStore implements AwardStore
     #[Override]
     public function withdraw(Award $award): bool
     {
-        // An award whose notice is due is removed at once; then an award whose notice was given waits for the notice
-        // of its withdrawal. Each statement is atomic: a notice delivered between them leaves the award to the second.
-        $this->connection->executeStatement(\sprintf('DELETE FROM %s WHERE %s AND notice = ?', BadgesTables::AWARDS, self::KEY), [...$this->key($award), self::AWARDED]);
-
-        return 0 < $this->connection->executeStatement(\sprintf('UPDATE %s SET notice = ? WHERE %s AND notice IS NULL', BadgesTables::AWARDS, self::KEY), [self::REVOKED, ...$this->key($award)]);
+        // One atomic statement: the award held, whose own notice may be under way in another process, waits for the
+        // notice of its withdrawal; markDelivered() only clears an `awarded` notice, and leaves this one due.
+        return 0 < $this->connection->executeStatement(\sprintf('UPDATE %s SET notice = ? WHERE %s AND (notice IS NULL OR notice = ?)', BadgesTables::AWARDS, self::KEY), [self::REVOKED, ...$this->key($award), self::AWARDED]);
     }
 
     #[Override]
