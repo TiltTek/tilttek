@@ -21,7 +21,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 - The export of a member lists the gains and the milestones their gestures brought to a character, which the erasure
   already deleted.
-
 - `ProgressionPrivacy` implements `Phil\PrivacyBundle\Application\Contract\PersonalDataExporter` and `PersonalDataEraser`,
   the interfaces `phil/privacy-bundle` exposes, and the bundle registers it when they exist: the export and the
   erasure of a member now reach it.

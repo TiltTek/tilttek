@@ -1,23 +1,11 @@
 # Upgrading
 
-## From 0.2.0 to 0.2.1
-
-The table `tilttek_dice_roll` has a `delivered` column: whether the `RollRecorded` of the roll was dispatched. Generate
-the migration with `doctrine:migrations:diff`, or write it by hand. On MySQL, MariaDB and PostgreSQL:
-
-```sql
-ALTER TABLE tilttek_dice_roll ADD delivered BOOLEAN DEFAULT TRUE NOT NULL;
-```
-
-The rows already kept count as dispatched. `rollReplayable()` takes a `key` by name, after the context, and
-`DiceRolls::deliver()` dispatches an event a listener failed to take; a call without a key works unchanged. A
-listener of `RollRecorded` may hear the same roll twice, and must be idempotent.
-
 ## From 0.1 to 0.2
 
 ### The journal's table
 
-The table `tilttek_dice_roll` has a nullable `context` column, indexed with `rolled_at`. Generate the migration:
+The table `tilttek_dice_roll` has a nullable `context` column, indexed with `rolled_at`, and a `delivered` column:
+whether the `RollRecorded` of the roll was dispatched. Generate the migration:
 
 ```sh
 bin/console doctrine:migrations:diff
@@ -29,9 +17,11 @@ or write it by hand. On MySQL, MariaDB and PostgreSQL:
 ```sql
 ALTER TABLE tilttek_dice_roll ADD context VARCHAR(320) DEFAULT NULL;
 CREATE INDEX tilttek_dice_roll_context ON tilttek_dice_roll (context, rolled_at);
+ALTER TABLE tilttek_dice_roll ADD delivered BOOLEAN DEFAULT TRUE NOT NULL;
 ```
 
-The rows already kept have no context; nothing else changes in them, and they replay as before.
+The rows already kept have no context and count as dispatched; nothing else changes in them, and they replay as
+before.
 
 ### The journal's port
 
@@ -51,6 +41,11 @@ $dice->rollReplayable('1d20', $member, context: $table);
 and `DiceRolls` dispatches `RollRecorded` after each replayable roll it saves, when the application has an event
 dispatcher. `rollsIn()` and `recorded()` read the journal by context and by identifiers. A call that passed the first
 four arguments works unchanged.
+
+`rollReplayable()` also takes a `key`, by name, after the context: the same call with the same key returns the roll
+kept instead of rolling again. `RollRecorded` is dispatched at least once: a roll whose listener failed keeps its event
+due, and the same keyed call or `DiceRolls::deliver()` dispatches it again. A listener of `RollRecorded` may hear the
+same roll twice, and must be idempotent.
 
 ### The appearance of a member's dice
 

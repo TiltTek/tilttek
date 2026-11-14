@@ -4,23 +4,6 @@ All notable changes to `tilttek/dice-bundle` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
-## Unreleased
-
-### Added
-
-- `rollReplayable()` takes a `key`, by name, after the context: the roll's identifier is drawn from the owner and the
-  key, and the same call again returns the roll kept instead of rolling again.
-- `DiceRolls::deliver()`: the `RollRecorded` of a roll dispatched again when a listener failed to take it; false when
-  it was dispatched already.
-- `RecordedRoll::isDelivered()` and `markDelivered()`, kept in the new `delivered` column of `tilttek_dice_roll`, true
-  for the rows already kept; `RollRecorded::key()`, the roll's identifier.
-
-### Fixed
-
-- A listener of `RollRecorded` that failed no longer loses the event of a roll already saved: the roll keeps its event
-  due, and the same keyed call or `deliver()` dispatches it again. `RollRecorded` is dispatched at least once, and its
-  listeners must be idempotent; `doc/upgrading.md` gives the migration of the column.
-
 ## 0.2.0-alpha - 2026-11-14
 
 ### Added
@@ -35,14 +18,21 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 - The context of a roll — a table, a game —: an optional `ResourceReference` given to `rollReplayable()` by name, kept
   in the nullable column `context` of `tilttek_dice_roll`, indexed with `rolled_at`, and read by
   `RecordedRoll::context()`.
+- `rollReplayable()` takes a `key`, by name, after the context: the roll's identifier is drawn from the owner and the
+  key, and the same call again returns the roll kept instead of rolling again.
 - `RollRecorded`, dispatched by `DiceRolls` after each replayable roll it saves when the application has an event
-  dispatcher, with the identifiers of the roll, its owner and its context.
+  dispatcher, with the identifiers of the roll, its owner and its context; `RollRecorded::key()`, the roll's
+  identifier. It is dispatched at least once: a roll whose listener failed keeps its event due, and the same keyed call
+  or `DiceRolls::deliver()` dispatches it again, `deliver()` returning false when it was dispatched already. Its
+  listeners must be idempotent.
+- `RecordedRoll::isDelivered()` and `markDelivered()`, kept in the new `delivered` column of `tilttek_dice_roll`, true
+  for the rows already kept.
 - `DiceRolls::rollsIn()`, a context's latest rolls, and `DiceRolls::recorded()`, rolls by their identifiers in the order
   asked, at most 500 distinct ones at once.
 - `Accessibility`, standard or high contrast: the viewer's accessibility, passed to the appearance by
   `DiceRolls::appearance()`, `DiceExtension::view()` and `dice_roll_detail()` as a fourth argument, `'high-contrast'`
   or `'standard'`; any other text is no preference.
-- `doc/upgrading.md`: the migration of the `context` column and the changes from 0.1 to 0.2.
+- `doc/upgrading.md`: the migration of the `context` and `delivered` columns and the changes from 0.1 to 0.2.
 
 ### Changed
 

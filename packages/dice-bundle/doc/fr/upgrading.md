@@ -1,24 +1,12 @@
-<!-- phil-dev source-sha256=33ae488d2f0067627a77c3245d93df40e51c628030feec846fa581550ca0dc92 -->
+<!-- phil-dev source-sha256=8d2024b54d2ead0e5168c7c999f76768211c22f6232f1d0dc61e093dde1c2677 -->
 # Mise à niveau
-
-## De 0.2.0 à 0.2.1
-
-La table `tilttek_dice_roll` a une colonne `delivered` : si le `RollRecorded` du lancer a été émis. Générez la
-migration avec `doctrine:migrations:diff`, ou écrivez-la à la main. Sur MySQL, MariaDB et PostgreSQL :
-
-```sql
-ALTER TABLE tilttek_dice_roll ADD delivered BOOLEAN DEFAULT TRUE NOT NULL;
-```
-
-Les lignes déjà gardées comptent comme émises. `rollReplayable()` prend une clé `key` par son nom, après le contexte,
-et `DiceRolls::deliver()` émet un événement qu'un écouteur n'a pas pu prendre ; un appel sans clé marche sans
-changement. Un écouteur de `RollRecorded` peut entendre deux fois le même lancer, et doit être idempotent.
 
 ## De 0.1 à 0.2
 
 ### La table du journal
 
-La table `tilttek_dice_roll` a une colonne `context` nulle, indexée avec `rolled_at`. Générez la migration :
+La table `tilttek_dice_roll` a une colonne `context` nulle, indexée avec `rolled_at`, et une colonne `delivered` : si
+le `RollRecorded` du lancer a été émis. Générez la migration :
 
 ```sh
 bin/console doctrine:migrations:diff
@@ -30,9 +18,11 @@ ou écrivez-la à la main. Sur MySQL, MariaDB et PostgreSQL :
 ```sql
 ALTER TABLE tilttek_dice_roll ADD context VARCHAR(320) DEFAULT NULL;
 CREATE INDEX tilttek_dice_roll_context ON tilttek_dice_roll (context, rolled_at);
+ALTER TABLE tilttek_dice_roll ADD delivered BOOLEAN DEFAULT TRUE NOT NULL;
 ```
 
-Les lignes déjà gardées n'ont pas de contexte ; rien d'autre ne change en elles, et elles se rejouent comme avant.
+Les lignes déjà gardées n'ont pas de contexte et comptent comme émises ; rien d'autre ne change en elles, et elles se
+rejouent comme avant.
 
 ### Le port du journal
 
@@ -52,6 +42,11 @@ $dice->rollReplayable('1d20', $member, context: $table);
 et `DiceRolls` émet `RollRecorded` après chaque lancer rejouable qu'elle enregistre, quand l'application a un
 répartiteur d'événements. `rollsIn()` et `recorded()` lisent le journal par contexte et par identifiants. Un appel qui
 passait les quatre premiers arguments fonctionne sans changement.
+
+`rollReplayable()` prend aussi une clé `key`, par son nom, après le contexte : le même appel avec la même clé renvoie
+le lancer gardé au lieu de lancer de nouveau. `RollRecorded` est émis au moins une fois : un lancer dont l'écouteur a
+échoué garde son événement dû, et le même appel avec sa clé, ou `DiceRolls::deliver()`, l'émet de nouveau. Un écouteur
+de `RollRecorded` peut entendre deux fois le même lancer, et doit être idempotent.
 
 ### L'apparence des dés d'un membre
 
