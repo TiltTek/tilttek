@@ -5,7 +5,9 @@
 A verifiable roll lets a player check that the result was not chosen:
 
 1. The roller draws a `Seed` from a secure source and publishes its `Commitment`, the SHA-256 of the seed.
-2. The player sends the expression and a seed of their own, the client seed.
+2. The player sends the expression and a seed of their own, the client seed: empty, or up to 256 bytes,
+   `Seed::MAX_CLIENT_SEED`. A longer one is refused with `InvalidDefinition`, so that a seed sent in a public request
+   costs a bounded HMAC.
 3. The roller rolls with `FairRoller::roll($pool, $seed, $clientSeed, $nonce)` — the nonce numbers the rolls made with
    the same seed — and gets a `VerifiableRoll`.
 4. Once the rolls of that seed are done, the roller reveals the seed. `VerifiableRoll::toArray()` is what it publishes,

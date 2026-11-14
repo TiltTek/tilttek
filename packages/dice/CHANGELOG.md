@@ -4,6 +4,15 @@ All notable changes to `tilttek/dice` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Fixed
+
+- A client seed had no longest length, though it goes whole into the HMAC of each roll: one sent in a public request
+  could make a roll cost as much work and memory as its length. `Seed::randomizer()`, and so `FairRoller` and
+  `DiceRoller::rollVerifiable()`, refuse a client seed longer than 256 bytes, `Seed::MAX_CLIENT_SEED`, with
+  `InvalidDefinition`; the bound is the one of the client seeds of `tilttek/collections`.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added
