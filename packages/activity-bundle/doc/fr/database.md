@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=b83a9b8939dc324d87b1c8bb7a5d589541cf7460fd26999aedecc48c3bcdcae8 -->
+<!-- phil-dev source-sha256=f11d304d0297638883db88adb2a9eafe92f08a8b4f6a99d3a190e70ecee86718 -->
 # Le journal dans la base de données
 
 ## Les tables
@@ -42,11 +42,25 @@ la plateforme.
 ## Dates et positions
 
 Les dates sont écrites en UTC, à la seconde près, et relues en UTC. Les positions viennent de l'auto-incrément ;
-`AUTOINCREMENT` de SQLite, l'identité de PostgreSQL et InnoDB ne donnent jamais un numéro deux fois. Deux transactions
-qui valident dans l'ordre inverse de celui où elles ont pris leurs positions peuvent faire sauter la position la plus
-ancienne à un rattrapage exécuté entre elles. Une application qui écrit de l'activité depuis de nombreuses transactions
-concurrentes, et qui a besoin que chaque entrée soit projetée, lance une reconstruction de la période quand elle
-soupçonne un trou, ou fait ses rattrapages depuis un seul rédacteur.
+`AUTOINCREMENT` de SQLite, l'identité de PostgreSQL et InnoDB ne donnent jamais un numéro deux fois. Une position est
+prise à l'insertion de la ligne, avant la validation de sa transaction : deux transactions qui valident dans l'ordre
+inverse de celui où elles ont pris leurs positions laissent, un moment, une position manquante sous une entrée visible.
+
+La lecture attend un tel trou. `read()` ne remet aucune entrée au-delà, et `lastPosition()` est la position sous le
+trou, jusqu'à ce que l'entrée au-dessus du trou ait été écrite il y a `gap_wait` (dix secondes par défaut) : la
+transaction qui a pris la position manquante a alors validé, ou ne validera jamais (annulée, une clé en double insérée
+par deux processus au même moment, un membre effacé). Un rattrapage ne fait donc jamais passer un point de reprise
+au-delà d'une entrée pas encore validée. Les entrées sont lues depuis la fin du journal tant qu'elles sont plus jeunes
+que `gap_wait` ; une entrée plus ancienne arrête la recherche.
+
+- Une entrée derrière un trou attend le prochain rattrapage après l'attente : avec `projections: live`, l'entrée
+  suivante, la même requête répétée, ou `tilttek:activity:catch-up` planifiée.
+- Une transaction qui garde sa position plus longtemps que `gap_wait` est tout de même dépassée : une application qui
+  a de telles transactions relève `gap_wait`, ou lance une reconstruction de la période.
+- L'âge se mesure sur l'horloge du lecteur par rapport à `recorded_at`, écrit par l'horloge du rédacteur, à la seconde
+  près : des serveurs dont les horloges s'écartent de plus d'une seconde ou deux relèvent `gap_wait` d'autant.
+- Un geste enregistré de nouveau n'est pas inséré de nouveau : l'entrée déjà présente est lue d'abord, si bien qu'un
+  doublon ne prend aucune position et ne laisse aucun trou.
 
 ## Lire
 

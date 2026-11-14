@@ -40,11 +40,38 @@ final class MessengerProjectionsTest extends TestCase
             new CatchUpProjection('all', 1),
             new CatchUpProjection('games', 1),
             new CatchUpProjection('all', 2),
+            new CatchUpProjection('all', 1),
+            new CatchUpProjection('games', 1),
             new CatchUpProjection('all', 3),
             new CatchUpProjection('games', 3),
         ], $bus->messages);
         self::assertSame([], $games->applied);
         self::assertSame([], $all->applied);
+    }
+
+    public function testAnEntryToldAgainSendsAMessageOnlyToTheProjectionsStillBeforeIt(): void
+    {
+        [$journal, $bus, $games, , $handler] = $this->kit();
+        $journal->record($this->activity('k1', 'game.played'));
+        $handler(new CatchUpProjection('games', 1));
+        $sent = \count($bus->messages);
+
+        $journal->record($this->activity('k1', 'game.played'));
+        $journal->record($this->activity('k2', 'news.commented'));
+        $journal->record($this->activity('k2', 'news.commented'));
+
+        self::assertEquals([new CatchUpProjection('all', 1), new CatchUpProjection('all', 2), new CatchUpProjection('all', 2)], \array_slice($bus->messages, $sent));
+        self::assertSame([1], $games->applied);
+    }
+
+    public function testWithoutTheProjectorAnEntryToldAgainSendsAMessageToEveryProjectionThatReadsIt(): void
+    {
+        $bus = $this->bus();
+        $journal = new Journal(new InMemoryActivityLog(), new Clock('2026-11-07 12:00:00 UTC'), observers: [new MessengerProjections($bus, new Projections([new Counter('games', Filter::all()->verbs('game.*')), new Counter('all')]))]);
+        $journal->record($this->activity('k1', 'news.commented'));
+        $journal->record($this->activity('k1', 'news.commented'));
+
+        self::assertEquals([new CatchUpProjection('all', 1), new CatchUpProjection('all', 1)], $bus->messages);
     }
 
     public function testAMessageCatchesItsProjectionUpOnce(): void
@@ -78,7 +105,24 @@ final class MessengerProjectionsTest extends TestCase
      */
     private function kit(): array
     {
-        $bus = new class implements MessageBusInterface {
+        $bus = $this->bus();
+        $log = new InMemoryActivityLog();
+        $checkpoints = new InMemoryCheckpoints();
+        $games = new Counter('games', Filter::all()->verbs('game.*'));
+        $all = new Counter('all');
+        $projections = new Projections([$games, $all]);
+        $projector = new Projector($log, $checkpoints);
+        $journal = new Journal($log, new Clock('2026-11-07 12:00:00 UTC'), observers: [new MessengerProjections($bus, $projections, $projector)]);
+
+        return [$journal, $bus, $games, $all, new CatchUpProjectionHandler($projector, $projections, $checkpoints)];
+    }
+
+    /**
+     * @return object{messages: list<object>}&MessageBusInterface
+     */
+    private function bus(): MessageBusInterface
+    {
+        return new class implements MessageBusInterface {
             /**
              * @var list<object>
              */
@@ -91,14 +135,6 @@ final class MessengerProjectionsTest extends TestCase
                 return new Envelope($message, $stamps);
             }
         };
-        $log = new InMemoryActivityLog();
-        $checkpoints = new InMemoryCheckpoints();
-        $games = new Counter('games', Filter::all()->verbs('game.*'));
-        $all = new Counter('all');
-        $projections = new Projections([$games, $all]);
-        $journal = new Journal($log, new Clock('2026-11-07 12:00:00 UTC'), observers: [new MessengerProjections($bus, $projections)]);
-
-        return [$journal, $bus, $games, $all, new CatchUpProjectionHandler(new Projector($log, $checkpoints), $projections, $checkpoints)];
     }
 
     private function activity(string $key, string $verb): Activity

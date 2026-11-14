@@ -4,6 +4,23 @@ All notable changes to `tilttek/activity-bundle` will be documented in this file
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `DbalActivityLog` waits for a position taken by a transaction not yet committed: `read()` hands no entry past a
+  missing position, and `lastPosition()` is the position below it, until the entry above it was written `gap_wait`
+  ago, so that a catch-up no longer moves a checkpoint past an entry committed later. It takes a clock and the wait.
+- `DbalActivityLog::append()` and `cancel()` read the entry already there before inserting: a gesture recorded again
+  takes no position.
+- `MessengerProjections` implements `ResumableObserver`: an entry recorded or cancelled again sends its message again
+  to each projection still before it, the projector given, so that a message lost after the entry was written is made
+  up by the repeated request.
+
+### Added
+
+- The `gap_wait` option, `PT10S` by default.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added

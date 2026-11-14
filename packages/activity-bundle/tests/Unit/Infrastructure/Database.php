@@ -7,6 +7,7 @@ namespace Tilttek\ActivityBundle\Tests\Unit\Infrastructure;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\Schema;
+use LogicException;
 use Tilttek\ActivityBundle\Infrastructure\Doctrine\ActivityTables;
 
 /**
@@ -18,14 +19,21 @@ final class Database
     {
     }
 
-    public static function connection(): Connection
+    /**
+     * @template T of Connection
+     *
+     * @param class-string<T> $wrapper
+     *
+     * @return T
+     */
+    public static function connection(string $wrapper = Connection::class): Connection
     {
-        $connection = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
+        $connection = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true, 'wrapperClass' => $wrapper]);
 
         foreach ($connection->getDatabasePlatform()->getCreateTablesSQL(ActivityTables::configure(new Schema())->getTables()) as $sql) {
             $connection->executeStatement($sql);
         }
 
-        return $connection;
+        return $connection instanceof $wrapper ? $connection : throw new LogicException(\sprintf('The connection is not a %s.', $wrapper));
     }
 }

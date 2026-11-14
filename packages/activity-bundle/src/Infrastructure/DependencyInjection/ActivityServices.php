@@ -71,7 +71,7 @@ final class ActivityServices
     }
 
     /**
-     * @param array{store: string, connection: string, verbs: list<string>, batch_size: int, projections: string, projection_bus: string, dates: array{past: ?string, ahead: string}, privacy: array{member_kind: string}} $config
+     * @param array{store: string, connection: string, verbs: list<string>, gap_wait: string, batch_size: int, projections: string, projection_bus: string, dates: array{past: ?string, ahead: string}, privacy: array{member_kind: string}} $config
      */
     public static function register(ContainerBuilder $container, array $config): void
     {
@@ -84,7 +84,7 @@ final class ActivityServices
             $container->setAlias(Checkpoints::class, InMemoryCheckpoints::class)->setPublic(true);
         } else {
             $connection = new Reference(\sprintf('doctrine.dbal.%s_connection', $config['connection']));
-            $container->register(DbalActivityLog::class, DbalActivityLog::class)->setArguments([$connection]);
+            $container->register(DbalActivityLog::class, DbalActivityLog::class)->setArguments([$connection, new Reference('clock'), new Definition(DateInterval::class, [$config['gap_wait']])]);
             $container->setAlias(ActivityLog::class, DbalActivityLog::class)->setPublic(true);
             $container->register(DbalCheckpoints::class, DbalCheckpoints::class)->setArguments([$connection, new Reference('clock')]);
             $container->setAlias(Checkpoints::class, DbalCheckpoints::class)->setPublic(true);
@@ -123,7 +123,7 @@ final class ActivityServices
             }
 
             $container->register(MessengerProjections::class, MessengerProjections::class)
-                ->setArguments([new Reference($config['projection_bus']), new Reference(Projections::class)])
+                ->setArguments([new Reference($config['projection_bus']), new Reference(Projections::class), new Reference(Projector::class)])
                 ->addTag(self::OBSERVER_TAG);
             $container->register(CatchUpProjectionHandler::class, CatchUpProjectionHandler::class)
                 ->setArguments([new Reference(Projector::class), new Reference(Projections::class), new Reference(Checkpoints::class)])

@@ -5,6 +5,7 @@ tilttek_activity:
     store: doctrine            # or memory, for tests
     connection: default        # the DBAL connection of the journal
     verbs: []                  # the declared verbs, as patterns; empty accepts every verb
+    gap_wait: PT10S            # how long the reading waits for a position not yet committed
     batch_size: 500            # entries read at a time by a projection, and by the export of a member
     projections: live          # live, messenger or manual
     projection_bus: messenger.bus.default   # the bus of the projections' messages, in messenger mode
@@ -20,6 +21,7 @@ tilttek_activity:
 | `store` | `doctrine` | `doctrine` keeps the journal and the checkpoints in the database; `memory` keeps them in the process, for tests |
 | `connection` | `default` | The DBAL connection, `doctrine.dbal.<name>_connection`; the schema listener is tied to it |
 | `verbs` | `[]` | Patterns such as `game.played`, `game.*` or `*`; a wrong pattern fails when the container is compiled; an undeclared verb raises `UnknownVerb` when it is recorded |
+| `gap_wait` | `PT10S` | An ISO 8601 duration: how long the reading of the journal in the database waits for a position missing below a visible entry, from the moment that entry was written ([The journal in the database](database.md#dates-and-positions)) |
 | `batch_size` | `500` | At least 1 |
 | `projections` | `live` | `live`: each new entry catches up the projections that read it, in the same request; `messenger`: it sends them a `CatchUpProjection` message ([Projections](projections.md)); `manual`: only `tilttek:activity:catch-up` catches them up |
 | `projection_bus` | `messenger.bus.default` | The Messenger bus the messages are sent on and handled from, in `messenger` mode |
