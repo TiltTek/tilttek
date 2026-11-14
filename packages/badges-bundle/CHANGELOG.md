@@ -15,6 +15,12 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
   projection is handed the entry again, before the member's next activity, or through `BadgeProjection::deliver()`.
   Listeners must be idempotent.
 
+### Fixed
+
+- `BadgesPrivacy` implements `Phil\PrivacyBundle\Application\Contract\PersonalDataExporter` and `PersonalDataEraser`,
+  the interfaces `phil/privacy-bundle` exposes, and the bundle registers it when they exist: the export and the
+  erasure of a member now reach it.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added

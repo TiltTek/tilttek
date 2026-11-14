@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tilttek\CollectionsBundle;
 
 use Override;
-use Phil\PrivacyBundle\Application\Port\PersonalDataEraser;
+use Phil\PrivacyBundle\Application\Contract\PersonalDataEraser;
 use Phil\PrivacyBundle\PhilPrivacyBundle;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;

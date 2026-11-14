@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tilttek\CollectionsBundle\Infrastructure\Privacy;
 
 use Override;
-use Phil\PrivacyBundle\Application\Port\PersonalDataEraser;
-use Phil\PrivacyBundle\Application\Port\PersonalDataExporter;
+use Phil\PrivacyBundle\Application\Contract\PersonalDataEraser;
+use Phil\PrivacyBundle\Application\Contract\PersonalDataExporter;
 use Phil\PrivacyBundle\Domain\Retention\ErasureEffect;
 use Phil\PrivacyBundle\Domain\Subject\DataSubject;
 use Phil\PrivacyBundle\Domain\Subject\ErasureReport;

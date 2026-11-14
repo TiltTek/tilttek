@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tilttek\ActivityBundle\Tests\Unit;
 
 use DateInterval;
-use Phil\PrivacyBundle\Application\Port\PersonalDataEraser;
+use Phil\PrivacyBundle\Application\Contract\PersonalDataEraser;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
