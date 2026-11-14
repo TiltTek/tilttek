@@ -4,6 +4,14 @@ All notable changes to `tilttek/stickers` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Fixed
+
+- `Stickers::revoke()` removes the placements before taking the sticker back, so that a revocation that failed halfway
+  is resumed by calling it again, and a call for a sticker no longer owned still removes the placements of it left
+  behind; it returns false and tells nothing then, as before.
+
 ## 0.1.0-alpha - 2026-11-13
 
 ### Added

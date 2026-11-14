@@ -9,6 +9,7 @@ use Override;
 use Phil\Resource\ResourceReference;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Tilttek\Stickers\Event\PlacementHidden;
 use Tilttek\Stickers\Event\PlacementRemoved;
 use Tilttek\Stickers\Event\PlacementRestored;
@@ -28,6 +29,7 @@ use Tilttek\Stickers\Stickers;
 use Tilttek\Stickers\Store\InMemoryOwnershipStore;
 use Tilttek\Stickers\Store\InMemoryPlacementStore;
 use Tilttek\Stickers\Store\InMemoryStickerCatalog;
+use Tilttek\Stickers\Tests\Unit\Fixture\FailingPlacementStore;
 use Tilttek\Stickers\Tests\Unit\Fixture\FrozenClock;
 use Tilttek\Stickers\Tests\Unit\Fixture\HidingModerator;
 use Tilttek\Stickers\Tests\Unit\Fixture\RecordingDispatcher;
@@ -352,6 +354,57 @@ final class StickersTest extends TestCase
         self::assertSame(2, $revoked->placementsRemoved);
         self::assertSame('dragon', $revoked->sticker);
         self::assertSame($this->holder, $revoked->holder);
+    }
+
+    public function testARevocationThatFailedHalfwayIsResumed(): void
+    {
+        $placements = new FailingPlacementStore();
+        $catalog = new InMemoryStickerCatalog([new Sticker('dragon', 'stickers/dragon.webp', 'A red dragon'), new Sticker('d20', 'stickers/d20.webp', 'A twenty-sided die')]);
+        $stickers = new Stickers($catalog, $this->ownerships, $placements, $this->surfaces, new Limits(), new FrozenClock(), $this->events);
+        $stickers->grant($this->holder, 'dragon');
+        $stickers->grant($this->holder, 'd20');
+
+        for ($i = 0; $i < 3; ++$i) {
+            $stickers->place($this->holder, $this->request());
+        }
+
+        $kept = $stickers->place($this->holder, $this->request('d20'));
+        $placements->removalsBeforeFailure = 1;
+
+        try {
+            $stickers->revoke($this->holder, 'dragon');
+            self::fail('No exception.');
+        } catch (RuntimeException $runtimeException) {
+            self::assertSame('The store went away.', $runtimeException->getMessage());
+        }
+
+        self::assertCount(3, $placements->ofHolder($this->holder));
+        self::assertTrue($this->ownerships->owns($this->holder, 'dragon'));
+
+        $placements->removalsBeforeFailure = null;
+
+        self::assertTrue($stickers->revoke($this->holder, 'dragon'));
+        self::assertSame([$kept->id], array_map(static fn (Placement $placement): string => $placement->id, $placements->ofHolder($this->holder)));
+        self::assertFalse($this->ownerships->owns($this->holder, 'dragon'));
+
+        $revoked = $this->events->events[\count($this->events->events) - 1];
+        self::assertInstanceOf(StickerRevoked::class, $revoked);
+        self::assertSame(2, $revoked->placementsRemoved);
+    }
+
+    public function testRevokingAStickerNoLongerOwnedStillRemovesItsPlacements(): void
+    {
+        $stickers = $this->stickers();
+        $stickers->grant($this->holder, 'dragon');
+        $stickers->place($this->holder, $this->request());
+        $stickers->place($this->holder, $this->request());
+
+        $this->ownerships->revoke($this->holder, 'dragon');
+        $told = \count($this->events->events);
+
+        self::assertFalse($stickers->revoke($this->holder, 'dragon'));
+        self::assertSame([], $this->placements->ofHolder($this->holder));
+        self::assertCount($told, $this->events->events);
     }
 
     public function testAStickerThatLeftTheCatalogueIsNeitherOwnedNorShown(): void

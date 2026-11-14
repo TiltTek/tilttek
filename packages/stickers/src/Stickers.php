@@ -70,19 +70,23 @@ final readonly class Stickers
     /**
      * Takes a sticker back from a holder, with every placement of it they made; returns false when they did not own
      * it.
+     *
+     * The placements are removed first and the sticker taken back last, so that a revocation that fails halfway is
+     * resumed by calling it again: the holder still owns the sticker, and the call does it all over. A call for a
+     * sticker the holder no longer owns still removes the placements of it left behind, and tells nothing.
      */
     public function revoke(ResourceReference $holder, string $sticker): bool
     {
-        if (!$this->ownerships->revoke($holder, $sticker)) {
-            return false;
-        }
-
         $removed = 0;
 
         foreach ($this->placements->ofHolder($holder) as $placement) {
             if ($placement->sticker === $sticker && $this->placements->remove($placement->id)) {
                 ++$removed;
             }
+        }
+
+        if (!$this->ownerships->revoke($holder, $sticker)) {
+            return false;
         }
 
         $this->events?->dispatch(new StickerRevoked($holder, $sticker, $removed));
