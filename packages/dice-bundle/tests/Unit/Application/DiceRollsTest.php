@@ -246,9 +246,9 @@ final class DiceRollsTest extends TestCase
 
         /** @var ArrayObject<int, list<string>> $asked */
         $asked = new ArrayObject();
-        $spy = new class($asked) implements RecordedRollRepository {
+        $spy = new readonly class($asked) implements RecordedRollRepository {
             /** @param ArrayObject<int, list<string>> $asked */
-            public function __construct(private readonly ArrayObject $asked)
+            public function __construct(private ArrayObject $asked)
             {
             }
 
