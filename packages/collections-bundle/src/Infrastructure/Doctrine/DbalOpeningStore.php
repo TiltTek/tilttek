@@ -14,7 +14,8 @@ use Tilttek\Collections\Pack\PackOpening;
 
 /**
  * The packs opened in `tilttek_collections_opening`, through a DBAL connection: one row per key, its items and copies
- * as JSON lists, inserted by a statement that writes nothing when the row is already there.
+ * as JSON lists, inserted by a statement that writes nothing when the row is already there — the key is reserved so,
+ * with no copies, and the copies written once given.
  */
 final readonly class DbalOpeningStore implements OpeningStore
 {
@@ -33,6 +34,12 @@ final readonly class DbalOpeningStore implements OpeningStore
             [$opening->key, $opening->member->toString(), $opening->pack, $opening->seed, $opening->commitment, $opening->clientSeed, Rows::encode($opening->items), Rows::encode($opening->copies), Rows::utc($opening->openedAt)],
             [ParameterType::STRING, ParameterType::STRING, ParameterType::STRING, ParameterType::STRING, ParameterType::STRING, ParameterType::STRING, ParameterType::STRING, ParameterType::STRING, Types::DATETIME_IMMUTABLE],
         );
+    }
+
+    #[Override]
+    public function complete(string $key, array $copies): void
+    {
+        $this->connection->executeStatement(\sprintf('UPDATE %s SET copies = ? WHERE opening_key = ?', CollectionsTables::OPENINGS), [Rows::encode($copies), $key]);
     }
 
     #[Override]

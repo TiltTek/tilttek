@@ -11,6 +11,7 @@ use Random\Engine\Xoshiro256StarStar;
 use Random\Randomizer;
 use Tilttek\Collections\CollectionKey;
 use Tilttek\Collections\Collections;
+use Tilttek\Collections\Copy;
 use Tilttek\Collections\Exception\CollectionRefused;
 use Tilttek\Collections\Exception\InvalidCollection;
 use Tilttek\Collections\Exception\NotFound;
@@ -91,9 +92,11 @@ final readonly class Packs
     }
 
     /**
-     * Opens a committed pack with the client seed the member gave after seeing the commitment: draws its items and
-     * gives a copy of each, under the key followed by `#` and the place of the item in the pack. The same pending
-     * opening and client seed opened again return the opening they made.
+     * Opens a committed pack with the client seed the member gave after seeing the commitment: draws its items, reserves
+     * the key by adding the opening with no copies, then gives a copy of each item, under the key followed by `#` and
+     * the place of the item in the pack. The same pending opening and client seed opened again return the opening they
+     * made — and give the copies of one whose giving was interrupted. An opening that loses the race for its key to
+     * another at the same moment gives nothing: it returns the winner, or refuses as a later opening would.
      *
      * @throws NotFound          when the catalog has no such pack
      * @throws InvalidCollection when the client seed is empty, longer than 256 bytes or not UTF-8 text
@@ -107,30 +110,23 @@ final readonly class Packs
         $opened = $this->openings->find($pending->key);
 
         if ($opened instanceof PackOpening) {
-            if ($opened->pack !== $pending->pack || !$opened->member->equals($pending->member)) {
-                throw CollectionRefused::because(\sprintf('The key "%s" already opened another pack.', $pending->key));
-            }
+            $this->checkSame($opened, $pending, $clientSeed);
 
-            if (!hash_equals($opened->seed, $pending->seed) || !hash_equals($opened->clientSeed, $clientSeed)) {
-                throw CollectionRefused::because(\sprintf('The key "%s" was opened from another commitment or client seed.', $pending->key));
-            }
-
-            return $opened;
+            return [] === $opened->copies ? $this->give($opened, $collectionKey) : $opened;
         }
 
         $seed = sodium_hex2bin($pending->seed);
-        $at ??= $this->clock->now();
         $items = $this->draw($this->collections->catalog->catalog()->pack($pending->pack), $seed, $clientSeed, $pending->key);
-        $copies = [];
+        $reserved = new PackOpening($pending->key, $pending->member, $pending->pack, $pending->seed, self::commitment($seed), $clientSeed, $items, [], $at ?? $this->clock->now());
 
-        foreach ($items as $place => $item) {
-            $copies[] = $this->collections->grant($pending->member, $item, Source::Pack, $collectionKey->derive(\sprintf('%d', $place + 1)), $at)->id;
+        if (!$this->openings->add($reserved)) {
+            $winner = $this->openings->find($pending->key) ?? throw CollectionRefused::because(\sprintf('The key "%s" is being opened by another request.', $pending->key));
+            $this->checkSame($winner, $pending, $clientSeed);
+
+            return [] === $winner->copies ? $winner->withCopies($this->copiesOf($winner, $collectionKey)) : $winner;
         }
 
-        $opening = new PackOpening($pending->key, $pending->member, $pending->pack, $pending->seed, self::commitment($seed), $clientSeed, $items, $copies, $at);
-        $this->openings->add($opening);
-
-        return $opening;
+        return $this->give($reserved, $collectionKey);
     }
 
     /**
@@ -167,6 +163,47 @@ final readonly class Packs
         $randomizer = new Randomizer(new Xoshiro256StarStar(hash_hmac('sha256', $clientSeed."\n".$key, $seed, true)));
 
         return array_map(static fn (int $slot): string => $odds->draw($randomizer)->code, range(1, $pack->size));
+    }
+
+    /**
+     * @throws CollectionRefused when the opening kept under the key is not the one the pending opening and the client
+     *                           seed make
+     */
+    private function checkSame(PackOpening $opened, PendingOpening $pending, string $clientSeed): void
+    {
+        if ($opened->pack !== $pending->pack || !$opened->member->equals($pending->member)) {
+            throw CollectionRefused::because(\sprintf('The key "%s" already opened another pack.', $pending->key));
+        }
+
+        if (!hash_equals($opened->seed, $pending->seed) || !hash_equals($opened->clientSeed, $clientSeed)) {
+            throw CollectionRefused::because(\sprintf('The key "%s" was opened from another commitment or client seed.', $pending->key));
+        }
+    }
+
+    /**
+     * Gives a copy of each item of the opening reserved, at the moment it was opened, and records them.
+     */
+    private function give(PackOpening $opening, CollectionKey $key): PackOpening
+    {
+        $copies = [];
+
+        foreach ($opening->items as $place => $item) {
+            $copies[] = $this->collections->grant($opening->member, $item, Source::Pack, $key->derive(\sprintf('%d', $place + 1)), $opening->openedAt)->id;
+        }
+
+        $this->openings->complete($opening->key, $copies);
+
+        return $opening->withCopies($copies);
+    }
+
+    /**
+     * The identifiers of the copies an opening gives, one for each item, without giving them.
+     *
+     * @return list<string>
+     */
+    private function copiesOf(PackOpening $opening, CollectionKey $key): array
+    {
+        return array_map(static fn (int $place): string => Copy::idFor($key->derive(\sprintf('%d', $place + 1))), array_keys($opening->items));
     }
 
     /**

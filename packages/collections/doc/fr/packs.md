@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=9f63dc5a01d3a999ff4183bc6c8c0eb6daa89028facb083409bb3f8067efd78b -->
+<!-- phil-dev source-sha256=0070c2cf4c49f47f28e6842566a90e3307d0fc39e2056133d10c0bc0dc437b36 -->
 # Paquets
 
 ## Chances publiées
@@ -19,9 +19,13 @@ Un paquet s'ouvre en deux temps, pour que ni le site ni le membre ne puisse choi
    paquet — chacun séparément : une rareté selon son poids, puis un objet de cette rareté — et remet un exemplaire de
    chacun, sous la clé suivie de `#` et de la place de l'objet.
 
-La même ouverture en attente, ouverte de nouveau avec le même germe du client, renvoie l'ouverture qu'elle a faite ;
-une clé qui a ouvert un autre paquet, ou pour un autre membre, ou à partir d'un autre germe ou d'un autre germe du
-client, est refusée.
+L'ouverture réserve sa clé avant de remettre quoi que ce soit : elle est ajoutée sans exemplaires, puis les exemplaires
+sont remis et enregistrés. De deux requêtes qui ouvrent la même clé au même moment, seule celle dont l'ajout a écrit
+remet des exemplaires ; l'autre ne remet rien et renvoie l'ouverture gagnante — ou est refusée, quand la gagnante venait
+d'un autre germe du client. La même ouverture en attente, ouverte de nouveau avec le même germe du client, renvoie
+l'ouverture qu'elle a faite, et remet les exemplaires d'une ouverture dont la remise a été interrompue ; une clé qui a
+ouvert un autre paquet, ou pour un autre membre, ou à partir d'un autre germe ou d'un autre germe du client, est
+refusée.
 
 Le tirage est celui que donnent les deux germes et la clé : `Xoshiro256StarStar` dont le germe est le HMAC-SHA256, sous
 le germe du site, du germe du client, d'un saut de ligne et de la clé. Le germe du site est fixé avant que le germe du

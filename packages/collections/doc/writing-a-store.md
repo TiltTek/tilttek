@@ -7,7 +7,7 @@ The library keeps its state behind five interfaces; the in-memory implementation
 |---|---|---|
 | `Store\CopyStore` | The copies, by identifier | Write a copy once even when two processes write it; reassign a copy only from the owner named, marking it moved; take a copy back only from its member and if never moved; forget the copies of a source from a moment, unless moved |
 | `Store\CompletionStore` | The sets completed | Write a set once per member |
-| `Pack\OpeningStore` | The packs opened, by key | Write an opening once per key |
+| `Pack\OpeningStore` | The packs opened, by key | Write an opening once per key, the check and the write in one atomic step; record the copies of an opening added without them |
 | `Dice\ChoiceStore` | The dice chosen | Keep one choice per member and number of sides |
 | `Daily\DailyStore` | The calendar, by day | Keep one pick per day; read the picks between two days in order |
 

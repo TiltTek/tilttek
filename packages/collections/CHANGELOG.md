@@ -4,6 +4,21 @@ All notable changes to `tilttek/collections` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `Pack\OpeningStore::complete()`: a store records the copies of an opening added without them; a store written for
+  0.1 implements it.
+- `Packs::open()` reserves the key, by adding the opening with no copies, before it gives any copy: an opening that
+  loses the race for its key to another at the same moment gives nothing, and returns the winner's opening, or is
+  refused when the winner came from another client seed. The same opening opened again gives the copies of one whose
+  giving was interrupted.
+
+### Added
+
+- `PackOpening::withCopies()`.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added

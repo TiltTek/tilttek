@@ -43,6 +43,16 @@ final readonly class PackOpening
     }
 
     /**
+     * The same opening with the copies given.
+     *
+     * @param list<string> $copies
+     */
+    public function withCopies(array $copies): self
+    {
+        return new self($this->key, $this->member, $this->pack, $this->seed, $this->commitment, $this->clientSeed, $this->items, $copies, $this->openedAt);
+    }
+
+    /**
      * @return array{key: string, member: string, pack: string, seed: string, commitment: string, client_seed: string, items: list<string>, copies: list<string>, opened_at: string}
      */
     public function toArray(): array

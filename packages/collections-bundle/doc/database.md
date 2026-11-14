@@ -17,7 +17,9 @@ Dates are written in UTC, to the second.
 
 A copy, a completion and an opening are inserted by a statement that writes nothing when the row is already there
 (`ON CONFLICT DO NOTHING` on PostgreSQL, `INSERT IGNORE` on MySQL and MariaDB, `INSERT OR IGNORE` on SQLite; a plain
-insertion elsewhere, whose unique violation reaches the caller): two processes giving the same key give one copy. A
+insertion elsewhere, whose unique violation reaches the caller): two processes giving the same key give one copy. An
+opening is inserted with no copies, which reserves its key before any copy is given, and its copies are written by an
+update once given: of two processes opening the same key, only the one whose insertion wrote gives copies. A
 copy changes hands by an update that names its expected owner, so that two trades of the same copy cannot both pass;
 run a trade in a transaction of the connection, as `tilttek/exchange-bundle` does, so that a refused copy rolls the
 whole trade back.
