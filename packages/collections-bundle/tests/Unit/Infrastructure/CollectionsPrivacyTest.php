@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tilttek\CollectionsBundle\Tests\Unit\Infrastructure;
 
 use Override;
-use Phil\PrivacyBundle\Application\Port\PersonalDataEraser;
+use Phil\PrivacyBundle\Application\Contract\PersonalDataEraser;
 use Phil\PrivacyBundle\Domain\Retention\ErasureEffect;
 use Phil\PrivacyBundle\Domain\Subject\DataSubject;
 use Phil\Resource\ResourceReference;
