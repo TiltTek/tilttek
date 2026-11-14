@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=ee29c58591a32145dcd46d4a11ee5b54b43df4cea25826ec28a3b28dde07a824 -->
+<!-- phil-dev source-sha256=7d3860495310a4a9c160fe139715e4b0d4f8933081107a9430b2d1bbbee22089 -->
 # Base de données
 
 Le bundle ajoute cinq tables au schéma de sa connexion :
@@ -18,6 +18,10 @@ seconde près.
 n'écrit rien quand la ligne existe déjà. C'est `ON CONFLICT DO NOTHING` sur PostgreSQL, `INSERT IGNORE` sur MySQL et
 MariaDB, et `INSERT OR IGNORE` sur SQLite. Sur une autre plateforme, c'est une simple insertion, dont la violation
 d'unicité remonte à l'appelant. Une inscription, un duel et une définition sont remplacés dans une seule transaction.
+
+**Un duel ne change d'état qu'une fois.** Une réponse, une expiration ou une victoire est un `UPDATE … WHERE duel_key
+= ? AND status = ?` qui nomme l'état dans lequel le duel a été lu : de deux réponses à la même offre, la seconde ne
+change aucune ligne, et sa requête relit le duel.
 
 ## Un catalogue en base de données
 

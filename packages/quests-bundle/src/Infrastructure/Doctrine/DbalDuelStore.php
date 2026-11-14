@@ -15,7 +15,8 @@ use Tilttek\Quests\Duel\DuelStatus;
 use Tilttek\Quests\Store\DuelStore;
 
 /**
- * The duels in `tilttek_quests_duel`, through a DBAL connection: a duel's row replaced in one transaction.
+ * The duels in `tilttek_quests_duel`, through a DBAL connection: a duel's row replaced in one transaction, or changed
+ * by an update whose condition names the status it was read in, so that of two answers to the same offer, one writes.
  */
 final readonly class DbalDuelStore implements DuelStore
 {
@@ -47,6 +48,16 @@ final readonly class DbalDuelStore implements DuelStore
                 ParameterType::STRING, Types::DATETIME_IMMUTABLE, Types::DATETIME_IMMUTABLE, ParameterType::STRING, Types::DATETIME_IMMUTABLE,
             ]);
         });
+    }
+
+    #[Override]
+    public function transition(Duel $duel, DuelStatus $from): bool
+    {
+        return 1 === $this->connection->executeStatement(
+            \sprintf('UPDATE %s SET status = ?, accepted_at = ?, ends_at = ?, winner = ?, decided_at = ? WHERE duel_key = ? AND status = ?', QuestsTables::DUELS),
+            [$duel->status->value, self::utc($duel->acceptedAt), self::utc($duel->endsAt), $duel->winner?->toString(), self::utc($duel->decidedAt), $duel->key, $from->value],
+            [ParameterType::STRING, Types::DATETIME_IMMUTABLE, Types::DATETIME_IMMUTABLE, ParameterType::STRING, Types::DATETIME_IMMUTABLE, ParameterType::STRING, ParameterType::STRING],
+        );
     }
 
     #[Override]

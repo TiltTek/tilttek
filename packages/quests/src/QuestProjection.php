@@ -164,7 +164,12 @@ final class QuestProjection implements Projection
         }
 
         $won = $duel->with(DuelStatus::Won, $progress->finish->at, $activity->member);
-        $this->evaluator->duels->save($won);
+
+        // A duel that expired, or that another process decided, since it was read is not won by this activity.
+        if (!$this->evaluator->duels->transition($won, DuelStatus::Accepted)) {
+            return;
+        }
+
         $completion = new Completion($quest->code, $duel->key, $activity->member, $progress->finish->at, $progress->finish->activity);
         $this->evaluator->completions->add($completion);
 

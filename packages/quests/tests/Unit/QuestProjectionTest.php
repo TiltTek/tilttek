@@ -46,6 +46,7 @@ use Tilttek\Quests\Store\InMemoryContributionStore;
 use Tilttek\Quests\Store\InMemoryDuelStore;
 use Tilttek\Quests\Store\InMemoryEnrolmentStore;
 use Tilttek\Quests\Tests\Unit\Fixture\Kit;
+use Tilttek\Quests\Tests\Unit\Fixture\StaleDuelStore;
 use Tilttek\Quests\Window;
 
 #[CoversClass(Quest::class)]
@@ -343,6 +344,24 @@ final class QuestProjectionTest extends TestCase
         // Decided: the other side's activity no longer counts.
         $kit->record('g5', 'member:1', 'game.played', '2026-11-01 13:00');
         self::assertSame([], $kit->recorder->events());
+    }
+
+    public function testADuelEndedSinceItWasReadIsNotWon(): void
+    {
+        $store = new StaleDuelStore();
+        $kit = Kit::of(['race' => ['kind' => 'duel', 'steps' => [['verbs' => ['game.played']]], 'duel' => ['length' => 'P2D']]], duels: $store);
+        $kit->at('2026-11-01 09:00');
+        $kit->duelService->challenge('d1', 'race', Kit::ref('member:1'), Kit::ref('member:2'));
+        $kit->duelService->accept('d1', Kit::ref('member:2'));
+
+        $store->freeze();
+        $store->current->save($store->current->find('d1')?->with(DuelStatus::Expired, new DateTimeImmutable('2026-11-01 09:59 UTC')) ?? self::fail('No duel.'));
+
+        $kit->record('g1', 'member:2', 'game.played', '2026-11-01 10:00');
+
+        self::assertSame([], $kit->recorder->events());
+        self::assertSame(DuelStatus::Expired, $store->current->find('d1')?->status);
+        self::assertNull($kit->completions->find('race', 'd1', Kit::ref('member:2')));
     }
 
     public function testADuelCountsOnlyUntilItEnds(): void

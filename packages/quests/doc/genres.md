@@ -37,5 +37,9 @@ $duels->expire();                        // the offers and the duels whose time 
 - Each side's activity counts from the acceptance to the end; **the first side to accomplish the quest wins**, which the
   projection decides: the duel is `Won`, its winner gets a completion under the duel's key and the rewards.
 - A duel whose time runs out with no winner expires when `expire()` sweeps the duels; the observer is told.
+- Each change of status is written only if the duel is still in the status it was read in: of an acceptance and a
+  refusal given at the same moment, one is kept, and the other is refused because the duel no longer waits for an
+  answer — or returns the duel, when it gave the same answer. A duel answered, expired or won since the sweep or the
+  projection read it is left as it is.
 
 A member may have several duels at once, on the same quest or not; each counts only its own time.

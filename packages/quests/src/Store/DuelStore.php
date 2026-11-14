@@ -7,6 +7,7 @@ namespace Tilttek\Quests\Store;
 use DateTimeImmutable;
 use Phil\Resource\ResourceReference;
 use Tilttek\Quests\Duel\Duel;
+use Tilttek\Quests\Duel\DuelStatus;
 
 /**
  * Where the duels are kept, by key.
@@ -17,6 +18,13 @@ interface DuelStore
      * Keeps the duel, in place of the one under its key.
      */
     public function save(Duel $duel): void;
+
+    /**
+     * Keeps the duel in place of the one under its key only if that one still has the status `from`, in one atomic
+     * step: of two transitions from the same status at the same time, one returns false and writes nothing. False too
+     * when no duel has the key. The duel's own status differs from `from`.
+     */
+    public function transition(Duel $duel, DuelStatus $from): bool;
 
     public function find(string $key): ?Duel;
 

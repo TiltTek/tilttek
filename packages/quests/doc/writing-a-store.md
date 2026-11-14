@@ -8,7 +8,7 @@ in-memory ones for tests. `tilttek/quests-bundle` implements them on Doctrine DB
 | `ContributionStore` | What each activity brought to a step | Written once per quest, step and activity — `add()` returns false the second time; read by quest, members and period by moment, then activity, then step; `forget($since)` before a rebuild |
 | `EnrolmentStore` | Acceptances and abandonments | One per quest and member, replaced on save; read by quest, ordered by member, and by member, ordered by quest |
 | `CompletionStore` | The journal of accomplished quests | Written once per quest, occurrence and subject; `latest()` the subject's most recent; `forget($since)` returns what it forgot |
-| `DuelStore` | Duels by key | Replaced on save; `accepted()` the accepted duels of a quest a member is a side of; `due()` the offers at or before a moment and the accepted duels ended by now; `reopen($since)` accepts again the duels won since |
+| `DuelStore` | Duels by key | Replaced on save; `transition($duel, $from)` writes only if the duel kept under the key still has the status `from`, in one atomic step, false otherwise; `accepted()` the accepted duels of a quest a member is a side of; `due()` the offers at or before a moment and the accepted duels ended by now; `reopen($since)` accepts again the duels won since |
 
 Each store erases a member.
 

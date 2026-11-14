@@ -44,6 +44,29 @@ abstract class DuelStoreTestCase extends TestCase
         self::assertSame(['d5', 'd6', 'd3', 'd1', 'd2'], $this->keys($store->ofMember(ResourceReference::fromString('member:1'))));
     }
 
+    public function testADuelChangesOnlyFromTheStatusItWasReadIn(): void
+    {
+        $store = $this->store();
+        $offered = self::duel('d1', 'race', 'member:1', 'member:2', '2026-11-01 10:00');
+        $accepted = $offered->accepted(new DateTimeImmutable('2026-11-01 11:00 UTC'), new DateTimeImmutable('2026-11-03 11:00 UTC'));
+        $declined = $offered->with(DuelStatus::Declined, new DateTimeImmutable('2026-11-01 11:00 UTC'));
+
+        self::assertFalse($store->transition($accepted, DuelStatus::Offered));
+        self::assertNull($store->find('d1'));
+
+        $store->save($offered);
+        $store->save(self::duel('d2', 'race', 'member:1', 'member:2', '2026-11-01 10:00'));
+
+        self::assertTrue($store->transition($accepted, DuelStatus::Offered));
+        self::assertFalse($store->transition($declined, DuelStatus::Offered));
+        self::assertEquals($accepted, $store->find('d1'));
+        self::assertSame(DuelStatus::Offered, $store->find('d2')?->status);
+
+        $won = $accepted->with(DuelStatus::Won, new DateTimeImmutable('2026-11-02 11:00 UTC'), ResourceReference::fromString('member:2'));
+        self::assertTrue($store->transition($won, DuelStatus::Accepted));
+        self::assertEquals($won, $store->find('d1'));
+    }
+
     public function testTheDuelsWhoseTimeIsUpAreDue(): void
     {
         $store = $this->store();

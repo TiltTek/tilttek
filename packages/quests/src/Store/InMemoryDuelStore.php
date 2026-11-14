@@ -28,6 +28,18 @@ final class InMemoryDuelStore implements DuelStore
     }
 
     #[Override]
+    public function transition(Duel $duel, DuelStatus $from): bool
+    {
+        if ($from !== ($this->duels[$duel->key] ?? null)?->status) {
+            return false;
+        }
+
+        $this->duels[$duel->key] = $duel;
+
+        return true;
+    }
+
+    #[Override]
     public function find(string $key): ?Duel
     {
         return $this->duels[$key] ?? null;
