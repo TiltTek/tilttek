@@ -36,6 +36,22 @@ enum Measure: string
     }
 
     /**
+     * Whether a reported score takes the place of the one held: on `latest`, a score reached at the same moment or later
+     * whose value or tie-breaks differ; on the other measures, a score that ranks better, its tie-breaks included.
+     * Always when none is held.
+     */
+    public function supersedes(Score $score, ?Score $held, Ranking $ranking): bool
+    {
+        if (!$held instanceof Score) {
+            return true;
+        }
+
+        return self::Latest === $this
+            ? $held->reachedAt <= $score->reachedAt && 0 !== $ranking->compareValues($held, $score)
+            : $ranking->compareValues($score, $held) < 0;
+    }
+
+    /**
      * What the activity brings: one gesture — or one day —, or its quantity.
      */
     public function amountFor(Activity $activity): int

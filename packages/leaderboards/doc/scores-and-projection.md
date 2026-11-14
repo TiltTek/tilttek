@@ -14,8 +14,8 @@ An activity contributes once per board: the store refuses a second contribution 
 so an entry handed twice after a crash counts once.
 
 The contribution is added in one step, but the score is then read and written back: two activities of the same member
-on the same board, projected at the same moment by two processes, can leave the score without one of them, and a value
-reported by `report()` can be overwritten by an older one. Project from a single consumer — the projection run by
+on the same board, projected at the same moment by two processes, can leave the score without one of them. Project from
+a single consumer — the projection run by
 Messenger or by a command rather than live in each request — or hold a lock (`symfony/lock`) per member, board and
 period around the projection; a rebuild counts every score again from the contributions.
 
@@ -55,8 +55,9 @@ $leaderboards->report('level', $member, 12);
 ```
 
 A `latest` board keeps the last value reported, ignoring a report older than the one it holds or the same; a `highest`
-board keeps the highest, ignoring a value that ranks no better, its tie-breaks included. `report()` says whether the
-score changed. A listener on the event of the package that keeps the balance reports it: tilttek/leaderboards depends
+board keeps the highest, ignoring a value that ranks no better, its tie-breaks included. The store compares the value
+with the one held and writes it in one atomic step, `ScoreStore::keep()`: of two reports at the same moment, an older or
+lower one never replaces the other. `report()` says whether the score changed. A listener on the event of the package that keeps the balance reports it: tilttek/leaderboards depends
 on no other gamification package. A reported value is not replayed by a rebuild; the application reports it again when
 it must.
 

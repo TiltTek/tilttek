@@ -154,14 +154,11 @@ final readonly class Leaderboards
             return false;
         }
 
-        $score = new Score($board, $period->code, $member, $value, $at, $tieBreaks);
-        $held = $this->scores->score($board, $period->code, $member);
-
-        if ($held instanceof Score && (Measure::Latest === $definition->measure ? $held->reachedAt > $at || 0 === $definition->ranking->compareValues($held, $score) : $definition->ranking->compareValues($score, $held) >= 0)) {
+        // The store compares and writes in one step: of two reports at the same time, the older never wins.
+        if (!$this->scores->keep(new Score($board, $period->code, $member, $value, $at, $tieBreaks), $definition->measure, $definition->ranking)) {
             return false;
         }
 
-        $this->scores->save($score);
         $this->leagues?->enter($board, $member, $at);
 
         return true;

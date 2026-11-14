@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=3193704e9179d090b8270c497cc9d73afbf84f79e0a08850d227925c759fdd1e -->
+<!-- phil-dev source-sha256=a12ec6f76c2a01e5b31576a146df9db8b94e0afa8430f884ca1f052dc057c9bd -->
 # Scores et projection
 
 ## Tenus à jour, pas recomptés à chaque affichage
@@ -15,8 +15,8 @@ Une activité contribue une seule fois par classement : le stockage refuse une s
 au même classement, et une entrée remise deux fois après une panne ne compte qu'une fois.
 
 La contribution est ajoutée en une seule étape, mais le score est ensuite lu puis réécrit : deux activités du même membre
-dans le même classement, projetées au même moment par deux processus, peuvent laisser le score sans l'une d'elles, et
-une valeur rapportée par `report()` peut être écrasée par une plus ancienne. Projetez depuis un seul consommateur (la
+dans le même classement, projetées au même moment par deux processus, peuvent laisser le score sans l'une d'elles.
+Projetez depuis un seul consommateur (la
 projection lancée par Messenger ou par une commande plutôt qu'en direct dans chaque requête) ou tenez un verrou
 (`symfony/lock`) par membre, classement et période autour de la projection ; une reconstruction recompte chaque score à
 partir des contributions.
@@ -58,8 +58,9 @@ $leaderboards->report('level', $member, 12);
 ```
 
 Un classement `latest` garde la dernière valeur rapportée et ignore un rapport plus ancien que celui qu'il garde ou identique ; un
-classement `highest` garde la plus haute et ignore une valeur qui ne se classe pas mieux, critères de départage compris. `report()` dit si le score a
-changé. Un écouteur de l'événement du paquet qui garde le solde le rapporte : tilttek/leaderboards ne dépend d'aucun
+classement `highest` garde la plus haute et ignore une valeur qui ne se classe pas mieux, critères de départage compris. Le stockage compare la valeur à celle qu'il garde et l'écrit en une seule étape atomique,
+`ScoreStore::keep()` : de deux rapports au même moment, un plus ancien ou plus bas ne remplace jamais l'autre.
+`report()` dit si le score a changé. Un écouteur de l'événement du paquet qui garde le solde le rapporte : tilttek/leaderboards ne dépend d'aucun
 autre paquet de ludification. Une valeur rapportée n'est pas rejouée par une reconstruction ; l'application la rapporte
 de nouveau quand il le faut.
 
