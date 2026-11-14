@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tilttek\DiceBundle\Infrastructure\DependencyInjection;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Random\Engine\Secure;
 use Random\Randomizer;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
@@ -40,7 +41,8 @@ use Twig\Attribute\AsTwigFunction;
 
 /**
  * The bundle's services: the library's limits, custom dice, notations and dialects, its `DiceRoller`, a secure
- * randomizer, the journal, the macros, the appearance of a member's dice, `DiceRolls`, `DiceMacros`, and — when their
+ * randomizer, the journal, the macros, the appearance of a member's dice, `DiceRolls` — with the event dispatcher when
+ * there is one —, `DiceMacros`, and — when their
  * components are installed — the constraint, the form type and the Twig extension. The custom dice and the notations are built once here, so
  * that a wrong definition fails when the container is compiled rather than at the first roll.
  */
@@ -91,7 +93,7 @@ final class DiceServices
         }
 
         $container->register(DiceRolls::class, DiceRolls::class)
-            ->setArguments([new Reference(DiceRoller::class), new Reference('tilttek_dice.randomizer'), new Reference(RecordedRollRepository::class), new Reference('clock'), new Reference(DiceAppearance::class)])
+            ->setArguments([new Reference(DiceRoller::class), new Reference('tilttek_dice.randomizer'), new Reference(RecordedRollRepository::class), new Reference('clock'), new Reference(DiceAppearance::class), new Reference(EventDispatcherInterface::class, ContainerInterface::NULL_ON_INVALID_REFERENCE)])
             ->setPublic(true);
         $container->register(DiceMacros::class, DiceMacros::class)
             ->setArguments([new Reference(DiceRoller::class), new Reference(DiceMacroRepository::class)])

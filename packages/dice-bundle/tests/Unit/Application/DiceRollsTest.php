@@ -4,22 +4,29 @@ declare(strict_types=1);
 
 namespace Tilttek\DiceBundle\Tests\Unit\Application;
 
+use ArrayObject;
 use DateTimeImmutable;
+use Override;
 use Phil\Resource\ResourceReference;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use RoundingMode;
+use Symfony\Component\Clock\MockClock;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Tilttek\Dice\Exception\InvalidDefinition;
+use Tilttek\Dice\Exception\LimitExceeded;
 use Tilttek\Dice\Fairness\Seed;
 use Tilttek\Dice\Parser\DiceParser;
 use Tilttek\Dice\Replay\ReplayableRoll;
 use Tilttek\Dice\Replay\Replayer;
 use Tilttek\DiceBundle\Application\DiceRolls;
 use Tilttek\DiceBundle\Application\DieAppearance;
+use Tilttek\DiceBundle\Application\Event\RollRecorded;
 use Tilttek\DiceBundle\Application\Exception\UnknownRoll;
 use Tilttek\DiceBundle\Application\NoDiceAppearance;
 use Tilttek\DiceBundle\Application\Replay;
 use Tilttek\DiceBundle\Domain\Model\RecordedRoll;
+use Tilttek\DiceBundle\Domain\Repository\RecordedRollRepository;
 use Tilttek\DiceBundle\Infrastructure\Memory\InMemoryRecordedRollRepository;
 use Tilttek\DiceBundle\Tests\Unit\Fixture\Dice;
 use Tilttek\DiceBundle\Tests\Unit\Fixture\ScriptedEngine;
@@ -29,6 +36,7 @@ use Tilttek\DiceBundle\Tests\Unit\Fixture\ScriptedEngine;
 #[CoversClass(UnknownRoll::class)]
 #[CoversClass(DieAppearance::class)]
 #[CoversClass(NoDiceAppearance::class)]
+#[CoversClass(RollRecorded::class)]
 final class DiceRollsTest extends TestCase
 {
     public function testInputsAreReadAndWrittenInTheReadersNotation(): void
@@ -144,12 +152,46 @@ final class DiceRollsTest extends TestCase
         self::assertNull(new NoDiceAppearance()->appearance($member, 6));
 
         $appearance = Dice::rolls(ScriptedEngine::randomizer(), appearance: Dice::redDice())->appearance($member, 6);
-        self::assertSame(['Ember', '#aa0000', 'resin', 'ember.png'], [$appearance?->name, $appearance?->color, $appearance?->material, $appearance?->image]);
+        self::assertSame(['Ember', '#aa0000', 'resin', 'ember.png', null, 'dice/ember.webp'], [$appearance?->name, $appearance?->color, $appearance?->material, $appearance?->image, $appearance?->ink, $appearance?->texture]);
+    }
+
+    public function testTheInkIsTheOneGivenOrOneThatReadsOnTheColour(): void
+    {
+        self::assertSame('#ffff00', new DieAppearance('Ember', '#aa0000', ink: '#ffff00')->readableInk());
+        self::assertSame('#ffffff', new DieAppearance('Ember', '#aa0000')->readableInk());
+        self::assertSame('#000000', new DieAppearance('Moss', '#2e8b57')->readableInk());
+        self::assertNull(new DieAppearance('Plain')->readableInk());
+        self::assertSame('#123456', new DieAppearance('Plain', ink: '#123456')->readableInk());
+        self::assertSame(
+            ['name' => 'Ember', 'color' => '#aa0000', 'ink' => '#ffffff', 'texture' => 'dice/ember.webp', 'material' => 'resin', 'image' => 'ember.png'],
+            new DieAppearance('Ember', '#aa0000', 'resin', 'ember.png', texture: 'dice/ember.webp')->toArray(),
+        );
+        self::assertSame(
+            ['name' => 'Plain', 'color' => null, 'ink' => null, 'texture' => null, 'material' => null, 'image' => null],
+            new DieAppearance('Plain')->toArray(),
+        );
+    }
+
+    public function testATextureIsAKeyNeverAnAddress(): void
+    {
+        foreach (['a', '0', 'dice/marble-01.webp', 'dice/stone_2/grain.png', str_repeat('a', 128)] as $texture) {
+            self::assertSame($texture, new DieAppearance('Stone', texture: $texture)->texture);
+        }
+
+        foreach (['', '.hidden', '/dice/stone', '-stone', '_stone', 'Dice/stone', 'dice/../secret', 'dice//stone', 'dice/', 'https://example.com/stone.png', 'dice\\stone', 'dice stone', "stone\n", str_repeat('a', 129)] as $texture) {
+            try {
+                new DieAppearance('Stone', texture: $texture);
+                self::fail(\sprintf('The texture "%s" was accepted.', $texture));
+            } catch (InvalidDefinition $exception) {
+                self::assertSame(\sprintf('The texture of a die is a key of 1 to 128 characters among a-z, 0-9, ".", "_", "/" and "-", starting with a letter or a digit, without "..", "//" or a final "/"; "%s" is not.', $texture), $exception->getMessage());
+            }
+        }
     }
 
     public function testAnAppearanceHasANameAndAColourOfSixDigits(): void
     {
-        self::assertSame([null, null, null], [new DieAppearance('Plain')->color, new DieAppearance('Plain')->material, new DieAppearance('Plain')->image]);
+        self::assertSame([null, null, null, null, null], [new DieAppearance('Plain')->color, new DieAppearance('Plain')->material, new DieAppearance('Plain')->image, new DieAppearance('Plain')->ink, new DieAppearance('Plain')->texture]);
+        self::assertSame(['#AbCdEf', '#00ff99'], [new DieAppearance('Ember', '#AbCdEf', ink: '#00ff99')->color, new DieAppearance('Ember', '#AbCdEf', ink: '#00ff99')->ink]);
 
         foreach ([['', null, 'The appearance of a die has a name.'], [' ', null, 'The appearance of a die has a name.'], ['Ember', '#fff', 'The colour of a die is written #rrggbb; "#fff" is not.'], ['Ember', 'x#ffffff', 'The colour of a die is written #rrggbb; "x#ffffff" is not.'], ['Ember', "#ffffff\n", "The colour of a die is written #rrggbb; \"#ffffff\n\" is not."]] as [$name, $color, $message]) {
             try {
@@ -159,5 +201,101 @@ final class DiceRollsTest extends TestCase
                 self::assertSame($message, $exception->getMessage());
             }
         }
+
+        foreach (['#fff', 'x#ffffff', "#ffffff\n", 'white'] as $ink) {
+            try {
+                new DieAppearance('Ember', '#aa0000', ink: $ink);
+                self::fail('The ink was accepted.');
+            } catch (InvalidDefinition $exception) {
+                self::assertSame(\sprintf('The ink of a die is written #rrggbb; "%s" is not.', $ink), $exception->getMessage());
+            }
+        }
+    }
+
+    public function testARollIsKeptWithItsContextAndAnnounced(): void
+    {
+        $journal = new InMemoryRecordedRollRepository();
+        $events = new EventDispatcher();
+        $heard = [];
+        $events->addListener(RollRecorded::class, static function (RollRecorded $event) use (&$heard, $journal): void {
+            $heard[] = [$event->id, $event->owner?->toString(), $event->context?->toString(), $journal->get($event->id) instanceof RecordedRoll];
+        });
+        $dice = new DiceRolls(Dice::roller(), ScriptedEngine::randomizer(...range(1, 36)), $journal, new MockClock('2026-11-07 03:00:00 UTC'), new NoDiceAppearance(), $events);
+        $table = ResourceReference::of('table', '7');
+
+        $first = $dice->rollReplayable('1d6', ResourceReference::of('member', '1'), context: $table);
+        $second = $dice->rollReplayable('1d8');
+        $third = $dice->rollReplayable('1d10', null, null, RoundingMode::PositiveInfinity, $table);
+
+        self::assertSame([[$first->id(), 'member:1', 'table:7', true], [$second->id(), null, null, true], [$third->id(), null, 'table:7', true]], $heard);
+        self::assertSame(['table:7', null, 'table:7'], [$first->context()?->toString(), $second->context(), $third->context()?->toString()]);
+        self::assertSame([$first, $third], $dice->rollsIn($table, 10));
+        self::assertSame([$first], $dice->rollsIn($table, 1));
+        self::assertSame([], $dice->rollsIn(ResourceReference::of('table', '8'), 10));
+    }
+
+    public function testRecordedRollsAreReadManyAtOnceWithinABound(): void
+    {
+        $journal = new InMemoryRecordedRollRepository();
+        $dice = Dice::rolls(ScriptedEngine::randomizer(...range(1, 24)), $journal);
+        $first = $dice->rollReplayable('1d6');
+        $second = $dice->rollReplayable('1d6');
+
+        self::assertSame([$second, $first], $dice->recorded([$second->id(), 'unknown', $first->id(), $second->id()]));
+        self::assertSame([], $dice->recorded([]));
+
+        /** @var ArrayObject<int, list<string>> $asked */
+        $asked = new ArrayObject();
+        $spy = new class($asked) implements RecordedRollRepository {
+            /** @param ArrayObject<int, list<string>> $asked */
+            public function __construct(private readonly ArrayObject $asked)
+            {
+            }
+
+            #[Override]
+            public function get(string $id): ?RecordedRoll
+            {
+                return null;
+            }
+
+            #[Override]
+            public function getMany(array $ids): array
+            {
+                $this->asked->append($ids);
+
+                return [];
+            }
+
+            #[Override]
+            public function save(RecordedRoll $roll): void
+            {
+            }
+
+            #[Override]
+            public function ofOwner(ResourceReference $owner, int $limit): array
+            {
+                return [];
+            }
+
+            #[Override]
+            public function ofContext(ResourceReference $context, int $limit): array
+            {
+                return [];
+            }
+
+            #[Override]
+            public function eraseOwner(ResourceReference $owner): int
+            {
+                return 0;
+            }
+        };
+        Dice::rolls(ScriptedEngine::randomizer(...range(1, 12)), $spy)->recorded(['a', 'a', 'b']);
+        self::assertSame([['a', 'b']], $asked->getArrayCopy());
+
+        self::assertCount(1, $dice->recorded([...array_fill(0, RecordedRollRepository::MANY + 1, $first->id())]));
+        self::assertSame([$first], $dice->recorded([$first->id(), ...array_map(static fn (int $i): string => \sprintf('%032d', $i), range(1, RecordedRollRepository::MANY - 1))]));
+
+        $this->expectExceptionObject(LimitExceeded::of('rolls read at once', 500, 501));
+        $dice->recorded(array_map(static fn (int $i): string => \sprintf('%032d', $i), range(0, RecordedRollRepository::MANY)));
     }
 }

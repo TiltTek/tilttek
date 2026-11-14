@@ -1,6 +1,6 @@
 {
     "name": "tilttek/dice-bundle",
-    "description": "Dice for Symfony on tilttek/dice: limits, custom dice and notations from the configuration, a journal of replayable rolls in Doctrine, macros of a site, a table and a member, verifiable rolls, a form field and its constraint, Twig filters and functions, an accessible detail of a roll, and an extension point that dresses a member's dice",
+    "description": "Dice for Symfony on tilttek/dice: limits, custom dice and notations from the configuration, a journal of replayable rolls in Doctrine, by member and by table, announced by an event, macros of a site, a table and a member, verifiable rolls, a form field and its constraint, Twig filters and functions, an accessible detail of a roll, and an extension point that dresses a member's dice, with an ink that reads on them",
     "license": "MIT",
     "type": "symfony-bundle",
     "keywords": [
@@ -24,6 +24,7 @@
         "doctrine/orm": "^3.7",
         "phil/resource": "^0.1@dev",
         "psr/clock": "^1.0",
+        "psr/event-dispatcher": "^1.0",
         "symfony/config": "^8.2",
         "symfony/dependency-injection": "^8.2",
         "tilttek/dice": "^0.1@dev"
@@ -64,7 +65,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "0.1.x-dev"
+            "dev-main": "0.2.x-dev"
         }
     }
 }

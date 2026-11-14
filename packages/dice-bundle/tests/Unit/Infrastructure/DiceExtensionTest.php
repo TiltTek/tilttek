@@ -9,6 +9,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Translator;
+use Tilttek\DiceBundle\Application\DieAppearance;
+use Tilttek\DiceBundle\Application\Port\DiceAppearance;
 use Tilttek\DiceBundle\Infrastructure\Twig\DiceExtension;
 use Tilttek\DiceBundle\Tests\Unit\Fixture\Dice;
 use Tilttek\DiceBundle\Tests\Unit\Fixture\ScriptedEngine;
@@ -115,7 +117,7 @@ final class DiceExtensionTest extends TestCase
         $extension = new DiceExtension($dice);
         $member = $extension->view($result, ResourceReference::of('member', '1'));
 
-        self::assertSame([['name' => 'Ember', 'color' => '#aa0000', 'material' => 'resin', 'image' => 'ember.png'], null, ['name' => 'Ember', 'color' => '#aa0000', 'material' => 'resin', 'image' => 'ember.png'], null], array_map(static fn (array $expression): ?array => $expression['sets'][0]['appearance'], $member));
+        self::assertSame([['name' => 'Ember', 'color' => '#aa0000', 'ink' => '#ffffff', 'texture' => 'dice/ember.webp', 'material' => 'resin', 'image' => 'ember.png'], null, ['name' => 'Ember', 'color' => '#aa0000', 'ink' => '#ffffff', 'texture' => 'dice/ember.webp', 'material' => 'resin', 'image' => 'ember.png'], null], array_map(static fn (array $expression): ?array => $expression['sets'][0]['appearance'], $member));
         self::assertSame([null, null, null, null], array_map(static fn (array $expression): ?array => $expression['sets'][0]['appearance'], $extension->view($result)));
         self::assertSame('1d6', $extension->view($result)[0]['notation']);
     }
@@ -129,11 +131,39 @@ final class DiceExtensionTest extends TestCase
         $html = new DiceExtension($dice)->detail(new Environment($loader), $dice->roll('2d6ro1kh1, 1d{colours}'), ResourceReference::of('member', '1'));
 
         self::assertStringContainsString('<code class="tilttek-dice-notation">2d6ro1kh1</code> = <output class="tilttek-dice-total">6</output>', $html);
-        self::assertStringContainsString('data-dice-appearance="Ember" data-dice-material="resin" style="--tilttek-dice-color: #aa0000"', $html);
+        self::assertStringContainsString('data-dice-appearance="Ember" data-dice-material="resin" data-dice-texture="dice/ember.webp" style="--tilttek-dice-color: #aa0000; --tilttek-dice-ink: #ffffff"', $html);
         self::assertStringContainsString('<li class="tilttek-dice-die is-rerolled" data-value="1"><span class="tilttek-dice-face">1</span> <span class="tilttek-dice-state">(rerolled)</span></li>', $html);
         self::assertStringContainsString('<li class="tilttek-dice-die is-dropped is-from-reroll" data-value="1">', $html);
         self::assertStringContainsString('<output class="tilttek-dice-tally">1 × Red</output>', $html);
         self::assertStringContainsString('style="--tilttek-dice-face-color: #ff0000"><span class="tilttek-dice-shape tilttek-dice-shape-circle" aria-hidden="true"></span><span class="tilttek-dice-face">Red</span>', $html);
         self::assertSame('@TilttekDice/roll_detail.html.twig', DiceExtension::TEMPLATE);
+    }
+
+    public function testTheInkAndTheTextureAreShownOnlyWhenThereIsOne(): void
+    {
+        $loader = new FilesystemLoader();
+        $loader->addPath(\dirname(__DIR__, 3).'/templates', 'TilttekDice');
+
+        $member = ResourceReference::of('member', '1');
+        $html = static function (DieAppearance $appearance) use ($loader, $member): string {
+            $dice = Dice::rolls(ScriptedEngine::randomizer(0), appearance: new readonly class($appearance) implements DiceAppearance {
+                public function __construct(private DieAppearance $appearance)
+                {
+                }
+
+                public function appearance(ResourceReference $member, int $sides): DieAppearance
+                {
+                    return $this->appearance;
+                }
+            });
+
+            return new DiceExtension($dice)->detail(new Environment($loader), $dice->roll('1d6'), $member);
+        };
+
+        self::assertStringContainsString('<ul class="tilttek-dice-set" aria-label="1d6" data-dice-appearance="Plain">', $html(new DieAppearance('Plain')));
+        self::assertStringContainsString('data-dice-appearance="Inked" style="--tilttek-dice-ink: #123456">', $html(new DieAppearance('Inked', ink: '#123456')));
+        self::assertStringContainsString('data-dice-appearance="Moss" style="--tilttek-dice-color: #2e8b57; --tilttek-dice-ink: #000000">', $html(new DieAppearance('Moss', '#2e8b57')));
+        self::assertStringContainsString('data-dice-appearance="Gold" style="--tilttek-dice-color: #aa0000; --tilttek-dice-ink: #ffd700">', $html(new DieAppearance('Gold', '#aa0000', ink: '#ffd700')));
+        self::assertStringContainsString('data-dice-appearance="Stone" data-dice-texture="stone/grain.png">', $html(new DieAppearance('Stone', texture: 'stone/grain.png')));
     }
 }

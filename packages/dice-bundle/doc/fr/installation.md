@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=f46bc139768bdd34f4d464223d62e51918c3684b311cda6cc9371e373a1a4dd6 -->
+<!-- phil-dev source-sha256=7dceadcbce19c571af74f3614caf7d89e8f326e8faede9333965fa66303391ba -->
 # Installation
 
 ## Prérequis
@@ -42,6 +42,10 @@ bin/console doctrine:migrations:migrate
 | `owner` | `varchar(320)`, nul | Qui a lancé, en `ResourceReference` ; indexée |
 | `rolled_at` | `datetime_immutable` | Quand |
 | `rounding` | `varchar(32)`, `NegativeInfinity` par défaut | Comment les divisions du lancer ont été arrondies, par le nom du `RoundingMode` de PHP |
+| `context` | `varchar(320)`, nul | Où le lancer a été fait (une table, une partie), en `ResourceReference` ; indexée avec `rolled_at` |
+
+Une application qui a la table sans la colonne `context` l'ajoute par une migration à elle ; le
+[guide de mise à niveau](upgrading.md) la donne.
 
 ## La table des macros
 

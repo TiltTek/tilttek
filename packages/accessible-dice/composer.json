@@ -27,7 +27,7 @@
         "symfony/dependency-injection": "^8.2",
         "symfony/translation-contracts": "^3.6",
         "tilttek/dice": "^0.1@dev",
-        "tilttek/dice-bundle": "^0.1@dev"
+        "tilttek/dice-bundle": "^0.1@dev || ^0.2@dev"
     },
     "require-dev": {
         "php-webdriver/webdriver": "^1.16",

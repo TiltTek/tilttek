@@ -1,8 +1,8 @@
 {#- Every die of a roll, and the text or list an instruction gave, escaped as any text. Each face reads without its
     colour: its shape and its label go with it, and the label is the text a screen reader says. The states of a die —
     dropped, rerolled, exploded, success, failure — are words, not only styles. The classes are hooks for the
-    application's stylesheet. The detail escapes its texts itself, whatever the application's autoescaping: the function
-    that renders it says its output is safe HTML. -#}
+    application's stylesheet; the colour of a member's dice comes with an ink that reads on it. The detail escapes its
+    texts itself, whatever the application's autoescaping: the function that renders it says its output is safe HTML. -#}
 {% autoescape 'html' -%}
 <div class="tilttek-dice-roll">
     {%- for expression in roll %}
@@ -17,7 +17,11 @@
         <ul class="tilttek-dice-set" aria-label="{{ set.notation }}"
             {%- if set.appearance is not null %} data-dice-appearance="{{ set.appearance.name }}"
                 {%- if set.appearance.material is not null %} data-dice-material="{{ set.appearance.material }}"{% endif %}
-                {%- if set.appearance.color is not null %} style="--tilttek-dice-color: {{ set.appearance.color }}"{% endif %}
+                {%- if set.appearance.texture is not null %} data-dice-texture="{{ set.appearance.texture }}"{% endif %}
+                {%- set colours = [] %}
+                {%- if set.appearance.color is not null %}{% set colours = colours|merge(['--tilttek-dice-color: ' ~ set.appearance.color]) %}{% endif %}
+                {%- if set.appearance.ink is not null %}{% set colours = colours|merge(['--tilttek-dice-ink: ' ~ set.appearance.ink]) %}{% endif %}
+                {%- if colours is not empty %} style="{{ colours|join('; ') }}"{% endif %}
             {%- endif %}>
             {%- for die in set.dice %}
             <li class="tilttek-dice-die{% for class in die.classes %} {{ class }}{% endfor %}" data-value="{{ die.value }}"

@@ -53,6 +53,7 @@ final class TestKernel extends Kernel
         $services = $container->services()->defaults()->autowire()->autoconfigure();
         $services->set('clock', MockClock::class)->args(['2026-11-07 03:00:00 UTC'])->public();
         $services->set(MemberDice::class);
+        $services->set(HeardRolls::class)->public();
         $services->alias('test.form.factory', 'form.factory')->public();
     }
 }

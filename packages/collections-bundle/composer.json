@@ -42,7 +42,7 @@
         "symfony/yaml": "^8.2",
         "tilttek/activity": "^0.1@dev",
         "tilttek/activity-bundle": "^0.1@dev",
-        "tilttek/dice-bundle": "^0.1@dev",
+        "tilttek/dice-bundle": "^0.1@dev || ^0.2@dev",
         "tilttek/exchange": "^0.1@dev",
         "twig/twig": "^3.21"
     },

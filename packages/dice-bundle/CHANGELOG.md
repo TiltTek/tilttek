@@ -4,6 +4,34 @@ All notable changes to `tilttek/dice-bundle` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## 0.2.0-alpha - 2026-11-14
+
+### Added
+
+- `DieAppearance` takes `ink`, the colour of the numbers written `#rrggbb`, and `texture`, a key the application
+  resolves to its own picture — 1 to 128 characters among `a-z`, `0-9`, `.`, `_`, `/` and `-`, starting with a letter
+  or a digit, without `..`, `//` or a final `/` —, after `image`, by name. `readableInk()` gives the ink, or, on a
+  coloured die without one, black or white, whichever contrasts more with the colour, at least 4.5:1; `toArray()` gives
+  the appearance with that ink.
+- `Contrast`: the contrast of two colours as WCAG 2 measures it, the relative luminance of a colour, and the ink that
+  reads on a face.
+- The context of a roll — a table, a game —: an optional `ResourceReference` given to `rollReplayable()` by name, kept
+  in the nullable column `context` of `tilttek_dice_roll`, indexed with `rolled_at`, and read by
+  `RecordedRoll::context()`.
+- `RollRecorded`, dispatched by `DiceRolls` after each replayable roll it saves when the application has an event
+  dispatcher, with the identifiers of the roll, its owner and its context.
+- `DiceRolls::rollsIn()`, a context's latest rolls, and `DiceRolls::recorded()`, rolls by their identifiers in the order
+  asked, at most 500 distinct ones at once.
+- `doc/upgrading.md`: the migration of the `context` column and the changes from 0.1 to 0.2.
+
+### Changed
+
+- `RecordedRollRepository` has `getMany()`, at most `RecordedRollRepository::MANY` identifiers, and `ofContext()`; an
+  application's own implementation of the port adds them.
+- The detail of a roll writes `--tilttek-dice-ink` next to `--tilttek-dice-color` and `data-dice-texture` on a
+  member's set, and `DiceExtension::view()` gives the appearance's `ink` and `texture`.
+- `psr/event-dispatcher` is required.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added

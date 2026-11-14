@@ -29,8 +29,26 @@ classes:
 | `is-success`, `is-failure` | success, failure |
 | `is-from-reroll`, `is-from-explosion` | — |
 
-With a member, each set carries the appearance of their dice: `data-dice-appearance`, `data-dice-material` and the
-variable `--tilttek-dice-color`. The bundle ships no stylesheet; the classes are hooks for the application's.
+With a member, each set carries the appearance of their dice:
+
+| Hook | Holds |
+|---|---|
+| `data-dice-appearance` | The name of the set |
+| `data-dice-material` | The material, when there is one |
+| `data-dice-texture` | The texture key, when there is one: the application's stylesheet maps it to a picture |
+| `--tilttek-dice-color` | The colour of the dice, when there is one |
+| `--tilttek-dice-ink` | The colour of the numbers: the ink of the appearance, or, on a coloured die without one, black or white, whichever contrasts more with the colour — at least 4.5:1 |
+
+```css
+.tilttek-dice-set[data-dice-appearance] .tilttek-dice-die {
+    background: var(--tilttek-dice-color, Canvas);
+    color: var(--tilttek-dice-ink, CanvasText);
+}
+.tilttek-dice-set[data-dice-texture="dice/marble"] .tilttek-dice-die { background-image: url(/images/dice/marble.webp); }
+```
+
+The bundle ships no stylesheet; the classes are hooks for the application's. A texture drawn under the numbers keeps
+them readable only when its colours stay close to `--tilttek-dice-color`.
 
 The words — `dropped`, `rerolled`, `exploded`, `success`, `failure` — and the faces' labels are translated in the
 configured domain when the translator is installed; untranslated, they show as written.

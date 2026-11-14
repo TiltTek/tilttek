@@ -7,6 +7,7 @@ namespace Tilttek\DiceBundle\Tests\Unit;
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Random\Engine\Secure;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
@@ -69,7 +70,7 @@ final class TilttekDiceBundleTest extends TestCase
         self::assertEquals([new Reference(DiceRoller::class), new Reference(DiceMacroRepository::class)], $container->getDefinition(DiceMacros::class)->getArguments());
         self::assertTrue($container->getDefinition(DiceMacros::class)->isPublic());
         self::assertSame([NoDiceAppearance::class, false], [(string) $container->getAlias(DiceAppearance::class), $container->getAlias(DiceAppearance::class)->isPublic()]);
-        self::assertEquals([new Reference(DiceRoller::class), new Reference('tilttek_dice.randomizer'), new Reference(RecordedRollRepository::class), new Reference('clock'), new Reference(DiceAppearance::class)], $container->getDefinition(DiceRolls::class)->getArguments());
+        self::assertEquals([new Reference(DiceRoller::class), new Reference('tilttek_dice.randomizer'), new Reference(RecordedRollRepository::class), new Reference('clock'), new Reference(DiceAppearance::class), new Reference(EventDispatcherInterface::class, ContainerInterface::NULL_ON_INVALID_REFERENCE)], $container->getDefinition(DiceRolls::class)->getArguments());
         self::assertTrue($container->getDefinition(DiceRolls::class)->isPublic());
         self::assertEquals([new Reference(DiceRolls::class)], $container->getDefinition(DiceExpressionValidator::class)->getArguments());
         self::assertSame(['validator.constraint_validator' => [[]]], $container->getDefinition(DiceExpressionValidator::class)->getTags());
