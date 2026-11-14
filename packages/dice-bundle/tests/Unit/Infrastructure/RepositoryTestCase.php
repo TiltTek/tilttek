@@ -32,6 +32,22 @@ abstract class RepositoryTestCase extends TestCase
         self::assertNull($repository->get('00000000000000000000000000000000'));
     }
 
+    public function testWhetherTheEventOfARollWasDeliveredIsKept(): void
+    {
+        $repository = $this->repository();
+        $roll = $this->roll(1, 'member:1', '2026-11-07 03:00:00');
+        $repository->save($roll);
+        $this->clear();
+
+        $found = $repository->get($roll->id());
+        self::assertFalse($found?->isDelivered());
+        $found->markDelivered();
+        $repository->save($found);
+        $this->clear();
+
+        self::assertTrue($repository->get($roll->id())?->isDelivered());
+    }
+
     public function testAnOwnersRollsAreListedTheLatestFirstAndErased(): void
     {
         $repository = $this->repository();

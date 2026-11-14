@@ -68,6 +68,10 @@ Doctrine and in memory.
 application has an event dispatcher. The event carries identifiers only — the roll's, its owner's and its context's —:
 a listener reads the roll from the journal, and a message it sends on, to Mercure or to a queue, carries the same.
 
+The event is dispatched at least once. The roll notes whether it was dispatched; a listener that fails leaves it due,
+and the same keyed call or `DiceRolls::deliver($id)` dispatches it again, to every listener. A listener is therefore
+idempotent: `$event->key()`, the roll's identifier, is the same each time.
+
 ```php
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Tilttek\DiceBundle\Application\Event\RollRecorded;

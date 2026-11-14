@@ -1,5 +1,18 @@
 # Upgrading
 
+## From 0.2.0 to 0.2.1
+
+The table `tilttek_dice_roll` has a `delivered` column: whether the `RollRecorded` of the roll was dispatched. Generate
+the migration with `doctrine:migrations:diff`, or write it by hand. On MySQL, MariaDB and PostgreSQL:
+
+```sql
+ALTER TABLE tilttek_dice_roll ADD delivered BOOLEAN DEFAULT TRUE NOT NULL;
+```
+
+The rows already kept count as dispatched. `rollReplayable()` takes a `key` by name, after the context, and
+`DiceRolls::deliver()` dispatches an event a listener failed to take; a call without a key works unchanged. A
+listener of `RollRecorded` may hear the same roll twice, and must be idempotent.
+
 ## From 0.1 to 0.2
 
 ### The journal's table

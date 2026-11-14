@@ -4,6 +4,23 @@ All notable changes to `tilttek/dice-bundle` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Added
+
+- `rollReplayable()` takes a `key`, by name, after the context: the roll's identifier is drawn from the owner and the
+  key, and the same call again returns the roll kept instead of rolling again.
+- `DiceRolls::deliver()`: the `RollRecorded` of a roll dispatched again when a listener failed to take it; false when
+  it was dispatched already.
+- `RecordedRoll::isDelivered()` and `markDelivered()`, kept in the new `delivered` column of `tilttek_dice_roll`, true
+  for the rows already kept; `RollRecorded::key()`, the roll's identifier.
+
+### Fixed
+
+- A listener of `RollRecorded` that failed no longer loses the event of a roll already saved: the roll keeps its event
+  due, and the same keyed call or `deliver()` dispatches it again. `RollRecorded` is dispatched at least once, and its
+  listeners must be idempotent; `doc/upgrading.md` gives the migration of the column.
+
 ## 0.2.0-alpha - 2026-11-14
 
 ### Added

@@ -14,7 +14,8 @@ use Tilttek\Dice\Replay\ReplayableRoll;
 /**
  * A replayable roll in the journal: its identifier, its expression in the canonical form, its seed, how its divisions
  * rounded, its result as the library writes it, who rolled it and where — a table, a game —, each an opaque reference
- * the application gives, or none, and when.
+ * the application gives, or none, and when; and whether its `RollRecorded` was dispatched, kept with the roll so that
+ * the event survives a listener that failed. A row written before the column was there counts as dispatched.
  */
 #[ORM\Entity]
 #[ORM\Table(name: self::TABLE)]
@@ -42,9 +43,11 @@ final class RecordedRoll
         #[ORM\Column(name: 'rolled_at')]
         private readonly DateTimeImmutable $rolledAt,
         #[ORM\Column(name: 'rounding', length: 32, options: ['default' => 'NegativeInfinity'])]
-        private readonly string $rounding = 'NegativeInfinity',
+        private readonly string $rounding,
         #[ORM\Column(name: 'context', length: 320, nullable: true)]
-        private readonly ?string $context = null,
+        private readonly ?string $context,
+        #[ORM\Column(name: 'delivered', options: ['default' => true])]
+        private bool $delivered,
     ) {
     }
 
@@ -53,7 +56,23 @@ final class RecordedRoll
      */
     public static function record(ReplayableRoll $roll, ?ResourceReference $owner, DateTimeImmutable $at, ?ResourceReference $context = null): self
     {
-        return new self($roll->id, $roll->expression(), $roll->seed->hex(), $roll->result->toArray(), $owner?->toString(), $at, $roll->result->rounding->name, $context?->toString());
+        return new self($roll->id, $roll->expression(), $roll->seed->hex(), $roll->result->toArray(), $owner?->toString(), $at, $roll->result->rounding->name, $context?->toString(), false);
+    }
+
+    /**
+     * Whether the roll's `RollRecorded` was dispatched; a roll just recorded waits for it.
+     */
+    public function isDelivered(): bool
+    {
+        return $this->delivered;
+    }
+
+    /**
+     * Notes that the roll's `RollRecorded` was dispatched; the repository's `save()` keeps it.
+     */
+    public function markDelivered(): void
+    {
+        $this->delivered = true;
     }
 
     public function id(): string

@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=e73b0eef9465d91d0ebd783e7de43ff89db4b851ab3ffd2de6afc99ebae4163a -->
+<!-- phil-dev source-sha256=c4fb737d6bdd29945ace40c857b0fcc03696685e6b950668565572e770ed4b7f -->
 # Points d'extension
 
 ## Les dés d'un membre
@@ -71,6 +71,10 @@ peut lui donner pour alias sa propre implémentation ; celles du bundle sont sur
 quand l'application a un répartiteur d'événements. L'événement ne porte que des identifiants, ceux du lancer, de son
 propriétaire et de son contexte : un écouteur lit le lancer dans le journal, et un message qu'il transmet, à Mercure
 ou à une file, porte les mêmes.
+
+L'événement est émis au moins une fois. Le lancer note s'il a été émis ; un écouteur qui échoue le laisse dû, et le
+même appel avec sa clé, ou `DiceRolls::deliver($id)`, l'émet de nouveau, à tous les écouteurs. Un écouteur est donc
+idempotent : `$event->key()`, l'identifiant du lancer, est le même à chaque fois.
 
 ```php
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;

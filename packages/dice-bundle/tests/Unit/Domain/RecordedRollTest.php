@@ -39,7 +39,7 @@ final class RecordedRollTest extends TestCase
             self::assertSame($mode, RecordedRoll::record($roll, null, $at)->rounding());
         }
 
-        $recorded = Closure::bind(static fn (): RecordedRoll => new RecordedRoll(str_repeat('0', 32), '1d6', str_repeat('0', 64), [], null, $at, 'Sideways'), null, RecordedRoll::class)();
+        $recorded = Closure::bind(static fn (): RecordedRoll => new RecordedRoll(str_repeat('0', 32), '1d6', str_repeat('0', 64), [], null, $at, 'Sideways', null, true), null, RecordedRoll::class)();
 
         self::assertSame(RoundingMode::NegativeInfinity, $recorded->rounding());
     }

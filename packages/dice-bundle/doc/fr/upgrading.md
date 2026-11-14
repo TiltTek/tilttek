@@ -1,5 +1,18 @@
-<!-- phil-dev source-sha256=bca4639ce12837fede44a2983daba37fd213ac3210267aa67f1d147eabf06b4d -->
+<!-- phil-dev source-sha256=33ae488d2f0067627a77c3245d93df40e51c628030feec846fa581550ca0dc92 -->
 # Mise à niveau
+
+## De 0.2.0 à 0.2.1
+
+La table `tilttek_dice_roll` a une colonne `delivered` : si le `RollRecorded` du lancer a été émis. Générez la
+migration avec `doctrine:migrations:diff`, ou écrivez-la à la main. Sur MySQL, MariaDB et PostgreSQL :
+
+```sql
+ALTER TABLE tilttek_dice_roll ADD delivered BOOLEAN DEFAULT TRUE NOT NULL;
+```
+
+Les lignes déjà gardées comptent comme émises. `rollReplayable()` prend une clé `key` par son nom, après le contexte,
+et `DiceRolls::deliver()` émet un événement qu'un écouteur n'a pas pu prendre ; un appel sans clé marche sans
+changement. Un écouteur de `RollRecorded` peut entendre deux fois le même lancer, et doit être idempotent.
 
 ## De 0.1 à 0.2
 

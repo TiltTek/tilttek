@@ -35,9 +35,10 @@ final class DoctrineRepositoryTest extends RepositoryTestCase
         $table = $schema->getTable(RecordedRoll::TABLE);
         self::assertSame(['id'], $table->getPrimaryKey()?->getColumns());
         self::assertSame(
-            ['id' => [32, true], 'expression' => [null, true], 'seed' => [64, true], 'result' => [null, true], 'owner' => [320, false], 'rolled_at' => [null, true], 'rounding' => [32, true], 'context' => [320, false]],
+            ['id' => [32, true], 'expression' => [null, true], 'seed' => [64, true], 'result' => [null, true], 'owner' => [320, false], 'rolled_at' => [null, true], 'rounding' => [32, true], 'context' => [320, false], 'delivered' => [null, true]],
             array_merge(...array_map(static fn (Column $column): array => [$column->getName() => [$column->getLength(), $column->getNotnull()]], $table->getColumns())),
         );
+        self::assertTrue((bool) $table->getColumn('delivered')->getDefault());
         $columns = static fn (string $index): array => array_map(static fn (IndexedColumn $column): string => $column->getColumnName()->getIdentifier()->getValue(), $table->getIndex($index)->getIndexedColumns());
         self::assertSame(['owner'], $columns('tilttek_dice_roll_owner'));
         self::assertSame(['context', 'rolled_at'], $columns('tilttek_dice_roll_context'));

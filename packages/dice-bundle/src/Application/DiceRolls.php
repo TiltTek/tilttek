@@ -90,22 +90,55 @@ final readonly class DiceRolls
     }
 
     /**
-     * Rolls and keeps the roll in the journal, to be replayed by its identifier, then dispatches `RollRecorded`.
+     * Rolls and keeps the roll in the journal, to be replayed by its identifier, then dispatches `RollRecorded` and
+     * notes it dispatched.
+     *
+     * With a key — the request's, the turn's —, the roll's identifier is drawn from the owner and the key: the same
+     * call again, after a failure or a retry, does not roll again but returns the roll kept, and dispatches its
+     * `RollRecorded` when it was not yet. A key is the owner's: another owner rolls anew under the same key.
      *
      * @param ?ResourceReference $context where the roll is made — a table, a game —, or nowhere in particular
+     * @param ?string            $key     what makes the call the same one again, for the owner; none rolls anew each time
      *
      * @throws InvalidExpression
      * @throws LimitExceeded
      * @throws CannotRoll
      */
-    public function rollReplayable(Pool|string $pool, ?ResourceReference $owner = null, ?string $locale = null, RoundingMode $rounding = RoundingMode::NegativeInfinity, ?ResourceReference $context = null): RecordedRoll
+    public function rollReplayable(Pool|string $pool, ?ResourceReference $owner = null, ?string $locale = null, RoundingMode $rounding = RoundingMode::NegativeInfinity, ?ResourceReference $context = null, ?string $key = null): RecordedRoll
     {
-        $roll = $this->roller->rollReplayable($this->pool($pool, $locale), $this->secure, $rounding);
+        $pool = $this->pool($pool, $locale);
+
+        if (null === $key) {
+            $roll = $this->roller->rollReplayable($pool, $this->secure, $rounding);
+        } else {
+            $id = $this->keyed($owner, $key);
+            $kept = $this->rolls->get($id);
+
+            if ($kept instanceof RecordedRoll) {
+                $this->dispatch($kept);
+
+                return $kept;
+            }
+
+            $roll = $this->roller->replay($id, $pool, Seed::generate($this->secure), $rounding);
+        }
+
         $recorded = RecordedRoll::record($roll, $owner, $this->clock->now(), $context);
         $this->rolls->save($recorded);
-        $this->events?->dispatch(new RollRecorded($recorded->id(), $owner, $context));
+        $this->dispatch($recorded);
 
         return $recorded;
+    }
+
+    /**
+     * Dispatches the `RollRecorded` of a roll whose event a listener failed to take; false when it was dispatched
+     * already.
+     *
+     * @throws UnknownRoll when the journal holds no roll with this identifier
+     */
+    public function deliver(string $id): bool
+    {
+        return $this->dispatch($this->rolls->get($id) ?? throw UnknownRoll::withId($id));
     }
 
     /**
@@ -202,6 +235,30 @@ final readonly class DiceRolls
     public function appearance(ResourceReference $member, int $sides, ?Accessibility $viewer = null): ?DieAppearance
     {
         return $this->appearance->appearance($member, $sides, $viewer);
+    }
+
+    /**
+     * The identifier of the owner's roll under this key: 32 hexadecimal digits, as the replayer draws them.
+     */
+    private function keyed(?ResourceReference $owner, string $key): string
+    {
+        return substr(hash('sha256', json_encode([$owner?->toString(), $key], \JSON_THROW_ON_ERROR)), 0, 32);
+    }
+
+    /**
+     * Dispatches the roll's event when it waits for it, then notes it dispatched; a listener that fails leaves it due.
+     */
+    private function dispatch(RecordedRoll $recorded): bool
+    {
+        if ($recorded->isDelivered()) {
+            return false;
+        }
+
+        $this->events?->dispatch(new RollRecorded($recorded->id(), $recorded->owner(), $recorded->context()));
+        $recorded->markDelivered();
+        $this->rolls->save($recorded);
+
+        return true;
     }
 
     private function pool(Pool|string $pool, ?string $locale): Pool

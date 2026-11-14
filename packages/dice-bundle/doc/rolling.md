@@ -25,6 +25,7 @@ $dice->translate($pool, 'roll20', RoundingMode::PositiveInfinity)->notices;     
 ```php
 $recorded = $dice->rollReplayable('4d6kh3', $member);   // kept in the journal
 $atTable = $dice->rollReplayable('1d20', $member, context: $table);
+$once = $dice->rollReplayable('1d20', $member, key: $requestKey);   // rolled once for this key
 $replay = $dice->replay($recorded->id());
 $replay->result;      // the roll, die for die
 $replay->matches();   // whether it gave what the journal holds
@@ -35,6 +36,15 @@ the clock, its rounding included; the owner and the context — where the roll i
 `ResourceReference`, are optional. It then dispatches `RollRecorded`, when the application has an event dispatcher:
 see the [extension points](extension-points.md#a-roll-recorded). `replay()` rolls it again from its expression, its seed
 and its rounding, and raises `UnknownRoll` for an identifier the journal does not hold.
+
+With a `key` — the request's idempotency key, a turn's —, the roll's identifier is drawn from the owner and the key.
+The same call again, after a listener failed or a request was retried, does not roll again: it returns the roll kept,
+and dispatches its `RollRecorded` if it was not dispatched yet. A key is the owner's: another owner, or a roll with no
+owner, rolls anew under the same key. Without a key, each call rolls anew.
+
+The roll notes whether its `RollRecorded` was dispatched: when a listener fails, the roll stays in the journal with its
+event due, and the same keyed call, or `deliver($id)`, dispatches it again — `deliver()` returns false when it was
+dispatched already. Listeners are therefore idempotent.
 
 ## Reading the journal
 
