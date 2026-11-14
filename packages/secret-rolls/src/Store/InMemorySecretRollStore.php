@@ -9,6 +9,7 @@ use Tilttek\SecretRolls\Contract\SecretRollStore;
 use Tilttek\SecretRolls\Exception\JournalConflict;
 use Tilttek\SecretRolls\HiddenRoll;
 use Tilttek\SecretRolls\Journal\JournalEntry;
+use Tilttek\SecretRolls\Journal\JournalHead;
 
 /**
  * The journals and the sealed rolls in memory, for tests and for a table that lives in one process.
@@ -18,6 +19,9 @@ final class InMemorySecretRollStore implements SecretRollStore
     /** @var array<string, list<JournalEntry>> */
     private array $entries = [];
 
+    /** @var array<string, JournalHead> */
+    private array $heads = [];
+
     /** @var array<string, HiddenRoll> */
     private array $hidden = [];
 
@@ -25,6 +29,12 @@ final class InMemorySecretRollStore implements SecretRollStore
     public function entries(string $scene): array
     {
         return $this->entries[$scene] ?? [];
+    }
+
+    #[Override]
+    public function head(string $scene): JournalHead
+    {
+        return $this->heads[$scene] ?? new JournalHead($scene);
     }
 
     #[Override]
@@ -37,13 +47,14 @@ final class InMemorySecretRollStore implements SecretRollStore
     #[Override]
     public function append(JournalEntry $entry): void
     {
-        $expected = \count($this->entries($entry->scene)) + 1;
+        $head = $this->head($entry->scene);
 
-        if ($entry->position !== $expected) {
-            throw JournalConflict::at($entry->scene, $entry->position, $expected);
+        if ($entry->position !== $head->nextPosition()) {
+            throw JournalConflict::at($entry->scene, $entry->position, $head->nextPosition());
         }
 
         $this->entries[$entry->scene][] = $entry;
+        $this->heads[$entry->scene] = $head->after($entry);
     }
 
     #[Override]
