@@ -20,9 +20,9 @@ use Tilttek\ProgressionBundle\Infrastructure\Doctrine\ProgressionTables;
 
 /**
  * The progression's part of an access or erasure request. The data subject is a member, referenced under the kind the
- * configuration names (`member` by default). The export lists the member's experience gains, the milestones they
- * reached and where they stand with each streak; the erasure deletes their gains and those their gestures brought to
- * a character, their milestones, and their streaks — gestures, frozen days and states.
+ * configuration names (`member` by default). The export lists the member's experience gains and those their gestures
+ * brought to a character, the milestones they reached and those their gestures reached for a character, and where
+ * they stand with each streak: what the erasure deletes, with their streaks — gestures, frozen days and states.
  */
 final readonly class ProgressionPrivacy implements PersonalDataExporter, PersonalDataEraser
 {
@@ -47,8 +47,8 @@ final readonly class ProgressionPrivacy implements PersonalDataExporter, Persona
     public function export(DataSubject $subject): array
     {
         $member = $this->member($subject);
-        $gains = $this->progression->gains($member);
-        $milestones = $this->progression->milestones($member);
+        $gains = $this->progression->gainsOfMember($member);
+        $milestones = $this->progression->milestonesOfMember($member);
         $streaks = array_values(array_filter($this->progression->streaks($member), static fn (StreakStatus $status): bool => 0 < $status->best));
 
         if ([] === $gains && [] === $milestones && [] === $streaks) {

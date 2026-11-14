@@ -38,13 +38,15 @@ final class TablesTest extends TestCase
         $schema = ProgressionTables::configure(new Schema());
 
         $gains = $schema->getTable(ProgressionTables::GAINS);
-        self::assertSame(['track', 'rule_name', 'activity', 'subject', 'member', 'amount', 'occurred_at', 'season'], $this->columns($gains));
+        self::assertSame(['track', 'rule_name', 'activity', 'subject', 'member', 'amount', 'occurred_at', 'season', 'delivered'], $this->columns($gains));
         self::assertSame([64, 64, 255, 320, 320, 64], [$gains->getColumn('track')->getLength(), $gains->getColumn('rule_name')->getLength(), $gains->getColumn('activity')->getLength(), $gains->getColumn('subject')->getLength(), $gains->getColumn('member')->getLength(), $gains->getColumn('season')->getLength()]);
         self::assertSame(['tilttek_progression_gain_subject', 'tilttek_progression_gain_member', 'tilttek_progression_gain_activity', 'tilttek_progression_gain_occurred', 'primary'], $this->indexes($gains));
         self::assertSame(['track', 'rule_name', 'activity'], $this->primary($gains));
+        self::assertTrue((bool) $gains->getColumn('delivered')->getDefault());
 
         $milestones = $schema->getTable(ProgressionTables::MILESTONES);
-        self::assertSame(['track', 'milestone', 'subject', 'season', 'member', 'reached_at', 'activity'], $this->columns($milestones));
+        self::assertTrue((bool) $milestones->getColumn('delivered')->getDefault());
+        self::assertSame(['track', 'milestone', 'subject', 'season', 'member', 'reached_at', 'activity', 'delivered'], $this->columns($milestones));
         self::assertSame(['subject', 'track', 'milestone', 'season'], $this->primary($milestones));
         self::assertSame([64, 64, 320, 64, 320, 255], $this->lengths($milestones, 'track', 'milestone', 'subject', 'season', 'member', 'activity'));
         self::assertSame(['tilttek_progression_milestone_member', 'primary'], $this->indexes($milestones));

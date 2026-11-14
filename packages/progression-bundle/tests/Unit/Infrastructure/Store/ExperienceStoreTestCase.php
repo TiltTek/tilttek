@@ -133,6 +133,48 @@ abstract class ExperienceStoreTestCase extends TestCase
         ], $store->of(self::ref('member:1')));
     }
 
+    public function testTheNoticeOfAGainIsDueUntilItIsDelivered(): void
+    {
+        $store = $this->store();
+        $store->add(self::gain('player', 'games', 'member:1', 'k2', 20, '2026-11-01 10:00', '2026-11'));
+        $store->add(self::gain('player', 'games', 'member:1', 'k1', 10, '2026-10-01 10:00', '2026-10'));
+        $store->add(self::gain('player', 'games', 'member:2', 'k3', 10, '2026-10-01 10:00'));
+        $store->add(self::gain('player', 'games', 'member:1', 'k4', 5, '2026-11-02 10:00'));
+
+        self::assertEquals([
+            self::gain('player', 'games', 'member:1', 'k1', 10, '2026-10-01 10:00', '2026-10'),
+            self::gain('player', 'games', 'member:1', 'k2', 20, '2026-11-01 10:00', '2026-11'),
+            self::gain('player', 'games', 'member:1', 'k4', 5, '2026-11-02 10:00'),
+        ], $store->undelivered(self::ref('member:1')));
+
+        $store->markDelivered(self::gain('player', 'games', 'member:1', 'k2', 20, '2026-11-01 10:00', '2026-11'));
+        $store->markDelivered(self::gain('player', 'games', 'member:1', 'k2', 20, '2026-11-01 10:00', '2026-11'));
+        $store->markDelivered(self::gain('player', 'other', 'member:1', 'k1', 10, '2026-10-01 10:00', '2026-10'));
+        self::assertSame(['k1', 'k4'], array_map(static fn (Gain $gain): string => $gain->activity, $store->undelivered(self::ref('member:1'))));
+        self::assertSame(['k3'], array_map(static fn (Gain $gain): string => $gain->activity, $store->undelivered(self::ref('member:2'))));
+        self::assertSame(35, $store->lifetime('player', self::ref('member:1')));
+
+        $store->remove('k1');
+        $store->forget(self::at('2026-11-02 00:00'));
+        $store->eraseMember(self::ref('member:2'));
+        self::assertSame([], $store->undelivered(self::ref('member:1')));
+        self::assertSame([], $store->undelivered(self::ref('member:2')));
+        self::assertTrue($store->add(self::gain('player', 'games', 'member:1', 'k4', 5, '2026-11-02 10:00')));
+        self::assertCount(1, $store->undelivered(self::ref('member:1')));
+    }
+
+    public function testTheGainsOfAMemberForTheirExport(): void
+    {
+        $store = $this->store();
+        $store->add(new Gain('character', 'sessions', self::ref('character:9'), self::ref('member:1'), 'k2', 300, self::at('2026-10-02 10:00')));
+        $store->add(self::gain('player', 'games', 'member:1', 'k1', 10, '2026-10-01 10:00'));
+        $store->add(new Gain('character', 'sessions', self::ref('character:8'), self::ref('member:2'), 'k3', 1, self::at('2026-10-01 10:00')));
+
+        self::assertSame(['k1', 'k2'], array_map(static fn (Gain $gain): string => $gain->activity, $store->ofMember(self::ref('member:1'))));
+        self::assertSame(['k3'], array_map(static fn (Gain $gain): string => $gain->activity, $store->ofMember(self::ref('member:2'))));
+        self::assertSame(['k2'], array_map(static fn (Gain $gain): string => $gain->activity, $store->ofMember(self::ref('character:9'))));
+    }
+
     public function testAMemberIsErased(): void
     {
         $store = $this->store();

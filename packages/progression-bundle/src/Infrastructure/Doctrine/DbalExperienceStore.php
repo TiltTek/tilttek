@@ -16,7 +16,8 @@ use Tilttek\Progression\Store\Total;
 
 /**
  * The experience in `tilttek_progression_gain`, through a DBAL connection: one row per track, rule and activity,
- * inserted by a statement that writes nothing when the row is already there; the totals are sums, never fields.
+ * inserted by a statement that writes nothing when the row is already there; the totals are sums, never fields. A row
+ * is inserted with `delivered` false, and turned true once the observer was told what it brought.
  */
 final readonly class DbalExperienceStore implements ExperienceStore
 {
@@ -31,9 +32,25 @@ final readonly class DbalExperienceStore implements ExperienceStore
     public function add(Gain $gain): bool
     {
         return 0 < $this->connection->executeStatement(
-            Rows::ignoring($this->connection->getDatabasePlatform(), \sprintf('INTO %s (%s) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', ProgressionTables::GAINS, self::COLUMNS), 'track, rule_name, activity'),
-            [$gain->track, $gain->rule, $gain->subject->toString(), $gain->member->toString(), $gain->activity, $gain->amount, Rows::utc($gain->occurredAt), $gain->season],
-            [ParameterType::STRING, ParameterType::STRING, ParameterType::STRING, ParameterType::STRING, ParameterType::STRING, ParameterType::INTEGER, Types::DATETIME_IMMUTABLE, ParameterType::STRING],
+            Rows::ignoring($this->connection->getDatabasePlatform(), \sprintf('INTO %s (%s, delivered) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', ProgressionTables::GAINS, self::COLUMNS), 'track, rule_name, activity'),
+            [$gain->track, $gain->rule, $gain->subject->toString(), $gain->member->toString(), $gain->activity, $gain->amount, Rows::utc($gain->occurredAt), $gain->season, false],
+            [ParameterType::STRING, ParameterType::STRING, ParameterType::STRING, ParameterType::STRING, ParameterType::STRING, ParameterType::INTEGER, Types::DATETIME_IMMUTABLE, ParameterType::STRING, ParameterType::BOOLEAN],
+        );
+    }
+
+    #[Override]
+    public function undelivered(ResourceReference $subject): array
+    {
+        return $this->gains(\sprintf('SELECT %s FROM %s WHERE subject = ? AND delivered = ? ORDER BY occurred_at, track, rule_name', self::COLUMNS, ProgressionTables::GAINS), [$subject->toString(), false], [ParameterType::STRING, ParameterType::BOOLEAN]);
+    }
+
+    #[Override]
+    public function markDelivered(Gain $gain): void
+    {
+        $this->connection->executeStatement(
+            \sprintf('UPDATE %s SET delivered = ? WHERE track = ? AND rule_name = ? AND activity = ? AND delivered = ?', ProgressionTables::GAINS),
+            [true, $gain->track, $gain->rule, $gain->activity, false],
+            [ParameterType::BOOLEAN, ParameterType::STRING, ParameterType::STRING, ParameterType::STRING, ParameterType::BOOLEAN],
         );
     }
 
@@ -108,6 +125,12 @@ final readonly class DbalExperienceStore implements ExperienceStore
     }
 
     #[Override]
+    public function ofMember(ResourceReference $member): array
+    {
+        return $this->gains(\sprintf('SELECT %s FROM %s WHERE subject = ? OR member = ? ORDER BY occurred_at, track, rule_name', self::COLUMNS, ProgressionTables::GAINS), [$member->toString(), $member->toString()]);
+    }
+
+    #[Override]
     public function forget(?DateTimeImmutable $since): int
     {
         if (!$since instanceof DateTimeImmutable) {
@@ -124,11 +147,12 @@ final readonly class DbalExperienceStore implements ExperienceStore
     }
 
     /**
-     * @param list<mixed> $parameters
+     * @param list<mixed>         $parameters
+     * @param list<ParameterType> $types
      *
      * @return list<Gain>
      */
-    private function gains(string $sql, array $parameters): array
+    private function gains(string $sql, array $parameters, array $types = []): array
     {
         return array_map(
             static fn (array $row): Gain => new Gain(
@@ -141,7 +165,7 @@ final readonly class DbalExperienceStore implements ExperienceStore
                 Rows::date($row['occurred_at']),
                 Rows::text($row['season']),
             ),
-            $this->connection->fetchAllAssociative($sql, $parameters),
+            $this->connection->fetchAllAssociative($sql, $parameters, $types),
         );
     }
 

@@ -4,6 +4,26 @@ All notable changes to `tilttek/progression` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `ExperienceStore` and `MilestoneStore` keep the notice of each gain and milestone while it is due: `add()` and
+  `reach()` keep it due, `undelivered($subject)` lists them and `markDelivered()` notes one given. Both also give
+  `ofMember($member)`, the rows whose subject or member is the member. A store written for 0.1 implements the three
+  methods of each.
+- `ProgressionProjection` tells the observer at least once: the gain and the milestones it passes are written with
+  their notices due before the observer is told, and noted delivered after. An observer that fails leaves them due;
+  the entry handed again, the subject's next activity on the track, or `deliver()` tells them, the levels of several
+  gains due at once. `StreakKeeper` tells a broken streak before it saves the state, so that a failed observer is told
+  again. Observers must be idempotent.
+
+### Added
+
+- `ProgressionProjection::deliver()`: the notices a subject is owed given to the observer, to resume after a failure.
+- `Progression::gainsOfMember()` and `milestonesOfMember()`: what the member and their gestures earned, a character's
+  included, for an export.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added

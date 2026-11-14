@@ -10,14 +10,27 @@ use Tilttek\Progression\Experience\Gain;
 
 /**
  * Where the experience is kept: one gain per track, rule and activity, written once even when the journal hands the
- * activity twice, and never spent.
+ * activity twice, and never spent; each gain with whether the observer was told what it brought.
  */
 interface ExperienceStore
 {
     /**
-     * Keeps the gain; false when the activity already brought one to this track by this rule.
+     * Keeps the gain, its notice due until `markDelivered()`; false when the activity already brought one to this track
+     * by this rule.
      */
     public function add(Gain $gain): bool;
+
+    /**
+     * The subject's gains whose notice is due, in the order they occurred.
+     *
+     * @return list<Gain>
+     */
+    public function undelivered(ResourceReference $subject): array;
+
+    /**
+     * Notes that the observer was told what the gain brought; nothing when the store does not hold it.
+     */
+    public function markDelivered(Gain $gain): void;
 
     /**
      * Removes every gain of the activity, for its cancellation, and returns them.
@@ -62,6 +75,14 @@ interface ExperienceStore
      * @return list<Gain>
      */
     public function of(ResourceReference $subject): array;
+
+    /**
+     * The gains whose subject is the member and those the member's gestures brought to another subject — a character
+     * —, in the order they occurred, for the member's export.
+     *
+     * @return list<Gain>
+     */
+    public function ofMember(ResourceReference $member): array;
 
     /**
      * Forgets the gains of the activities from `since` on — all of them when `since` is null —, before a rebuild.

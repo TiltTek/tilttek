@@ -30,6 +30,14 @@ use Tilttek\Progression\Streak\TimezoneResolver;
  * When a rule changes, `Projector::rebuild()` forgets the experience and the streak days of the period and replays
  * its activity under the new rules. While it replays the entries written before the reset, only the levels above
  * those held before are told, and no broken streak is: the members were told then.
+ *
+ * The observer is told of a level gained and of a milestone at least once. A gain is kept with its notice due, and a
+ * milestone reached likewise, both before the observer is told; each is noted delivered once the observer was told.
+ * When the observer fails, the notices stay due: the entry handed again — the same request repeated, or a catch-up —,
+ * the subject's next activity, or `deliver()` gives them. The levels the gains still due brought are told at once,
+ * from the level before the first of them to the level after the last. The observer may thus be told twice of the
+ * same change, and must be idempotent: it recognises a level by its track, subject, season and number, a milestone by
+ * its track, code, subject and season. A level lost is told once, when the cancellation is applied.
  */
 final class ProgressionProjection implements Projection
 {
@@ -93,8 +101,10 @@ final class ProgressionProjection implements Projection
             }
 
             foreach ($track->matching($activity) as $rule) {
-                $this->earn($track, $rule, $subject, $entry, $replaying);
+                $this->earn($track, $rule, $subject, $entry);
             }
+
+            $this->tell($subject, $replaying);
         }
 
         foreach ($this->streaks->rules()->all() as $rule) {
@@ -121,6 +131,16 @@ final class ProgressionProjection implements Projection
     }
 
     /**
+     * Gives the observer the notices the subject is still owed — the levels its gains due brought, then its milestones
+     * due —; returns how many gains and milestones were settled. A notice of a track the configuration no longer holds
+     * is let go without the observer.
+     */
+    public function deliver(ResourceReference $subject): int
+    {
+        return $this->tell($subject, false);
+    }
+
+    /**
      * Forgets what the last reset kept for its replay, the levels held before it and its moment. A rebuild resets and replays in one call; a
      * long-running process, such as a worker that serves one request after another, calls this between two of them,
      * so that the activity of the next is told as new.
@@ -131,7 +151,10 @@ final class ProgressionProjection implements Projection
         $this->resetAt = null;
     }
 
-    private function earn(Track $track, ExperienceRule $rule, ResourceReference $subject, Entry $entry, bool $replaying): void
+    /**
+     * Keeps the gain the rule gives the subject, with the milestones it reaches, each with its notice due.
+     */
+    private function earn(Track $track, ExperienceRule $rule, ResourceReference $subject, Entry $entry): void
     {
         $activity = $entry->activity;
         $season = $track->seasons?->at($activity->occurredAt)->code ?? '';
@@ -152,19 +175,65 @@ final class ProgressionProjection implements Projection
             return;
         }
 
-        $from = $track->curve->level($before)->number;
-        $to = $track->curve->level($before + $amount)->number;
-        if ($to > $from && (!$replaying || $to > ($this->held[$track->name][$subject->toString()][$season] ?? $from))) {
-            $this->held[$track->name][$subject->toString()][$season] = $to;
-            $this->observer?->leveledUp(new LevelChange($track->name, $subject, $season, $from, $to, $activity->occurredAt, $activity->key->value));
+        foreach ($track->milestonesBetween($before, $before + $amount) as $milestone) {
+            $this->milestones->reach(new ReachedMilestone($track->name, $milestone->code, $subject, $activity->member, $season, $activity->occurredAt, $activity->key->value));
+        }
+    }
+
+    /**
+     * Tells the observer the levels the subject's gains due brought, by track and season, then its milestones due, and
+     * notes each delivered.
+     */
+    private function tell(ResourceReference $subject, bool $replaying): int
+    {
+        $due = [];
+
+        foreach ($this->experience->undelivered($subject) as $gain) {
+            $due[json_encode([$gain->track, $gain->season], \JSON_THROW_ON_ERROR)][] = $gain;
         }
 
-        foreach ($track->milestonesBetween($before, $before + $amount) as $milestone) {
-            $reached = new ReachedMilestone($track->name, $milestone->code, $subject, $activity->member, $season, $activity->occurredAt, $activity->key->value);
+        $settled = 0;
 
-            if ($this->milestones->reach($reached)) {
+        foreach ($due as $gains) {
+            if ($this->tracks->has($gains[0]->track)) {
+                $this->leveled($this->tracks->get($gains[0]->track)->curve, $subject, $gains, $replaying);
+            }
+
+            foreach ($gains as $gain) {
+                $this->experience->markDelivered($gain);
+                ++$settled;
+            }
+        }
+
+        foreach ($this->milestones->undelivered($subject) as $reached) {
+            if ($this->tracks->has($reached->track)) {
                 $this->observer?->milestoneReached($reached);
             }
+
+            $this->milestones->markDelivered($reached);
+            ++$settled;
+        }
+
+        return $settled;
+    }
+
+    /**
+     * Tells the level the subject gained on a track and in a season by these gains, still due, in the order they
+     * occurred: from the level before the first to the level now.
+     *
+     * @param non-empty-list<Gain> $gains
+     */
+    private function leveled(Curve $curve, ResourceReference $subject, array $gains, bool $replaying): void
+    {
+        $last = $gains[\count($gains) - 1];
+        $season = $last->season;
+        $after = $this->experience->total($last->track, $subject, $season);
+        $from = $curve->level($after - array_sum(array_map(static fn (Gain $gain): int => $gain->amount, $gains)))->number;
+        $to = $curve->level($after)->number;
+
+        if ($to > $from && (!$replaying || $to > ($this->held[$last->track][$subject->toString()][$season] ?? $from))) {
+            $this->held[$last->track][$subject->toString()][$season] = $to;
+            $this->observer?->leveledUp(new LevelChange($last->track, $subject, $season, $from, $to, $last->occurredAt, $last->activity));
         }
     }
 

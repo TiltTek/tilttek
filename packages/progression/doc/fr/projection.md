@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=96b9ee36e7db6a192509db8b3b6966415526989e2c2be6d7d90501223a815979 -->
+<!-- phil-dev source-sha256=4e87c9ead6fe8894223069980cf9bd9c0b6a1b6242b0be56dc2873085d056eb8 -->
 # La projection
 
 `ProgressionProjection` est une projection de `tilttek/activity` : le journal lui remet chaque entrée que lit son
@@ -18,6 +18,22 @@ Pour chaque piste dont les règles correspondent, par nom, et dont l'activité a
 
 Pour chaque série dont la règle correspond, l'unité du membre (dans son fuseau horaire) devient active, et l'état de la
 série est mis à jour jusqu'au moment où le journal a écrit l'entrée : une série trouvée terminée est annoncée.
+
+## Des annonces données au moins une fois
+
+Un gain est écrit avec son annonce due, et chaque jalon qu'il dépasse est atteint avec son annonce due, avant que
+l'observateur soit averti ; chacun est noté remis une fois l'observateur averti. Quand l'observateur lève une
+exception, elle atteint le journal et les annonces restent dues. Elles sont données de nouveau quand l'entrée est remise
+de nouveau — la requête répétée sous la même clé d'idempotence, ou le rattrapage suivant —, avec la prochaine activité
+du sujet sur la piste, ou par `$projection->deliver($subject)`, qui renvoie combien de gains et de jalons il a réglés.
+Les niveaux qu'ont apportés les gains encore dus sont annoncés d'un coup, du niveau d'avant le premier au niveau d'après
+le dernier ; l'annonce d'une piste que la configuration ne contient plus est abandonnée. Une série brisée est annoncée
+avant que son état soit enregistré : un observateur qui a échoué est averti de nouveau par le geste ou le balayage
+suivant.
+
+L'observateur peut donc être averti deux fois du même changement, et il est idempotent : il reconnaît un niveau à sa
+piste, son sujet, sa saison et son numéro, un jalon à sa piste, son code, son sujet et sa saison, une série brisée à sa
+série, son membre et sa dernière unité active. Un niveau perdu est annoncé une fois, quand l'annulation est appliquée.
 
 ## Une annulation
 

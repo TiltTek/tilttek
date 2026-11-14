@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=ea2fbc3fa21cc5c5dbed0fc1871b23692e7d8f087dac90f85e03caebca15a58a -->
+<!-- phil-dev source-sha256=e630f74f93b99f2bcca98452315cceef71091dfdd75734d87456d408e422eee5 -->
 # Événements
 
 La projection et le balayage avertissent le répartiteur d'événements de l'application :
@@ -25,6 +25,9 @@ final readonly class RewardMilestones
 }
 ```
 
-La clé fait que l'attribution n'est écrite qu'une fois, même si l'écouteur s'exécute deux fois. Pendant une
+La clé fait que l'attribution n'est écrite qu'une fois, même si l'écouteur s'exécute deux fois — et cela peut
+arriver : `LevelUp`, `ReachedMilestone` et `StreakBroken` sont répartis au moins une fois. Un écouteur qui échoue laisse
+son annonce due, gardée dans la colonne `delivered` des gains et des jalons, et l'événement est réparti de nouveau
+quand l'entrée est remise de nouveau, avec la prochaine activité du sujet, ou par `ProgressionProjection::deliver()`. Pendant une
 reconstruction, seuls les niveaux au-dessus de ceux atteints avant sont annoncés ; ni un niveau perdu ni une série
 brisée ne le sont, et les jalons ne sont jamais annoncés de nouveau.

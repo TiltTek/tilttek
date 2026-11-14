@@ -9,6 +9,7 @@ use DateTimeZone;
 use Phil\Resource\ResourceReference;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Tilttek\Activity\Activity;
 use Tilttek\Activity\Entry;
 use Tilttek\Activity\EntryKind;
@@ -16,6 +17,7 @@ use Tilttek\Activity\VerbPattern;
 use Tilttek\Progression\Experience\Gain;
 use Tilttek\Progression\LevelChange;
 use Tilttek\Progression\ProgressionProjection;
+use Tilttek\Progression\ReachedMilestone;
 use Tilttek\Progression\Streak\ContextTimezone;
 use Tilttek\Progression\Streak\StreakKeeper;
 use Tilttek\Progression\Streak\StreakRules;
@@ -92,6 +94,20 @@ final class ProgressionProjectionTest extends TestCase
         self::assertSame(['up character character:9  1→2 k1'], $kit->recorder->told);
     }
 
+    public function testWhatAMembersGesturesBroughtACharacterIsTheirsToExport(): void
+    {
+        $kit = self::kit();
+
+        $kit->record('k1', 'member:1', 'session.played', '2026-11-02 10:00', 'character:9', 400);
+        $kit->record('k2', 'member:1', 'game.played', '2026-11-03 10:00');
+        $kit->record('k3', 'member:2', 'session.played', '2026-11-04 10:00', 'character:8', 400);
+
+        self::assertSame(['character:9', 'member:1', 'member:1'], array_map(static fn (Gain $gain): string => $gain->subject->toString(), $kit->progression->gainsOfMember($this->ref('member:1'))));
+        self::assertSame(['member:1', 'member:1'], array_map(static fn (Gain $gain): string => $gain->subject->toString(), $kit->progression->gains($this->ref('member:1'))));
+        self::assertSame(['k3'], array_map(static fn (Gain $gain): string => $gain->activity, $kit->progression->gainsOfMember($this->ref('member:2'))));
+        self::assertSame(['k2'], array_map(static fn (ReachedMilestone $reached): string => $reached->activity, $kit->progression->milestonesOfMember($this->ref('member:1'))));
+    }
+
     public function testASeasonStartsATrackAgain(): void
     {
         $kit = self::kit();
@@ -114,6 +130,79 @@ final class ProgressionProjectionTest extends TestCase
         $kit->projection->apply($entry);
 
         self::assertSame(150, $kit->experience->lifetime('player', $this->ref('member:1')));
+        self::assertSame(['up player member:1  1→2 k1', 'milestone player first member:1 '], $kit->recorder->told);
+    }
+
+    public function testANoticeTheObserverFailedToTakeIsGivenWhenTheEntryIsHandedAgain(): void
+    {
+        $kit = self::kit();
+        $entry = new Entry(1, EntryKind::Recorded, Activity::of('k1', 'member:1', 'game.played', new DateTimeImmutable('2026-11-02 10:00 UTC'), quantity: 3), new DateTimeImmutable('2026-11-02 10:00 UTC'));
+        $kit->recorder->failures = 1;
+
+        try {
+            $kit->projection->apply($entry);
+            self::fail('The observer did not fail.');
+        } catch (RuntimeException) {
+        }
+
+        self::assertCount(1, $kit->experience->undelivered($this->ref('member:1')));
+        self::assertCount(1, $kit->milestones->undelivered($this->ref('member:1')));
+
+        $kit->projection->apply($entry);
+
+        self::assertSame(150, $kit->experience->lifetime('player', $this->ref('member:1')));
+        self::assertSame(['up player member:1  1→2 k1', 'milestone player first member:1 '], $kit->recorder->told);
+        self::assertSame([], $kit->experience->undelivered($this->ref('member:1')));
+        self::assertSame([], $kit->milestones->undelivered($this->ref('member:1')));
+        self::assertSame(0, $kit->projection->deliver($this->ref('member:1')));
+    }
+
+    public function testDeliverTellsTheLevelsOfEveryGainDueAtOnce(): void
+    {
+        $kit = self::kit();
+        $member = $this->ref('member:1');
+        $kit->recorder->failures = 100;
+
+        foreach (['k1' => '2026-11-02 10:00', 'k2' => '2026-11-03 10:00', 'k3' => '2026-11-04 10:00'] as $key => $at) {
+            try {
+                $kit->projection->apply(new Entry(1, EntryKind::Recorded, Activity::of($key, 'member:1', 'game.played', new DateTimeImmutable($at.' UTC')), new DateTimeImmutable($at.' UTC')));
+            } catch (RuntimeException) {
+            }
+        }
+
+        $kit->recorder->failures = 0;
+        $kit->milestones->reach(new ReachedMilestone('gone', 'old', $member, $member, '', new DateTimeImmutable('2026-11-01 UTC'), 'k0'));
+
+        // The gains of k2 and k3 still due bring one level, told once; a milestone of a track gone is let go.
+        self::assertSame(4, $kit->projection->deliver($member));
+        self::assertSame(['up player member:1  1→2 k3', 'milestone player first member:1 '], $kit->recorder->told);
+        self::assertSame([], $kit->milestones->undelivered($member));
+        self::assertSame(0, $kit->projection->deliver($member));
+    }
+
+    public function testTheGainsDueAreToldTrackByTrack(): void
+    {
+        $kit = new Kit(Tracks::fromArray([
+            'a' => ['curve' => ['type' => 'linear', 'step' => 100], 'rules' => ['games' => ['verbs' => ['game.played'], 'experience' => 100]]],
+            'b' => ['curve' => ['type' => 'linear', 'step' => 100], 'rules' => ['games' => ['verbs' => ['game.played'], 'experience' => 100]]],
+        ], 'UTC'), self::streaks());
+        $member = $this->ref('member:1');
+        $kit->experience->add(new Gain('a', 'games', $member, $member, 'k1', 100, new DateTimeImmutable('2026-11-02 10:00 UTC')));
+        $kit->experience->add(new Gain('b', 'games', $member, $member, 'k1', 100, new DateTimeImmutable('2026-11-02 10:00 UTC')));
+
+        self::assertSame(2, $kit->projection->deliver($member));
+        self::assertSame(['up a member:1  1→2 k1', 'up b member:1  1→2 k1'], $kit->recorder->told);
+    }
+
+    public function testAnEntryHandedAgainReachesNoMilestoneBeyondItsGain(): void
+    {
+        $kit = new Kit(self::tracks(100), self::streaks());
+        $entry = new Entry(1, EntryKind::Recorded, Activity::of('k1', 'member:1', 'game.played', new DateTimeImmutable('2026-11-02 10:00 UTC')), new DateTimeImmutable('2026-11-02 10:00 UTC'));
+
+        $kit->projection->apply($entry);
+        $kit->projection->apply($entry);
+
+        self::assertSame(['first'], array_map(static fn (ReachedMilestone $reached): string => $reached->milestone, $kit->milestones->of($this->ref('member:1'))));
         self::assertSame(['up player member:1  1→2 k1', 'milestone player first member:1 '], $kit->recorder->told);
     }
 

@@ -24,5 +24,8 @@ final readonly class RewardMilestones
 }
 ```
 
-The key makes the grant written once even if the listener runs twice. During a rebuild only the levels above those
+The key makes the grant written once even if the listener runs twice — and it may: `LevelUp`, `ReachedMilestone` and
+`StreakBroken` are dispatched at least once. A listener that fails leaves its notice due, kept in the `delivered`
+column of the gains and the milestones, and the event is dispatched again when the entry is handed again, with the
+subject's next activity, or through `ProgressionProjection::deliver()`. During a rebuild only the levels above those
 held before are told, and neither a level lost nor a broken streak is; milestones are never told again.

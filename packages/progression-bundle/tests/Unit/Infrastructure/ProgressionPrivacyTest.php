@@ -59,6 +59,28 @@ final class ProgressionPrivacyTest extends TestCase
         self::assertSame([], new ProgressionPrivacy($kit->progression, 'user')->export(DataSubject::fromString('8')));
     }
 
+    public function testAnExportListsWhatTheMembersGesturesBroughtACharacter(): void
+    {
+        $kit = new Kit(Tracks::fromArray([
+            'character' => [
+                'subject' => 'object',
+                'curve' => ['type' => 'linear', 'step' => 100],
+                'rules' => ['sessions' => ['verbs' => ['session.played'], 'experience' => 50]],
+                'milestones' => ['first' => ['experience' => 100]],
+            ],
+        ]), StreakRules::fromArray([]));
+        $kit->record('k1', 'member:7', 'session.played', '2026-11-06 10:00', 'character:9', 3);
+        $privacy = new ProgressionPrivacy($kit->progression, 'member');
+
+        $export = $privacy->export(DataSubject::fromString('7'));
+
+        self::assertSame(['character:9'], array_map(static fn (array $gain): string => $gain['subject'], $export['gains'] ?? []));
+        self::assertSame(['character:9'], array_map(static fn (array $reached): string => $reached['subject'], $export['milestones'] ?? []));
+        $privacy->erase(DataSubject::fromString('7'));
+        self::assertSame([], $privacy->export(DataSubject::fromString('7')));
+        self::assertSame([], $kit->progression->gains(ResourceReference::fromString('character:9')));
+    }
+
     public function testAnExportOfStreaksOnly(): void
     {
         $kit = new Kit(Tracks::fromArray([]), StreakRules::fromArray(['daily' => ['verbs' => ['forum.posted']], 'visits' => ['verbs' => ['site.visited'], 'unit' => 'week']]));

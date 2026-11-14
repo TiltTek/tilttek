@@ -7,7 +7,9 @@ each must pass the contract test case the library's tests carry.
 
 | Method | Contract |
 |---|---|
-| `add(Gain)` | Writes the gain once per track, rule and activity; false when it is there |
+| `add(Gain)` | Writes the gain once per track, rule and activity, its notice due; false when it is there |
+| `undelivered(subject)` | The subject's gains whose notice is due, in the order they occurred |
+| `markDelivered(Gain)` | Notes the gain's notice given; nothing when the gain is not there |
 | `remove(activity)` | Removes and returns every gain of the activity, as a list |
 | `total(track, subject, season)` | The sum of the subject's gains on the track in the season, the empty code for none |
 | `lifetime(track, subject)` | The sum of every season |
@@ -15,13 +17,17 @@ each must pass the contract test case the library's tests carry.
 | `earned(track, rule, subject, since, until)` | What the rule gave from `since`, included, to `until`, excluded |
 | `totalsSince(since)` | The full totals of every track, subject and season with a gain from `since` on |
 | `of(subject)` | The subject's gains, in the order they occurred |
+| `ofMember(member)` | The gains whose subject or member is the member, in the order they occurred, for an export |
 | `forget(since)` | Deletes the gains from `since` on, all when null |
 | `eraseMember(member)` | Deletes the gains whose subject or member is the member |
 
 ## `MilestoneStore`
 
-`reach()` writes a `ReachedMilestone` once per track, milestone, subject and season; `of()` lists a subject's in the
-order they were reached; `eraseMember()` deletes those whose subject or member is the member.
+`reach()` writes a `ReachedMilestone` once per track, milestone, subject and season, its notice due; `undelivered()`
+lists a subject's whose notice is due and `markDelivered()` notes one given; `of()` lists a subject's in the order
+they were reached, `ofMember()` those whose subject or member is the member, for an export; `eraseMember()` deletes
+those. On a database, a `delivered` boolean column on each of the two tables keeps the notice: true by default for
+the rows written before it, false on insertion, and turned true by an update conditional on it.
 
 ## `StreakStore`
 

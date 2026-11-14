@@ -62,6 +62,7 @@ final class ProgressionTables
                 ->addColumn(self::integer('amount'))
                 ->addColumn(self::date('occurred_at'))
                 ->addColumn(self::string('season', 64))
+                ->addColumn(self::delivered())
                 ->addPrimaryKeyConstraint(PrimaryKeyConstraint::editor()->setUnquotedColumnNames('track', 'rule_name', 'activity')->create())
                 ->addIndex(self::index(self::GAINS.'_subject', 'subject', 'track', 'season'))
                 ->addIndex(self::index(self::GAINS.'_member', 'member'))
@@ -80,6 +81,7 @@ final class ProgressionTables
                 ->addColumn(self::string('member', self::REFERENCE_LENGTH))
                 ->addColumn(self::date('reached_at'))
                 ->addColumn(self::string('activity', 255))
+                ->addColumn(self::delivered())
                 ->addPrimaryKeyConstraint(PrimaryKeyConstraint::editor()->setUnquotedColumnNames('subject', 'track', 'milestone', 'season')->create())
                 ->addIndex(self::index(self::MILESTONES.'_member', 'member'))
                 ->create());
@@ -150,6 +152,15 @@ final class ProgressionTables
     private static function date(string $name): Column
     {
         return Column::editor()->setUnquotedName($name)->setTypeName(Types::DATETIME_IMMUTABLE)->create();
+    }
+
+    /**
+     * Whether the observer was told of the row: true by default, for the rows written before the column; a row inserted
+     * by the stores writes false, until its notice is given.
+     */
+    private static function delivered(): Column
+    {
+        return Column::editor()->setUnquotedName('delivered')->setTypeName(Types::BOOLEAN)->setDefaultValue(true)->create();
     }
 
     /**
