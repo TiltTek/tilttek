@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=48039c84d55ce63f38e1cc3e49ef7095c40a2e591bb28d804b732fab60a60a8e -->
+<!-- phil-dev source-sha256=a9d688a6af4b390f85d5cde4359da547330846ad8de2eb19ddaab937bd516217 -->
 # Gabarits
 
 | Twig | Donne |
@@ -31,9 +31,26 @@ entre parenthèses, en plus des classes :
 | `is-success`, `is-failure` | success, failure |
 | `is-from-reroll`, `is-from-explosion` | — |
 
-Avec un membre, chaque groupe porte l'apparence de ses dés : `data-dice-appearance`, `data-dice-material` et la
-variable `--tilttek-dice-color`. Le bundle n'est fourni avec aucune feuille de style ; les classes sont des crochets
-pour celle de l'application.
+Avec un membre, chaque groupe porte l'apparence de ses dés :
+
+| Crochet | Contient |
+|---|---|
+| `data-dice-appearance` | Le nom du jeu |
+| `data-dice-material` | Le matériau, s'il y en a un |
+| `data-dice-texture` | La clé de texture, s'il y en a une : la feuille de style de l'application la associe à une image |
+| `--tilttek-dice-color` | La couleur des dés, s'il y en a une |
+| `--tilttek-dice-ink` | La couleur des nombres : l'encre de l'apparence ou, sur un dé coloré sans encre, le noir ou le blanc, selon celui qui contraste le plus avec la couleur, à 4,5:1 au moins |
+
+```css
+.tilttek-dice-set[data-dice-appearance] .tilttek-dice-die {
+    background: var(--tilttek-dice-color, Canvas);
+    color: var(--tilttek-dice-ink, CanvasText);
+}
+.tilttek-dice-set[data-dice-texture="dice/marble"] .tilttek-dice-die { background-image: url(/images/dice/marble.webp); }
+```
+
+Le bundle n'est fourni avec aucune feuille de style ; les classes sont des crochets pour celle de l'application. Une
+texture dessinée sous les nombres ne les garde lisibles que si ses couleurs restent proches de `--tilttek-dice-color`.
 
 Les mots (`dropped`, `rerolled`, `exploded`, `success`, `failure`) et les libellés des faces sont traduits dans le
 domaine configuré quand le traducteur est installé ; sans traduction, ils s'affichent tels qu'écrits.

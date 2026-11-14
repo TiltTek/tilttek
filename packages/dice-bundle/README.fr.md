@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=f5ca81297a22b095a63aab359de253a8c43ec67f8c5aae90eb137e81d6f9a665 -->
+<!-- phil-dev source-sha256=ff3e3ed8f5db74bf279b3bc68aa696c50468d957b506079ffd4d52b90585e162 -->
 # tilttek/dice-bundle
 
 **Des dés pour une application Symfony : configurés, lancés, gardés pour être rejoués, vérifiés dans les formulaires et
@@ -6,10 +6,12 @@ affichés dans les gabarits.**
 
 tilttek/dice-bundle intègre `tilttek/dice` à Symfony. Il construit la bibliothèque à partir de la configuration : ses
 limites, les dés personnalisés de l'application, les notations d'autres langues. Il lance les dés à partir d'une source
-sûre, garde les lancers rejouables dans un journal Doctrine et les rejoue. Il garde les macros d'un site, d'une table
+sûre, garde les lancers rejouables dans un journal Doctrine, par membre et par table, chacun annoncé par un événement,
+et les rejoue. Il garde les macros d'un site, d'une table
 et d'un membre, et produit des lancers vérifiables. Il fournit un champ de formulaire avec sa contrainte, des filtres et
 des fonctions Twig, et un détail accessible d'un lancer. Un point d'extension habille les dés d'un membre de
-l'apparence d'un jeu qu'il possède. Le bundle n'anime pas les dés, ne dessine pas la page du lanceur, ne décide pas qui
+l'apparence d'un jeu qu'il possède (couleur, encre, matériau, texture), et les nombres s'y lisent toujours. Le bundle
+n'anime pas les dés, ne dessine pas la page du lanceur, ne décide pas qui
 peut lancer et ne possède aucun jeu de dés : l'application s'en charge.
 
 Il s'adresse aux applications Symfony qui lancent des dés pour leurs membres : une page de lanceur de dés, un forum de
@@ -21,7 +23,7 @@ de `phil/resource` : le bundle ne lit ni nom, ni adresse, ni compte.
 
 La conception est sobre : la classe du bundle lit la configuration, `DiceServices` enregistre les services, `DiceRolls`
 est le service que l'application appelle, `DiceMacros` garde et résout les macros, `RecordedRoll` est une ligne du
-journal et `DiceAppearance` est le port qui habille les dés d'un membre.
+journal, `RollRecorded` l'annonce et `DiceAppearance` est le port qui habille les dés d'un membre.
 
 ## État
 
@@ -29,9 +31,10 @@ journal et `DiceAppearance` est le port qui habille les dés d'un membre.
 |---|---|
 | Configuration : limites, dés personnalisés, notations, apparence, domaine de traduction, stockage, gestionnaire d'entités | Implémentée et testée |
 | `DiceRolls` : analyse, lecture de DiceParser, écriture, traduction, lancer, lancers rejouables, rejeu, lancers vérifiables et vérification, lancers d'un membre et leur effacement | Implémenté et testé |
-| Journal des lancers rejouables dans Doctrine ou en mémoire | Implémenté et testé |
+| Journal des lancers rejouables dans Doctrine ou en mémoire : contexte d'un lancer, lancers par propriétaire, par contexte et plusieurs à la fois | Implémenté et testé |
+| Événement `RollRecorded` | Implémenté et testé |
 | `DiceMacros` : macros d'un site, d'une table et d'un membre, nommées par jeton, dans Doctrine ou en mémoire | Implémenté et testé |
-| Point d'extension `DiceAppearance` | Implémenté et testé |
+| Point d'extension `DiceAppearance` : couleur, encre, matériau, image, texture ; une encre qui se lit à 4,5:1 quand aucune n'est donnée | Implémenté et testé |
 | Contrainte `DiceExpression` et champ `DiceExpressionType` | Implémentés et testés |
 | Twig : `dice_notation`, `dice_dialect`, `dice_roll`, `dice_roll_detail`, `dice_text` | Implémenté et testé |
 | Dialectes ajoutés par étiquette | Implémentés et testés |
@@ -42,14 +45,15 @@ journal et `DiceAppearance` est le port qui habille les dés d'un membre.
 |---|---|
 | [Installation](doc/fr/installation.md) | Prérequis, enregistrement du bundle, table du journal. |
 | [Configuration](doc/fr/configuration.md) | Chaque option de `tilttek_dice`, avec sa valeur par défaut. |
-| [Lancer les dés](doc/fr/rolling.md) | `DiceRolls` : lancers simples, rejouables et vérifiables, le journal, l'effacement des lancers d'un membre. |
+| [Lancer les dés](doc/fr/rolling.md) | `DiceRolls` : lancers simples, rejouables et vérifiables, le journal et ses contextes, l'effacement des lancers d'un membre. |
 | [Macros](doc/fr/macros.md) | `DiceMacros` : les rayons d'un site, d'une table et d'un membre ; définir, résoudre et effacer des macros. |
 | [Formulaires et validation](doc/fr/forms.md) | `DiceExpressionType` et la contrainte `DiceExpression`. |
 | [Gabarits](doc/fr/templates.md) | Les filtres et fonctions Twig, le détail d'un lancer, ses classes et ses mots. |
-| [Points d'extension](doc/fr/extension-points.md) | `DiceAppearance`, les dialectes par étiquette, le port du journal. |
+| [Points d'extension](doc/fr/extension-points.md) | `DiceAppearance` et l'encre lisible, les dialectes par étiquette, le port du journal, `RollRecorded`. |
 | [Exceptions](doc/fr/exceptions.md) | Ce que le bundle lève. |
 | [Tests](doc/fr/testing.md) | Les tests du bundle, et comment tester une application qui lance des dés. |
 | [Référence](doc/fr/reference.md) | Chaque type du bundle, avec son rôle. |
+| [Mise à niveau](doc/fr/upgrading.md) | De 0.1 à 0.2 : la colonne de contexte, le port du journal, l'apparence. |
 
 ## Démarrage rapide
 

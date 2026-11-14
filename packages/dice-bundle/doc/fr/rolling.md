@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=ae787ba0bf8bbfac6cc4863e6870495e0ba227e6b255c23fcef765ed3eaacbc7 -->
+<!-- phil-dev source-sha256=69984c73677e4fbf696421c356ff711686ce88f6cbb25c6bb043330843e6e0ac -->
 # Lancer les dés
 
 `DiceRolls` est le service que l'application appelle. Une expression est un `Pool` ou une chaîne, lue dans la notation
@@ -25,15 +25,30 @@ $dice->translate($pool, 'roll20', RoundingMode::PositiveInfinity)->notices;     
 
 ```php
 $recorded = $dice->rollReplayable('4d6kh3', $member);   // kept in the journal
+$atTable = $dice->rollReplayable('1d20', $member, context: $table);
 $replay = $dice->replay($recorded->id());
 $replay->result;      // the roll, die for die
 $replay->matches();   // whether it gave what the journal holds
 ```
 
 `rollReplayable()` tire un identifiant et un germe, lance avec l'arrondi donné et enregistre un `RecordedRoll` daté par
-l'horloge, arrondi compris ; le propriétaire, une `ResourceReference`, est facultatif. `replay()` le relance à partir de
-son expression, de son germe et de son arrondi, et lève `UnknownRoll` pour un identifiant que le journal ne contient
-pas. `rollsOf($member, $limit)` liste les derniers lancers d'un membre, le plus récent d'abord.
+l'horloge, arrondi compris ; le propriétaire et le contexte (l'endroit où le lancer est fait, une table ou une
+partie), chacun une `ResourceReference`, sont facultatifs. Il émet ensuite `RollRecorded`, quand l'application a un
+répartiteur d'événements : voyez les [points d'extension](extension-points.md#un-lancer-enregistré). `replay()` le
+relance à partir de son expression, de son germe et de son arrondi, et lève `UnknownRoll` pour un identifiant que le
+journal ne contient pas.
+
+## Lire le journal
+
+```php
+$dice->rollsOf($member, 20);                // a member's latest rolls, the latest first
+$dice->rollsIn($table, 50);                 // the latest rolls made at a table, the latest first
+$dice->recorded([$id, $otherId]);           // these rolls, in the order asked
+```
+
+`recorded()` donne chaque lancer une fois et saute un identifiant que le journal ne contient pas. Elle lit au plus
+`RecordedRollRepository::MANY` identifiants distincts, soit 500, à la fois, et lève `LimitExceeded` au-delà : une page
+des lancers d'une table, un fil, le rejeu d'une partie lu par tranches.
 
 ## Lancers vérifiables
 
