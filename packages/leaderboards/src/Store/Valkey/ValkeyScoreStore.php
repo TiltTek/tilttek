@@ -14,6 +14,7 @@ use Tilttek\Leaderboards\Circle;
 use Tilttek\Leaderboards\Contract\ValkeyConnection;
 use Tilttek\Leaderboards\Contribution;
 use Tilttek\Leaderboards\Exception\InvalidLeaderboard;
+use Tilttek\Leaderboards\Measure;
 use Tilttek\Leaderboards\Names;
 use Tilttek\Leaderboards\Ranking;
 use Tilttek\Leaderboards\Score;
@@ -30,7 +31,10 @@ use UnexpectedValueException;
  * directions are the boards' own, read from the boards given; a ranking asked in other directions, or among a circle,
  * is ordered in memory from the scores of its members.
  *
- * Each write that touches several keys runs as one script, so that it is whole or not at all. Every key starts with
+ * Each write that touches several keys runs as one script, so that it is whole or not at all; a reported score is
+ * compared with the one held in the script that writes it, so that two reports at the same time cannot both pass the
+ * comparison. The sorted sets give every member the score 0 — the order is the key's —, so `ZADD GT` and `LT`, which
+ * compare scores, cannot do it. Every key starts with
  * the prefix between braces, a hash tag that keeps them on one node of a cluster. A moment is kept to the microsecond in
  * the keys, and as seconds with their fraction in the indexes of time.
  */
@@ -70,6 +74,29 @@ final readonly class ValkeyScoreStore implements ScoreStore
     private const string SAVE = <<<'LUA'
         local held = redis.call('HGET', KEYS[1], ARGV[1])
         if held then redis.call('ZREM', KEYS[2], cjson.decode(held)[4]) end
+        redis.call('HSET', KEYS[1], ARGV[1], ARGV[2])
+        redis.call('ZADD', KEYS[2], 0, ARGV[3])
+        redis.call('SADD', KEYS[3], ARGV[1])
+        return 1
+        LUA;
+
+    /**
+     * The save, only if the score supersedes the one held, compared on the sort keys: the values and tie-breaks are their
+     * first ARGV[4] characters, which sort from the best, and the moment the next 18 digits. ARGV[5] is 1 on `latest`.
+     */
+    private const string KEEP = <<<'LUA'
+        local held = redis.call('HGET', KEYS[1], ARGV[1])
+        if held then
+            local key = cjson.decode(held)[4]
+            local length = tonumber(ARGV[4])
+            local heldValues, newValues = string.sub(key, 1, length), string.sub(ARGV[3], 1, length)
+            if ARGV[5] == '1' then
+                if string.sub(key, length + 1, length + 18) > string.sub(ARGV[3], length + 1, length + 18) or heldValues == newValues then return 0 end
+            elseif newValues >= heldValues then
+                return 0
+            end
+            redis.call('ZREM', KEYS[2], key)
+        end
         redis.call('HSET', KEYS[1], ARGV[1], ARGV[2])
         redis.call('ZADD', KEYS[2], 0, ARGV[3])
         redis.call('SADD', KEYS[3], ARGV[1])
@@ -169,6 +196,30 @@ final readonly class ValkeyScoreStore implements ScoreStore
             self::encode([$score->board, $score->period, $score->member->toString()]),
             self::encode([$score->value, $this->micro($score->reachedAt), $score->tieBreaks, $this->sortKey($score)]),
             $this->sortKey($score),
+        );
+    }
+
+    /**
+     * The comparison runs in Valkey, in the script that writes, on the sort keys of the board's own directions: a
+     * ranking given in other directions is not read.
+     */
+    #[Override]
+    public function keep(Score $score, Measure $measure, Ranking $ranking): bool
+    {
+        $sortKey = $this->sortKey($score);
+
+        return 1 === $this->connection->execute(
+            'EVAL',
+            self::KEEP,
+            '3',
+            $this->key('score'),
+            $this->key('rank', $score->board, $score->period),
+            $this->key('member-score', $score->member->toString()),
+            self::encode([$score->board, $score->period, $score->member->toString()]),
+            self::encode([$score->value, $this->micro($score->reachedAt), $score->tieBreaks, $sortKey]),
+            $sortKey,
+            (string) ($this->headLength($score->board) - Ranking::MOMENT_DIGITS),
+            Measure::Latest === $measure ? '1' : '0',
         );
     }
 

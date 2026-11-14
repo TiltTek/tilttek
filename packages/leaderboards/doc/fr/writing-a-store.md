@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=e7d459fca6b0d4e536125ca4c83c200389e93740754faab564843dca3b2abe55 -->
+<!-- phil-dev source-sha256=e5787378c71388601e474addd66a5e5e7d6cb59408053ab57eb28c89b80c28f9 -->
 # Écrire un stockage
 
 Une application garde les classements sur son propre support en implémentant quatre contrats, ou garde les scores dans
@@ -15,6 +15,10 @@ toute implémentation doit réussir : étendez-le et retournez votre stockage de
   garde ses critères de départage, de 0 à 2 entiers.
 - `save()` remplace le score d'un membre dans un classement et une période, avec ses critères de départage ; `delete()`
   le retire ; `score()` le lit.
+- `keep()` ne le remplace que si le score rapporté l'emporte sur celui qui est gardé, comme le dit
+  `Measure::supersedes()`, et retourne s'il l'a fait : la comparaison et l'écriture forment une seule étape atomique
+  (une mise à jour conditionnelle comme `UPDATE … WHERE value < ?` en SQL, un script dans Valkey), pour que deux
+  rapports au même moment ne puissent pas passer tous les deux la comparaison.
 - `top()` lit les premiers scores d'un classement dans une période dans l'ordre du `Ranking` donné : la plus haute
   valeur d'abord, chaque critère de départage dans son sens, puis le moment le plus ancien, puis la référence du membre,
   parmi les membres d'un cercle quand il est donné. Un index sur le classement, la période, la valeur, les critères de
@@ -68,6 +72,7 @@ Chaque classement est un ensemble trié dont les clés ont toutes le score 0 et 
 sienne, ou avant son score et ses critères de départage seuls pour un rang partagé), et le nombre de classés par
 `ZCARD`, chacun en un logarithme de la taille du classement. Un classement parmi un cercle, ou demandé dans d'autres
 sens que ceux du classement, est ordonné en mémoire à partir des scores de ses membres. Chaque écriture qui touche
-plusieurs clés s'exécute en un seul script Lua ; chaque clé commence par le préfixe entre accolades, une étiquette de
+plusieurs clés s'exécute en un seul script Lua (`keep()` compare les clés de tri du score rapporté et de celui qui est
+gardé dans le script qui écrit, puisque chaque clé a le score 0 et que `ZADD GT` ou `LT` ne comparerait rien) ; chaque clé commence par le préfixe entre accolades, une étiquette de
 hachage qui les garde sur un seul nœud d'une grappe. Les instantanés, les choix et les ligues restent dans un autre
 stockage.

@@ -1,10 +1,11 @@
-<!-- phil-dev source-sha256=6edc58c42f7cfc292eb84a0377902bde4ddca40ea27ada1d49107bd1de332fe3 -->
+<!-- phil-dev source-sha256=787bece345136e02e37ea2b33ed153bc82d191089a39d06110e367e6f65b8580 -->
 # Référence
 
 | Type | Rôle |
 |---|---|
 | `Journal` | L'entrée de l'activité des membres : enregistrer, annuler, trouver, lire, compter, effacer |
 | `JournalObserver` | Averti de chaque nouvelle entrée |
+| `Contract\ResumableObserver` | Un observateur qui garde un point de reprise, à qui une entrée enregistrée ou annulée de nouveau est remise |
 | `Activity` | Un fait : membre, verbe, moment, objet, quantité, contexte, clé d'idempotence |
 | `Verb`, `VerbPattern`, `Verbs` | Un verbe, un motif de verbes, les verbes déclarés |
 | `IdempotencyKey` | Ce qui fait compter un geste une seule fois |

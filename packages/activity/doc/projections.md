@@ -63,5 +63,7 @@ $journal = new Journal($log, $clock, observers: [new LiveProjections($projector,
 ```
 
 `LiveProjections` catches up, after each new entry, every projection whose filter reads it. If a projection fails, the
-entry stays recorded and the projection's checkpoint stays before it: the next catch-up hands it again. An application
+entry stays recorded and the projection's checkpoint stays before it: the next catch-up hands it again, and the same
+request repeated under the same key catches up, through `resume()`, the projections whose checkpoint
+(`Projector::behind()`) is still before the entry. An application
 with many projections, or slow ones, keeps them out of the request and catches them up from a scheduled task instead.

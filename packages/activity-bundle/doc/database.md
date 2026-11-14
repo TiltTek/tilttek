@@ -40,10 +40,24 @@ The entry is then read back: the caller gets the row the database kept, and whet
 ## Dates and positions
 
 Dates are written in UTC, to the second, and read back in UTC. Positions come from the auto-increment; SQLite's
-`AUTOINCREMENT`, PostgreSQL's identity and InnoDB never give a number twice. Two transactions that commit in the other
-order than they took their positions can make a catch-up that runs between them skip the earlier position: an
-application that writes activity from many concurrent transactions and needs every entry projected runs a rebuild of
-the period when it suspects a gap, or catches up from a single writer.
+`AUTOINCREMENT`, PostgreSQL's identity and InnoDB never give a number twice. A position is taken when the row is
+inserted, before its transaction commits: two transactions that commit in the other order than they took their
+positions leave, for a while, a missing position below a visible entry.
+
+The reading waits for such a gap. `read()` hands no entry past it and `lastPosition()` is the position below it, until
+the entry above the gap was written `gap_wait` ago — ten seconds by default —: by then the transaction that took the
+missing position has committed, or it never will — rolled back, a duplicate key inserted by two processes at the same
+moment, a member erased. So a catch-up never moves a checkpoint past an entry not yet committed. The entries are read
+from the end of the journal while they are younger than `gap_wait`; an older one ends the search.
+
+- An entry behind a gap waits for the next catch-up after the wait: with `projections: live`, the next entry, the same
+  request repeated, or `tilttek:activity:catch-up` on a schedule.
+- A transaction that holds its position longer than `gap_wait` is still passed: an application with such transactions
+  raises `gap_wait`, or runs a rebuild of the period.
+- The age is measured on the clock of the reader against `recorded_at`, written by the clock of the writer, to the
+  second: servers whose clocks drift apart by more than a second or two raise `gap_wait` as much.
+- A gesture recorded again is not inserted again: the entry already there is read first, so a duplicate takes no
+  position and leaves no gap.
 
 ## Reading
 

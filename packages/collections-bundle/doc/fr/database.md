@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=12cc9b4cd03a955272bb0842b4b5a2e7b131966baa66d01b4de0ee7adf4128c7 -->
+<!-- phil-dev source-sha256=b7471d069e42eda62b2b7da7eef96dabe7b8b6f2151100401b21d5f17cb2422f -->
 # La base de données
 
 ## Les tables
@@ -19,7 +19,9 @@ Les dates sont écrites en UTC, à la seconde près.
 Un exemplaire, une complétion et une ouverture sont insérés par une instruction qui n'écrit rien quand la ligne est
 déjà présente (`ON CONFLICT DO NOTHING` sur PostgreSQL, `INSERT IGNORE` sur MySQL et MariaDB, `INSERT OR IGNORE` sur
 SQLite ; ailleurs, une insertion simple dont la violation d'unicité atteint l'appelant) : deux processus qui remettent
-la même clé remettent un seul exemplaire. Un exemplaire change de mains par une mise à jour qui nomme son propriétaire
+la même clé remettent un seul exemplaire. Une ouverture est insérée sans exemplaires, ce qui réserve sa clé avant
+qu'aucun exemplaire soit remis, et ses exemplaires sont écrits par une mise à jour une fois remis : de deux processus
+qui ouvrent la même clé, seul celui dont l'insertion a écrit remet des exemplaires. Un exemplaire change de mains par une mise à jour qui nomme son propriétaire
 attendu : deux échanges du même exemplaire ne peuvent donc pas réussir tous les deux. Exécutez un échange dans une
 transaction de la connexion, comme le fait `tilttek/exchange-bundle`, pour qu'un exemplaire refusé annule tout
 l'échange.

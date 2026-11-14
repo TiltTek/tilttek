@@ -4,6 +4,19 @@ All notable changes to `tilttek/quests` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `Store\DuelStore::transition()`: a store keeps a duel only if the one under its key still has the status it was
+  read in, in one atomic step; a store written for 0.1 implements it.
+- `Duels` accepts, declines, withdraws and expires a duel only if it still waits for an answer — or, for an expiry, is
+  still accepted —: of two answers given at the same moment, one is kept, the other is refused with `QuestRefused`, or
+  returns the duel when it gave the same answer. The sweep leaves, and does not report, a duel answered since it read
+  it.
+- `QuestProjection` wins a duel only if it is still accepted: a duel that expired since it was read is not won, and no
+  completion is written for it.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added

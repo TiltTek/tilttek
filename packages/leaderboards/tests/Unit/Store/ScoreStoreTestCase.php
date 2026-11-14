@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Tilttek\Leaderboards\Circle;
 use Tilttek\Leaderboards\Contribution;
 use Tilttek\Leaderboards\Direction;
+use Tilttek\Leaderboards\Measure;
 use Tilttek\Leaderboards\Ranking;
 use Tilttek\Leaderboards\Score;
 use Tilttek\Leaderboards\Store\ScoreStore;
@@ -103,6 +104,43 @@ abstract class ScoreStoreTestCase extends TestCase
         self::assertNotNull($store->score('games', '2026-10', self::member('member:1')));
         self::assertNotNull($store->score('games', '2026-11', self::member('member:2')));
         self::assertSame(1, $store->participants('games', '2026-11'));
+    }
+
+    public function testTheLatestScoreReportedIsKept(): void
+    {
+        $store = $this->store();
+        $ranking = self::arrival();
+
+        self::assertTrue($store->keep(self::score('arcade', '2026-11', 'member:1', 3, '2026-11-05 10:00'), Measure::Latest, $ranking));
+        self::assertFalse($store->keep(self::score('arcade', '2026-11', 'member:1', 5, '2026-11-04 10:00'), Measure::Latest, $ranking));
+        self::assertFalse($store->keep(self::score('arcade', '2026-11', 'member:1', 3, '2026-11-06 10:00'), Measure::Latest, $ranking));
+        self::assertEquals(self::score('arcade', '2026-11', 'member:1', 3, '2026-11-05 10:00'), $store->score('arcade', '2026-11', self::member('member:1')));
+
+        self::assertTrue($store->keep(self::score('arcade', '2026-11', 'member:1', 2, '2026-11-05 10:00'), Measure::Latest, $ranking));
+        self::assertTrue($store->keep(self::score('arcade', '2026-11', 'member:1', 1, '2026-11-05 10:00:00.000001'), Measure::Latest, $ranking));
+        self::assertFalse($store->keep(self::score('arcade', '2026-11', 'member:1', 9, '2026-11-05 10:00'), Measure::Latest, $ranking));
+        self::assertEquals(self::score('arcade', '2026-11', 'member:1', 1, '2026-11-05 10:00:00.000001'), $store->score('arcade', '2026-11', self::member('member:1')));
+        self::assertSame(['member:1'], array_map(static fn (Score $score): string => $score->member->toString(), $store->top('arcade', '2026-11', 5, $ranking)));
+        self::assertSame(1, $store->participants('arcade', '2026-11'));
+    }
+
+    public function testTheHighestScoreReportedIsKept(): void
+    {
+        $store = $this->store();
+        $ranking = new Ranking([Direction::Ascending, Direction::Descending]);
+
+        self::assertTrue($store->keep(self::score('games', '2026-11', 'member:1', 5, '2026-11-05 10:00', [3, 10]), Measure::Highest, $ranking));
+        self::assertFalse($store->keep(self::score('games', '2026-11', 'member:1', 4, '2026-11-06 10:00', [0, 99]), Measure::Highest, $ranking));
+        self::assertFalse($store->keep(self::score('games', '2026-11', 'member:1', 5, '2026-11-04 10:00', [3, 10]), Measure::Highest, $ranking));
+        self::assertFalse($store->keep(self::score('games', '2026-11', 'member:1', 5, '2026-11-04 10:00', [4, 99]), Measure::Highest, $ranking));
+        self::assertFalse($store->keep(self::score('games', '2026-11', 'member:1', 5, '2026-11-04 10:00', [3, 9]), Measure::Highest, $ranking));
+        self::assertTrue($store->keep(self::score('games', '2026-11', 'member:1', 5, '2026-11-06 10:00', [3, 11]), Measure::Highest, $ranking));
+        self::assertTrue($store->keep(self::score('games', '2026-11', 'member:1', 5, '2026-11-07 10:00', [2, 0]), Measure::Highest, $ranking));
+        self::assertTrue($store->keep(self::score('games', '2026-11', 'member:1', 6, '2026-11-01 10:00', [9, 0]), Measure::Highest, $ranking));
+        self::assertTrue($store->keep(self::score('games', '2026-11', 'member:2', 1, '2026-11-01 10:00', [0, 0]), Measure::Highest, $ranking));
+        self::assertEquals(self::score('games', '2026-11', 'member:1', 6, '2026-11-01 10:00', [9, 0]), $store->score('games', '2026-11', self::member('member:1')));
+        self::assertSame(['member:1', 'member:2'], array_map(static fn (Score $score): string => $score->member->toString(), $store->top('games', '2026-11', 5, $ranking)));
+        self::assertSame(2, $store->participants('games', '2026-11'));
     }
 
     public function testTheScoresAreReadInRankOrder(): void

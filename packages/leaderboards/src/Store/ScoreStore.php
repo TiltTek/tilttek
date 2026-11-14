@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Phil\Resource\ResourceReference;
 use Tilttek\Leaderboards\Circle;
 use Tilttek\Leaderboards\Contribution;
+use Tilttek\Leaderboards\Measure;
 use Tilttek\Leaderboards\Ranking;
 use Tilttek\Leaderboards\Score;
 
@@ -61,6 +62,13 @@ interface ScoreStore
      * Keeps the score, in place of the member's score on that board and period.
      */
     public function save(Score $score): void;
+
+    /**
+     * Keeps the reported score in place of the member's score on that board and period only if it supersedes the one
+     * held, as `Measure::supersedes()` says, the read and the write in one atomic step: of two reports at the same time,
+     * an older or lower one never replaces the other. False, writing nothing, when it does not supersede it.
+     */
+    public function keep(Score $score, Measure $measure, Ranking $ranking): bool;
 
     public function delete(string $board, string $period, ResourceReference $member): void;
 

@@ -25,6 +25,7 @@ use Tilttek\Leaderboards\Snapshot;
 use Tilttek\Leaderboards\Standing;
 use Tilttek\Leaderboards\Store\SnapshotStore;
 use Tilttek\Leaderboards\Tests\Unit\Fixture\Kit;
+use Tilttek\Leaderboards\Tests\Unit\Fixture\StaleScoreStore;
 
 #[CoversClass(Leaderboards::class)]
 #[CoversClass(Snapshot::class)]
@@ -182,6 +183,34 @@ final class LeaderboardsTest extends TestCase
         self::assertTrue($kit->leaderboards->report('level', $member, 2, $this->at('2026-11-05 10:00')));
         self::assertTrue($kit->leaderboards->report('level', $member, 4));
         self::assertSame('4 2026-11-07 12:00', $this->held($kit, 'level', 'ever'));
+    }
+
+    public function testALatestValueReadBeforeANewerOneWasWrittenDoesNotReplaceIt(): void
+    {
+        $kit = $this->kit();
+        $store = new StaleScoreStore();
+        $leaderboards = new Leaderboards($kit->boards, $store, $kit->snapshots, $kit->appearances, $kit->clock);
+        $member = $this->member('member:1');
+
+        self::assertTrue($leaderboards->report('level', $member, 4, $this->at('2026-11-06 10:00')));
+        $store->blind = true;
+
+        self::assertFalse($leaderboards->report('level', $member, 3, $this->at('2026-11-05 10:00')));
+        self::assertSame(4, $store->store->score('level', 'ever', $member)?->value);
+    }
+
+    public function testAHighestValueReadBeforeAHigherOneWasWrittenDoesNotReplaceIt(): void
+    {
+        $kit = $this->kit();
+        $store = new StaleScoreStore();
+        $leaderboards = new Leaderboards($kit->boards, $store, $kit->snapshots, $kit->appearances, $kit->clock);
+        $member = $this->member('member:1');
+
+        self::assertTrue($leaderboards->report('streak', $member, 6, $this->at('2026-11-06 10:00')));
+        $store->blind = true;
+
+        self::assertFalse($leaderboards->report('streak', $member, 5, $this->at('2026-11-06 11:00')));
+        self::assertSame(6, $store->store->score('streak', '2026-11', $member)?->value);
     }
 
     public function testTheHighestValueReported(): void

@@ -37,7 +37,8 @@ journal out of the way of a moderation or an edit, and keeps its export short.
 ## The idempotency key
 
 **The same key counts once.** Recording an activity whose key is already in the journal returns the entry already
-there, with `Appended::$new` false, and tells no observer. Build the key from what makes the gesture unique, never from
+there, with `Appended::$new` false, and tells no observer of a new entry — only those that keep a checkpoint are handed
+it again, below. Build the key from what makes the gesture unique, never from
 the time it is recorded:
 
 | Gesture | A good key |
@@ -91,3 +92,10 @@ often a typing error that would record a gesture no rule ever reads. Without pat
 A `JournalObserver` is told of each **new** entry, recorded or cancelled, right after it is written, in the same
 process; a duplicate is not told. An observer that fails lets its exception through, after the entry is written.
 `LiveProjections` is the observer that keeps the projections up to date ([Projections](projections.md)).
+
+The entry is written before the observers are told, so a failure leaves it recorded: the request repeated under the same
+key finds it there. An observer that keeps a checkpoint implements `Contract\ResumableObserver`: the journal hands it
+the entry it found, recorded or cancelled again, through `resume()`, and the observer takes it up if its checkpoint is
+before the entry's position — `LiveProjections` catches up the projections still before it. A checkpoint already exists
+for each projection, so no outbox is added: the journal is the outbox, the checkpoints say what was processed, and the
+repeated request, the next entry or a scheduled catch-up makes up a failure.

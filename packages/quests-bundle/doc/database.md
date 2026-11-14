@@ -17,6 +17,10 @@ row is there — `ON CONFLICT DO NOTHING` on PostgreSQL, `INSERT IGNORE` on MySQ
 SQLite; on another platform, a plain insertion whose unique violation reaches the caller. An enrolment, a duel and a
 definition are replaced in one transaction.
 
+**A duel changes status once.** An answer, an expiry or a win is an `UPDATE … WHERE duel_key = ? AND status = ?` that
+names the status the duel was read in: of two answers to the same offer, the second changes no row, and its request
+reads the duel again.
+
 ## A catalog in the database
 
 With `catalog: doctrine`, the `WritableCatalog` service is `DbalCatalog`:

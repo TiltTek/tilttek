@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\DependencyInjection\Reference;
 use Tilttek\Activity\Journal;
 use Tilttek\ActivityBundle\Infrastructure\DependencyInjection\ActivityServices;
+use Tilttek\ActivityBundle\Infrastructure\Doctrine\DbalActivityLog;
 use Tilttek\ActivityBundle\Infrastructure\Privacy\ActivityPrivacy;
 
 /**
@@ -55,6 +56,14 @@ final class TilttekActivityBundle extends AbstractBundle
                 ->arrayNode('verbs')
                     ->info('The verbs the application records, as patterns such as "game.played" or "game.*"; empty lets every verb through.')
                     ->scalarPrototype()->end()
+                ->end()
+                ->scalarNode('gap_wait')
+                    ->info('How long a reading of the journal in the database waits for a position missing below a visible entry — taken by a transaction not yet committed —, from the moment that entry was written, before it reads past it; an ISO 8601 duration.')
+                    ->defaultValue(DbalActivityLog::DEFAULT_GAP_WAIT)
+                    ->validate()
+                        ->ifTrue(static fn (mixed $value): bool => !self::isDuration($value))
+                        ->thenInvalid('%s is not an ISO 8601 duration, such as "PT10S".')
+                    ->end()
                 ->end()
                 ->integerNode('batch_size')
                     ->info('How many entries a projection reads at a time, and the export of a member.')
@@ -112,7 +121,7 @@ final class TilttekActivityBundle extends AbstractBundle
     #[Override]
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        /** @var array{store: string, connection: string, verbs: list<string>, batch_size: int, projections: string, projection_bus: string, dates: array{past: ?string, ahead: string}, privacy: array{member_kind: string}} $config */
+        /** @var array{store: string, connection: string, verbs: list<string>, gap_wait: string, batch_size: int, projections: string, projection_bus: string, dates: array{past: ?string, ahead: string}, privacy: array{member_kind: string}} $config */
         ActivityServices::register($builder, $config);
 
         // The privacy module, when `phil/privacy-bundle` is installed: a member's activity leaves with their account.

@@ -11,7 +11,7 @@ after a crash (see the library's documentation).
 
 With `projections: live`, the default, each new entry catches up, in the same request, every projection whose filter
 reads it. A failing projection lets its exception through after the entry is written, and its checkpoint stays before
-the entry.
+the entry: the same request repeated under the same key catches it up, as does the next entry.
 
 ## Projections through Messenger
 
@@ -42,7 +42,8 @@ The message carries identifiers only: the projection's name and the entry's posi
 journal, which the handler reads.
 
 - **The journal is the outbox.** The entry is written before the message is sent: a message lost on the way is made up
-  by the projection's next message, which catches it up past every entry it has not seen, or by
+  by the projection's next message, which catches it up past every entry it has not seen, by the same request repeated
+  under the same key — which sends the message again to each projection still before the entry —, or by
   `tilttek:activity:catch-up`.
 - **The checkpoints are the inbox.** A message delivered twice, or after a later one, finds the projection already past
   its entry and applies nothing; a message for a projection the application no longer has is dropped.

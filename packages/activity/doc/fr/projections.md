@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=08fc51211cad7b2f8bf2a334c198c7aa17114ac4f8d5e1d939cc9f9e30b01972 -->
+<!-- phil-dev source-sha256=508844863451b7c3f1f5593e05ffb50859045d0e53f79044122ca8db56858cf5 -->
 # Projections
 
 Une projection est un lecteur du journal qui tient son propre état — les points d'un membre, la progression d'un badge,
@@ -67,5 +67,6 @@ $journal = new Journal($log, $clock, observers: [new LiveProjections($projector,
 
 `LiveProjections` rattrape, après chaque nouvelle entrée, chaque projection dont le filtre la lit. Si une projection
 échoue, l'entrée reste enregistrée et le point de reprise de la projection reste avant elle : le rattrapage suivant la
-remet. Une application qui a beaucoup de projections, ou des projections lentes, les garde hors de la requête et les
+remet, et la même requête répétée sous la même clé fait rattraper, par `resume()`, les projections dont le point de
+reprise (`Projector::behind()`) est encore avant l'entrée. Une application qui a beaucoup de projections, ou des projections lentes, les garde hors de la requête et les
 rattrape plutôt depuis une tâche planifiée.

@@ -40,6 +40,25 @@ abstract class OpeningStoreTestCase extends TestCase
         self::assertNotNull($store->find('k3'));
     }
 
+    public function testTheCopiesOfAReservedOpeningAreRecorded(): void
+    {
+        $store = $this->store();
+        $reserved = new PackOpening('k1', ResourceReference::fromString('member:1'), 'booster', str_repeat('ab', 16), str_repeat('c', 64), 'mine', ['pirate', 'deckhand'], [], new DateTimeImmutable('2026-11-07 12:00:00 UTC'));
+        $store->add($reserved);
+        $store->add($this->opening('k2', 'member:1', '2026-11-07 12:00:00'));
+
+        self::assertSame([], $store->find('k1')?->copies);
+
+        $store->complete('k1', ['c3', 'c4']);
+        $store->complete('k9', ['c5']);
+
+        $completed = $store->find('k1') ?? self::fail('Not found.');
+        self::assertSame(['c3', 'c4'], $completed->copies);
+        self::assertSame(['pirate', 'deckhand'], $completed->items);
+        self::assertSame(['c1', 'c2'], $store->find('k2')?->copies);
+        self::assertNull($store->find('k9'));
+    }
+
     private function opening(string $key, string $member, string $at): PackOpening
     {
         return new PackOpening($key, ResourceReference::fromString($member), 'booster', str_repeat('ab', 16), str_repeat('c', 64), 'mine', ['pirate', 'deckhand'], ['c1', 'c2'], new DateTimeImmutable($at.' UTC'));

@@ -45,6 +45,7 @@ use Tilttek\Quests\Store\InMemoryContributionStore;
 use Tilttek\Quests\Store\InMemoryDuelStore;
 use Tilttek\Quests\Store\InMemoryEnrolmentStore;
 use Tilttek\Quests\Tests\Unit\Fixture\Kit;
+use Tilttek\Quests\Tests\Unit\Fixture\StaleDuelStore;
 use Tilttek\Quests\Window;
 
 #[CoversClass(Quest::class)]
@@ -256,6 +257,122 @@ final class DuelsTest extends TestCase
 
         $kit->at('2026-11-08 10:00');
         self::assertCount(1, new Duels($kit->evaluator, $kit->clock)->expire());
+    }
+
+    public function testADeclinedDuelAcceptedPastTheOfferLifetimeStaysDeclined(): void
+    {
+        $kit = Kit::of(self::QUESTS);
+        $kit->at('2026-11-01 09:00');
+        $kit->duelService->challenge('d1', 'race', Kit::ref('member:1'), Kit::ref('member:2'));
+        $kit->duelService->decline('d1', Kit::ref('member:2'));
+        $kit->at('2026-11-09 09:00');
+
+        try {
+            $kit->duelService->accept('d1', Kit::ref('member:2'));
+            self::fail('Accepted.');
+        } catch (QuestRefused $questRefused) {
+            self::assertSame('The duel "d1" is declined; it no longer waits for an answer.', $questRefused->getMessage());
+        }
+
+        self::assertSame(DuelStatus::Declined, $kit->duels->find('d1')?->status);
+        self::assertSame([], $kit->recorder->events());
+    }
+
+    public function testADeclineThatReadTheOfferBeforeAnAcceptanceIsRefused(): void
+    {
+        $store = new StaleDuelStore();
+        $kit = Kit::of(self::QUESTS, duels: $store);
+        $kit->at('2026-11-01 09:00');
+        $kit->duelService->challenge('d1', 'race', Kit::ref('member:1'), Kit::ref('member:2'));
+
+        $store->freeze();
+        $accepted = $kit->duelService->accept('d1', Kit::ref('member:2'));
+
+        try {
+            $kit->duelService->decline('d1', Kit::ref('member:2'));
+            self::fail('Declined.');
+        } catch (QuestRefused $questRefused) {
+            self::assertSame('The duel "d1" is accepted; it no longer waits for an answer.', $questRefused->getMessage());
+        }
+
+        self::assertEquals($accepted, $store->current->find('d1'));
+    }
+
+    public function testAnAcceptanceThatReadTheOfferBeforeAWithdrawalIsRefused(): void
+    {
+        $store = new StaleDuelStore();
+        $kit = Kit::of(self::QUESTS, duels: $store);
+        $kit->at('2026-11-01 09:00');
+        $kit->duelService->challenge('d1', 'race', Kit::ref('member:1'), Kit::ref('member:2'));
+
+        $store->freeze();
+        $kit->duelService->withdraw('d1', Kit::ref('member:1'));
+
+        try {
+            $kit->duelService->accept('d1', Kit::ref('member:2'));
+            self::fail('Accepted.');
+        } catch (QuestRefused $questRefused) {
+            self::assertSame('The duel "d1" is withdrawn; it no longer waits for an answer.', $questRefused->getMessage());
+        }
+
+        self::assertSame(DuelStatus::Withdrawn, $store->current->find('d1')?->status);
+    }
+
+    public function testTwoAnswersAliketheSameMomentGiveTheOneKept(): void
+    {
+        $store = new StaleDuelStore();
+        $kit = Kit::of(self::QUESTS, duels: $store);
+        $kit->at('2026-11-01 09:00');
+        $kit->duelService->challenge('d1', 'race', Kit::ref('member:1'), Kit::ref('member:2'));
+        $kit->duelService->challenge('d2', 'race', Kit::ref('member:1'), Kit::ref('member:2'));
+
+        $store->freeze();
+        $accepted = $kit->duelService->accept('d1', Kit::ref('member:2'));
+        $declined = $kit->duelService->decline('d2', Kit::ref('member:2'));
+        $kit->at('2026-11-01 09:05');
+
+        self::assertEquals($accepted, $kit->duelService->accept('d1', Kit::ref('member:2')));
+        self::assertEquals($declined, $kit->duelService->decline('d2', Kit::ref('member:2')));
+        self::assertEquals($accepted, $store->current->find('d1'));
+    }
+
+    public function testTheSweepLeavesADuelAnsweredSinceItWasRead(): void
+    {
+        $store = new StaleDuelStore();
+        $kit = Kit::of(self::QUESTS, duels: $store);
+        $kit->at('2026-11-01 09:00');
+        $kit->duelService->challenge('d1', 'race', Kit::ref('member:1'), Kit::ref('member:2'));
+        $kit->duelService->challenge('d2', 'race', Kit::ref('member:1'), Kit::ref('member:3'));
+        $kit->at('2026-11-08 09:00');
+
+        $store->freeze();
+        $store->current->save($store->current->find('d1')?->with(DuelStatus::Declined, new DateTimeImmutable('2026-11-08 08:59 UTC')) ?? self::fail('No duel.'));
+
+        self::assertSame(['d2'], array_map(static fn (Duel $duel): string => $duel->key, $kit->duelService->expire()));
+        self::assertSame(['duel d2 expired'], $kit->recorder->events());
+        self::assertSame(DuelStatus::Declined, $store->current->find('d1')?->status);
+    }
+
+    public function testAnOfferRunOutAndAnsweredSinceItWasReadIsStillRefused(): void
+    {
+        $store = new StaleDuelStore();
+        $kit = Kit::of(self::QUESTS, duels: $store);
+        $kit->at('2026-11-01 09:00');
+        $kit->duelService->challenge('d1', 'race', Kit::ref('member:1'), Kit::ref('member:2'));
+        $kit->at('2026-11-08 09:00');
+
+        $store->freeze();
+        $store->current->save($store->current->find('d1')?->with(DuelStatus::Withdrawn, new DateTimeImmutable('2026-11-08 08:59 UTC')) ?? self::fail('No duel.'));
+
+        try {
+            $kit->duelService->accept('d1', Kit::ref('member:2'));
+            self::fail('Accepted.');
+        } catch (QuestRefused $questRefused) {
+            self::assertSame('The duel "d1" was not answered in time.', $questRefused->getMessage());
+        }
+
+        self::assertSame([], $kit->recorder->events());
+        self::assertSame(DuelStatus::Withdrawn, $store->current->find('d1')?->status);
     }
 
     public function testAnUnknownDuelIsReported(): void

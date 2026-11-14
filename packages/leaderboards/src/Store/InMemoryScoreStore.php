@@ -10,6 +10,7 @@ use Phil\Resource\ResourceReference;
 use Tilttek\Leaderboards\Board;
 use Tilttek\Leaderboards\Circle;
 use Tilttek\Leaderboards\Contribution;
+use Tilttek\Leaderboards\Measure;
 use Tilttek\Leaderboards\Ranking;
 use Tilttek\Leaderboards\Score;
 
@@ -85,6 +86,18 @@ final class InMemoryScoreStore implements ScoreStore
     public function save(Score $score): void
     {
         $this->scores[$this->key($score->board, $score->period, $score->member)] = $score;
+    }
+
+    #[Override]
+    public function keep(Score $score, Measure $measure, Ranking $ranking): bool
+    {
+        if (!$measure->supersedes($score, $this->score($score->board, $score->period, $score->member), $ranking)) {
+            return false;
+        }
+
+        $this->save($score);
+
+        return true;
     }
 
     #[Override]

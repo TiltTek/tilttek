@@ -51,7 +51,7 @@ final class TilttekActivityBundleTest extends TestCase
 
         self::assertSame('tilttek_activity', $this->extension()->getAlias());
         self::assertSame(['service_container', DbalActivityLog::class, DbalCheckpoints::class, ActivitySchemaListener::class, Verbs::class, Projections::class, Projector::class, Journal::class, LiveProjections::class, CatchUpCommand::class, RebuildCommand::class, StatusCommand::class, ...$this->privacy()], array_keys($container->getDefinitions()));
-        self::assertEquals([$connection], $container->getDefinition(DbalActivityLog::class)->getArguments());
+        self::assertEquals([$connection, new Reference('clock'), new Definition(DateInterval::class, ['PT10S'])], $container->getDefinition(DbalActivityLog::class)->getArguments());
         self::assertSame([DbalActivityLog::class, true], [(string) $container->getAlias(ActivityLog::class), $container->getAlias(ActivityLog::class)->isPublic()]);
         self::assertEquals([$connection, new Reference('clock')], $container->getDefinition(DbalCheckpoints::class)->getArguments());
         self::assertSame([DbalCheckpoints::class, true], [(string) $container->getAlias(Checkpoints::class), $container->getAlias(Checkpoints::class)->isPublic()]);
@@ -120,7 +120,8 @@ final class TilttekActivityBundleTest extends TestCase
         self::assertTrue($this->load(['store' => 'doctrine'])->hasDefinition(DbalActivityLog::class));
 
         $other = $this->load(['connection' => 'activity']);
-        self::assertEquals([new Reference('doctrine.dbal.activity_connection')], $other->getDefinition(DbalActivityLog::class)->getArguments());
+        self::assertEquals([new Reference('doctrine.dbal.activity_connection'), new Reference('clock'), new Definition(DateInterval::class, ['PT10S'])], $other->getDefinition(DbalActivityLog::class)->getArguments());
+        self::assertEquals(new Definition(DateInterval::class, ['PT2S']), $this->load(['gap_wait' => 'PT2S'])->getDefinition(DbalActivityLog::class)->getArgument(2));
         self::assertSame(['doctrine.event_listener' => [['event' => 'postGenerateSchema', 'connection' => 'activity']]], $other->getDefinition(ActivitySchemaListener::class)->getTags());
     }
 
@@ -129,7 +130,7 @@ final class TilttekActivityBundleTest extends TestCase
         $container = $this->load(['projections' => 'messenger']);
 
         self::assertFalse($container->hasDefinition(LiveProjections::class));
-        self::assertEquals([new Reference('messenger.bus.default'), new Reference(Projections::class)], $container->getDefinition(MessengerProjections::class)->getArguments());
+        self::assertEquals([new Reference('messenger.bus.default'), new Reference(Projections::class), new Reference(Projector::class)], $container->getDefinition(MessengerProjections::class)->getArguments());
         self::assertSame(['tilttek_activity.observer' => [[]]], $container->getDefinition(MessengerProjections::class)->getTags());
         self::assertEquals([new Reference(Projector::class), new Reference(Projections::class), new Reference(Checkpoints::class)], $container->getDefinition(CatchUpProjectionHandler::class)->getArguments());
         self::assertSame(['messenger.message_handler' => [['handles' => CatchUpProjection::class, 'bus' => 'messenger.bus.default']]], $container->getDefinition(CatchUpProjectionHandler::class)->getTags());
@@ -193,6 +194,13 @@ final class TilttekActivityBundleTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
 
         $this->load(['dates' => $dates]);
+    }
+
+    public function testTheGapWaitIsAnIso8601Duration(): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+
+        $this->load(['gap_wait' => '10 seconds']);
     }
 
     public function testTheStoreIsDoctrineOrMemory(): void

@@ -26,6 +26,9 @@ use Tilttek\Quests\Window;
  * duel length — or until the quest closes —, and the first side to accomplish the quest wins it, which the projection
  * decides. A duel whose time runs out with no winner expires, when `expire()` sweeps the duels.
  *
+ * Each answer is written only if the duel still waits for one, in one atomic step of the store: of two answers given
+ * at the same moment, one is kept; the other returns it when it gave the same answer, and is refused otherwise.
+ *
  * ```php
  * $duels->challenge('duel:812', 'ten-games', $member, $friend);
  * $duels->accept('duel:812', $friend);
@@ -105,7 +108,7 @@ final readonly class Duels
         $now = $this->clock->now();
 
         if ($duel->offeredAt->add($this->offerLifetime) <= $now) {
-            $this->end($duel->with(DuelStatus::Expired, $now));
+            $this->end($duel, $duel->with(DuelStatus::Expired, $now));
 
             throw QuestRefused::because(\sprintf('The duel "%s" was not answered in time.', $key));
         }
@@ -114,9 +117,8 @@ final readonly class Duels
         $closesAt = $this->open($quest)->closesAt;
         $length = new Window(null, $quest->duelLength instanceof DateInterval ? $now->add($quest->duelLength) : null);
         $accepted = $duel->accepted($now, $length->intersect(new Window(null, $closesAt))->until);
-        $this->evaluator->duels->save($accepted);
 
-        return $accepted;
+        return $this->evaluator->duels->transition($accepted, DuelStatus::Offered) ? $accepted : $this->answered($key, DuelStatus::Accepted);
     }
 
     /**
@@ -159,7 +161,11 @@ final readonly class Duels
         $expired = [];
 
         foreach ($this->evaluator->duels->due($now->sub($this->offerLifetime), $now) as $duel) {
-            $expired[] = $this->end($duel->with(DuelStatus::Expired, $now));
+            $ended = $this->end($duel, $duel->with(DuelStatus::Expired, $now));
+
+            if ($ended instanceof Duel) {
+                $expired[] = $ended;
+            }
         }
 
         return $expired;
@@ -237,16 +243,37 @@ final readonly class Duels
             return $duel;
         }
 
-        $this->checkOffered($duel);
+        // Refused, by the store, unless the duel still waits for an answer: `answered()` then says why.
         $answered = $duel->with($status, $this->clock->now());
-        $this->evaluator->duels->save($answered);
 
-        return $answered;
+        return $this->evaluator->duels->transition($answered, DuelStatus::Offered) ? $answered : $this->answered($duel->key, $status);
     }
 
-    private function end(Duel $expired): Duel
+    /**
+     * The duel another request answered between the read and the write: returned when it was given the same answer.
+     *
+     * @throws QuestRefused when it was given another answer
+     */
+    private function answered(string $key, DuelStatus $status): Duel
     {
-        $this->evaluator->duels->save($expired);
+        $duel = $this->get($key);
+
+        if ($status !== $duel->status) {
+            $this->checkOffered($duel);
+        }
+
+        return $duel;
+    }
+
+    /**
+     * Expires the duel, and tells the observer, unless another request ended or answered it since it was read.
+     */
+    private function end(Duel $duel, Duel $expired): ?Duel
+    {
+        if (!$this->evaluator->duels->transition($expired, $duel->status)) {
+            return null;
+        }
+
         $this->observer?->duelExpired($expired);
 
         return $expired;

@@ -4,6 +4,13 @@ All notable changes to `tilttek/collections-bundle` will be documented in this f
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `DbalOpeningStore::complete()`: the copies of an opening inserted without them, written by an update once given,
+  for `tilttek/collections` whose `Packs::open()` reserves the key before it gives any copy.
+
 ## 0.1.1-alpha - 2026-11-14
 
 ### Changed

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tilttek\ActivityBundle\Infrastructure\Doctrine;
 
+use DateInterval;
 use DateTimeImmutable;
 use DateTimeZone;
 use Doctrine\DBAL\Connection;
@@ -18,6 +19,7 @@ use Doctrine\DBAL\Types\Types;
 use LogicException;
 use Override;
 use Phil\Resource\ResourceReference;
+use Psr\Clock\ClockInterface;
 use Tilttek\Activity\Activity;
 use Tilttek\Activity\Appended;
 use Tilttek\Activity\Context;
@@ -41,23 +43,54 @@ use UnexpectedValueException;
  * on PostgreSQL, `INSERT IGNORE` on MySQL and MariaDB, `INSERT OR IGNORE` on SQLite; elsewhere, a plain insert whose
  * unique violation counts as "already there". The entry is then read back, so the caller gets the row the database
  * kept, and whether this call wrote it. Dates are written in UTC, to the second.
+ *
+ * A position is taken from the auto-increment when the row is inserted, before its transaction commits: two
+ * transactions that commit in the other order leave, for a while, a missing position below a visible one. The reading
+ * stops before such a gap — `read()` hands no entry past it, and `lastPosition()` is the position below it — until the
+ * entry above the gap was written `gapWait` ago: by then the transaction that took the missing position committed, or
+ * it never will — rolled back, a duplicate the insertion ignored, a member erased. So a catch-up never moves a
+ * checkpoint past an entry not yet committed, unless its transaction lasts longer than `gapWait`.
  */
 final readonly class DbalActivityLog implements ActivityLog
 {
+    /**
+     * How long, by default, the reading waits for a missing position below a visible entry, as an ISO 8601 duration.
+     */
+    public const string DEFAULT_GAP_WAIT = 'PT10S';
+
     private const string INSERTED = 'kind, idempotency_key, member, verb, object, quantity, context, occurred_at, recorded_at';
 
     private const string COLUMNS = 'position, '.self::INSERTED;
 
+    /**
+     * How many of the latest positions one query reads, as the reading looks for gaps from the end of the journal.
+     */
+    private const int TAIL = 500;
+
+    /**
+     * @param ?ClockInterface $clock   the moment the age of a gap is measured from; the system's clock without it
+     * @param DateInterval    $gapWait how long after the entry above a missing position was written the reading goes
+     *                                 past it
+     */
     public function __construct(
         private Connection $connection,
+        private ?ClockInterface $clock = null,
+        private DateInterval $gapWait = new DateInterval(self::DEFAULT_GAP_WAIT),
     ) {
     }
 
     #[Override]
     public function append(Activity $activity, DateTimeImmutable $at): Appended
     {
-        $new = $this->insert(EntryKind::Recorded, $activity, $at);
-        $entry = $this->written($activity->key, EntryKind::Recorded);
+        // An entry already there is not inserted again: a duplicate would take a position for nothing, a gap the
+        // reading would wait for.
+        $entry = $this->entry($activity->key, EntryKind::Recorded);
+        $new = false;
+
+        if (!$entry instanceof Entry) {
+            $new = $this->insert(EntryKind::Recorded, $activity, $at);
+            $entry = $this->written($activity->key, EntryKind::Recorded);
+        }
 
         if (!$entry->activity->sameGestureAs($activity)) {
             throw IdempotencyConflict::on($activity->key);
@@ -73,6 +106,12 @@ final readonly class DbalActivityLog implements ActivityLog
 
         if (!$recorded instanceof Entry) {
             return null;
+        }
+
+        $cancelled = $this->entry($key, EntryKind::Cancelled);
+
+        if ($cancelled instanceof Entry) {
+            return new Appended($cancelled, false);
         }
 
         $new = $this->insert(EntryKind::Cancelled, $recorded->activity, $at);
@@ -96,13 +135,14 @@ final readonly class DbalActivityLog implements ActivityLog
     public function read(int $after, int $limit, Filter $filter): array
     {
         Reading::check($after, $limit);
-
+        $horizon = $this->horizon();
         $query = $this->connection->createQueryBuilder()
             ->select(self::COLUMNS)
             ->from(ActivityTables::ENTRIES)
             ->orderBy('position')
             ->setMaxResults($limit);
         $query->where('position > '.$query->createNamedParameter($after, ParameterType::INTEGER));
+        $query->andWhere('position <= '.$query->createNamedParameter($horizon, ParameterType::INTEGER));
         $this->filter($query, $filter);
         $entries = [];
 
@@ -113,10 +153,13 @@ final readonly class DbalActivityLog implements ActivityLog
         return $entries;
     }
 
+    /**
+     * The last position the reading reaches: below the lowest gap still awaited, the last entry otherwise.
+     */
     #[Override]
     public function lastPosition(): int
     {
-        return $this->integer($this->connection->fetchOne(\sprintf('SELECT COALESCE(MAX(position), 0) FROM %s', ActivityTables::ENTRIES)));
+        return $this->horizon();
     }
 
     #[Override]
@@ -159,6 +202,53 @@ final readonly class DbalActivityLog implements ActivityLog
             $platform instanceof SQLitePlatform => 'INSERT OR IGNORE '.$into,
             default => 'INSERT '.$into,
         };
+    }
+
+    /**
+     * The highest position below which no gap is awaited: the entries are read from the end of the journal while they
+     * were written less than `gapWait` ago, and a missing position below one of them stops the reading under it. An
+     * older entry ends the search, its gaps settled; so does the start of the journal, where position 1 is the first.
+     */
+    private function horizon(): int
+    {
+        $settled = ($this->clock?->now() ?? new DateTimeImmutable())->setTimezone(new DateTimeZone('UTC'))->sub($this->gapWait);
+        $horizon = null;
+        $above = null;
+        $before = null;
+
+        do {
+            $query = $this->connection->createQueryBuilder()
+                ->select('position', 'recorded_at')
+                ->from(ActivityTables::ENTRIES)
+                ->orderBy('position', 'DESC')
+                ->setMaxResults(self::TAIL);
+
+            if (null !== $before) {
+                $query->where('position < '.$query->createNamedParameter($before, ParameterType::INTEGER));
+            }
+
+            $rows = $query->fetchAllNumeric();
+
+            foreach ($rows as [$position, $recordedAt]) {
+                $position = $this->integer($position);
+                $horizon ??= $position;
+
+                // The entry above, written less than gapWait ago, waits for the positions missing below it.
+                if (null !== $above && $above - $position > 1) {
+                    $horizon = $position;
+                }
+
+                if ($this->date($recordedAt) <= $settled) {
+                    return $horizon;
+                }
+
+                $above = $position;
+            }
+
+            $before = $above;
+        } while (self::TAIL === \count($rows));
+
+        return null !== $above && $above > 1 ? 0 : $horizon ?? 0;
     }
 
     private function insert(EntryKind $kind, Activity $activity, DateTimeImmutable $at): bool

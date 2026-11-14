@@ -9,6 +9,7 @@ use Override;
 use Phil\Resource\ResourceReference;
 use Tilttek\Leaderboards\Circle;
 use Tilttek\Leaderboards\Contribution;
+use Tilttek\Leaderboards\Measure;
 use Tilttek\Leaderboards\Ranking;
 use Tilttek\Leaderboards\Score;
 use Tilttek\Leaderboards\Store\InMemoryScoreStore;
@@ -64,6 +65,12 @@ final class CountingScoreStore implements ScoreStore
     public function save(Score $score): void
     {
         $this->store->save($score);
+    }
+
+    #[Override]
+    public function keep(Score $score, Measure $measure, Ranking $ranking): bool
+    {
+        return $this->store->keep($score, $measure, $ranking);
     }
 
     #[Override]

@@ -10,6 +10,7 @@ use DateTimeInterface;
 use DateTimeZone;
 use Phil\Resource\ResourceReference;
 use Psr\Clock\ClockInterface;
+use Tilttek\Activity\Contract\ResumableObserver;
 use Tilttek\Activity\Exception\IdempotencyConflict;
 use Tilttek\Activity\Exception\InvalidActivity;
 use Tilttek\Activity\Exception\UnknownVerb;
@@ -26,7 +27,9 @@ use Tilttek\Activity\Log\ActivityLog;
  * ```
  *
  * The journal stamps each entry with its clock, checks the verb against the declared verbs, and tells its observers
- * of each new entry. It records a gesture dated within its window: at most `$past` before its clock — thirty days by
+ * of each new entry. The entry is written before the observers are told: when one of them fails, the request repeated
+ * under the same key finds the entry there, and hands it again to the observers that keep a checkpoint
+ * (`ResumableObserver`), which take it up if they have not processed it. It records a gesture dated within its window: at most `$past` before its clock — thirty days by
  * default, no bound when null — and at most `$ahead` after it — five minutes by default. A moment the client gave,
  * from an action made offline, cannot reach far into the past to collect the caps of days gone by, nor far from now
  * to make the streaks and periods count units by the billion.
@@ -69,7 +72,8 @@ final readonly class Journal
     }
 
     /**
-     * Records the activity once: recorded again under the same key, it returns the entry already there.
+     * Records the activity once: recorded again under the same key, it returns the entry already there, and hands it
+     * to the observers that keep a checkpoint, in case one of them failed on it.
      *
      * @throws UnknownVerb         when the verbs are declared and this one is not
      * @throws InvalidActivity     when the gesture is dated outside the journal's window
@@ -85,7 +89,8 @@ final readonly class Journal
     }
 
     /**
-     * Cancels the activity recorded under the key, once; null when none is recorded.
+     * Cancels the activity recorded under the key, once; null when none is recorded. Cancelled again, it returns the
+     * cancellation already there, and hands it to the observers that keep a checkpoint.
      */
     public function cancel(IdempotencyKey|string $key): ?Appended
     {
@@ -140,9 +145,11 @@ final readonly class Journal
 
     private function told(Appended $appended): Appended
     {
-        if ($appended->new) {
-            foreach ($this->observers as $observer) {
+        foreach ($this->observers as $observer) {
+            if ($appended->new) {
                 $observer->appended($appended->entry);
+            } elseif ($observer instanceof ResumableObserver) {
+                $observer->resume($appended->entry);
             }
         }
 

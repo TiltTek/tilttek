@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=3a254b2352f1808381c59adfcc42ccbf10ef2c377f3ff172efcd54d86c8ab0f5 -->
+<!-- phil-dev source-sha256=ba050cfbdb72ccc57b864cb3cd985cb086b3f3c25f9b5bfdd67386f3cbd05e9c -->
 # Configuration
 
 ```yaml
@@ -6,6 +6,7 @@ tilttek_activity:
     store: doctrine            # or memory, for tests
     connection: default        # the DBAL connection of the journal
     verbs: []                  # the declared verbs, as patterns; empty accepts every verb
+    gap_wait: PT10S            # how long the reading waits for a position not yet committed
     batch_size: 500            # entries read at a time by a projection, and by the export of a member
     projections: live          # live, messenger or manual
     projection_bus: messenger.bus.default   # the bus of the projections' messages, in messenger mode
@@ -21,6 +22,7 @@ tilttek_activity:
 | `store` | `doctrine` | `doctrine` garde le journal et les points de reprise dans la base de données ; `memory` les garde dans le processus, pour les tests |
 | `connection` | `default` | La connexion DBAL, `doctrine.dbal.<name>_connection` ; l'écouteur du schéma y est lié |
 | `verbs` | `[]` | Des motifs comme `game.played`, `game.*` ou `*` ; un motif erroné échoue à la compilation du conteneur ; un verbe non déclaré lève `UnknownVerb` à son enregistrement |
+| `gap_wait` | `PT10S` | Une durée ISO 8601 : combien de temps la lecture du journal dans la base de données attend une position manquante sous une entrée visible, à partir du moment où cette entrée a été écrite ([Le journal dans la base de données](database.md#dates-et-positions)) |
 | `batch_size` | `500` | Au moins 1 |
 | `projections` | `live` | `live` : chaque nouvelle entrée fait rattraper les projections qui la lisent, dans la même requête ; `messenger` : elle leur envoie un message `CatchUpProjection` ([Projections](projections.md)) ; `manual` : seule `tilttek:activity:catch-up` les fait rattraper |
 | `projection_bus` | `messenger.bus.default` | Le bus de Messenger sur lequel les messages sont envoyés et traités, en mode `messenger` |

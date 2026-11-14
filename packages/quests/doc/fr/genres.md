@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=20f2790e64f4b389598f2b7c13df126f217315effe4dde00af24a5767122ece2 -->
+<!-- phil-dev source-sha256=3300b08d1004c09aec450c8d63ffcb3090fa43aca38f9e93bce82221320803f8 -->
 # Genres
 
 Le `QuestKind` d'une quête dit quelle activité la fait avancer et qui l'accomplit.
@@ -39,5 +39,9 @@ $duels->expire();                        // the offers and the duels whose time 
   ce que décide la projection : le duel est `Won`, et son gagnant reçoit un accomplissement sous la clé du duel ainsi
   que les récompenses.
 - Un duel dont le temps s'écoule sans gagnant expire quand `expire()` balaie les duels ; l'observateur en est averti.
+- Chaque changement d'état ne s'écrit que si le duel est encore dans l'état où il a été lu : d'une acceptation et d'un
+  refus donnés au même moment, un seul est gardé, et l'autre est refusé parce que le duel n'attend plus de réponse — ou
+  renvoie le duel, quand il a donné la même réponse. Un duel répondu, expiré ou gagné depuis que le balayage ou la
+  projection l'a lu reste tel quel.
 
 Un membre peut avoir plusieurs duels à la fois, sur la même quête ou non ; chacun ne compte que son propre temps.

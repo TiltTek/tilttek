@@ -4,6 +4,21 @@ All notable changes to `tilttek/activity` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `Journal` hands the entry it found, when the same gesture is recorded or the same cancellation given again, to its
+  observers that implement `ResumableObserver`: a request repeated after an observer failed makes up the failure.
+- `LiveProjections` implements `ResumableObserver`: an entry handed again catches up the projections still before it,
+  so a projection that failed in `live` mode no longer stays behind until the next entry.
+
+### Added
+
+- `Contract\ResumableObserver`: an observer that keeps a checkpoint, handed again, through `resume()`, an entry recorded or
+  cancelled again under its key, which it takes up if it has not processed it.
+- `Projector::behind()`: whether a projection's checkpoint is before a position.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added

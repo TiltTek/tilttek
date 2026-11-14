@@ -21,6 +21,7 @@ use Tilttek\Activity\Journal;
 use Tilttek\Activity\JournalObserver;
 use Tilttek\Activity\Log\InMemoryActivityLog;
 use Tilttek\Activity\Tests\Unit\Fixture\Clock;
+use Tilttek\Activity\Tests\Unit\Fixture\ResumingWitness;
 use Tilttek\Activity\Tests\Unit\Fixture\Told;
 use Tilttek\Activity\Tests\Unit\Fixture\Witness;
 use Tilttek\Activity\Verbs;
@@ -54,6 +55,18 @@ final class JournalTest extends TestCase
         self::assertFalse($journal->cancel(IdempotencyKey::fromString('game:1:member:1'))?->new);
         self::assertNull($journal->cancel('unknown'));
         self::assertSame(['first:recorded:1', 'second:recorded:1', 'first:cancelled:2', 'second:cancelled:2'], $this->told->lines);
+    }
+
+    public function testAnObserverThatKeepsACheckpointIsToldAgainOfAnEntryAlreadyThere(): void
+    {
+        $journal = new Journal(new InMemoryActivityLog(), new Clock('2026-11-07 12:00:00 UTC'), new Verbs(), [$this->observer('plain'), new ResumingWitness('resuming', $this->told)]);
+
+        $journal->record($this->activity('game:1:member:1'));
+        $journal->record($this->activity('game:1:member:1'));
+        $journal->cancel('game:1:member:1');
+        $journal->cancel('game:1:member:1');
+
+        self::assertSame(['plain:recorded:1', 'resuming:recorded:1', 'resuming:again:recorded:1', 'plain:cancelled:2', 'resuming:cancelled:2', 'resuming:again:cancelled:2'], $this->told->lines);
     }
 
     public function testObserversMayComeFromAGenerator(): void

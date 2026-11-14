@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=743569d41395a821009de58c60597107bd762a71ce74252a578c920651baf706 -->
+<!-- phil-dev source-sha256=3ebf3e8ba1c550aa1bd5b6a5d2d2b2b00ab367dc8f1f1f12a70d12d1477d1275 -->
 # Projections et commandes
 
 ## Écrire une projection
@@ -12,7 +12,8 @@ cache — et doit tolérer de voir une entrée deux fois après un plantage (con
 
 Avec `projections: live`, la valeur par défaut, chaque nouvelle entrée fait rattraper, dans la même requête, chaque
 projection dont le filtre la lit. Une projection qui échoue laisse passer son exception une fois l'entrée écrite, et
-son point de reprise reste avant l'entrée.
+son point de reprise reste avant l'entrée : la même requête répétée sous la même clé la fait rattraper, comme l'entrée
+suivante.
 
 ## Projections par Messenger
 
@@ -44,7 +45,8 @@ journal, que lit le *handler*.
 
 - **Le journal est la boîte d'envoi.** L'entrée est écrite avant l'envoi du message. Un message perdu en route est
   compensé par le message suivant de la projection, qui la fait rattraper au-delà de chaque entrée qu'elle n'a pas vue,
-  ou par `tilttek:activity:catch-up`.
+  par la même requête répétée sous la même clé (qui renvoie le message à chaque projection encore avant l'entrée), ou
+  par `tilttek:activity:catch-up`.
 - **Les points de reprise sont la boîte de réception.** Un message livré deux fois, ou après un message plus récent,
   trouve la projection déjà au-delà de son entrée et n'applique rien. Un message pour une projection que l'application
   n'a plus est abandonné.

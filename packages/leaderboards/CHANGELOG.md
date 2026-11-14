@@ -4,6 +4,20 @@ All notable changes to `tilttek/leaderboards` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `Store\ScoreStore::keep()`: a store replaces a reported score only if it supersedes the one held, the comparison and
+  the write in one atomic step; a store written for 0.1 implements it. `InMemoryScoreStore` and `ValkeyScoreStore`
+  implement it, the latter in the Lua script that writes, on the sort keys.
+- `Leaderboards::report()` keeps the value through `ScoreStore::keep()` rather than reading the score and writing it
+  back: of two reports at the same moment, an older or lower value no longer replaces the other.
+
+### Added
+
+- `Measure::supersedes()`: whether a reported score takes the place of the one held.
+
 ## 0.1.0-alpha - 2026-11-12
 
 ### Added

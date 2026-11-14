@@ -256,6 +256,87 @@ final class ProjectorTest extends TestCase
         self::assertSame([1, 2, 3], $all->applied);
     }
 
+    public function testAFailedLiveProjectionIsCaughtUpWhenTheSameGestureIsRecordedAgain(): void
+    {
+        $games = new Counter('games', Filter::all()->verbs('game.*'));
+        $all = new Counter('all');
+        $games->failOn = 1;
+        $projector = new Projector($this->log, $this->checkpoints);
+        $journal = new Journal($this->log, new Clock(), observers: [new LiveProjections($projector, new Projections([$all, $games]))]);
+        $activity = Activity::of('a', 'member:1', 'game.played', new DateTimeImmutable('2026-11-07 10:00:00 UTC'));
+
+        try {
+            $journal->record($activity);
+            self::fail('The failure was swallowed.');
+        } catch (RuntimeException) {
+        }
+
+        self::assertSame(0, $this->checkpoints->position('games'));
+        $games->failOn = null;
+
+        self::assertFalse($journal->record($activity)->new);
+        self::assertSame([1], $games->applied);
+        self::assertSame([1], $all->applied);
+        self::assertSame(1, $this->checkpoints->position('games'));
+
+        self::assertFalse($journal->record($activity)->new);
+        self::assertSame([1], $games->applied);
+    }
+
+    public function testAnEntryToldAgainCatchesUpOnlyTheProjectionsThatReadIt(): void
+    {
+        $games = new Counter('games', Filter::all()->verbs('game.*'));
+        $news = new Counter('news', Filter::all()->verbs('news.*'));
+        $projector = new Projector($this->log, $this->checkpoints);
+        $journal = new Journal($this->log, new Clock(), observers: [new LiveProjections($projector, new Projections([$games, $news]))]);
+        $news->failOn = 1;
+
+        try {
+            $journal->record(Activity::of('n', 'member:1', 'news.read', new DateTimeImmutable('2026-11-07 10:00:00 UTC')));
+            self::fail('The failure was swallowed.');
+        } catch (RuntimeException) {
+        }
+
+        $news->failOn = null;
+        $journal->record(Activity::of('a', 'member:1', 'game.played', new DateTimeImmutable('2026-11-07 10:00:00 UTC')));
+        $journal->record(Activity::of('a', 'member:1', 'game.played', new DateTimeImmutable('2026-11-07 10:00:00 UTC')));
+
+        self::assertSame([], $news->applied);
+        self::assertSame([2], $games->applied);
+    }
+
+    public function testAFailedLiveProjectionIsCaughtUpWhenTheSameCancellationIsGivenAgain(): void
+    {
+        $games = new Counter('games', Filter::all()->verbs('game.*'));
+        $projector = new Projector($this->log, $this->checkpoints);
+        $journal = new Journal($this->log, new Clock(), observers: [new LiveProjections($projector, new Projections([$games]))]);
+        $journal->record(Activity::of('a', 'member:1', 'game.played', new DateTimeImmutable('2026-11-07 10:00:00 UTC')));
+        $journal->record(Activity::of('b', 'member:1', 'news.read', new DateTimeImmutable('2026-11-07 10:00:00 UTC')));
+
+        $games->failOn = 3;
+
+        try {
+            $journal->cancel('a');
+            self::fail('The failure was swallowed.');
+        } catch (RuntimeException) {
+        }
+
+        $games->failOn = null;
+
+        self::assertFalse($journal->cancel('a')?->new);
+        self::assertSame([1, 3], $games->applied);
+    }
+
+    public function testAProjectionIsBehindAnEntryItHasNotSeen(): void
+    {
+        $projector = new Projector($this->log, $this->checkpoints);
+        $this->checkpoints->save('games', 4);
+
+        self::assertTrue($projector->behind(new Counter('games'), 5));
+        self::assertFalse($projector->behind(new Counter('games'), 4));
+        self::assertFalse($projector->behind(new Counter('games'), 3));
+    }
+
     private function append(string $key, string $member, string $verb, int $quantity = 1, string $at = '2026-11-07'): void
     {
         $this->log->append(Activity::of($key, $member, $verb, new DateTimeImmutable($at.' 00:00:00 UTC'), quantity: $quantity), new DateTimeImmutable());

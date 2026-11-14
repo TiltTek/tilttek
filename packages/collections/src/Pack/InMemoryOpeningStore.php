@@ -30,6 +30,16 @@ final class InMemoryOpeningStore implements OpeningStore
     }
 
     #[Override]
+    public function complete(string $key, array $copies): void
+    {
+        $opening = $this->openings[$key] ?? null;
+
+        if ($opening instanceof PackOpening) {
+            $this->openings[$key] = $opening->withCopies($copies);
+        }
+    }
+
+    #[Override]
     public function find(string $key): ?PackOpening
     {
         return $this->openings[$key] ?? null;

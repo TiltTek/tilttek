@@ -20,6 +20,7 @@ use Tilttek\Quests\InMemoryCatalog;
 use Tilttek\Quests\QuestProjection;
 use Tilttek\Quests\QuestReader;
 use Tilttek\Quests\Quests;
+use Tilttek\Quests\Store\DuelStore;
 use Tilttek\Quests\Store\InMemoryCompletionStore;
 use Tilttek\Quests\Store\InMemoryContributionStore;
 use Tilttek\Quests\Store\InMemoryDuelStore;
@@ -41,8 +42,6 @@ final readonly class Kit
 
     public InMemoryCompletionStore $completions;
 
-    public InMemoryDuelStore $duels;
-
     public Evaluator $evaluator;
 
     public QuestProjection $projection;
@@ -60,13 +59,13 @@ final readonly class Kit
     public function __construct(
         public Catalog $catalog,
         string $now = '2026-11-07 12:00:00 UTC',
+        public DuelStore $duels = new InMemoryDuelStore(),
     ) {
         $this->clock = new Clock($now);
         $this->recorder = new Recorder();
         $this->contributions = new InMemoryContributionStore();
         $this->enrolments = new InMemoryEnrolmentStore();
         $this->completions = new InMemoryCompletionStore();
-        $this->duels = new InMemoryDuelStore();
         $this->evaluator = new Evaluator($catalog, $this->contributions, $this->enrolments, $this->completions, $this->duels);
         $this->projection = new QuestProjection($this->evaluator, $this->recorder);
         $this->quests = new Quests($this->evaluator, $this->clock);
@@ -81,9 +80,9 @@ final readonly class Kit
      *
      * @param array<string, array<string, mixed>> $definitions
      */
-    public static function of(array $definitions, string $now = '2026-11-07 12:00:00 UTC'): self
+    public static function of(array $definitions, string $now = '2026-11-07 12:00:00 UTC', DuelStore $duels = new InMemoryDuelStore()): self
     {
-        return new self(InMemoryCatalog::fromArray($definitions, new QuestReader('UTC')), $now);
+        return new self(InMemoryCatalog::fromArray($definitions, new QuestReader('UTC')), $now, $duels);
     }
 
     /**

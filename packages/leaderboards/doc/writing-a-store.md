@@ -14,6 +14,10 @@ implementation passes: extend it and return your store from `store()`.
   tie-breaks, 0 to 2 integers.
 - `save()` replaces a member's score on a board and period, with its tie-breaks; `delete()` removes it; `score()` reads
   it.
+- `keep()` replaces it only if the reported score supersedes the one held, as `Measure::supersedes()` says, and returns
+  whether it did: the comparison and the write are one atomic step — a conditional update such as
+  `UPDATE … WHERE value < ?` in SQL, a script in Valkey —, so that two reports at the same moment cannot both pass the
+  comparison.
 - `top()` reads the first scores of a board in a period in the order of the `Ranking` given: the highest value first,
   each tie-break in its direction, then the earliest moment, then the member's reference — among a circle's members
   when one is given. An index on board, period, value, tie-breaks and moment serves it. `Ranking::key()` gives a key
@@ -63,5 +67,7 @@ Each ranking is a sorted set whose keys all have the score 0 and sort as the boa
 first lines are read by `ZRANGE`, a member's rank by `ZLEXCOUNT` — the keys before theirs, or before their score and
 tie-breaks alone for a shared rank —, and how many are ranked by `ZCARD`, each in a logarithm of the ranking's size. A
 ranking among a circle, or asked in directions other than the board's, is ordered in memory from the scores of its
-members. Each write that touches several keys runs as one Lua script; every key starts with the prefix between braces,
+members. Each write that touches several keys runs as one Lua script — `keep()` compares the sort keys of the reported
+score and of the one held in the script that writes, since every key has the score 0 and `ZADD GT` or `LT` would compare
+nothing —; every key starts with the prefix between braces,
 a hash tag that keeps them on one node of a cluster. The snapshots, the choices and the leagues stay in another store.

@@ -4,6 +4,13 @@ All notable changes to `tilttek/quests-bundle` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `DbalDuelStore::transition()`: an `UPDATE … WHERE status = ?` that changes a duel only from the status it was read
+  in, for `tilttek/quests` whose answers, expiries and wins no longer overwrite one another.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added
