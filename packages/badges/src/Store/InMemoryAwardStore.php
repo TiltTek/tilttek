@@ -74,16 +74,9 @@ final class InMemoryAwardStore implements AwardStore
             return false;
         }
 
-        $held = $this->awards[$key];
-        unset($this->awards[$key]);
-
-        if (isset($this->due[$key])) {
-            unset($this->due[$key]);
-
-            return false;
-        }
-
-        $this->withdrawn[$key] = $held;
+        // Its own notice may be under way: the notice of its withdrawal is due all the same.
+        $this->withdrawn[$key] = $this->awards[$key];
+        unset($this->awards[$key], $this->due[$key]);
 
         return true;
     }

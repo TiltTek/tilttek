@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=5e7ac0a8327cc2b7e8602eba5935f140688cd25faf2ead9c3cf51fc051efcd23 -->
+<!-- phil-dev source-sha256=787d1c0ec4f7848759cff344818de7c2251cae54fb3e93f350f9980cc5e708fa -->
 # Écrire un stockage
 
 Une application garde les badges sur son propre stockage en implémentant les quatre stockages. Chaque contrat est le
@@ -21,10 +21,11 @@ comportement que vérifient les tests de la bibliothèque sur les implémentatio
   faite à la main est gardée avec son avis dû ; une attribution faite à la main n'en appelle aucun.
 - `markDelivered()` note que l'avis de l'attribution a été donné ; `undelivered($member)` énumère les attributions du
   membre dont l'avis est dû, par badge et par numéro.
-- `withdraw()` sort l'attribution de celles que détient le membre et renvoie vrai : elle attend l'avis de son retrait.
-  Une attribution dont l'avis est encore dû est supprimée sur-le-champ sans appeler d'avis, et une attribution que le
-  membre ne détient pas est laissée telle quelle : faux dans les deux cas. `withdrawn($member)` énumère les
-  attributions retirées dont l'avis est dû, par badge et par numéro.
+- `withdraw()` sort l'attribution de celles que détient le membre et renvoie vrai : elle attend l'avis de son retrait,
+  même quand son propre avis est encore dû, car cet avis peut être en cours dans un autre processus. Le changement se
+  fait en une étape atomique, une mise à jour conditionnelle par exemple, et `markDelivered()` laisse ensuite dû l'avis
+  du retrait. Une attribution que le membre ne détient pas est laissée telle quelle : faux. `withdrawn($member)`
+  énumère les attributions retirées dont l'avis est dû, par badge et par numéro.
 - `remove()` supprime l'attribution de ce badge, de ce membre et de ce numéro, détenue ou retirée.
 - `of($member, $badge)` énumère les attributions que détient le membre — d'un seul badge quand il est nommé — selon le
   moment où elles ont été gagnées, puis par badge et par numéro ; les attributions retirées sont omises.

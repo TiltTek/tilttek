@@ -20,9 +20,10 @@ library's tests check on the implementations in memory, and that `tilttek/badges
 - `markDelivered()` notes that the notice of the award was given; `undelivered($member)` lists the member's awards
   whose notice is due, by badge and number.
 - `withdraw()` takes the award out of those the member holds and returns true: it waits for the notice of its
-  withdrawal. An award whose own notice is still due is removed at once and owed no notice, and an award the member
-  does not hold is left alone: false for both. `withdrawn($member)` lists the withdrawn awards whose notice is due, by
-  badge and number.
+  withdrawal, even when its own notice is still due, since that notice may be under way in another process. The change
+  is one atomic step, a conditional update for instance, and `markDelivered()` then leaves the notice of the withdrawal
+  due. An award the member does not hold is left alone: false. `withdrawn($member)` lists the withdrawn awards whose
+  notice is due, by badge and number.
 - `remove()` removes the award of that badge, member and number, held or withdrawn.
 - `of($member, $badge)` lists the awards the member holds — of one badge when it is named — by the moment they were
   earned, then badge and number; withdrawn awards are left out.

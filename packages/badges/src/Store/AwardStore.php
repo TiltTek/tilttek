@@ -23,7 +23,7 @@ interface AwardStore
     public function add(Award $award): bool;
 
     /**
-     * Notes that the notice of the award was given.
+     * Notes that the notice of the award was given; a withdrawn award keeps the notice of its withdrawal due.
      */
     public function markDelivered(Award $award): void;
 
@@ -36,8 +36,9 @@ interface AwardStore
 
     /**
      * Withdraws the award the member holds: no longer held, it waits for the notice of its withdrawal, then for
-     * `remove()`; true when that notice is due. An award whose own notice was not given yet is removed at once, and
-     * owed no notice: false, as when the member does not hold it.
+     * `remove()`; true when that notice is due, false when the member does not hold it. The change is one atomic step,
+     * whether or not the award's own notice was given: that notice may be under way in another process, so a withdrawn
+     * award is always owed the notice of its withdrawal, and `markDelivered()` leaves that notice due.
      */
     public function withdraw(Award $award): bool;
 

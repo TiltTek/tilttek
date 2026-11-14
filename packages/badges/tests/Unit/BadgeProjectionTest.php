@@ -232,14 +232,14 @@ final class BadgeProjectionTest extends TestCase
         } catch (RuntimeException) {
         }
 
-        // A withdrawn award whose notice was given is owed the notice of its withdrawal; one whose notice was not given
-        // is owed none.
+        // A withdrawn award is owed the notice of its withdrawal, whether or not its own notice was given: that notice
+        // may be under way in another process.
         $given = new Award('first', $member, 2, $this->at('2026-11-01 10:00:00'), 'a1');
         $this->awards->add($given);
         $this->awards->markDelivered($given);
         self::assertTrue($this->awards->withdraw($given));
         $this->awards->add(new Award('first', $member, 3, $this->at('2026-11-01 10:00:00'), 'a1'));
-        self::assertFalse($this->awards->withdraw(new Award('first', $member, 3, $this->at('2026-11-01 10:00:00'), 'a1')));
+        self::assertTrue($this->awards->withdraw(new Award('first', $member, 3, $this->at('2026-11-01 10:00:00'), 'a1')));
         // A notice of a badge the catalog no longer holds is let go.
         $this->awards->add(new Award('old', $member, 1, $this->at('2026-11-01 10:00:00'), 'x'));
         $older = new Award('older', $member, 1, $this->at('2026-11-01 10:00:00'), 'x');
@@ -247,8 +247,8 @@ final class BadgeProjectionTest extends TestCase
         $this->awards->markDelivered($older);
         $this->awards->withdraw($older);
 
-        self::assertSame(4, $projection->deliver($member));
-        self::assertSame(['revoked first member:1 #2', 'awarded first member:1 #1'], $this->observer->told());
+        self::assertSame(5, $projection->deliver($member));
+        self::assertSame(['revoked first member:1 #2', 'revoked first member:1 #3', 'awarded first member:1 #1'], $this->observer->told());
         self::assertSame([], $this->awards->undelivered($member));
         self::assertSame([], $this->awards->withdrawn($member));
         self::assertSame(0, $projection->deliver($member));

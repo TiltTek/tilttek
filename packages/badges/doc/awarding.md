@@ -54,9 +54,10 @@ and is given:
 - by `BadgeProjection::deliver($member)`, which gives every notice the member is owed, withdrawals first, and returns
   how many it settled. A notice of a badge the catalog no longer holds is let go without the observer.
 
-An award withdrawn before its own notice was given is owed no notice at all. Since a notice can be given again after a
-failure, an observer must be idempotent: it recognises an award by its badge, member and number, and does nothing for a
-notice it has already acted on.
+An award withdrawn is always owed the notice of its withdrawal, even when its own notice was not given yet: that notice
+may be under way in another process, and the observer may thus be told of the withdrawal of an award it was never told
+of. Since a notice can be given again after a failure, an observer must be idempotent: it recognises an award by its
+badge, member and number, and does nothing for a notice it has already acted on.
 
 ## When a rule changes
 

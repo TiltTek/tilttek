@@ -14,9 +14,12 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
   the observer was told and `remove()` deletes it. A store written for 0.1 implements these four methods; `of()` leaves
   out the withdrawn awards, and `forgetDerived()` returns only the awards held whose notice was given.
 - `BadgeProjection` gives the notices a member is owed before evaluating their activity or cancellation, so that the
-  request repeated after a failure, or the next catch-up, tells the observer again; an award withdrawn before its notice
-  was given is owed none, and a rebuild announces an award whose first notice was never given. The observer is told at
-  least once, and must be idempotent.
+  request repeated after a failure, or the next catch-up, tells the observer again, and a rebuild announces an award
+  whose first notice was never given. The observer is told at least once, and must be idempotent.
+- `AwardStore::withdraw()` is one atomic step that always leaves the notice of the withdrawal due, and returns true,
+  for an award the member holds, even when the award's own notice is still due: that notice may be under way in
+  another process. `markDelivered()` leaves the notice of a withdrawal due. The observer may thus be told of the
+  withdrawal of an award it was never told of.
 - `Badges::award()` no longer returns an award the store did not keep. When an award made at the same moment took the
   number, a badge that is not repeatable returns the award kept, and a repeatable badge takes the next number, at most
   `Badges::AWARD_ATTEMPTS` times.
