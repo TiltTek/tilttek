@@ -1,6 +1,6 @@
 {
     "name": "tilttek/dice-bundle",
-    "description": "Dice for Symfony on tilttek/dice: limits, custom dice and notations from the configuration, a journal of replayable rolls in Doctrine, by member and by table, announced by an event, macros of a site, a table and a member, verifiable rolls, a form field and its constraint, Twig filters and functions, an accessible detail of a roll, and an extension point that dresses a member's dice, with an ink that reads on them",
+    "description": "Symfony dice on tilttek/dice: configured limits, custom dice and notations, a Doctrine journal of replayable rolls by member and table, an event per roll, macros by site, table and member, verifiable rolls, a form field and constraint, Twig filters and functions, accessible roll details, and an extension point dressing members' dice in readable ink",
     "license": "MIT",
     "type": "symfony-bundle",
     "keywords": [

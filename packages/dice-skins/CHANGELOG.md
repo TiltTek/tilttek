@@ -33,6 +33,7 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
   material and its texture key, in standard or high contrast as the viewer's accessibility the roller passes asks, or
   as the adapter was built without it; no appearance for a number of sides no die has.
   `tilttek/dice-bundle` is suggested.
+- A conflict with `tilttek/dice-bundle` older than 0.2: the adapter uses its 0.2 API.
 - `Exception\DiceSkinsException`, with `InvalidSkin` and `SkinRefused`.
 - A fuzz target for the skin definitions, and benchmarks of an appearance and of a catalog of 256 skins.
 - The documentation in `doc/`, one file per topic, indexed by the README.
