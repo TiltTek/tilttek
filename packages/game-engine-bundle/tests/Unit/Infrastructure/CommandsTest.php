@@ -51,11 +51,12 @@ final class CommandsTest extends TestCase
     public function testALogIsReplayedAndVerifiedAgainstItsCommitment(): void
     {
         $games = new Games(new RollRace());
-        $tables = new GameTables(new Tables($games, new InMemoryLogStore()));
+        $library = new Tables($games, new InMemoryLogStore());
+        $tables = new GameTables($library);
         $tables->open('roll-race', 'table:1', ['ann', 'bob'], ['target' => 2], self::SEED);
         $tables->play('table:1', new Move('roll.roll', 'ann'));
 
-        $command = $this->tester(new VerifyCommand($tables, $games));
+        $command = $this->tester(new VerifyCommand($library, $games));
 
         self::assertSame(Command::SUCCESS, $command->execute(['table' => 'table:1']));
         $display = $command->getDisplay();
@@ -87,11 +88,12 @@ final class CommandsTest extends TestCase
     public function testAGameThatEndsWithoutWinnersSaysSo(): void
     {
         $games = new Games(new RoleplayingScene());
-        $tables = new GameTables(new Tables($games, new InMemoryLogStore()));
+        $library = new Tables($games, new InMemoryLogStore());
+        $tables = new GameTables($library);
         $tables->open('roleplaying-scene', 'scene:1', ['gm'], [], self::SEED);
         $tables->play('scene:1', new Move('scene.end', 'gm'));
 
-        $command = $this->tester(new VerifyCommand($tables, $games));
+        $command = $this->tester(new VerifyCommand($library, $games));
 
         self::assertSame(Command::SUCCESS, $command->execute(['table' => 'scene:1']));
         self::assertStringContainsString('scene-ended (no winner)', $command->getDisplay());

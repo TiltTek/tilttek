@@ -45,6 +45,11 @@ dispatched for each square; a card whose pattern it completes wins. A cancelled 
 unless the card won already: a cell stays ticked while one of its gestures stands. A gesture recorded twice ticks once,
 by its idempotency key.
 
+A cell remembers the keys of `Card::MOST_KEYS` gestures, sixteen, which bounds the size of a card. A seventeenth
+gesture on the same square **pins** the cell: it stays ticked for good, whatever is cancelled, since a gesture the
+card could not remember may still stand; `Card::pinned()` lists those cells. Unticking a cell that a gesture still
+holds would be worse than keeping one ticked after many gestures, every one of them cancelled.
+
 ## Calling
 
 `Bingo::call($game, $square)` calls a square of the pool for every card of a game whose squares are called, and
@@ -62,6 +67,27 @@ of a closed game is checked, never won.
 The answer is a `Claim`: the cells ticked, the free centre included, and the pattern the card won with, or null. A card
 wins once: `BingoWon` is dispatched once, the game keeps its serial among `winners()` in order, and the card keeps the
 pattern and the moment.
+
+## Delivering the events
+
+A tick, a call or a win is written with its event, in the same version of the card or the game: the card keeps the
+events of its ticks and its win, the game those of its calls, until each was dispatched without an exception.
+
+- When a listener throws, its event stays undelivered; the other events are dispatched all the same, and the first
+  exception is thrown again at the end.
+- The same call repeated dispatches the undelivered events again: the gesture recorded again — which the activity
+  journal does when the same request is repeated, `BingoActivityObserver` being a `ResumableObserver` —, the square
+  called again, the claim made again or the card checked again.
+- `Bingo::deliver($game, $serial)` dispatches again the game's undelivered calls and, given a serial, the card's
+  undelivered ticks and win, and returns how many were delivered: the application calls it to resume from a retry, a
+  scheduled task or the player's next visit.
+
+A card's win takes its place among the game's `winners()` right before its event is dispatched, so a win whose step
+failed is resumed with it. An event is therefore dispatched **at least once**, not exactly once: a listener that acted
+and failed afterwards, or two processes delivering the same event at the same moment, hear it twice. **The listeners
+are idempotent**: each event carries a stable `key()` — the game, the card's serial, and the square and the gesture
+of a tick, or the square of a call —, the same each time it is dispatched again, under which a listener does its work
+once. Each delivery is one more change of the card or the game, made again on a conflict like the others.
 
 ## Closing
 

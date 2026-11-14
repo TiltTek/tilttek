@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=27f733c96c14f94960aa31b86cbb5eb3dbf02b38574a33a9fe3319c084ff826a -->
+<!-- phil-dev source-sha256=08459f72b4036d429113563b14b91701d4a39dbe902f7ed6c9c80f39d96fa39d -->
 # Lancers vérifiables et rejouables
 
 ## Lancers vérifiables
@@ -6,7 +6,9 @@
 Un lancer vérifiable permet à un joueur de vérifier que le résultat n'a pas été choisi :
 
 1. Le lanceur tire une `Seed` d'une source sûre et publie son `Commitment`, le SHA-256 du germe.
-2. Le joueur envoie l'expression et un germe de son choix, le germe du client.
+2. Le joueur envoie l'expression et un germe de son choix, le germe du client : vide, ou d'au plus 256 octets,
+   `Seed::MAX_CLIENT_SEED`. Un germe plus long est refusé avec `InvalidDefinition`, si bien qu'un germe envoyé dans une
+   requête publique coûte un HMAC borné.
 3. Le lanceur lance avec `FairRoller::roll($pool, $seed, $clientSeed, $nonce)` — le *nonce* numérote les lancers faits
    avec le même germe — et obtient un `VerifiableRoll`.
 4. Une fois les lancers de ce germe terminés, le lanceur révèle le germe. `VerifiableRoll::toArray()` est ce qu'il

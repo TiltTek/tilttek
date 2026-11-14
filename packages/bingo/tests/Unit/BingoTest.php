@@ -75,16 +75,16 @@ final class BingoTest extends TestCase
         $observer->appended($this->entry(1, 'k1', 'booth:11'));
         $observer->appended($this->entry(2, 'k2', 'booth:2'));
         $observer->appended($this->entry(3, 'k3', 'booth:5'));
-        self::assertEquals([new SquareTicked('con-2026', 1, 's11'), new SquareTicked('con-2026', 1, 's5')], $this->events->events);
+        self::assertEquals([new SquareTicked('con-2026', 1, 's11', 'k1'), new SquareTicked('con-2026', 1, 's5', 'k3')], $this->events->events);
         self::assertSame([0, 1, 4], $this->bingo->claim('con-2026', 1, 'member:1')->ticked);
         self::assertFalse($this->bingo->claim('con-2026', 1, 'member:1')->isWon());
 
         $observer->appended($this->entry(4, 'k4', 'booth:1'));
 
         self::assertEquals([
-            new SquareTicked('con-2026', 1, 's11'),
-            new SquareTicked('con-2026', 1, 's5'),
-            new SquareTicked('con-2026', 1, 's1'),
+            new SquareTicked('con-2026', 1, 's11', 'k1'),
+            new SquareTicked('con-2026', 1, 's5', 'k3'),
+            new SquareTicked('con-2026', 1, 's1', 'k4'),
             new BingoWon('con-2026', 1, 'member:1', 'row'),
         ], $this->events->events);
         $won = $this->bingo->card('con-2026', 1);
@@ -146,7 +146,7 @@ final class BingoTest extends TestCase
         $present = (string) $open->layout[0];
         $this->bingo->record(Activity::of('k4', 'member:1', 'booth.visited', $this->clock->now(), 'booth:'.substr($present, 1)));
 
-        self::assertSame($saves + 1, $this->store->cardSaves);
+        self::assertSame($saves + 2, $this->store->cardSaves, 'The tick, then its event delivered.');
         self::assertSame([], $this->bingo->card('closed', 1)->ticks());
         self::assertSame([], $this->bingo->card('called', 1)->ticks());
         self::assertSame([0 => ['k4']], $this->bingo->card('open', 1)->ticks());
@@ -292,7 +292,7 @@ final class BingoTest extends TestCase
         $this->store->gameConflicts = Bingo::ATTEMPTS - 1;
         $this->bingo->call('night', 's1');
         self::assertSame(['s1'], $this->bingo->game('night')->called());
-        self::assertSame(Bingo::ATTEMPTS, $this->store->gameSaves);
+        self::assertSame(Bingo::ATTEMPTS + 1, $this->store->gameSaves, 'The call, then its event delivered.');
 
         $this->store->gameConflicts = Bingo::ATTEMPTS;
 
@@ -300,7 +300,7 @@ final class BingoTest extends TestCase
             $this->bingo->call('night', 's2');
             self::fail('Endless conflicts were hidden.');
         } catch (BingoConflict) {
-            self::assertSame(2 * Bingo::ATTEMPTS, $this->store->gameSaves);
+            self::assertSame(2 * Bingo::ATTEMPTS + 1, $this->store->gameSaves);
         }
     }
 
@@ -313,7 +313,7 @@ final class BingoTest extends TestCase
 
         $this->bingo->record(Activity::of('k1', 'member:1', 'booth.visited', $this->clock->now(), 'booth:'.substr((string) $card->layout[0], 1)));
         self::assertSame([0 => ['k1']], $this->bingo->card('con', 1)->ticks());
-        self::assertSame(Bingo::ATTEMPTS, $this->store->cardSaves);
+        self::assertSame(Bingo::ATTEMPTS + 1, $this->store->cardSaves, 'The tick, then its event delivered.');
 
         $this->store->cardConflicts = Bingo::ATTEMPTS;
         $this->expectException(BingoConflict::class);

@@ -80,6 +80,20 @@ final class FairnessTest extends TestCase
         self::assertSame($plain->getBytes(32), $seed->randomizer()->getBytes(32));
     }
 
+    public function testAClientSeedIsAtMostTwoHundredFiftySixBytes(): void
+    {
+        $seed = Seed::fromHex(self::SEED);
+        $longest = str_repeat('é', Seed::MAX_CLIENT_SEED / 2);
+        $expected = new Randomizer(new Xoshiro256StarStar(hash_hmac('sha256', $longest."\n0", sodium_hex2bin(self::SEED), true)));
+
+        self::assertSame(256, Seed::MAX_CLIENT_SEED);
+        self::assertSame($expected->getBytes(32), $seed->randomizer($longest)->getBytes(32));
+
+        $this->expectException(InvalidDefinition::class);
+        $this->expectExceptionMessageIsOrContains('A client seed is at most 256 bytes.');
+        $seed->randomizer($longest.'x');
+    }
+
     public function testAVerifiableRollIsCheckedByAnyone(): void
     {
         $pool = new DiceParser()->parse('4d6kh3, 1d20');

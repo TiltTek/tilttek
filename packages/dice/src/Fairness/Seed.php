@@ -18,6 +18,9 @@ final readonly class Seed
 {
     public const int BYTES = 32;
 
+    /** The longest client seed, in bytes: a seed from a public request costs a bounded HMAC. */
+    public const int MAX_CLIENT_SEED = 256;
+
     private function __construct(
         private string $bytes,
     ) {
@@ -55,9 +58,15 @@ final readonly class Seed
 
     /**
      * The randomness of one roll: this seed, the seed the player chose and the number of the roll.
+     *
+     * @throws InvalidDefinition when the client seed is longer than `MAX_CLIENT_SEED` bytes
      */
     public function randomizer(string $clientSeed = '', int $nonce = 0): Randomizer
     {
+        if (\strlen($clientSeed) > self::MAX_CLIENT_SEED) {
+            throw InvalidDefinition::because(\sprintf('A client seed is at most %d bytes.', self::MAX_CLIENT_SEED));
+        }
+
         return new Randomizer(new Xoshiro256StarStar(hash_hmac('sha256', $clientSeed."\n".$nonce, $this->bytes, true)));
     }
 }

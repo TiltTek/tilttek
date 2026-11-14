@@ -2,9 +2,9 @@
 
 | Type | Role |
 |---|---|
-| `Bingo` | Creates games, deals and prints cards, calls squares, records and cancels gestures, claims, checks by serial or label, and closes |
-| `BingoGame` | A game: pool, grid, patterns, mode, cards dealt, squares called and winners, at a version |
-| `Card` | A card, a player's or printed: serial, layout, ticks and win, at a version |
+| `Bingo` | Creates games, deals and prints cards, calls squares, records and cancels gestures, claims, checks by serial or label, closes, and delivers again the events not delivered |
+| `BingoGame` | A game: pool, grid, patterns, mode, cards dealt, squares called and winners, and the calls not delivered, at a version |
+| `Card` | A card, a player's or printed: serial, layout, ticks, cells pinned and win, and the events not delivered, at a version |
 | `CardDealer` | Draws a layout and a label from the server's secret; the fingerprint of a layout |
 | `SerialLabel` | The label of a printed card: its serial and check code, read as typed |
 | `Claim` | What the server found on a card: the cells ticked and the pattern won with |

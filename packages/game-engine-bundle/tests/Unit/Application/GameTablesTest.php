@@ -6,6 +6,7 @@ namespace Tilttek\GameEngineBundle\Tests\Unit\Application;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Tilttek\GameEngine\Exception\GameInProgress;
 use Tilttek\GameEngine\Games;
 use Tilttek\GameEngine\Move;
 use Tilttek\GameEngine\Store\InMemoryLogStore;
@@ -45,9 +46,27 @@ final class GameTablesTest extends TestCase
         self::assertIsInt($secrets['bob']);
         self::assertSame(['totals' => ['ann' => 0, 'bob' => 0], 'secret' => $secrets['bob']], $tables->view('table:1', 'bob'));
         self::assertSame(['totals' => ['ann' => 0, 'bob' => 0], 'secret' => null], $tables->view('table:1', null, ['leader-first' => true]));
-        self::assertSame(self::SEED, $tables->log('table:1')->seed);
         self::assertSame(hash('sha256', self::SEED), $tables->commitment('table:1'));
         self::assertSame(['table:1', 'table:1', 'table:1'], $lock->held);
+    }
+
+    public function testTheLogAndItsSeedAreShownOnlyOnceTheGameIsOver(): void
+    {
+        $tables = new GameTables(new Tables(new Games(new RollRace()), new InMemoryLogStore()));
+        $tables->open('roll-race', 'table:1', ['ann', 'bob'], ['target' => 2], self::SEED);
+
+        try {
+            $tables->log('table:1');
+            self::fail('The seed of a game that goes on was shown.');
+        } catch (GameInProgress $gameInProgress) {
+            self::assertStringContainsString('table:1', $gameInProgress->getMessage());
+        }
+
+        $tables->play('table:1', new Move('roll.roll', 'ann'));
+
+        self::assertTrue($tables->state('table:1')->isOver());
+        self::assertSame(self::SEED, $tables->log('table:1')->seed);
+        self::assertEquals($tables->finishedLog('table:1'), $tables->log('table:1'));
     }
 
     public function testATableIsNeverOpenedForSeatsThatIdentifyAPerson(): void

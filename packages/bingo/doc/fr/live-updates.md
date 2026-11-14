@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=6339a5b3ed1a11269c14e6be0d2764c4edb66fc6265d1355d44685a9d286427a -->
+<!-- phil-dev source-sha256=d2450ea24491290cd2c1df134d64ddb14831962059e505b878accd020d673b47 -->
 # Mises à jour en direct
 
 Les écrans des joueurs suivent un jeu à mesure qu'il se joue : les cases que l'animateur appelle, les cartons qui
@@ -27,6 +27,9 @@ $publisher = new BingoPublisher(
 | `squareCalled()` | `SquareCalled` | Celui du jeu | `{"type": "square-called", "game": …, "square": …}` |
 | `bingoWon()` | `BingoWon` | Celui du jeu | `{"type": "bingo-won", "game": …, "serial": …, "pattern": …}` |
 | `squareTicked()` | `SquareTicked` | Celui du carton | `{"type": "square-ticked", "game": …, "serial": …, "square": …}` |
+
+Un événement peut être envoyé plus d'une fois, donc une mise à jour peut être poussée deux fois : l'écran qui
+l'entend relit le carton ou le jeu, qui montre la même chose.
 
 Dans une application Symfony, enregistrez-les sur le répartiteur d'événements :
 

@@ -14,17 +14,19 @@ use Tilttek\GameEngine\Exception\InvalidGame;
 use Tilttek\GameEngine\Exception\UnknownTable;
 use Tilttek\GameEngine\Games;
 use Tilttek\GameEngine\Outcome;
-use Tilttek\GameEngineBundle\Application\GameTables;
+use Tilttek\GameEngine\Tables;
 
 /**
  * Replays the log of a table from its first move, against the commitment to its seed when one is given, and tells
- * what it leads to: a log that no longer replays, or whose seed is not the one committed to, fails the command.
+ * what it leads to: a log that no longer replays, or whose seed is not the one committed to, fails the command. It
+ * reads the log through the library's `Tables`, on the server, a game that goes on included, and never prints the
+ * seed: only its commitment.
  */
 #[AsCommand('tilttek:game-engine:verify', 'Replays the log of a game table and verifies it against the commitment to its seed')]
 final readonly class VerifyCommand
 {
     public function __construct(
-        private GameTables $tables,
+        private Tables $tables,
         private Games $games,
         private Engine $engine = new Engine(),
     ) {

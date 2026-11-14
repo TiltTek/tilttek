@@ -109,7 +109,7 @@ final class GameEngineServices
 
         if (class_exists(Command::class)) {
             $container->register(VerifyCommand::class, VerifyCommand::class)
-                ->setArguments([new Reference(GameTables::class), new Reference(Games::class), new Reference(Engine::class)])
+                ->setArguments([new Reference(Tables::class), new Reference(Games::class), new Reference(Engine::class)])
                 ->addTag('console.command');
 
             if ('doctrine' === $config['store']) {

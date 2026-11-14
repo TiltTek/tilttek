@@ -11,6 +11,9 @@ use ReflectionProperty;
 use Tilttek\Bingo\BingoGame;
 use Tilttek\Bingo\Card;
 use Tilttek\Bingo\CardDealer;
+use Tilttek\Bingo\Event\BingoWon;
+use Tilttek\Bingo\Event\SquareCalled;
+use Tilttek\Bingo\Event\SquareTicked;
 use Tilttek\Bingo\Exception\BingoRefused;
 use Tilttek\Bingo\Exception\InvalidBingo;
 use Tilttek\Bingo\Grid;
@@ -98,6 +101,77 @@ final class CardsTest extends TestCase
 
         self::assertCount(Card::MOST_KEYS, $card->ticks()[0]);
         self::assertSame('k16', $card->ticks()[0][15]);
+    }
+
+    public function testACellTickedByMoreGesturesThanItRemembersStaysTicked(): void
+    {
+        $card = new Card('g', 1, 'member:1', ['a', 'b', 'a']);
+
+        for ($key = 1; $key <= Card::MOST_KEYS; ++$key) {
+            $card->tick('a', 'k'.$key);
+        }
+
+        self::assertSame([], $card->pinned());
+        $version = $card->version();
+        self::assertSame([], $card->tick('a', 'k17'));
+        self::assertSame($version + 1, $card->version(), 'Pinned in a change of its own.');
+        self::assertSame([0, 2], $card->pinned());
+        self::assertSame([], $card->tick('a', 'k18'));
+        self::assertSame([], $card->tickAll(['a'], 'k19'));
+        self::assertSame($version + 1, $card->version(), 'Pinned once.');
+
+        for ($key = 1; $key <= Card::MOST_KEYS; ++$key) {
+            self::assertSame([], $card->untick('k'.$key));
+        }
+
+        self::assertSame([0 => [], 2 => []], $card->ticks());
+        self::assertSame([], $card->untick('k17'));
+        self::assertSame([], $card->tick('a', 'k20'), 'Ticked already: not newly.');
+        self::assertSame([0 => ['k20'], 2 => ['k20']], $card->ticks());
+        self::assertCount(1, $card->undelivered(), 'One event, for the first tick.');
+    }
+
+    public function testACardKeepsTheEventsOfItsTicksAndItsWinUntilDelivered(): void
+    {
+        $card = new Card('g', 3, 'member:1', ['a', 'b', 'c']);
+        $card->tickAll(['a', 'b'], 'k1');
+        $card->tick('a', 'k2');
+        $card->win('row', new DateTimeImmutable('2026-11-12 20:00:00 UTC'));
+
+        self::assertEquals([
+            new SquareTicked('g', 3, 'a', 'k1'),
+            new SquareTicked('g', 3, 'b', 'k1'),
+            new BingoWon('g', 3, 'member:1', 'row'),
+        ], $card->undelivered());
+
+        $version = $card->version();
+        $card->markDelivered('g/3/won', 'nope');
+        self::assertSame($version + 1, $card->version());
+        $card->markDelivered('g/3/won');
+        $card->markDelivered();
+        self::assertSame($version + 1, $card->version());
+        $card->markDelivered('g/3/ticked/a/k1', 'g/3/ticked/b/k1');
+        self::assertSame($version + 2, $card->version(), 'One change for many.');
+        self::assertSame([], $card->undelivered());
+        self::assertSame('row', $card->pattern());
+    }
+
+    public function testAGameKeepsTheEventsOfItsCallsUntilDelivered(): void
+    {
+        $game = new BingoGame('g', Games::pool(12), new Grid(3), WinPatterns::line(new Grid(3)), TickMode::Called);
+        $game->call('s2');
+        $game->call('s1');
+        $game->call('s2');
+
+        self::assertEquals([new SquareCalled('g', 's2'), new SquareCalled('g', 's1')], $game->undelivered());
+
+        $version = $game->version();
+        $game->markDelivered('g/called/s9');
+        self::assertSame($version, $game->version());
+        $game->markDelivered('g/called/s1', 'g/called/s2');
+        self::assertSame($version + 1, $game->version());
+        self::assertSame([], $game->undelivered());
+        self::assertSame(['s2', 's1'], $game->called());
     }
 
     public function testACardThatWonStaysWon(): void

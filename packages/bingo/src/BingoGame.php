@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Tilttek\Bingo;
 
+use Tilttek\Bingo\Event\SquareCalled;
 use Tilttek\Bingo\Exception\BingoRefused;
 use Tilttek\Bingo\Exception\InvalidBingo;
 
 /**
  * A bingo game: the pool its cards are drawn from, their grid, the ways to win and what ticks the squares. It counts
- * the cards dealt, keeps the squares called and the cards that won, in order, and is open until it is closed.
+ * the cards dealt, keeps the squares called and the cards that won, in order, and is open until it is closed. It keeps
+ * the squares called whose event is not delivered yet: a call is written with its event, in the same version, and the
+ * event leaves the game once it was dispatched without an exception.
  *
  * Each change gives the game its next version, which the store checks.
  */
@@ -24,6 +27,12 @@ final class BingoGame
 
     /** @var array<string, string> the squares called, by themselves, in the order called */
     private array $called = [];
+
+    /**
+     * @var array<string, string> the squares called whose event is not delivered yet, by themselves, in order; empty in
+     *                            a game stored before it was kept
+     */
+    private array $unsentCalls = [];
 
     /** @var list<int> the serials of the cards that won, in order */
     private array $winners = [];
@@ -105,6 +114,7 @@ final class BingoGame
         }
 
         $this->called[$square] = $square;
+        $this->unsentCalls[$square] = $square;
         ++$this->version;
 
         return true;
@@ -121,6 +131,30 @@ final class BingoGame
     public function called(): array
     {
         return array_values($this->called);
+    }
+
+    /**
+     * The events of the squares called not delivered yet, in the order called.
+     *
+     * @return list<SquareCalled>
+     */
+    public function undelivered(): array
+    {
+        return array_values(array_map(fn (string $square): SquareCalled => new SquareCalled($this->id, $square), $this->unsentCalls));
+    }
+
+    /**
+     * Forgets the events of these keys, dispatched without an exception, in one change: the game takes its next
+     * version; nothing when it holds none of them undelivered.
+     */
+    public function markDelivered(string ...$keys): void
+    {
+        $left = array_filter($this->unsentCalls, fn (string $square): bool => !\in_array(new SquareCalled($this->id, $square)->key(), $keys, true));
+
+        if (\count($left) !== \count($this->unsentCalls)) {
+            $this->unsentCalls = $left;
+            ++$this->version;
+        }
     }
 
     /**

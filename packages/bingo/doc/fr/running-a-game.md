@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=fc37638fda32ef8a36e0966354ae036fc4a844d8d4a251465fbd7d78bc6f4026 -->
+<!-- phil-dev source-sha256=ee08cb2cff973948352b915cb6685c83785d6e72961c247156bebcbbcab12e73 -->
 # Mener un jeu
 
 ## La réserve, la grille et les motifs
@@ -47,6 +47,11 @@ envoyé pour chacune ; un carton dont il complète un motif gagne. Un geste annu
 sauf si le carton a déjà gagné : une cellule reste cochée tant que l'un de ses gestes tient. Un geste enregistré deux
 fois ne coche qu'une fois, grâce à sa clé d'idempotence.
 
+Une cellule retient les clés de `Card::MOST_KEYS` gestes, seize, ce qui borne la taille d'un carton. Un dix-septième
+geste sur la même case **épingle** la cellule : elle reste cochée pour de bon, quoi qu'on annule, puisqu'un geste que
+le carton n'a pas pu retenir tient peut-être encore ; `Card::pinned()` donne ces cellules. Décocher une cellule qu'un
+geste tient encore serait pire que d'en garder une cochée après de nombreux gestes, tous annulés.
+
 ## L'appel
 
 `Bingo::call($game, $square)` appelle une case de la réserve pour chaque carton d'un jeu dont les cases sont appelées, et
@@ -64,6 +69,29 @@ l'organisateur ; `Bingo::verifyLabel()` vérifie d'abord un carton imprimé par 
 La réponse est un `Claim` : les cellules cochées, case libre du centre comprise, et le motif avec lequel le carton a
 gagné, ou null. Un carton gagne une seule fois : `BingoWon` est envoyé une fois, le jeu garde son numéro de série dans
 `winners()` dans l'ordre, et le carton garde le motif et le moment.
+
+## La remise des événements
+
+Une case cochée, une case appelée ou une victoire s'écrit avec son événement, dans la même version du carton ou du
+jeu : le carton garde les événements de ses cases cochées et de sa victoire, le jeu ceux de ses appels, jusqu'à ce que
+chacun ait été envoyé sans exception.
+
+- Quand un écouteur lance une exception, son événement reste non remis ; les autres événements sont envoyés tout de
+  même, et la première exception est relancée à la fin.
+- Le même appel répété envoie de nouveau les événements non remis : le geste enregistré de nouveau — ce que fait le
+  journal d'activité quand la même requête est répétée, `BingoActivityObserver` étant un `ResumableObserver` —, la case
+  appelée de nouveau, la réclamation faite de nouveau ou le carton vérifié de nouveau.
+- `Bingo::deliver($game, $serial)` envoie de nouveau les appels non remis du jeu et, si un numéro de série est donné,
+  les cases cochées et la victoire non remises du carton, et retourne combien ont été remis : l'application l'appelle
+  pour reprendre, depuis une nouvelle tentative, une tâche planifiée ou la visite suivante du joueur.
+
+La victoire d'un carton prend sa place dans les `winners()` du jeu juste avant l'envoi de son événement : une victoire
+dont cette étape a échoué reprend avec lui. Un événement est donc envoyé **au moins une fois**, pas exactement une
+fois : un écouteur qui a agi puis échoué, ou deux processus qui remettent le même événement au même moment,
+l'entendent deux fois. **Les écouteurs sont idempotents** : chaque événement porte une `key()` stable — le jeu, le
+numéro de série du carton, et la case et le geste d'une case cochée, ou la case d'un appel —, la même chaque fois qu'il
+est envoyé de nouveau, sous laquelle un écouteur ne fait son travail qu'une fois. Chaque remise est un changement de
+plus du carton ou du jeu, refait en cas de conflit comme les autres.
 
 ## Fermer
 

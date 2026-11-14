@@ -31,7 +31,7 @@ final class BingoPublisherTest extends TestCase
 
         $publisher->squareCalled(new SquareCalled('con 2026', 's4'));
         $publisher->bingoWon(new BingoWon('con 2026', 7, 'member:44', 'row'));
-        $publisher->squareTicked(new SquareTicked('con 2026', 7, 's9'));
+        $publisher->squareTicked(new SquareTicked('con 2026', 7, 's9', 'k1'));
 
         self::assertSame('https://bingo.test/games/con%202026', $publisher->topic('con 2026'));
         self::assertSame('https://bingo.test/games/con%202026/7', $publisher->cardTopic('con 2026', 7));

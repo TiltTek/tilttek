@@ -26,6 +26,9 @@ $publisher = new BingoPublisher(
 | `bingoWon()` | `BingoWon` | The game's | `{"type": "bingo-won", "game": …, "serial": …, "pattern": …}` |
 | `squareTicked()` | `SquareTicked` | The card's | `{"type": "square-ticked", "game": …, "serial": …, "square": …}` |
 
+An event may be dispatched more than once, so an update may be pushed twice: the screen that hears it reads the card
+or the game again, which shows the same thing.
+
 In a Symfony application, register them on the event dispatcher:
 
 ```yaml
