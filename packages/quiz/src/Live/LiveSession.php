@@ -7,6 +7,11 @@ namespace Tilttek\Quiz\Live;
 use DateTimeImmutable;
 use Tilttek\Quiz\AnswerResult;
 use Tilttek\Quiz\Contract\Answer;
+use Tilttek\Quiz\Event\GuestInvited;
+use Tilttek\Quiz\Event\LiveQuizFinished;
+use Tilttek\Quiz\Event\PerfectScore;
+use Tilttek\Quiz\Event\QuizCompleted;
+use Tilttek\Quiz\Event\TeamWon;
 use Tilttek\Quiz\Exception\InvalidQuiz;
 use Tilttek\Quiz\Exception\QuizRefused;
 use Tilttek\Quiz\Identifier;
@@ -23,7 +28,8 @@ use Tilttek\Quiz\Team\TeamScoring;
  * session, whatever its case. A session may be played by teams: each player joins one, and the teams are ranked by
  * the scores of their players.
  *
- * Each change gives the session its next version, which the store checks.
+ * Each change gives the session its next version, which the store checks. The events of its end are written with it,
+ * in the same version, and each leaves the session once it was dispatched without an exception.
  */
 final class LiveSession
 {
@@ -45,6 +51,12 @@ final class LiveSession
     private array $teamOf = [];
 
     private int $position = -1;
+
+    /**
+     * @var array<string, LiveQuizFinished|QuizCompleted|PerfectScore|TeamWon|GuestInvited> the events of the end not
+     *                                                                                      delivered yet, by key, in order
+     */
+    private array $undelivered = [];
 
     private ?DateTimeImmutable $shownAt = null;
 
@@ -217,10 +229,17 @@ final class LiveSession
     }
 
     /**
-     * Ends the session, from the lobby or a review: its standings are final. A question shown is closed first.
+     * Ends the session, from the lobby or a review: its standings are final. A question shown is closed first. Given its
+     * quiz, as `LiveQuizzes` gives it, the session keeps the events of its end until they are delivered:
+     * `LiveQuizFinished`, then for each player `QuizCompleted` and maybe `PerfectScore`, `TeamWon` for each winning
+     * team, and `GuestInvited` for each guest.
      */
-    public function finish(): void
+    public function finish(?Quiz $quiz = null): void
     {
+        if ($quiz instanceof Quiz) {
+            $this->checkQuiz($quiz);
+        }
+
         if (LiveState::Question === $this->state) {
             throw QuizRefused::because(\sprintf('The live session %s shows a question: close it before the end.', $this->id));
         }
@@ -231,6 +250,36 @@ final class LiveSession
 
         $this->state = LiveState::Finished;
         ++$this->version;
+
+        if ($quiz instanceof Quiz) {
+            foreach ($this->endEvents($quiz) as $event) {
+                $this->undelivered[$event->key()] = $event;
+            }
+        }
+    }
+
+    /**
+     * The events of the end not delivered yet, in the order they are dispatched.
+     *
+     * @return list<LiveQuizFinished|QuizCompleted|PerfectScore|TeamWon|GuestInvited>
+     */
+    public function undelivered(): array
+    {
+        return array_values($this->undelivered);
+    }
+
+    /**
+     * Forgets the events of these keys, dispatched without an exception, in one change: the session takes its next
+     * version; nothing when it holds none of them undelivered.
+     */
+    public function markDelivered(string ...$keys): void
+    {
+        $left = array_diff_key($this->undelivered, array_flip($keys));
+
+        if (\count($left) !== \count($this->undelivered)) {
+            $this->undelivered = $left;
+            ++$this->version;
+        }
     }
 
     /**
@@ -405,6 +454,37 @@ final class LiveSession
     public function version(): int
     {
         return $this->version;
+    }
+
+    /**
+     * @return list<LiveQuizFinished|QuizCompleted|PerfectScore|TeamWon|GuestInvited>
+     */
+    private function endEvents(Quiz $quiz): array
+    {
+        $events = [new LiveQuizFinished($quiz->id, $this->id)];
+
+        foreach ($this->players as $player) {
+            $perfect = $this->isPerfect($quiz, $player->id);
+            $events[] = new QuizCompleted($quiz->id, $this->id, $player->id, $perfect);
+
+            if ($perfect) {
+                $events[] = new PerfectScore($quiz->id, $this->id, $player->id);
+            }
+        }
+
+        if ([] !== $this->teams) {
+            foreach ($this->teamLeaderboard()->top(1) as $winner) {
+                if ($winner->score > 0) {
+                    $events[] = new TeamWon($quiz->id, $this->id, $winner->team);
+                }
+            }
+        }
+
+        foreach ($this->guests() as $guest) {
+            $events[] = new GuestInvited($this->id, $guest->id);
+        }
+
+        return $events;
     }
 
     /**

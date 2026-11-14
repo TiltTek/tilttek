@@ -11,6 +11,9 @@ use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 use Tilttek\Quiz\Answer\ChoiceAnswer;
 use Tilttek\Quiz\Answer\NumberAnswer;
+use Tilttek\Quiz\Event\GuestInvited;
+use Tilttek\Quiz\Event\LiveQuizFinished;
+use Tilttek\Quiz\Event\QuizCompleted;
 use Tilttek\Quiz\Exception\InvalidQuiz;
 use Tilttek\Quiz\Exception\QuizRefused;
 use Tilttek\Quiz\Live\LiveSession;
@@ -198,6 +201,41 @@ final class LiveSessionTest extends TestCase
         self::assertSame(100, $this->session->resultsOf('m5')[0]->total());
         self::assertSame(100, $this->session->leaderboard()->standingOf('m5')?->score);
         self::assertEquals([Player::guest('g2', 'Elf')], $this->session->guests());
+    }
+
+    public function testTheEndKeepsItsEventsUntilTheyAreDelivered(): void
+    {
+        $this->session->join(Player::guest('g1', 'Pixel'));
+        $this->expectRefusal('The live session s plays the quiz trivia, not other.', fn () => $this->session->finish(new Quiz('other', $this->quiz->questions)));
+        self::assertSame(LiveState::Lobby, $this->session->state());
+
+        $this->session->finish($this->quiz);
+        $version = $this->session->version();
+
+        self::assertEquals([
+            new LiveQuizFinished('trivia', 's'),
+            new QuizCompleted('trivia', 's', 'g1', false),
+            new GuestInvited('s', 'g1'),
+        ], $this->session->undelivered());
+
+        $this->session->markDelivered('unknown');
+        self::assertSame($version, $this->session->version());
+
+        $this->session->markDelivered('s/finished', 's/g1/invited');
+        self::assertSame($version + 1, $this->session->version());
+        self::assertEquals([new QuizCompleted('trivia', 's', 'g1', false)], $this->session->undelivered());
+
+        $this->session->markDelivered('trivia/s/g1/completed');
+        self::assertSame([], $this->session->undelivered());
+        self::assertSame($version + 2, $this->session->version());
+    }
+
+    public function testAnEndWithoutItsQuizKeepsNoEvent(): void
+    {
+        $this->session->join(Player::member('m1'));
+        $this->session->finish();
+
+        self::assertSame([], $this->session->undelivered());
     }
 
     public function testAClaimedPseudonymIsFreeAgain(): void

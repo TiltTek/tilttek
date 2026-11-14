@@ -8,18 +8,14 @@ use Closure;
 use Psr\Clock\ClockInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Random\Randomizer;
+use Throwable;
 use Tilttek\Quiz\Contract\Answer;
 use Tilttek\Quiz\Contract\LiveSessionStore;
 use Tilttek\Quiz\Contract\PseudonymFilter;
 use Tilttek\Quiz\Contract\QuizCatalog;
-use Tilttek\Quiz\Event\GuestInvited;
-use Tilttek\Quiz\Event\LiveQuizFinished;
-use Tilttek\Quiz\Event\PerfectScore;
 use Tilttek\Quiz\Event\PlayerJoined;
 use Tilttek\Quiz\Event\QuestionClosed;
 use Tilttek\Quiz\Event\QuestionShown;
-use Tilttek\Quiz\Event\QuizCompleted;
-use Tilttek\Quiz\Event\TeamWon;
 use Tilttek\Quiz\Exception\QuizConflict;
 use Tilttek\Quiz\Exception\QuizRefused;
 use Tilttek\Quiz\Live\LiveSession;
@@ -35,6 +31,11 @@ use Tilttek\Quiz\Team\TeamScoring;
  * end of a session dispatches `LiveQuizFinished`, then `QuizCompleted` and maybe `PerfectScore` for each player,
  * `TeamWon` for each winning team, and `GuestInvited` for each guest. Each event follows the saving of the change it
  * tells. It keeps no state between calls: the sessions live in the store.
+ *
+ * The events of the end are written with the session that is over, and each stays there until it was dispatched
+ * without an exception: a listener that throws leaves it there, the other events are dispatched all the same, and the
+ * first exception is thrown again at the end. `finish()` called again, or `deliver()`, dispatches what is left. An
+ * event may thus be dispatched more than once: the listeners are idempotent, keyed by the event's `key()`.
  */
 final readonly class LiveQuizzes
 {
@@ -56,7 +57,8 @@ final readonly class LiveQuizzes
 
     /**
      * Opens a session of the quiz, with a PIN of six digits no other session that is not over holds, played by each
-     * player for themselves, or by teams.
+     * player for themselves, or by teams. The store takes the PIN only while it is free, in one step: a PIN another
+     * session took in between is drawn again, up to `PIN_DRAWS` times.
      *
      * @param list<string> $teams
      */
@@ -65,12 +67,9 @@ final readonly class LiveQuizzes
         $played = $this->quiz($quiz);
 
         for ($draw = 0; $draw < self::PIN_DRAWS; ++$draw) {
-            $pin = \sprintf('%06d', $this->randomizer->getInt(0, 999_999));
+            $opened = LiveSession::open($session, $played, \sprintf('%06d', $this->randomizer->getInt(0, 999_999)), $teams, $teamScoring);
 
-            if (!$this->sessions->findByPin($pin) instanceof LiveSession) {
-                $opened = LiveSession::open($session, $played, $pin, $teams, $teamScoring);
-                $this->sessions->add($opened);
-
+            if ($this->sessions->add($opened)) {
                 return $opened;
             }
         }
@@ -138,41 +137,39 @@ final readonly class LiveQuizzes
         return $closed;
     }
 
+    /**
+     * Ends the session, then dispatches the events of its end not delivered yet. A session over whose events are not
+     * all delivered is not ended again: its events left are dispatched; one whose events are all delivered is refused.
+     */
     public function finish(string $session): LiveSession
     {
         $finished = $this->change(
             fn (): LiveSession => $this->session($session),
-            static function (LiveSession $live): null {
-                $live->finish();
+            function (LiveSession $live): null {
+                if (LiveState::Finished !== $live->state() || [] === $live->undelivered()) {
+                    $live->finish($this->quiz($live->quiz));
+                }
 
                 return null;
             },
         )[0];
-        $quiz = $this->quiz($finished->quiz);
-        $this->events->dispatch(new LiveQuizFinished($quiz->id, $finished->id));
+        [$delivered, , $failure] = $this->deliverEnd($finished);
+        $this->rethrow($failure);
 
-        foreach ($finished->players() as $player) {
-            $perfect = $finished->isPerfect($quiz, $player->id);
-            $this->events->dispatch(new QuizCompleted($quiz->id, $finished->id, $player->id, $perfect));
+        return $delivered;
+    }
 
-            if ($perfect) {
-                $this->events->dispatch(new PerfectScore($quiz->id, $finished->id, $player->id));
-            }
-        }
+    /**
+     * Dispatches again the events of the end of the session not delivered yet, to resume after a listener failed.
+     *
+     * @return int how many were delivered
+     */
+    public function deliver(string $session): int
+    {
+        [, $count, $failure] = $this->deliverEnd($this->session($session));
+        $this->rethrow($failure);
 
-        if ([] !== $finished->teams()) {
-            foreach ($finished->teamLeaderboard()->top(1) as $winner) {
-                if ($winner->score > 0) {
-                    $this->events->dispatch(new TeamWon($quiz->id, $finished->id, $winner->team));
-                }
-            }
-        }
-
-        foreach ($finished->guests() as $guest) {
-            $this->events->dispatch(new GuestInvited($finished->id, $guest->id));
-        }
-
-        return $finished;
+        return $count;
     }
 
     /**
@@ -193,6 +190,50 @@ final readonly class LiveQuizzes
     public function session(string $session): LiveSession
     {
         return $this->sessions->find($session) ?? throw QuizRefused::unknownSession($session);
+    }
+
+    /**
+     * Dispatches the events of the end not delivered yet, and forgets those dispatched without an exception.
+     *
+     * @return array{LiveSession, int, ?Throwable} the session as kept, how many were delivered, and the first exception
+     *                                             thrown
+     */
+    private function deliverEnd(LiveSession $session): array
+    {
+        $keys = [];
+        $failure = null;
+
+        foreach ($session->undelivered() as $event) {
+            try {
+                $this->events->dispatch($event);
+            } catch (Throwable $thrown) {
+                $failure ??= $thrown;
+
+                continue;
+            }
+
+            $keys[] = $event->key();
+        }
+
+        if ([] !== $keys) {
+            $session = $this->change(
+                fn (): LiveSession => $this->session($session->id),
+                static function (LiveSession $live) use ($keys): null {
+                    $live->markDelivered(...$keys);
+
+                    return null;
+                },
+            )[0];
+        }
+
+        return [$session, \count($keys), $failure];
+    }
+
+    private function rethrow(?Throwable $failure): void
+    {
+        if ($failure instanceof Throwable) {
+            throw $failure;
+        }
     }
 
     private function closeOne(LiveSession $live): bool

@@ -10,6 +10,8 @@ namespace Tilttek\Quiz\Event;
  * identifiers only: `run` is the play or the live session, `player` the member's reference or the guest's identifier;
  * the listener reads the rest. `practice` is true for a play at one's own pace that does not count, the member having
  * played the quiz before: a listener that awards points or badges leaves it out.
+ *
+ * It is dispatched at least once: a listener is idempotent, keyed by `key()`.
  */
 final readonly class QuizCompleted
 {
@@ -20,5 +22,11 @@ final readonly class QuizCompleted
         public bool $perfect,
         public bool $practice = false,
     ) {
+    }
+
+    /** The same each time this player's run is dispatched again: a run is completed once. */
+    public function key(): string
+    {
+        return \sprintf('%s/%s/%s/completed', $this->quiz, $this->run, $this->player);
     }
 }

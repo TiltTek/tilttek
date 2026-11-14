@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=dbb0a7a6e5a9c868d28ca02bb28dd866272318c3241b4f5d1007a0b0e045a863 -->
+<!-- phil-dev source-sha256=5579296c22271f53602fbba689f4acc87ba3c369bf55b8c798a98f92f0a26437 -->
 # Jouer
 
 ## À son rythme
@@ -109,6 +109,24 @@ déjà fermée ne fait rien.
 
 Un joueur qui se joint de nouveau, et une question déjà fermée, ne disent rien. Les écrans suivent ces gestes par les
 [mises à jour en direct](live-updates.md).
+
+Les événements de la fin sont gardés dans la session terminée, dans la même version, et chacun y reste jusqu'à ce qu'il
+ait été envoyé sans exception. Un écouteur qui lance une exception y laisse son événement ; les autres événements sont
+envoyés quand même, et la première exception est relancée une fois chaque événement essayé. La session reste terminée :
+appeler `finish()` de nouveau envoie les événements restants, et `deliver($session)` fait de même et renvoie combien
+sont partis. Une fois tous les événements partis, `finish()` est de nouveau refusé.
+
+```php
+try {
+    $live->finish('night-12');
+} catch (ListenerFailed $failure) {   // whatever the listener threw
+    $live->deliver('night-12');
+}
+```
+
+Un événement de la fin peut donc être envoyé plus d'une fois. Les écouteurs sont idempotents : chacun de ces événements
+porte une `key()`, la même chaque fois qu'il est envoyé de nouveau (`night-12/finished`,
+`trivia/night-12/member:44/completed`), et un écouteur qui donne des points ou un badge le fait une fois par clé.
 
 
 Une session accepte jusqu'à 1 000 joueurs. Beaucoup de joueurs répondent en même temps : chaque réponse est une

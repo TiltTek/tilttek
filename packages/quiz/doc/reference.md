@@ -14,7 +14,7 @@
 | `SelfPaced\Replays` | `Practice` or `Refused`: a member's later plays of a quiz |
 | `SelfPaced\Feedback` | `AfterPlay` or `AfterEachAnswer`: when a member sees their results |
 | `SelfPaced\PerfectScoreRule` | `OncePerQuizAndMember` or `EveryPerfectPlay` |
-| `LiveQuizzes` | Opens, joins, shows, answers, closes and finishes the live sessions; gives a guest's place to a member |
+| `LiveQuizzes` | Opens, joins, shows, answers, closes and finishes the live sessions, and delivers the events of their end again after a failed listener; gives a guest's place to a member |
 | `Live\LiveSession` | A live session, at a version |
 | `Live\LiveState` | `Lobby`, `Question`, `Review` or `Finished` |
 | `Leaderboard`, `Standing` | The standings of a live session |

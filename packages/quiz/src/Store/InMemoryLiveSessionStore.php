@@ -12,7 +12,8 @@ use Tilttek\Quiz\Live\LiveState;
 
 /**
  * The live sessions in memory, for tests and for a game that lives in one process. It keeps copies, so that a session
- * changed and not saved leaves the stored one as it was.
+ * changed and not saved leaves the stored one as it was. One process runs one call at a time: checking a PIN and
+ * adding the session cannot be split.
  */
 final class InMemoryLiveSessionStore implements LiveSessionStore
 {
@@ -38,13 +39,19 @@ final class InMemoryLiveSessionStore implements LiveSessionStore
     }
 
     #[Override]
-    public function add(LiveSession $session): void
+    public function add(LiveSession $session): bool
     {
         if (isset($this->sessions[$session->id])) {
             throw QuizConflict::at('live session', $session->id, 0, $this->sessions[$session->id]->version());
         }
 
+        if ($this->findByPin($session->pin) instanceof LiveSession) {
+            return false;
+        }
+
         $this->sessions[$session->id] = clone $session;
+
+        return true;
     }
 
     #[Override]

@@ -28,7 +28,11 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
   `SelfPaced\PerfectScoreRule`; `erasePlayer()` deleting a member's plays.
 - `LiveQuizzes`, `Live\LiveSession` and `Live\LiveState`: a six-digit PIN drawn from a secure source and free among
   the sessions not over, up to 1 000 players, members and guests, each question shown, answered once per player in
-  time, closed with the absent timed out, then reviewed; the changes made again on a conflict, up to eight times.
+  time, closed with the absent timed out, then reviewed; the changes made again on a conflict, up to eight times. The
+  PIN is taken by `Contract\LiveSessionStore::add()` only while no session that is not over holds it, in one atomic
+  step, and drawn again otherwise, up to `LiveQuizzes::PIN_DRAWS` times. The events of the end are kept in the session
+  until each was dispatched without an exception: `LiveSession::undelivered()` and `markDelivered()`, the events left
+  dispatched by `finish()` called again or by `LiveQuizzes::deliver()`, a failed listener never stopping the others.
 - `Pin`: the PIN a player types, spaces and hyphens left out, at most 16 bytes read, refused with `InvalidQuiz` unless
   six ASCII digits, read by `LiveQuizzes::join()` before any store is asked.
 - Teams: 2 to 50 per session, by identifier; a player joins the team given or the smallest; `Team\TeamLeaderboard`
@@ -45,7 +49,8 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
   ranks (1, 1, 3), `top()` with ties at the edge.
 - Events carrying identifiers only: `QuizCompleted` and `PerfectScore`, both saying whether a play is practice,
   `LiveQuizFinished`, `TeamWon`, `GuestInvited`, and the moves of a live session, `PlayerJoined`, `QuestionShown` and
-  `QuestionClosed`, each dispatched once the change is saved.
+  `QuestionClosed`, each dispatched once the change is saved; the events of the end of a live session carry a stable
+  `key()` for idempotent listeners.
 - `Mercure\LiveSessionPublisher`: the moves of a live session pushed as private Mercure updates on the session's
   topic, naming the session and the position of a question only; `symfony/mercure` suggested.
 - `View\ResultView` and `templates/result.html.twig`: the score out of the most, the rank of a live run and of the
@@ -53,7 +58,8 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
   dispatching `quiz:completed`, `quiz:perfect` and `quiz:team-won` on the window once per run in a browser tab, for the
   celebration of the PHIL UX kit.
 - `Contract\QuizCatalog`, `Contract\PlayStore` — with the count of a member's plays of a quiz, one play per attempt
-  and the erasure of a member — and `Contract\LiveSessionStore`, with versions, and their stores in memory, with
+  and the erasure of a member — and `Contract\LiveSessionStore`, with versions and one session not over per PIN, and
+  their stores in memory, with
   `Store\InMemoryQuestionSource`.
 - Exceptions under `Exception\QuizException`: `InvalidQuiz`, `QuizRefused` and `QuizConflict`.
 - Benchmarks of an answer in a session of 1 000 players, of its standings, of the standings of its players in ten

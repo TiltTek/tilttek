@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=fa48907b98ef459e309bba91e4608a1ab9128ee059201e1d0691b1c54ebbe60e -->
+<!-- phil-dev source-sha256=16e1fb1dfb1b3b1473ea3531bcf03ad64185e2443fc39bbad3e073584e5b7c64 -->
 # Référence
 
 | Type | Rôle |
@@ -15,7 +15,7 @@
 | `SelfPaced\Replays` | `Practice` ou `Refused` : les parties suivantes d'un membre à un jeu-questionnaire |
 | `SelfPaced\Feedback` | `AfterPlay` ou `AfterEachAnswer` : quand un membre voit ses résultats |
 | `SelfPaced\PerfectScoreRule` | `OncePerQuizAndMember` ou `EveryPerfectPlay` |
-| `LiveQuizzes` | Ouvre, fait rejoindre, montre, reçoit les réponses, ferme et termine les sessions en direct ; donne la place d'un invité à un membre |
+| `LiveQuizzes` | Ouvre, fait rejoindre, montre, reçoit les réponses, ferme et termine les sessions en direct, et remet de nouveau les événements de leur fin après un écouteur en échec ; donne la place d'un invité à un membre |
 | `Live\LiveSession` | Une session en direct, à une version |
 | `Live\LiveState` | `Lobby`, `Question`, `Review` ou `Finished` |
 | `Leaderboard`, `Standing` | Le classement d'une session en direct |

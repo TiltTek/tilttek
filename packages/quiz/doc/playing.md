@@ -103,6 +103,24 @@ already does nothing.
 A player who joins again, and a question closed already, say nothing. The screens follow these moves through
 [live updates](live-updates.md).
 
+The events of the end are kept in the session that is over, in the same version, and each stays there until it was
+dispatched without an exception. A listener that throws leaves its event there; the other events are dispatched all
+the same, and the first exception is thrown again once every event was tried. The session stays over: calling
+`finish()` again dispatches the events left, and `deliver($session)` does the same and returns how many went. Once
+every event went, `finish()` is refused again.
+
+```php
+try {
+    $live->finish('night-12');
+} catch (ListenerFailed $failure) {   // whatever the listener threw
+    $live->deliver('night-12');
+}
+```
+
+An event of the end may thus be dispatched more than once. The listeners are idempotent: each of these events carries
+a `key()`, the same each time it is dispatched again — `night-12/finished`, `trivia/night-12/member:44/completed` — and
+a listener that awards points or a badge does it once per key.
+
 A session takes up to 1 000 players. Many players answer at once: each answer is a new version of the session, and
 `LiveQuizzes` reads the session again and makes the change again when another answer was saved first, up to eight
 times; see [Storing](storing.md).

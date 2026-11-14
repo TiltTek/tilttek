@@ -21,6 +21,19 @@ so that the answers of many players are all kept; `SelfPacedQuizzes` lets the co
 member answers one question at a time. A store backed by a database writes `save()` as an update conditioned on the
 version.
 
+## PINs
+
+A PIN is held by one session that is not over at most. `LiveSessionStore::add()` checks it and keeps the session in one
+atomic step: it returns false, and keeps nothing, when another session that is not over holds the PIN, and
+`LiveQuizzes::open()` then draws another, up to `LiveQuizzes::PIN_DRAWS` times before refusing with `QuizRefused`. A
+lookup with `findByPin()` followed by a write would let two sessions opened at once both take the PIN they drew.
+
+A store backed by a database holds this with a unique index on a nullable `active_pin` column: the PIN while the
+session is not over, and `NULL` once `save()` keeps it over, which frees the PIN. `add()` inserts the row and returns
+false on a violation of that index. SQLite, MySQL and PostgreSQL all let a unique index hold many `NULL`, so the same
+schema works on the three; a partial index (`WHERE state <> 'finished'`) would do the same on SQLite and PostgreSQL,
+but MySQL has none.
+
 ## Attempts
 
 A play carries its `attempt` at the quiz, and `PlayStore::countOf($quiz, $player)` tells how many plays of the quiz a
@@ -35,5 +48,5 @@ returns how many there were.
 A play holds its quiz's identifier, its player, its attempt, the moment each question was shown and the result of each
 answer. A
 session holds its PIN, its state, its teams and their scoring, its players — a guest's pseudonym among them — with the
-team of each, and the result of each answer. A
+team of each, the result of each answer, and the events of its end not delivered yet. A
 store that keeps a guest's pseudonym keeps it with the session and deletes it with the session; no event carries it.
