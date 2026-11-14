@@ -20,7 +20,7 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 - `tilttek_generator.cache` is the directory of Twig's compiled templates, `%kernel.cache_dir%/tilttek_generator/twig`
   by default, `true` naming the default; `false` and an empty text are refused, so that templates are never loaded by
   `eval()`.
-- `tilttek/generator: ^0.1.1@dev`, for its new limits and attributions.
+- `tilttek/generator: ^0.2@dev`, for its new limits and attributions.
 
 ## 0.1.0-alpha - 2026-11-12
 
