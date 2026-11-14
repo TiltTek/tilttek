@@ -4,6 +4,13 @@ All notable changes to `tilttek/generator` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Fixed
+
+- The table `hook`, in English and in French: the entry whose text holds a comma is quoted, so that it is read whole
+  instead of cut at the comma; Symfony Yaml 8.2.0-BETA2 refuses the unquoted form.
+
 ## 0.1.0-alpha - 2026-11-12
 
 ### Added

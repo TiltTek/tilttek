@@ -49,7 +49,7 @@ lists:
     - { text: the target does not want to be found, weight: 2 }
     - { text: the patron is the real culprit, weight: 1 }
     - { text: the deadline is shorter than they said, weight: 2 }
-    - { text: nothing is as it seems, and that is all, weight: 1 }
+    - { text: "nothing is as it seems, and that is all", weight: 1 }
 generators:
   table.hook:
     templates:

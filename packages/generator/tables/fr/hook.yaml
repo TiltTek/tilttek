@@ -49,7 +49,7 @@ lists:
     - { text: la cible ne veut pas être retrouvée, weight: 2 }
     - { text: le commanditaire est le vrai coupable, weight: 1 }
     - { text: le délai est plus court qu'annoncé, weight: 2 }
-    - { text: rien n'est ce qu'il paraît, et voilà tout, weight: 1 }
+    - { text: "rien n'est ce qu'il paraît, et voilà tout", weight: 1 }
 generators:
   table.hook:
     locale: fr
