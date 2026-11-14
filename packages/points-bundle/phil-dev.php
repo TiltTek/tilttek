@@ -54,9 +54,9 @@ return [
             // à corriger : new Schema() est interne à DBAL, les tests de schéma doivent passer par un SchemaManager ou une SchemaConfig.
             ['identifier' => 'method.internal', 'path' => 'tests/Unit/Infrastructure/Database.php', 'count' => 1],
             // à corriger : API de schéma DBAL dépréciée dans les tests (getColumns(), getName(), getPrimaryKey(), isUnique()).
-            ['identifier' => 'method.deprecated', 'path' => 'tests/Unit/Infrastructure/DbalLedgerTest.php', 'count' => 12],
+            ['identifier' => 'method.deprecated', 'path' => 'tests/Unit/Infrastructure/DbalLedgerTest.php', 'count' => 15],
             // à corriger : getName()/getObjectName() appelées sur des classes internes de DBAL dans les tests.
-            ['identifier' => 'method.internalClass', 'path' => 'tests/Unit/Infrastructure/DbalLedgerTest.php', 'count' => 2],
+            ['identifier' => 'method.internalClass', 'path' => 'tests/Unit/Infrastructure/DbalLedgerTest.php', 'count' => 3],
             // à corriger : new Schema() est interne à DBAL, les tests de schéma doivent passer par un SchemaManager ou une SchemaConfig.
             ['identifier' => 'method.internal', 'path' => 'tests/Unit/Infrastructure/DbalLedgerTest.php', 'count' => 1],
             // à corriger : new Schema() est interne à DBAL, les tests de schéma doivent passer par un SchemaManager ou une SchemaConfig.

@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=35547a9e8cbf2818770cb12334ec6ca42d53d0bc1c22581e9d5d5ce842032efb -->
+<!-- phil-dev source-sha256=1fade3c94d85e97f24203b2c756ec2277f6bcd9812ce57dd29bf9831a8e705bb -->
 # Écrire un stockage
 
 Une application qui garde ses échanges ailleurs qu'en mémoire ou dans les tables du bundle implémente les stockages.
@@ -7,13 +7,16 @@ Chaque contrat est aussi un cas de test dans les tests de la bibliothèque (`Res
 
 ## `ReservationStore`
 
-- `add()` écrit une réservation une fois par clé (false quand la clé existe déjà). Elle vérifie les unités des
-  réservations réservées et confirmées de la récompense selon le stock et la limite du membre **dans la même étape**,
-  pour que deux membres n'obtiennent jamais la dernière unité : sous un verrou, ou en une seule instruction.
-- `settle()` fait sortir une réservation de `reserved` seulement tant qu'elle est réservée, et dit si cet appel l'a
-  fait.
-- `discard()` supprime une réservation encore réservée ; `held()`, `due()`, `ofMember()` et `eraseMember()` lisent et
-  effacent.
+- `add()` écrit une réservation, `paying`, une fois par clé (false quand la clé existe déjà). Elle vérifie les unités
+  des réservations en paiement, réservées et confirmées de la récompense selon le stock et la limite du membre **dans
+  la même étape**, pour que deux membres n'obtiennent jamais la dernière unité : sous un verrou, ou en une seule
+  instruction.
+- `transition()` fait passer une réservation d'un statut à un autre seulement tant qu'elle est dans le premier (un
+  compare-et-écrit, comme `UPDATE … SET status = ? WHERE key = ? AND status = ?`) et dit si cet appel l'a fait :
+  de `paying` à `reserved` une fois ses points payés, d'un statut ouvert à `confirmed`, `cancelled` ou `expired`, avec
+  le moment de son règlement.
+- `discard()` supprime une réservation encore en paiement ; `held()`, `due()` (les réservations en paiement ou
+  réservées dont la durée de vie est passée), `ofMember()` et `eraseMember()` lisent et effacent.
 
 ## `TransferLog`
 

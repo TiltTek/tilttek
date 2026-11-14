@@ -41,9 +41,9 @@ final readonly class LateReservationStore implements ReservationStore
     }
 
     #[Override]
-    public function settle(ExchangeKey $key, ReservationStatus $status, DateTimeImmutable $at): bool
+    public function transition(ExchangeKey $key, ReservationStatus $from, ReservationStatus $to, DateTimeImmutable $at): bool
     {
-        return $this->inner->settle($key, $status, $at);
+        return $this->inner->transition($key, $from, $to, $at);
     }
 
     #[Override]

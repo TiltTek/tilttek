@@ -10,6 +10,7 @@ use Phil\Resource\ResourceReference;
 use Psr\Clock\ClockInterface;
 use Tilttek\Points\Exception\InsufficientPoints;
 use Tilttek\Points\Exception\InvalidPoints;
+use Tilttek\Points\Exception\LedgerContention;
 use Tilttek\Points\Exception\MovementConflict;
 use Tilttek\Points\Exception\UnknownCurrency;
 use Tilttek\Points\Exception\UnknownMovement;
@@ -34,6 +35,11 @@ final readonly class Points
     public const int MAX_HISTORY = 1000;
 
     public const int DEFAULT_BATCH_SIZE = 500;
+
+    /**
+     * How many times the expiry reads the lots again when another movement of the account is written meanwhile.
+     */
+    public const int EXPIRY_ATTEMPTS = 5;
 
     public function __construct(
         private Ledger $ledger,
@@ -150,6 +156,12 @@ final readonly class Points
     /**
      * Expires the member's credits whose lifetime has ended, first in first out, each by a movement of its own dated
      * at the end of its lifetime; returns how many points expired. Nothing expires in a currency without a lifetime.
+     *
+     * The lots are read from the checkpoint the ledger kept and the entries written after it, and each expiry is
+     * written only if no other entry of the account was written since they were read — a spending that slipped in
+     * between is applied to the lots, which are read again, so that the points are never taken twice.
+     *
+     * @throws LedgerContention when the account changed during each attempt
      */
     public function expire(ResourceReference $member, ?string $currency = null): int
     {
@@ -160,40 +172,16 @@ final readonly class Points
         }
 
         $account = Account::member($member);
-        $lots = new Lots($account, $currency);
-        $after = 0;
 
-        do {
-            $batch = $this->ledger->statement($account, $currency->code, $after, $this->batchSize);
+        for ($attempt = 1; $attempt <= self::EXPIRY_ATTEMPTS; ++$attempt) {
+            $expired = $this->expireLots($account, $currency);
 
-            foreach ($batch as $entry) {
-                $lots->apply($entry);
-                $after = $entry->position;
-            }
-        } while (\count($batch) === $this->batchSize);
-
-        $now = $this->clock->now();
-        $expired = 0;
-
-        foreach ($lots->open() as $lot) {
-            $expiredAt = $lot->expiredBy($now);
-
-            if ($expiredAt instanceof DateTimeImmutable) {
-                $this->ledger->append(new Movement(
-                    MovementKey::derived('expire', $lot->key->value),
-                    MovementKind::Expired,
-                    $currency->code,
-                    $account,
-                    Account::expiry(),
-                    $lot->remaining,
-                    $expiredAt,
-                    reverses: $lot->key,
-                ), $now);
-                $expired += $lot->remaining;
+            if (null !== $expired) {
+                return $expired;
             }
         }
 
-        return $expired;
+        throw LedgerContention::on($account, $currency->code, self::EXPIRY_ATTEMPTS);
     }
 
     /**
@@ -228,6 +216,92 @@ final readonly class Points
     public function erase(ResourceReference $member): Erasure
     {
         return $this->ledger->eraseMember($member);
+    }
+
+    /**
+     * Expires the account's lots due in the currency; returns how many points expired, or null when another entry of
+     * the account was written meanwhile, to read the lots again.
+     */
+    private function expireLots(Account $account, Currency $currency): ?int
+    {
+        $kept = $this->ledger->keptLots($account, $currency->code);
+        [$lots, $after] = $this->replay($account, $currency, $kept);
+
+        if ($kept instanceof LotsCheckpoint && !$this->holds($lots, $account, $currency)) {
+            // The checkpoint no longer matches the ledger — a movement before it appeared late, or was rewritten.
+            $kept = null;
+            [$lots, $after] = $this->replay($account, $currency, null);
+        }
+
+        if (!$this->holds($lots, $account, $currency)) {
+            return null;
+        }
+
+        $now = $this->clock->now();
+        $expired = 0;
+
+        foreach ($lots->open() as $lot) {
+            $expiredAt = $lot->expiredBy($now);
+
+            if ($expiredAt instanceof DateTimeImmutable) {
+                $recorded = $this->ledger->appendAfter(new Movement(
+                    MovementKey::derived('expire', $lot->key->value),
+                    MovementKind::Expired,
+                    $currency->code,
+                    $account,
+                    Account::expiry(),
+                    $lot->remaining,
+                    $expiredAt,
+                    reverses: $lot->key,
+                ), $now, $after);
+
+                if (true !== $recorded?->new) {
+                    return null;
+                }
+
+                $lots->apply($recorded->entry);
+                $after = $recorded->entry->position;
+                $expired += $lot->remaining;
+            }
+        }
+
+        if ($after > ($kept->position ?? 0)) {
+            $this->ledger->keepLots($lots->checkpoint($after));
+        }
+
+        return $expired;
+    }
+
+    /**
+     * The account's lots in the currency, from the checkpoint or from the start, with the position of the last entry
+     * applied.
+     *
+     * @return array{Lots, int}
+     */
+    private function replay(Account $account, Currency $currency, ?LotsCheckpoint $kept): array
+    {
+        $lots = $kept instanceof LotsCheckpoint ? Lots::resume($kept, $currency) : new Lots($account, $currency);
+        $after = $kept->position ?? 0;
+
+        do {
+            $batch = $this->ledger->statement($account, $currency->code, $after, $this->batchSize);
+
+            foreach ($batch as $entry) {
+                $lots->apply($entry);
+                $after = $entry->position;
+            }
+        } while (\count($batch) === $this->batchSize);
+
+        return [$lots, $after];
+    }
+
+    /**
+     * Whether the lots stand for the account's balance in the ledger: when they do not, an entry was written after
+     * they were read, or one they rest on was not there.
+     */
+    private function holds(Lots $lots, Account $account, Currency $currency): bool
+    {
+        return $lots->balance() === $this->ledger->balance($account, $currency->code);
     }
 
     private function decided(string $key, MovementKind $kind, ?string $currency, Account $debit, Account $credit, int $amount): Movement

@@ -26,4 +26,4 @@
 | `Announcer`, `SilentAnnouncer` | Told each event; tells no one |
 | `Event\ExchangeEvent` and its eleven events | [Events](events.md) |
 | `Erasure`, `ExchangeErasure` | What erasing a member did; the erasure |
-| `Exception\ExchangeException` and its six exceptions | [Exceptions](exceptions.md) |
+| `Exception\ExchangeException` and its seven exceptions | [Exceptions](exceptions.md) |

@@ -31,7 +31,8 @@ use Tilttek\SecretRolls\Store\NoPublisher;
  * checks with `RollVerifier`; `close()` ends the scene, revealing the rolls the game master chooses, or all of them,
  * the others staying withheld with their commitments in the journal. Each entry appended is handed to the publisher.
  *
- * The service keeps nothing between calls: the store holds the state.
+ * The service keeps nothing between calls: the store holds the state. A roll reads only the head of the scene's
+ * journal — its length, its last hash, whether it is closed —, never the whole journal.
  */
 final readonly class SecretRolls
 {
@@ -60,23 +61,27 @@ final readonly class SecretRolls
      */
     public function roll(string $scene, Pool|string $expression, ?string $roller = null, ?string $context = null, RoundingMode $rounding = RoundingMode::NegativeInfinity, ?string $locale = null, ?DateTimeImmutable $at = null): HiddenRoll
     {
-        $journal = $this->open(Encoding::scene($scene));
+        $head = $this->store->head(Encoding::scene($scene));
 
-        if (\count($journal->entries) >= SceneJournal::MAX_ROLLS) {
-            throw SecretRollRefused::sceneFull($scene, \count($journal->entries));
+        if ($head->closed) {
+            throw SecretRollRefused::sceneClosed($scene);
+        }
+
+        if ($head->length >= SceneJournal::MAX_ROLLS) {
+            throw SecretRollRefused::sceneFull($scene, $head->length);
         }
 
         Encoding::text($roller, 'roller', Encoding::MAX_ROLLER);
         Encoding::text($context, 'context', Encoding::MAX_CONTEXT);
 
         $pool = $expression instanceof Pool ? $expression : $this->dice->parse($expression, $locale);
-        $position = $journal->nextPosition();
+        $position = $head->nextPosition();
         $id = Encoding::rollId($scene, $position);
         $seed = Seed::generate($this->secure);
         $result = $this->dice->rollVerifiable($pool, $seed, $id, 0, $rounding)->result;
 
         $hidden = new HiddenRoll(new RollOpening($id, $scene, $position, $pool->canonical(), $rounding->name, $seed->hex(), $result->toArray(), $context), $roller, $at ?? new DateTimeImmutable());
-        $entry = JournalEntry::committed($hidden, $journal->head());
+        $entry = JournalEntry::committed($hidden, $head->hash);
         $this->store->commit($entry, $hidden);
         $this->publisher->publish($entry);
 
@@ -125,10 +130,13 @@ final readonly class SecretRolls
      */
     public function close(string $scene, string ...$reveal): array
     {
-        $this->open($scene);
+        if ($this->store->head(Encoding::scene($scene))->closed) {
+            throw SecretRollRefused::sceneClosed($scene);
+        }
+
         $entries = $this->reveal($scene, ...$reveal);
-        $journal = $this->journal($scene);
-        $closing = JournalEntry::closed($scene, $journal->nextPosition(), new DateTimeImmutable(), $journal->head());
+        $head = $this->store->head($scene);
+        $closing = JournalEntry::closed($scene, $head->nextPosition(), new DateTimeImmutable(), $head->hash);
         $this->store->append($closing);
         $this->publisher->publish($closing);
 
@@ -165,22 +173,6 @@ final readonly class SecretRolls
     public function hidden(string $roll): ?HiddenRoll
     {
         return $this->store->hidden($roll);
-    }
-
-    /**
-     * The journal of a scene still open.
-     *
-     * @throws SecretRollRefused when the scene is closed
-     */
-    private function open(string $scene): SceneJournal
-    {
-        $journal = $this->journal($scene);
-
-        if ($journal->isClosed()) {
-            throw SecretRollRefused::sceneClosed($scene);
-        }
-
-        return $journal;
     }
 
     /**

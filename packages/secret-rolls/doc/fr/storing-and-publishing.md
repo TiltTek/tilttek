@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=f4bd60f98870fb228c31bf2d9a08d4566738bd68b315c8103d2f3c02aa351c37 -->
+<!-- phil-dev source-sha256=07efd18f1b8a5b60b2b8ae9c4f26ee0da990b63a24c35235a878a57faa0ea648 -->
 # Stocker et publier
 
 ## Le dépôt de stockage
@@ -8,6 +8,7 @@
 | Méthode | Fait |
 |---|---|
 | `entries($scene)` | Les entrées du journal de la scène, par position ; aucune pour une scène qui n'en a pas |
+| `head($scene)` | Le `JournalHead` de la scène : combien d'entrées contient son journal, l'empreinte de la dernière, si elle est close |
 | `commit($entry, $roll)` | Garde le jet caché scellé et ajoute l'entrée de son engagement, les deux ou aucun |
 | `append($entry)` | Ajoute une entrée qui révèle un jet ou clôt la scène |
 | `hidden($roll)` | Le jet scellé de cet identifiant, ou null |
@@ -16,6 +17,12 @@ Le journal ne fait que croître : une entrée est ajoutée à la position qui su
 Un dépôt de stockage lance `JournalConflict` quand l'entrée ne vient pas à cette position — deux écrivains ont ajouté
 en même temps — ; l'appelant relit le journal et recommence. Sur une base de données, une clé unique sur la scène et la
 position donne cette garantie, et `commit()` écrit l'entrée et le jet scellé dans une seule transaction.
+
+Un jet lit la tête du journal, jamais ses entrées : il coûte autant au cinq millième jet d'une scène qu'au premier. Le
+dépôt de stockage tient la tête à jour à mesure qu'il ajoute (sur une base de données, une ligne par scène mise à jour
+dans la transaction de l'ajout, ou la dernière ligne lue par la clé unique sur la scène et la position), et
+`JournalHead::after()` donne la tête une fois une entrée ajoutée. La tête ne sert qu'à l'entrée suivante : la chaîne
+d'empreintes et les engagements se vérifient sur le journal entier, par `SceneJournal::problems()`, comme avant.
 
 Les jets scellés sont le secret du dépôt de stockage : quiconque les lit connaît les résultats cachés avant la
 révélation. Gardez-les à part de ce que la table lit, chiffrés au repos quand le stockage est partagé.

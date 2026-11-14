@@ -9,6 +9,7 @@ Every exception of the library implements `Tilttek\Points\Exception\PointsExcept
 | `InsufficientPoints` | A spending or a transfer is larger than the payer's balance | `The account "member:member:44" holds 30 points; 31 cannot be paid from it.` |
 | `UnknownCurrency` | A currency is asked for by a code none has | `No currency of points is named "crowns".` |
 | `UnknownMovement` | A refund names no spending | `No spending is written under the key "order:2".` |
+| `LedgerContention` | The account changed during each attempt to expire its credits | `The account "member:member:44" changed during each of 5 attempts to expire its stars.` |
 
 The verb patterns and the context conditions of a rule are checked by `tilttek/activity`, which raises its own
 `InvalidActivity`.

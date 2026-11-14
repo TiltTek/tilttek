@@ -4,6 +4,30 @@ All notable changes to `tilttek/points` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Added
+
+- `LotsCheckpoint`: the lots of an account in a currency at a position — the lots with points left and the debt —,
+  with its plain values for a ledger that stores it as JSON; `Lots::resume()`, `Lots::checkpoint()` and
+  `Lots::balance()`.
+- `LedgerContention`: raised when the account changed during each attempt to expire its credits.
+
+### Changed
+
+- `Ledger` gains `appendAfter()`, which appends a movement only if the debited account has no entry after a position,
+  as one step that a covered append of the same account cannot slip between, and `keptLots()` and `keepLots()`, which
+  keep a checkpoint of an account's lots; `forgetDerived()` and `eraseMember()` delete the checkpoints. A ledger of the
+  application implements the three methods.
+- `Points::expire()` starts from the checkpoint the ledger kept and reads only the entries written after it, instead of
+  the whole history of the account, then keeps a new checkpoint; it reads the whole history again when the checkpoint
+  no longer matches the balance.
+
+### Fixed
+
+- A spending or a transfer that slipped between the expiry's read of the lots and its write could leave a balance below
+  zero: each expiry is now written only if the account has no newer entry, and read again otherwise.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added

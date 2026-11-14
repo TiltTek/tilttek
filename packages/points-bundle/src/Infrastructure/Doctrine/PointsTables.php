@@ -15,20 +15,24 @@ use Tilttek\Points\Account;
 use Tilttek\Points\MovementKey;
 
 /**
- * The two tables of the ledger, added to the schema Doctrine generates so that the application's migrations create
+ * The three tables of the ledger, added to the schema Doctrine generates so that the application's migrations create
  * them:
  *
  * - `tilttek_points_movement`: one row per movement, its position an auto-increment, its key unique — the unique
  *   index is what makes a movement written once, even when two processes write it at the same moment;
  * - `tilttek_points_lock`: one row per account and currency that has paid a spending or a transfer, which each payment
  *   updates — counting the payments — to hold its lock while it checks the balance and writes the movement. It holds
- *   no balance: a balance is always the sum of the movements.
+ *   no balance: a balance is always the sum of the movements;
+ * - `tilttek_points_lots`: one row per account and currency whose lots the expiry kept, with the position they stand
+ *   at and the lots with points left as JSON, so that the next expiry reads only the movements written after it.
  */
 final class PointsTables
 {
     public const string MOVEMENTS = 'tilttek_points_movement';
 
     public const string LOCKS = 'tilttek_points_lock';
+
+    public const string LOTS = 'tilttek_points_lots';
 
     /**
      * An activity's idempotency key, the cause of the points it earned.
@@ -40,7 +44,7 @@ final class PointsTables
     }
 
     /**
-     * The schema with the two tables added, those it already has left as they are.
+     * The schema with the three tables added, those it already has left as they are.
      */
     public static function configure(Schema $schema): Schema
     {
@@ -75,6 +79,17 @@ final class PointsTables
                 ->addColumn(self::string('account', Account::MAX_LENGTH))
                 ->addColumn(self::string('currency', 32))
                 ->addColumn(Column::editor()->setUnquotedName('payments')->setTypeName(Types::BIGINT)->create())
+                ->addPrimaryKeyConstraint(PrimaryKeyConstraint::editor()->setUnquotedColumnNames('account', 'currency')->create())
+                ->create());
+        }
+
+        if (!$schema->hasTable(self::LOTS)) {
+            $editor->addTable(Table::editor()
+                ->setUnquotedName(self::LOTS)
+                ->addColumn(self::string('account', Account::MAX_LENGTH))
+                ->addColumn(self::string('currency', 32))
+                ->addColumn(Column::editor()->setUnquotedName('position')->setTypeName(Types::BIGINT)->create())
+                ->addColumn(Column::editor()->setUnquotedName('lots')->setTypeName(Types::TEXT)->create())
                 ->addPrimaryKeyConstraint(PrimaryKeyConstraint::editor()->setUnquotedColumnNames('account', 'currency')->create())
                 ->create());
         }

@@ -4,6 +4,19 @@ All notable changes to `tilttek/secret-rolls` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Added
+
+- `JournalHead`: where a scene's journal stands without its entries — its length, the hash of its last entry, whether
+  it is closed —, and the head once an entry is appended.
+
+### Changed
+
+- `SecretRollStore` gains `head()`, which the store keeps as it appends; a store of the application implements it.
+- `SecretRolls::roll()` and `close()` read the head of the journal instead of the whole journal, so that a roll no
+  longer costs more as the scene grows; the journal, its chain of hashes and its commitments are unchanged.
+
 ## 0.1.0-alpha - 2026-11-13
 
 ### Added

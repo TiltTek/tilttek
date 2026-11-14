@@ -31,6 +31,21 @@ final class Lots
     ) {
     }
 
+    /**
+     * The lots as a checkpoint kept them, each lot's end computed again from the currency's lifetime.
+     */
+    public static function resume(LotsCheckpoint $checkpoint, Currency $currency): self
+    {
+        $lots = new self($checkpoint->account, $currency);
+        $lots->debt = $checkpoint->debt;
+
+        foreach ($checkpoint->lots as $lot) {
+            $lots->lots[] = new Lot($lot->key, $lot->creditedAt, $lot->remaining, $currency->expiresAt($lot->creditedAt));
+        }
+
+        return $lots;
+    }
+
     public function apply(LedgerEntry $entry): void
     {
         $movement = $entry->movement;
@@ -54,6 +69,22 @@ final class Lots
     public function open(): array
     {
         return array_values(array_filter($this->sorted(), static fn (Lot $lot): bool => $lot->remaining > 0));
+    }
+
+    /**
+     * The balance the lots stand for: the points left in them, less the debt.
+     */
+    public function balance(): int
+    {
+        return array_sum(array_map(static fn (Lot $lot): int => $lot->remaining, $this->lots)) - $this->debt;
+    }
+
+    /**
+     * The lots as they stand once the entries up to the position are applied, for the ledger to keep.
+     */
+    public function checkpoint(int $position): LotsCheckpoint
+    {
+        return new LotsCheckpoint($this->account, $this->currency->code, $position, $this->open(), $this->debt);
     }
 
     /**

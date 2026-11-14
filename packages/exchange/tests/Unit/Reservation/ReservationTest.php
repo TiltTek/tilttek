@@ -48,7 +48,16 @@ final class ReservationTest extends TestCase
             'settled_at' => '2026-11-07T12:31:00+00:00',
         ], $confirmed->toArray());
         self::assertNull($reservation->toArray()['settled_at']);
-        self::assertSame([ReservationStatus::Reserved, ReservationStatus::Confirmed], ReservationStatus::holding());
+        self::assertSame([ReservationStatus::Paying, ReservationStatus::Reserved, ReservationStatus::Confirmed], ReservationStatus::holding());
+        self::assertSame([true, true, false, false, false], array_map(static fn (ReservationStatus $status): bool => $status->isOpen(), [ReservationStatus::Paying, ReservationStatus::Reserved, ReservationStatus::Confirmed, ReservationStatus::Cancelled, ReservationStatus::Expired]));
+
+        // Paying until its points are paid, then reserved: open, and due once its lifetime ends.
+        $paying = $this->reservation()->settled(ReservationStatus::Paying, new DateTimeImmutable('2026-11-07 12:01:00 UTC'));
+        self::assertNull($paying->settledAt);
+        self::assertTrue($paying->isDue(new DateTimeImmutable('2026-11-07 12:30:00 UTC')));
+        self::assertFalse($paying->isDue(new DateTimeImmutable('2026-11-07 12:29:59 UTC')));
+        $reserved = $paying->settled(ReservationStatus::Reserved, new DateTimeImmutable('2026-11-07 12:01:00 UTC'));
+        self::assertSame([ReservationStatus::Reserved, null], [$reserved->status, $reserved->settledAt]);
     }
 
     public function testAReservationHoldsAUnit(): void
@@ -81,7 +90,7 @@ final class ReservationTest extends TestCase
     public function testAReservedReservationIsNotSettled(): void
     {
         $this->expectException(InvalidExchange::class);
-        $this->expectExceptionMessageIsOrContains('The reservation "order:1" is settled when, and only when, it is no longer reserved.');
+        $this->expectExceptionMessageIsOrContains('The reservation "order:1" is settled when, and only when, it is no longer paying nor reserved.');
 
         $this->reservation(settledAt: new DateTimeImmutable());
     }

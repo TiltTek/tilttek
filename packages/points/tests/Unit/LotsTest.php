@@ -12,6 +12,7 @@ use Tilttek\Points\Currency;
 use Tilttek\Points\LedgerEntry;
 use Tilttek\Points\Lot;
 use Tilttek\Points\Lots;
+use Tilttek\Points\LotsCheckpoint;
 use Tilttek\Points\MovementKey;
 use Tilttek\Points\MovementKind;
 use Tilttek\Points\Tests\Unit\Ledger\LedgerTestCase;
@@ -124,6 +125,33 @@ final class LotsTest extends TestCase
         $lots->apply($this->entry('d', MovementKind::Spent, 'member:member:1', 'redemption:reward:1', 15, '2026-01-02'));
 
         self::assertSame([['b', 5, null], ['c', 10, null]], $this->open($lots));
+    }
+
+    public function testLotsResumeFromTheirCheckpoint(): void
+    {
+        $lots = $this->lots('P1M');
+        $lots->apply($this->entry('a', MovementKind::Granted, 'issuance:manual', 'member:member:1', 10, '2026-01-10'));
+        $lots->apply($this->entry('b', MovementKind::Granted, 'issuance:manual', 'member:member:1', 10, '2026-01-10'));
+        $lots->apply($this->entry('c', MovementKind::Spent, 'member:member:1', 'redemption:reward:1', 12, '2026-01-12'));
+        self::assertSame(8, $lots->balance());
+
+        $checkpoint = $lots->checkpoint(3);
+        self::assertSame(['member:member:1', 'points', 3, 0], [$checkpoint->account->toString(), $checkpoint->currency, $checkpoint->position, $checkpoint->debt]);
+        self::assertSame([['b', 8, '2026-02-10']], array_map(static fn (Lot $lot): array => [$lot->key->value, $lot->remaining, $lot->expiresAt?->format('Y-m-d')], $checkpoint->lots));
+
+        // The end of each lot is computed again from the currency's lifetime, and the order of credits of the same
+        // moment is kept.
+        $resumed = Lots::resume(new LotsCheckpoint(Account::fromString('member:member:1'), 'points', 3, [new Lot(MovementKey::fromString('b'), $this->at('2026-01-10'), 8, null), new Lot(MovementKey::fromString('d'), $this->at('2026-01-10'), 4, null)], 0), new Currency('points', 'P2M'));
+        self::assertSame([['b', 8, '2026-03-10'], ['d', 4, '2026-03-10']], $this->open($resumed));
+        $resumed->apply($this->entry('e', MovementKind::Spent, 'member:member:1', 'redemption:reward:1', 10, '2026-01-12'));
+        self::assertSame([['d', 2, '2026-03-10']], $this->open($resumed));
+
+        $indebted = Lots::resume(new LotsCheckpoint(Account::fromString('member:member:1'), 'points', 3, [], 5), new Currency('points'));
+        self::assertSame([5, -5], [$indebted->debt(), $indebted->balance()]);
+        $indebted->apply($this->entry('f', MovementKind::Granted, 'issuance:manual', 'member:member:1', 7, '2026-01-12'));
+        self::assertSame([['f', 2, null]], $this->open($indebted));
+        self::assertSame([0, 2], [$indebted->debt(), $indebted->balance()]);
+        self::assertSame([], $this->lots(null)->checkpoint(1)->lots);
     }
 
     private function lots(?string $lifetime): Lots

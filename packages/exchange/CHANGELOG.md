@@ -4,6 +4,25 @@ All notable changes to `tilttek/exchange` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- A reservation is written `ReservationStatus::Paying` and becomes `Reserved` once its points are spent, so that no
+  cancellation nor expiry settles it between its writing and its payment; `ReservationStatus::isOpen()` tells a
+  paying or reserved reservation, and the units of a paying one are held.
+- `ReservationStore::settle()` is replaced by `transition()`, a compare-and-set from one status to another;
+  `discard()` deletes a paying reservation, and `due()` returns the paying and reserved reservations past their
+  lifetime. A store of the application implements `transition()` in place of `settle()`.
+- `Redemptions::confirm()` and `cancel()` throw `ReservationPending` while the points are being paid; a payment that
+  finds its reservation settled or gone gives its points back, and `RewardReserved` is told once, by the call that
+  made the reservation reserved.
+
+### Fixed
+
+- Points could be spent for a reservation already cancelled or expired, when the cancellation or the expiry ran
+  between the writing of the reservation and the spending of its points.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added

@@ -15,8 +15,10 @@ use Tilttek\Exchange\Event\ReservationExpired;
 use Tilttek\Exchange\Event\RewardReserved;
 use Tilttek\Exchange\Exception\ExchangeClosed;
 use Tilttek\Exchange\Exception\ExchangeConflict;
+use Tilttek\Exchange\Exception\ExchangeException;
 use Tilttek\Exchange\Exception\ExchangeRefused;
 use Tilttek\Exchange\Exception\InvalidExchange;
+use Tilttek\Exchange\Exception\ReservationPending;
 use Tilttek\Exchange\Exception\UnknownExchange;
 use Tilttek\Exchange\ExchangeKey;
 use Tilttek\Exchange\Refusal;
@@ -28,6 +30,7 @@ use Tilttek\Exchange\Reward\InMemoryCatalog;
 use Tilttek\Exchange\Reward\Reward;
 use Tilttek\Exchange\SilentAnnouncer;
 use Tilttek\Exchange\Tests\Unit\Fixture\Clock;
+use Tilttek\Exchange\Tests\Unit\Fixture\InterleavingReservationStore;
 use Tilttek\Exchange\Tests\Unit\Fixture\LateReservationStore;
 use Tilttek\Exchange\Tests\Unit\Fixture\MetRequirements;
 use Tilttek\Exchange\Tests\Unit\Fixture\RecordingAnnouncer;
@@ -48,6 +51,7 @@ use Tilttek\Points\Points;
 #[CoversClass(UnknownExchange::class)]
 #[CoversClass(ExchangeClosed::class)]
 #[CoversClass(ExchangeConflict::class)]
+#[CoversClass(ReservationPending::class)]
 final class RedemptionsTest extends TestCase
 {
     private Clock $clock;
@@ -109,7 +113,7 @@ final class RedemptionsTest extends TestCase
         self::assertSame('2026-11-07 12:30:00', $reservation->expiresAt->format('Y-m-d H:i:s'));
         self::assertSame(700, $this->points->balance($this->member(1)));
         self::assertSame(['RewardReserved'], $this->announcer->told());
-        self::assertSame($reservation, $this->redemptions->get('order:1'));
+        self::assertEquals($reservation, $this->redemptions->get('order:1'));
 
         // The same key reserves once.
         self::assertEquals($reservation, $this->redemptions->reserve($this->member(1), 'discount-10', 'order:1', 3));
@@ -166,21 +170,147 @@ final class RedemptionsTest extends TestCase
     public function testAReservationInterruptedBeforeItsSpendingIsPaidWhenAskedAgain(): void
     {
         $now = $this->clock->now();
-        $this->reservations->add(new Reservation(ExchangeKey::fromString('order:1'), $this->member(1), 'discount-10', 1, 100, 'points', $now, $now->modify('+30 minutes')), null, null);
+        $this->reservations->add($this->paying('order:1', $now), null, null);
 
-        $this->redemptions->reserve($this->member(1), 'discount-10', 'order:1');
+        self::assertSame(ReservationStatus::Reserved, $this->redemptions->reserve($this->member(1), 'discount-10', 'order:1')->status);
+        self::assertSame(900, $this->points->balance($this->member(1)));
+        self::assertSame(['RewardReserved'], $this->announcer->told());
+        $this->redemptions->confirm('order:1');
+        $this->announcer->told();
+
+        // Interrupted and never asked again, it cannot be confirmed nor cancelled before its lifetime ends, then
+        // expires, giving nothing back since its spending is missing.
+        $this->reservations->add($this->paying('order:2', $now), null, null);
+
+        foreach ([fn (): Reservation => $this->redemptions->cancel('order:2'), fn (): Reservation => $this->redemptions->confirm('order:2')] as $settle) {
+            try {
+                $settle();
+                self::fail('A pending payment was expected.');
+            } catch (ReservationPending $reservationPending) {
+                self::assertSame('The points of the reservation "order:2" are being paid; ask again in a moment.', $reservationPending->getMessage());
+            }
+        }
+
+        $this->clock->set('2026-11-07 12:30:00 UTC');
+        self::assertSame(1, $this->redemptions->expireDue());
+        self::assertSame(ReservationStatus::Expired, $this->redemptions->get('order:2')->status);
+        self::assertSame(900, $this->points->balance($this->member(1)));
+        self::assertSame(['ReservationExpired'], $this->announcer->told());
+
+        // A settled reservation asked again is returned as it is.
+        self::assertSame(ReservationStatus::Expired, $this->redemptions->reserve($this->member(1), 'discount-10', 'order:2')->status);
+        self::assertSame(900, $this->points->balance($this->member(1)));
+
+        // Still paying past its lifetime, a cancellation expires it.
+        $this->reservations->add($this->paying('order:3', $now), null, null);
+        self::assertSame('The reservation "order:3" is expired; it cannot be cancelled.', $this->closed(fn (): Reservation => $this->redemptions->cancel('order:3'))->getMessage());
+    }
+
+    public function testAReservationCannotBeCancelledWhileItsPointsArePaid(): void
+    {
+        $closed = [];
+        $store = new InterleavingReservationStore($this->reservations, 'add', function (Reservation $reservation) use (&$closed): void {
+            // Another process cancels the reservation between its writing and its payment.
+            try {
+                $closed[] = $this->redemptions->cancel($reservation->key->value)->status;
+            } catch (ExchangeException $exchangeException) {
+                $closed[] = $exchangeException::class;
+            }
+        });
+        $redemptions = new Redemptions($this->catalog, $store, $this->points, new Currencies(new Currency('points')), $this->clock, announcer: $this->announcer);
+
+        $reservation = $redemptions->reserve($this->member(1), 'discount-10', 'order:1');
+        self::assertSame([ReservationPending::class], $closed);
+        self::assertSame(ReservationStatus::Reserved, $reservation->status);
+        self::assertSame(ReservationStatus::Reserved, $this->redemptions->get('order:1')->status);
+        self::assertSame(900, $this->points->balance($this->member(1)));
+
+        self::assertSame(ReservationStatus::Cancelled, $this->redemptions->cancel('order:1')->status);
+        self::assertSame(1000, $this->points->balance($this->member(1)));
+    }
+
+    public function testAReservationWhoseLifetimeEndsWhileItsPointsArePaidGivesThemBack(): void
+    {
+        foreach (['add', 'transition'] as $when) {
+            $this->clock->set('2026-11-07 12:00:00 UTC');
+            $store = new InterleavingReservationStore($this->reservations, $when, function (): void {
+                // The payment outlives the reservation's lifetime, and the scheduler expires it meanwhile.
+                $this->clock->set('2026-11-07 12:30:00 UTC');
+                self::assertSame(1, $this->redemptions->expireDue());
+            });
+            $redemptions = new Redemptions($this->catalog, $store, $this->points, new Currencies(new Currency('points')), $this->clock, announcer: $this->announcer);
+
+            $reservation = $redemptions->reserve($this->member(1), 'discount-10', 'order:'.$when);
+            self::assertSame(ReservationStatus::Expired, $reservation->status, $when);
+            self::assertSame(1000, $this->points->balance($this->member(1)), $when);
+            self::assertSame(['ReservationExpired'], $this->announcer->told(), $when);
+        }
+    }
+
+    public function testAReservationPaidOrSettledByAnotherProcessMeanwhileKeepsItsPointsOnce(): void
+    {
+        // Another process asked with the same key pays it first: it is reserved once, and told once.
+        $store = new InterleavingReservationStore($this->reservations, 'transition', function (Reservation $reservation): void {
+            self::assertSame(ReservationStatus::Reserved, $this->redemptions->reserve($this->member(1), 'discount-10', $reservation->key->value)->status);
+        });
+        $redemptions = new Redemptions($this->catalog, $store, $this->points, new Currencies(new Currency('points')), $this->clock, announcer: $this->announcer);
+        self::assertSame(ReservationStatus::Reserved, $redemptions->reserve($this->member(1), 'discount-10', 'order:1')->status);
         self::assertSame(900, $this->points->balance($this->member(1)));
         self::assertSame(['RewardReserved'], $this->announcer->told());
 
-        // Its spending missing, a cancelled reservation gives nothing back.
-        $this->reservations->add(new Reservation(ExchangeKey::fromString('order:2'), $this->member(1), 'discount-10', 1, 100, 'points', $now, $now->modify('+30 minutes')), null, null);
-        self::assertSame(ReservationStatus::Cancelled, $this->redemptions->cancel('order:2')->status);
-        self::assertSame(900, $this->points->balance($this->member(1)));
-        self::assertSame(['ReservationCancelled'], $this->announcer->told());
+        // ... and confirms it: its points stay spent.
+        $store = new InterleavingReservationStore($this->reservations, 'transition', function (Reservation $reservation): void {
+            $this->redemptions->reserve($this->member(1), 'discount-10', $reservation->key->value);
+            $this->redemptions->confirm($reservation->key->value);
+        });
+        $redemptions = new Redemptions($this->catalog, $store, $this->points, new Currencies(new Currency('points')), $this->clock, announcer: $this->announcer);
+        self::assertSame(ReservationStatus::Confirmed, $redemptions->reserve($this->member(1), 'discount-10', 'order:2')->status);
+        self::assertSame(800, $this->points->balance($this->member(1)));
+        self::assertSame(['RewardReserved', 'ReservationConfirmed'], $this->announcer->told());
 
-        // A settled reservation asked again is returned as it is.
-        self::assertSame(ReservationStatus::Cancelled, $this->redemptions->reserve($this->member(1), 'discount-10', 'order:2')->status);
-        self::assertSame(900, $this->points->balance($this->member(1)));
+        // ... or cancels it: its points come back once.
+        $store = new InterleavingReservationStore($this->reservations, 'transition', function (Reservation $reservation): void {
+            $this->redemptions->reserve($this->member(1), 'discount-10', $reservation->key->value);
+            $this->redemptions->cancel($reservation->key->value);
+        });
+        $redemptions = new Redemptions($this->catalog, $store, $this->points, new Currencies(new Currency('points')), $this->clock, announcer: $this->announcer);
+        self::assertSame(ReservationStatus::Cancelled, $redemptions->reserve($this->member(1), 'discount-10', 'order:3')->status);
+        self::assertSame(800, $this->points->balance($this->member(1)));
+        self::assertSame(['RewardReserved', 'ReservationCancelled'], $this->announcer->told());
+
+        // Discarded by another process whose payment failed, it is gone, and its points come back.
+        $store = new InterleavingReservationStore($this->reservations, 'transition', function (Reservation $reservation): void {
+            $this->reservations->discard($reservation->key);
+        });
+        $redemptions = new Redemptions($this->catalog, $store, $this->points, new Currencies(new Currency('points')), $this->clock, announcer: $this->announcer);
+
+        try {
+            $redemptions->reserve($this->member(1), 'discount-10', 'order:4');
+            self::fail('A withdrawn reservation was expected.');
+        } catch (ExchangeClosed $exchangeClosed) {
+            self::assertSame('The reservation "order:4" was withdrawn while its points were paid; they are back with the member.', $exchangeClosed->getMessage());
+        }
+
+        self::assertSame(800, $this->points->balance($this->member(1)));
+        self::assertSame([], $this->announcer->told());
+    }
+
+    public function testASettlementThatAPaymentOvertakesIsWrittenAgain(): void
+    {
+        $now = $this->clock->now();
+        $this->reservations->add($this->paying('order:1', $now), null, null);
+        $this->points->spend($this->member(1), 100, 'exchange:reservation:order:1', 'reward:discount-10');
+        $this->clock->set('2026-11-07 12:30:00 UTC');
+
+        // The cancellation reads it paying past its lifetime; its payment ends before the expiry is written.
+        $store = new InterleavingReservationStore($this->reservations, 'transition', function (Reservation $reservation): void {
+            $this->reservations->transition($reservation->key, ReservationStatus::Paying, ReservationStatus::Reserved, $this->clock->now());
+        });
+        $redemptions = new Redemptions($this->catalog, $store, $this->points, new Currencies(new Currency('points')), $this->clock, announcer: $this->announcer);
+
+        self::assertSame('The reservation "order:1" is expired; it cannot be cancelled.', $this->closed(static fn (): Reservation => $redemptions->cancel('order:1'))->getMessage());
+        self::assertSame(1000, $this->points->balance($this->member(1)));
+        self::assertSame(['ReservationExpired'], $this->announcer->told());
     }
 
     public function testTheRewardsRules(): void
@@ -241,10 +371,10 @@ final class RedemptionsTest extends TestCase
     public function testAReservationWrittenByAnotherProcessFirstIsTheOneKept(): void
     {
         $now = $this->clock->now();
-        $competitor = new Reservation(ExchangeKey::fromString('order:1'), $this->member(1), 'discount-10', 1, 90, 'points', $now->modify('-1 second'), $now->modify('+1 hour'));
+        $competitor = new Reservation(ExchangeKey::fromString('order:1'), $this->member(1), 'discount-10', 1, 90, 'points', $now->modify('-1 second'), $now->modify('+1 hour'), ReservationStatus::Paying);
         $redemptions = new Redemptions($this->catalog, new LateReservationStore($competitor), $this->points, new Currencies(new Currency('points')), $this->clock, announcer: $this->announcer);
 
-        self::assertSame($competitor, $redemptions->reserve($this->member(1), 'discount-10', 'order:1'));
+        self::assertEquals($competitor->settled(ReservationStatus::Reserved, $now), $redemptions->reserve($this->member(1), 'discount-10', 'order:1'));
         self::assertSame(910, $this->points->balance($this->member(1)));
         self::assertSame(['RewardReserved'], $this->announcer->told());
 
@@ -398,6 +528,11 @@ final class RedemptionsTest extends TestCase
         }
 
         self::fail('A refusal was expected.');
+    }
+
+    private function paying(string $key, DateTimeImmutable $now): Reservation
+    {
+        return new Reservation(ExchangeKey::fromString($key), $this->member(1), 'discount-10', 1, 100, 'points', $now, $now->modify('+30 minutes'), ReservationStatus::Paying);
     }
 
     private function closed(callable $settle): ExchangeClosed

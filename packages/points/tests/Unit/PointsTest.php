@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tilttek\Points\Tests\Unit;
 
+use DateTimeImmutable;
 use Override;
 use Phil\Resource\ResourceReference;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -13,18 +14,24 @@ use Tilttek\Points\Currencies;
 use Tilttek\Points\Currency;
 use Tilttek\Points\Exception\InsufficientPoints;
 use Tilttek\Points\Exception\InvalidPoints;
+use Tilttek\Points\Exception\LedgerContention;
 use Tilttek\Points\Exception\UnknownCurrency;
 use Tilttek\Points\Exception\UnknownMovement;
 use Tilttek\Points\Ledger\InMemoryLedger;
 use Tilttek\Points\LedgerEntry;
+use Tilttek\Points\Lot;
+use Tilttek\Points\LotsCheckpoint;
 use Tilttek\Points\MovementKey;
 use Tilttek\Points\Points;
 use Tilttek\Points\Recorded;
 use Tilttek\Points\Tests\Unit\Fixture\Clock;
+use Tilttek\Points\Tests\Unit\Fixture\InterleavingLedger;
+use Tilttek\Points\Tests\Unit\Fixture\LaggingLedger;
 use Tilttek\Points\Tests\Unit\Fixture\ReadCountingLedger;
 
 #[CoversClass(Points::class)]
 #[CoversClass(UnknownMovement::class)]
+#[CoversClass(LedgerContention::class)]
 final class PointsTest extends TestCase
 {
     private InMemoryLedger $ledger;
@@ -188,6 +195,141 @@ final class PointsTest extends TestCase
         self::assertSame(10, $this->points->expire($this->member(1), 'stars'));
         self::assertSame('2026-02-20 00:00:00', $this->ledger->find(MovementKey::fromString('#expire:b'))?->movement->occurredAt->format('Y-m-d H:i:s'));
         self::assertSame(99, $this->points->balance($this->member(1)));
+    }
+
+    public function testASpendingThatSlipsBetweenTheExpiryReadAndItsWriteLeavesNoNegativeBalance(): void
+    {
+        foreach (['statement', 'balance'] as $read) {
+            $ledger = new InMemoryLedger();
+            $currencies = new Currencies(new Currency('stars', 'P1D'));
+            $this->clock->set('2026-01-01 00:00:00 UTC');
+            new Points($ledger, $this->clock, $currencies)->grant($this->member(1), 100, 'a');
+            new Points($ledger, $this->clock, $currencies)->grant($this->member(1), 50, 'b');
+            $this->clock->set('2026-01-01 12:00:00 UTC');
+            new Points($ledger, $this->clock, $currencies)->grant($this->member(1), 30, 'c');
+
+            // Another process spends one second before the first two credits expire, while the expiry is between
+            // its read and its write: the spending takes from them, and only what is left of them expires.
+            $before = new Clock('2026-01-01 23:59:59 UTC');
+            $interleaving = new InterleavingLedger($ledger, $read, fn (): Recorded => new Points($ledger, $before, $currencies)->spend($this->member(1), 120, 'd', 'reward:1'));
+            $this->clock->set('2026-01-02 00:00:00 UTC');
+
+            self::assertSame(30, new Points($interleaving, $this->clock, $currencies)->expire($this->member(1)), $read);
+            self::assertSame(30, $ledger->balance(Account::member($this->member(1)), 'stars'), $read);
+            self::assertNull($ledger->find(MovementKey::fromString('#expire:a')), $read);
+            self::assertSame(30, $ledger->find(MovementKey::fromString('#expire:b'))?->movement->amount, $read);
+        }
+    }
+
+    public function testAnExpiryAnotherProcessWroteMeanwhileIsReadAgain(): void
+    {
+        $currencies = new Currencies(new Currency('stars', 'P1D'));
+        $this->clock->set('2026-01-01 00:00:00 UTC');
+        $this->points->grant($this->member(1), 100, 'a', currency: 'stars');
+        $this->clock->set('2026-01-02 00:00:00 UTC');
+        $interleaving = new InterleavingLedger($this->ledger, 'balance', fn (): int => new Points($this->ledger, $this->clock, $currencies)->expire($this->member(1)));
+
+        self::assertSame(0, new Points($interleaving, $this->clock, $currencies)->expire($this->member(1)));
+        self::assertSame(0, $this->points->balance($this->member(1), 'stars'));
+    }
+
+    public function testAnAccountThatKeepsChangingStopsTheExpiry(): void
+    {
+        $currencies = new Currencies(new Currency('stars', 'P1D'));
+        $this->clock->set('2026-01-01 00:00:00 UTC');
+        $this->points->grant($this->member(1), 100, 'a', currency: 'stars');
+        $this->clock->set('2026-01-02 00:00:00 UTC');
+        $grants = 0;
+        $grant = function () use (&$grants): Recorded {
+            return $this->points->grant($this->member(1), 1, 'g'.++$grants, currency: 'stars');
+        };
+        $interleaving = new InterleavingLedger($this->ledger, 'balance', $grant, Points::EXPIRY_ATTEMPTS);
+
+        try {
+            new Points($interleaving, $this->clock, $currencies)->expire($this->member(1));
+            self::fail('The expiry was expected to give up.');
+        } catch (LedgerContention $ledgerContention) {
+            self::assertSame('The account "member:member:1" changed during each of 5 attempts to expire its stars.', $ledgerContention->getMessage());
+        }
+
+        self::assertSame(105, $this->points->balance($this->member(1), 'stars'));
+        self::assertSame(5, Points::EXPIRY_ATTEMPTS);
+
+        $interleaving = new InterleavingLedger($this->ledger, 'balance', $grant, Points::EXPIRY_ATTEMPTS - 1);
+        self::assertSame(100, new Points($interleaving, $this->clock, $currencies)->expire($this->member(1)));
+    }
+
+    public function testAnEntryTheStatementDoesNotShowYetStopsTheExpiry(): void
+    {
+        $currencies = new Currencies(new Currency('stars', 'P1D'));
+        $this->clock->set('2026-01-01 00:00:00 UTC');
+        $this->points->grant($this->member(1), 100, 'a', currency: 'stars');
+        $this->points->revoke($this->member(1), 100, 'b', currency: 'stars');
+        $this->clock->set('2026-01-01 12:00:00 UTC');
+        $this->points->grant($this->member(1), 10, 'c', currency: 'stars');
+        $this->clock->set('2026-01-02 00:00:00 UTC');
+
+        try {
+            new Points(new LaggingLedger($this->ledger, 'b'), $this->clock, $currencies)->expire($this->member(1));
+            self::fail('The expiry was expected to give up.');
+        } catch (LedgerContention) {
+            self::assertNull($this->ledger->find(MovementKey::fromString('#expire:a')));
+            self::assertNull($this->ledger->keptLots(Account::member($this->member(1)), 'stars'));
+            self::assertSame(10, $this->points->balance($this->member(1), 'stars'));
+        }
+
+        // An account without any entry expires nothing and keeps nothing.
+        self::assertSame(0, new Points($this->ledger, $this->clock, $currencies)->expire($this->member(9)));
+        self::assertNull($this->ledger->keptLots(Account::member($this->member(9)), 'stars'));
+    }
+
+    public function testTheExpiryStartsFromTheLotsItKept(): void
+    {
+        $currencies = new Currencies(new Currency('stars', 'P1M'));
+        $reads = new ReadCountingLedger($this->ledger);
+        $points = new Points($reads, $this->clock, $currencies);
+        $this->clock->set('2026-01-01 00:00:00 UTC');
+
+        for ($day = 0; $day < 20; ++$day) {
+            $points->grant($this->member(1), 10, 'g'.$day);
+            $points->spend($this->member(1), 5, 's'.$day, 'reward:1');
+        }
+
+        // Each spending read only the entries written since the one before: its own and the credit that followed.
+        self::assertSame([20, 39], [$reads->kept, $reads->entries]);
+        $kept = $this->ledger->keptLots(Account::member($this->member(1)), 'stars') ?? self::fail();
+        self::assertSame([39, 105], [$kept->position, array_sum(array_map(static fn (Lot $lot): int => $lot->remaining, $kept->lots))]);
+
+        self::assertSame(0, $points->expire($this->member(1)));
+        self::assertSame([40, 21], [$reads->entries, $reads->kept]);
+
+        // Nothing new: nothing read, nothing kept again.
+        self::assertSame(0, $points->expire($this->member(1)));
+        self::assertSame([40, 21], [$reads->entries, $reads->kept]);
+
+        // The lots kept keep their end, computed again from the lifetime: the ten credits left expire.
+        $this->clock->set('2026-02-01 00:00:00 UTC');
+        self::assertSame(100, $points->expire($this->member(1)));
+        self::assertSame([40, 22], [$reads->entries, $reads->kept]);
+        $kept = $this->ledger->keptLots(Account::member($this->member(1)), 'stars') ?? self::fail();
+        self::assertSame([50, []], [$kept->position, $kept->lots]);
+        self::assertSame(0, $points->balance($this->member(1)));
+    }
+
+    public function testLotsKeptThatNoLongerMatchTheLedgerAreReadAgainFromTheStart(): void
+    {
+        $currencies = new Currencies(new Currency('stars', 'P1D'));
+        $member = Account::member($this->member(1));
+        $this->clock->set('2026-01-01 00:00:00 UTC');
+        $this->points->grant($this->member(1), 10, 'a', currency: 'stars');
+        $this->points->grant($this->member(1), 20, 'b', currency: 'stars');
+        // A checkpoint that misses the first credit, as when a movement before it appears late.
+        $this->ledger->keepLots(new LotsCheckpoint($member, 'stars', 2, [new Lot(MovementKey::fromString('b'), new DateTimeImmutable('2026-01-01 00:00:00 UTC'), 20, null)]));
+        $this->clock->set('2026-01-02 00:00:00 UTC');
+
+        self::assertSame(30, new Points($this->ledger, $this->clock, $currencies)->expire($this->member(1)));
+        self::assertSame(0, $this->points->balance($this->member(1), 'stars'));
+        self::assertSame(4, $this->ledger->keptLots($member, 'stars')?->position);
     }
 
     public function testTheExpiryReadsTheWholeStatementInBatches(): void

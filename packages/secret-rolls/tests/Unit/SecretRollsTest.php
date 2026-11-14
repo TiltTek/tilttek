@@ -7,6 +7,8 @@ namespace Tilttek\SecretRolls\Tests\Unit;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Random\Engine\Xoshiro256StarStar;
+use Random\Randomizer;
 use RoundingMode;
 use Tilttek\Dice\DiceRoller;
 use Tilttek\Dice\Exception\InvalidExpression;
@@ -23,6 +25,7 @@ use Tilttek\SecretRolls\RollOpening;
 use Tilttek\SecretRolls\RollVerifier;
 use Tilttek\SecretRolls\SecretRolls;
 use Tilttek\SecretRolls\Store\InMemorySecretRollStore;
+use Tilttek\SecretRolls\Tests\Unit\Fixture\HeadOnlyStore;
 use Tilttek\SecretRolls\Tests\Unit\Fixture\Table;
 
 #[CoversClass(SecretRolls::class)]
@@ -83,6 +86,21 @@ final class SecretRollsTest extends TestCase
         self::assertSame($journal->entries[0]->hash, $journal->entries[1]->previous);
         self::assertNotSame($first->opening->seed, $second->opening->seed);
         self::assertTrue($journal->holds());
+    }
+
+    public function testARollReadsTheHeadOfTheJournalNeverTheWholeJournal(): void
+    {
+        $table = new Table();
+        $rolls = new SecretRolls(new HeadOnlyStore($table->store), $table, secure: new Randomizer(new Xoshiro256StarStar(7)));
+
+        for ($roll = 1; $roll <= 50; ++$roll) {
+            self::assertSame($roll, $rolls->roll('cave', '1d20')->opening->position);
+        }
+
+        $journal = $table->rolls->journal('cave');
+        self::assertCount(50, $journal->entries);
+        self::assertTrue($journal->holds());
+        self::assertSame($journal->head(), $table->store->head('cave')->hash);
     }
 
     public function testARevealPublishesTheOpeningsInTheOrderGivenOnce(): void

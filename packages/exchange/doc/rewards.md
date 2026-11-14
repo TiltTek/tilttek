@@ -36,6 +36,12 @@ points on the ledger under `exchange:reservation:` and the key, to the redemptio
 the points cannot be paid, the reservation is deleted, its units are free again, and `InsufficientPoints` reaches the
 caller.
 
+The reservation is written `paying` and becomes `reserved` once its points are spent, by a compare-and-set of the
+store. While it is paying, nothing confirms nor cancels it — `confirm()` and `cancel()` throw `ReservationPending`, to
+be asked again a moment later — and nothing expires it before its lifetime ends. A payment that outlives the
+lifetime finds the reservation expired: it gives the points it just spent back, and `reserve()` returns the
+reservation as it stands.
+
 The application then delivers — from the `RewardReserved` event or right away — and calls `confirm($key)`: the points
 stay spent. Or it calls `cancel($key)`: the points come back to the member by a refund of the ledger, and the units to
 the stock. A confirmed reservation cannot be cancelled, nor a cancelled one confirmed.
@@ -55,7 +61,8 @@ try {
 
 The key makes each step safe to run twice. The same key reserves once and returns the reservation, even when its
 reward has left the catalogue since; a reservation interrupted before its spending was written is paid when asked
-again. The same key for another member, reward or quantity is an `ExchangeConflict`. A confirmed reservation confirmed
+again, and `RewardReserved` is told once, by the call that made it reserved. The same key for another member, reward
+or quantity is an `ExchangeConflict`. A confirmed reservation confirmed
 again, a cancelled one cancelled again, are returned as they are.
 
 ## Expiry

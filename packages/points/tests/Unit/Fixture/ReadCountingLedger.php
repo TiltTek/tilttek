@@ -11,16 +11,27 @@ use Tilttek\Points\Account;
 use Tilttek\Points\Erasure;
 use Tilttek\Points\Ledger\Ledger;
 use Tilttek\Points\LedgerEntry;
+use Tilttek\Points\LotsCheckpoint;
 use Tilttek\Points\Movement;
 use Tilttek\Points\MovementKey;
 use Tilttek\Points\Recorded;
 
 /**
- * A ledger that counts the statements read through it.
+ * A ledger that counts the statements read through it, the entries they returned and the checkpoints kept.
  */
 final class ReadCountingLedger implements Ledger
 {
     public int $statements = 0;
+
+    /**
+     * The entries the statements returned.
+     */
+    public int $entries = 0;
+
+    /**
+     * The checkpoints kept through it.
+     */
+    public int $kept = 0;
 
     public function __construct(
         private readonly Ledger $ledger,
@@ -37,6 +48,12 @@ final class ReadCountingLedger implements Ledger
     public function appendCovered(Movement $movement, DateTimeImmutable $at): Recorded
     {
         return $this->ledger->appendCovered($movement, $at);
+    }
+
+    #[Override]
+    public function appendAfter(Movement $movement, DateTimeImmutable $at, int $after): ?Recorded
+    {
+        return $this->ledger->appendAfter($movement, $at, $after);
     }
 
     #[Override]
@@ -67,14 +84,29 @@ final class ReadCountingLedger implements Ledger
     public function statement(Account $account, ?string $currency, int $after, int $limit): array
     {
         ++$this->statements;
+        $statement = $this->ledger->statement($account, $currency, $after, $limit);
+        $this->entries += \count($statement);
 
-        return $this->ledger->statement($account, $currency, $after, $limit);
+        return $statement;
     }
 
     #[Override]
     public function membersCreditedBefore(string $currency, DateTimeImmutable $cutoff): array
     {
         return $this->ledger->membersCreditedBefore($currency, $cutoff);
+    }
+
+    #[Override]
+    public function keptLots(Account $account, string $currency): ?LotsCheckpoint
+    {
+        return $this->ledger->keptLots($account, $currency);
+    }
+
+    #[Override]
+    public function keepLots(LotsCheckpoint $checkpoint): void
+    {
+        ++$this->kept;
+        $this->ledger->keepLots($checkpoint);
     }
 
     #[Override]
