@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=11af0342604c9144d563b90bf0eb7f78eae934fb90b04496e702296185e5b7b7 -->
+<!-- phil-dev source-sha256=e86208384440da56979f9dd155d779bc1d45e59b275d8f7cf01eddef520ab5f2 -->
 # API de tirage
 
 ## La route
@@ -21,6 +21,10 @@ Authorization: Bearer <token>
 | `unique` | `1`, `true`, `0` ou `false` ; faux par défaut. |
 | `seed` | Un texte de 1 à 128 caractères, en UTF-8, qui fait revenir le même tirage. |
 | `state` | Pour une table à mémoire, l'état que sa dernière réponse a donné, comme `state[day]=3&state[season]=winter` : au plus 32 noms vers des textes d'au plus 1024 caractères, en UTF-8. |
+
+La réponse donne les attributions des listes, des entrées et des générateurs que ses résultats ont utilisés, quand ils
+en ont, chacune avec les textes qu'elle a : `"attributions": [{"source": "Old tables", "licence": "CC-BY-4.0", "attribution": "Tables by A. Author"}]` ;
+un client les montre avec les résultats.
 
 Une table à mémoire répond son nouvel état avec ses résultats (`"state": {"day": "4", "season": "winter"}`), et le
 client le renvoie avec son tirage suivant. L'API ne garde aucun état : un site qui veut que le bundle le garde appelle

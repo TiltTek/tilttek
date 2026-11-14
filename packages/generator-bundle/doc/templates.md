@@ -39,13 +39,16 @@ ones and puts them in place:
 | `short` | What the status says when a draw finds fewer results than asked. |
 
 A structured result shows its `name` field, or its JSON; an application that shows more writes its own template with
-the same Stimulus controller.
+the same Stimulus controller. A paragraph of class `tilttek-generator-attribution` follows the results with their
+attributions, each its attribution, or its source, then its licence in parentheses, separated by semicolons:
+`Tables by A. Author (CC-BY-4.0); A grammar`.
 
 ## The Stimulus controller
 
 `tilttek--generator-bundle--generator` asks the API for `count` results — unique unless `unique` is false — and writes
 each as the text of a list item, never as HTML. A status element, `role="status"`, says when the draw fails or is
-short, and the element is `aria-busy` during the request.
+short, an attribution element, when there is one, shows the attributions of the new results the same way as the
+template, and the element is `aria-busy` during the request.
 
 ```html
 <div data-controller="tilttek--generator-bundle--generator"
@@ -54,6 +57,7 @@ short, and the element is `aria-busy` during the request.
      data-tilttek--generator-bundle--generator-unique-value="true"
      data-tilttek--generator-bundle--generator-short-message-value="Fewer names than asked were found.">
     <ul data-tilttek--generator-bundle--generator-target="results"></ul>
+    <p data-tilttek--generator-bundle--generator-target="attribution"></p>
     <p data-tilttek--generator-bundle--generator-target="status" role="status"></p>
     <button type="button" data-action="tilttek--generator-bundle--generator#draw">Again</button>
 </div>

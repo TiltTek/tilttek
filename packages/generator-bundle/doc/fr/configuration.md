@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=029d51e2d76bf7911370ae59e019b9b851877af72746b2b7ec26c00f2e07cc2c -->
+<!-- phil-dev source-sha256=ee01fb5f1ba67a1ab4b4640c66c2835029ace0bfdfe55ee309f2b47a5f081c85 -->
 # Configuration
 
 ```yaml
@@ -25,9 +25,12 @@ tilttek_generator:
         results: 100
         cells: 2500
         draw_milliseconds: 1000
+        steps: 10000
+        bytes: 65536
+        megabytes: 16
 
-    # Keeps Twig's compiled templates in %kernel.cache_dir%/tilttek_generator/twig.
-    cache: true
+    # The directory of Twig's compiled templates, loaded from their files rather than by eval().
+    cache: '%kernel.cache_dir%/tilttek_generator/twig'
 
     # Loads the library's random tables too, named table.<name>.
     tables: false
@@ -71,7 +74,7 @@ tilttek_generator:
 | `aspirated` | `[]` | Des mots ajoutés à la liste des h aspirés de la grammaire française. |
 | `stressed_a` | `[]` | Des mots ajoutés à la liste de la grammaire espagnole des mots féminins dont la première syllabe est un a accentué (`el ánima`, `un ánima`), comparés sans tenir compte de la casse. |
 | `limits.*` | comme montré | Les `Limits` de `tilttek/generator`, chacune d'au moins 1. |
-| `cache` | `true` | Si Twig garde ses gabarits compilés dans le répertoire du cache. |
+| `cache` | `%kernel.cache_dir%/tilttek_generator/twig` | Le répertoire où Twig écrit les gabarits compilés des générateurs, qu'il charge ensuite de leurs fichiers, jamais par `eval()` ; `true` nomme la valeur par défaut. `false` et un texte vide sont refusés : il y a toujours un répertoire. |
 | `tables` | `false` | Si les tables aléatoires de `tables/` de la bibliothèque sont lues après les chemins ; une liste ou un générateur de l'application nommé comme l'une d'elles est alors une erreur. |
 | `tables_locale` | `en` | La langue des tables aléatoires, `en` ou `fr` ; les deux versions ont les mêmes noms, les mêmes valeurs d'état et les mêmes champs. |
 | `state.store` | `cache` | Où sont gardés les états des tables à mémoire : `cache`, dans le pool ci-dessous, quand `psr/cache` est installé ; `memory`, pour les tests, réinitialisé avec le noyau ; ou le service du `StateStore` propre à l'application. |

@@ -13,8 +13,8 @@ use Twig\Sandbox\SecurityPolicyInterface;
 
 /**
  * What a generator's template may use: the tags `set`, `if`, `for` and `apply`, the string filters of Twig and the
- * generator's own, the functions `pick`, `generate` and `roll`, a few tests — and, of objects, only the text and the
- * fields of an entry.
+ * generator's own, the functions `pick`, `generate`, `roll` and `between`, a few tests — and, of objects, only the text
+ * and the fields of an entry.
  *
  * @internal
  */
@@ -27,7 +27,7 @@ final readonly class SandboxPolicy implements SecurityPolicyInterface
         'abs', 'round', 'upper_first', 'elide', 'article', 'agree', 'plural',
     ];
 
-    public const array FUNCTIONS = ['pick', 'generate', 'roll'];
+    public const array FUNCTIONS = ['pick', 'generate', 'roll', 'between'];
 
     public const array TESTS = ['defined', 'empty', 'null', 'none', 'even', 'odd', 'divisible by', 'same as', 'iterable'];
 

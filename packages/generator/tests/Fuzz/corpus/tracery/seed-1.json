@@ -1,0 +1,1 @@
+{"origin": ["#[hero:#name#]story#", "Hello #name.capitalize#"], "story": "#hero# met #animal.a#", "name": ["ada", "bo"], "animal": ["owl", "ox"]}

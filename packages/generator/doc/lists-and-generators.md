@@ -30,6 +30,7 @@ of the same name are an error, wherever they are.
 
 A name is made of letters, digits, `_` and `-`, in parts joined by dots: `name.fantasy.elf.female.first`. The dots
 only order the names for people; the library does not read them. `Reader::isName()` says whether a text is a name.
+A name of digits only, such as `12`, which YAML and JSON decode as a number when it is a key, is read as a name.
 
 ## Lists and entries
 
@@ -47,9 +48,11 @@ lists:
 | `text` | What the entry prints. Required in a map. |
 | `weight` | A whole number of at least 1, 1 by default: an entry of weight 3 comes three times as often. |
 | `tags` | A map of tags, each with a value or a sequence of values, on which `pick(…, where: …)` filters. |
+| `source`, `licence`, `attribution` | Where this entry comes from, when not from where its list comes from; see [Where the text comes from](#where-the-text-comes-from). |
 | any other key | A field: a scalar or a sequence of scalars, read in a template as `entry.price`. |
 
-A list may also be written as a map of its `entries` and its `markov` chain; see [Markov lists](#markov-lists).
+A list may also be written as a map of its `entries`, its `markov` chain and where it comes from; see [Markov
+lists](#markov-lists) and [Where the text comes from](#where-the-text-comes-from).
 
 What other generators write as ranges of indexes — "the first six adjectives only go with the first four nouns" — is
 written here with tags. A filter on a tag that no entry of the list carries is an error, not an empty draw.
@@ -101,6 +104,7 @@ A generator has exactly one body, and may have a language, variables and a state
 | `vars` | Templates by variable name, rendered once per result, in order, before the body; each sees the earlier ones. |
 | `locale` | The language of the grammar filters, such as `fr` or `en_CA`; the generator's default otherwise. |
 | `state` | Values carried from one result to the next: a table with a memory; see [Tables with a memory](memory.md). |
+| `source`, `licence`, `attribution` | Where the text of its templates comes from; see [Where the text comes from](#where-the-text-comes-from). |
 
 The fields of a structured result are filled in order, and each sees the earlier ones as variables:
 
@@ -119,6 +123,33 @@ generators:
 
 A field filled by `generate` keeps the other generator's result as it is — a text, a structured result, a map — and
 a count gives a list of different results.
+
+## Where the text comes from
+
+A list, an entry and a generator say where their text comes from by three texts, each optional but at least one
+given, each of 1 to 1024 characters in UTF-8:
+
+| Key | Meaning |
+|---|---|
+| `source` | Where the text was taken from: a book, a site, a set of tables. |
+| `licence` | The licence it is under, best written as an SPDX identifier such as `CC-BY-4.0`. |
+| `attribution` | The credit its licence asks to show, as it is to be shown. |
+
+```yaml
+lists:
+  oracle.action:
+    source: The tables of a shared game
+    licence: CC-BY-4.0
+    attribution: Oracle tables by A. Author, CC BY 4.0
+    entries:
+      - seek
+      - { text: defend, source: Another book, licence: CC0-1.0 }
+```
+
+An entry's own texts take the place of its list's. A draw gives the attributions of every list, entry and generator
+its results used ([Drawing](drawing.md#attributions)), which the application shows with them. The names `source`,
+`licence` and `attribution` are not fields of an entry. The importers give an attribution to every list and
+generator they make ([Imports](imports.md)).
 
 ## Neutral examples
 

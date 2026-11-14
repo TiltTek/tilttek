@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=4e31498b9382da47e081dffa326a1c7b4d059d736f8159bc7bed6d69acb67a19 -->
+<!-- phil-dev source-sha256=6a097fd17962047ad9f9e0c067f927ed5044e05a87f7f6218a8b4efe44ddeda9 -->
 # tilttek/generator
 
 **Des générateurs aléatoires écrits comme des données : des listes, et des gabarits Twig qui y puisent.**
@@ -14,7 +14,10 @@ derrière le port `Grammar`. Un générateur retourne un texte, un résultat str
 aubergiste, son personnel et son menu) ou une carte (cases carrées, hexagones, ou salles reliées par des passages). Une
 liste peut inventer des mots nouveaux à partir de ses entrées par une chaîne de Markov au lieu de les rendre ; un
 générateur peut porter un état d'un tirage au suivant (une table à mémoire, pour la météo d'une campagne, un voyage ou
-l'exploration d'une carte), que l'appelant garde et repasse. Des tables aléatoires prêtes à tirer sont livrées dans
+l'exploration d'une carte), que l'appelant garde et repasse. Une liste, une entrée et un générateur disent d'où vient leur texte (source, licence,
+attribution), et un tirage donne les attributions de ce que ses résultats ont utilisé. Des grammaires Tracery et des
+tables dans le sous-ensemble de la syntaxe de Perchance sans JavaScript sont importées en listes et en générateurs ; une
+carte s'exporte en JSON versionné avec son schéma JSON. Des tables aléatoires prêtes à tirer sont livrées dans
 `tables/`, en anglais et en français : rencontres, objets magiques, butins avec objets non identifiés, boutiques,
 accroches de scénario, rumeurs, oracle du jeu en solo et bonne aventure. Il ne garde de listes ni d'états pour personne, n'affiche pas de résultats et
 ne les sert pas : l'application tient ses propres listes, ses états et ses pages, et le bundle sert les tirages.
@@ -27,7 +30,9 @@ C'est une bibliothèque PHP construite sur Twig, dont le bac à sable exécute l
 fichiers, et sur `tilttek/dice`, qui lance les dés. Son hasard est un `Random\Randomizer` que passe l'appelant, ou le
 germe d'un tirage, qui fait revenir le même tirage. Chaque gabarit est compilé et vérifié à la construction du
 catalogue. Un gabarit qui ne compile pas, sort du bac à sable ou nomme une liste, une étiquette ou un générateur
-inexistants est alors une erreur, et non un texte vide plus tard.
+inexistants est alors une erreur, et non un texte vide plus tard. Chaque résultat a un budget vérifié dans ses
+gabarits (pas des boucles et des affectations, mémoire, temps, longueur de ce que font `replace` et `join`), pour que
+des gabarits écrits par d'autres soient tirés à un coût borné.
 
 La conception est sobre : un `Reader` ou un `FileLoader` donne un `Catalog` d'`EntryList` et de
 `GeneratorDefinition`, un `Generator` le vérifie et y fait des tirages qui donnent un `DrawResult`, et les classes
@@ -41,13 +46,17 @@ La conception est sobre : un `Reader` ou un `FileLoader` donne un `Catalog` d'`E
 | Listes de Markov : mots inventés à partir des entrées, ordre et longueurs, entrées écartées, étiquettes du tirage | Implémentées et testées |
 | Tables à mémoire : un état donné par des gabarits de départ et suivants, passé d'un résultat à l'autre et retourné | Implémentées et testées |
 | Tables aléatoires dans `tables/` : rencontres, objets magiques, butins, boutiques, accroches, rumeurs, oracle du jeu en solo, bonne aventure, en anglais et en français | Implémentées et testées |
-| Gabarits dans le bac à sable de Twig : `pick` selon le poids, l'étiquette, plusieurs sans doublons, avec exclusions ; `generate` ; `roll` | Implémentés et testés |
+| Gabarits dans le bac à sable de Twig : `pick` selon le poids, l'étiquette, plusieurs sans doublons, avec exclusions ; `generate`, avec des variables ; `roll` ; `between` | Implémentés et testés |
+| Le budget d'un résultat vérifié dans ses gabarits : pas des boucles et des affectations, mémoire, temps ; `replace` et `join` bornés | Implémentés et testés |
+| Attributions : source, licence et attribution d'une liste, d'une entrée ou d'un générateur, données avec les résultats qui les ont utilisées | Implémentées et testées |
+| Importations de grammaires Tracery et de tables dans le sous-ensemble de la syntaxe de Perchance sans JavaScript | Implémentées et testées |
+| Cartes exportées en JSON versionné, avec leur schéma JSON | Implémentées et testées |
 | Vérifications à la construction du catalogue : syntaxe, bac à sable, listes, étiquettes et générateurs inconnus, opérateur d'intervalle | Implémentées et testées |
 | Variables partagées par un résultat ; résultats structurés ; cartes carrées et hexagonales ; graphes de nœuds et de passages | Implémentés et testés |
 | Filtres de grammaire : élision, contraction, articles, accord et pluriel en français ; `a`/`an`, articles et pluriel en anglais | Implémentés et testés |
 | Grammaires espagnole, allemande, italienne et portugaise : articles selon le genre et le nombre, contractions et élision, féminin et pluriel | Implémentées et testées |
 | Le port `Grammar`, par lequel une application ajoute ou remplace une langue | Implémenté et documenté |
-| Tirages : nombres, résultats uniques avec un nombre borné de tentatives, germes ; limites de profondeur, de tirages, de temps, de résultats et de cases | Implémentés et testés |
+| Tirages : nombres, résultats uniques avec un nombre borné de tentatives, germes ; limites de profondeur, de tirages, de pas, de mémoire, de temps, de résultats et de cases | Implémentés et testés |
 | Exceptions sous une seule interface `GeneratorException` | Implémentées et testées |
 
 ## Documentation
@@ -55,11 +64,12 @@ La conception est sobre : un `Reader` ou un `FileLoader` donne un `Catalog` d'`E
 | Document | Ce qu'il couvre |
 |---|---|
 | [Installation](doc/fr/installation.md) | Prérequis et installation. |
-| [Listes et générateurs](doc/fr/lists-and-generators.md) | Les documents : listes, entrées, champs, étiquettes, listes de Markov, générateurs et leurs genres. |
-| [Gabarits](doc/fr/templates.md) | `pick`, `generate`, `roll`, les variables, les filtres et le bac à sable. |
+| [Listes et générateurs](doc/fr/lists-and-generators.md) | Les documents : listes, entrées, champs, étiquettes, listes de Markov, générateurs et leurs genres, et d'où vient leur texte. |
+| [Gabarits](doc/fr/templates.md) | `pick`, `generate`, `roll`, `between`, les variables, les filtres, le bac à sable et le budget d'un résultat. |
 | [Grammaire](doc/fr/grammar.md) | Élision, articles, accord et pluriel en français, en anglais, en espagnol, en allemand, en italien et en portugais ; ajouter une langue. |
-| [Cartes](doc/fr/maps.md) | Cartes carrées et hexagonales, graphes, leurs coordonnées et leurs résultats. |
-| [Tirages](doc/fr/drawing.md) | `Generator`, `Draw`, `DrawResult`, les états, l'unicité, les germes, le hasard et les limites. |
+| [Cartes](doc/fr/maps.md) | Cartes carrées et hexagonales, graphes, leurs coordonnées, leurs résultats et leur exportation en JSON. |
+| [Tirages](doc/fr/drawing.md) | `Generator`, `Draw`, `DrawResult`, les attributions, les états, l'unicité, les germes, le hasard et les limites. |
+| [Importations](doc/fr/imports.md) | Des grammaires Tracery et des tables de Perchance transformées en listes et en générateurs. |
 | [Tables à mémoire](doc/fr/memory.md) | Un état porté d'un tirage au suivant : l'écrire, tirer avec lui, et les exemples de la météo, du voyage et de l'exploration d'hexagones. |
 | [Tables aléatoires](doc/fr/tables.md) | Les tables de `tables/` en anglais et en français, ce que donne chacune, et l'oracle du jeu en solo. |
 | [Points d'extension](doc/fr/extension-points.md) | Le port de grammaire, l'horloge, le hasard et les dés que prend un générateur. |

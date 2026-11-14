@@ -41,7 +41,7 @@ use Twig\Attribute\AsTwigFunction;
  * optional lock and the tables with a memory, the access to the draw API and its rate limits, and — when their components are installed — the
  * controller of the API, the commands and the Twig function. The dice of `tilttek/dice-bundle` roll in the templates when it is installed.
  *
- * @phpstan-type Config array{paths: ?list<string>, locale: string, aspirated: list<string>, stressed_a: list<string>, limits: array{depth: int, picks: int, milliseconds: int, attempts: int, results: int, cells: int, draw_milliseconds: int}, cache: bool, tables: bool, tables_locale: string, state: array{store: string, pool: string, lock: ?string}, api: array{enabled: bool, max_count: int, public: list<string>, rate_limiter: ?string, public_limit: array{limit: int, interval: string}, clients: array<string, array{token: string, generators: list<string>, rate_limiter: ?string}>}}
+ * @phpstan-type Config array{paths: ?list<string>, locale: string, aspirated: list<string>, stressed_a: list<string>, limits: array{depth: int, picks: int, milliseconds: int, attempts: int, results: int, cells: int, draw_milliseconds: int, steps: int, bytes: int, megabytes: int}, cache: string, tables: bool, tables_locale: string, state: array{store: string, pool: string, lock: ?string}, api: array{enabled: bool, max_count: int, public: list<string>, rate_limiter: ?string, public_limit: array{limit: int, interval: string}, clients: array<string, array{token: string, generators: list<string>, rate_limiter: ?string}>}}
  */
 final class GeneratorServices
 {
@@ -68,7 +68,7 @@ final class GeneratorServices
             $config['locale'],
             new Reference(Grammars::class),
             new Reference(DiceRoller::class, ContainerInterface::NULL_ON_INVALID_REFERENCE),
-            $config['cache'] ? '%kernel.cache_dir%/tilttek_generator/twig' : false,
+            $config['cache'],
         ]);
         $container->register(Generator::class, Generator::class)
             ->setFactory([new Reference(GeneratorFactory::class), 'generator'])

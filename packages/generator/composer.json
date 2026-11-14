@@ -1,6 +1,6 @@
 {
     "name": "tilttek/generator",
-    "description": "Random generators written as data: weighted, tagged lists or words from a Markov chain, Twig templates in a sandbox that pick, generate and roll, grammar in six languages, structured results, generated maps, tables with a memory, unique and replayable draws, and limits against runaway generators",
+    "description": "Random generators written as data: weighted, tagged lists or words from a Markov chain, Twig templates in a sandbox that pick, generate and roll, grammar in six languages, structured results, generated maps exported as versioned JSON, tables with a memory, attributions, imports of Tracery and Perchance, unique and replayable draws, and a budget against runaway generators",
     "license": "MIT",
     "type": "library",
     "keywords": [
@@ -9,6 +9,7 @@
         "name-generator",
         "procedural-generation",
         "rpg",
+        "tracery",
         "ttrpg",
         "twig"
     ],

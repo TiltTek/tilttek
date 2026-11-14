@@ -4,7 +4,8 @@
 
 tilttek/generator-bundle integrates `tilttek/generator` with a Symfony application. It reads the lists and the
 generators from the YAML and JSON files of the application, keeps them in the cache, and builds the generator that
-checks them on first use. It adds commands that validate the files, write a new generator and draw in the terminal, a
+checks them on first use, whose templates Twig compiles into files of the cache directory and loads from there, never
+by `eval()`. It adds commands that validate the files, write a new generator and draw in the terminal, a
 Twig function that draws in a template, a template and a Stimulus controller that draw again in place, and a draw API
 that other sites and applications call without ever receiving the lists. It loads the library's random tables when
 asked, in English or in French, and keeps the states of the tables with a memory — the weather of a campaign, a journey,
@@ -35,8 +36,9 @@ generator.
 | Tables with a memory: states kept by generator and key in a cache pool, in memory or in the application's store | Implemented and tested |
 | An optional lock on `symfony/lock`, so that two draws on the same state do not lose an update | Implemented and tested |
 | Commands: validate, create — a text, fields, a map, a table with a memory, or a copy of a random table — and draw, with a key | Implemented and tested |
-| Twig function `tilttek_draw`, template and Stimulus controller that draw again | Implemented and tested |
-| Draw API: off by default, public generators by address, clients by token, rate limits, problem details, states sent back by the client | Implemented and tested |
+| Twig function `tilttek_draw`, template and Stimulus controller that draw again, with the attributions of the results | Implemented and tested |
+| Compiled templates in files of the cache directory, never loaded by `eval()` | Implemented and tested |
+| Draw API: off by default, public generators by address, clients by token, rate limits, problem details, states sent back by the client, attributions | Implemented and tested |
 | The dice of `tilttek/dice-bundle` in the templates, when it is installed | Implemented and tested |
 
 ## Documentation

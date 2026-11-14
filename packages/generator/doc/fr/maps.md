@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=42dc145dc40d19bca3463a52a07a3f1a8b4465c5a06403f14d3d4a18826dd542 -->
+<!-- phil-dev source-sha256=2692d05e39d10d63ddea4359f00fb6e60009cb0524df6c474c8204c003a7880b -->
 # Cartes
 
 Un générateur doté d'une `map` retourne des cases ou des nœuds que l'application dessine. Chacun est rempli par la même
@@ -49,3 +49,23 @@ d'identifiants de nœuds, le plus petit d'abord, en ordre.
 
 Une carte a au plus `Limits::$cells` cases ou nœuds. Le placement des nœuds dans l'espace, le terrain qui suit ses
 voisins et le dessin sont laissés à l'application ou à des paquets plus spécialisés.
+
+## Exporter une carte
+
+`MapSchema` écrit une carte en JSON pour un autre programme (un éditeur de cartes, une table virtuelle, une imprimante),
+avec l'identifiant du schéma qu'elle suit et sa version en premier :
+
+```php
+use Tilttek\Generator\MapSchema;
+
+$json = MapSchema::json($generator->draw('dungeon')->first(), JSON_PRETTY_PRINT);
+// {"$schema": "urn:tilttek:generator:map:1", "version": 1, "layout": "graph", "nodes": […], "edges": […]}
+```
+
+`MapSchema::export()` donne la même chose sous forme de tableau, et refuse avec `InvalidDefinition` un tableau qui n'est
+pas une carte qu'un générateur a faite. `MapSchema::schema()` donne le schéma JSON (draft 2020-12) d'une carte exportée,
+que le paquet livre aussi sous `schema/map.v1.json` : une grille carrée avec `x` et `y`, une grille hexagonale avec
+`col`, `row`, `q` et `r`, ou un graphe de nœuds avec leur `id` et d'arêtes en paires d'identifiants ; la `value` d'une
+case ou d'un nœud est un texte ou les champs d'un résultat structuré. `MapSchema::VERSION` est augmentée, et
+`MapSchema::ID` avec elle, chaque fois qu'une carte exportée change d'une manière qu'un ancien lecteur lirait de travers ;
+un lecteur vérifie `$schema` avant de lire le reste.

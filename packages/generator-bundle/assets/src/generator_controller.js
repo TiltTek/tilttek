@@ -1,9 +1,10 @@
 import { Controller } from '@hotwired/stimulus';
-import { drawUrl, resultTexts } from './lib/draws.js';
+import { attributionText, drawUrl, resultTexts } from './lib/draws.js';
 
 /**
  * Asks the draw API for new results of a generator and shows them in place of the old ones, each as a list item
- * written as text; a status element says when the draw fails or finds fewer results than asked.
+ * written as text; a status element says when the draw fails or finds fewer results than asked, and an attribution
+ * element, when there is one, shows the attributions of the lists and generators the new results used.
  *
  *     <div data-controller="tilttek--generator-bundle--generator"
  *          data-tilttek--generator-bundle--generator-url-value="/api/generators/name.elf"
@@ -14,7 +15,7 @@ import { drawUrl, resultTexts } from './lib/draws.js';
  *     </div>
  */
 export default class extends Controller {
-    static targets = ['results', 'status'];
+    static targets = ['results', 'status', 'attribution'];
     static values = {
         url: String,
         count: { type: Number, default: 1 },
@@ -47,6 +48,10 @@ export default class extends Controller {
                 }),
             );
             this.say(body.short ? this.shortMessageValue : '');
+
+            if (this.hasAttributionTarget) {
+                this.attributionTarget.textContent = attributionText(body.attributions);
+            }
         } catch (error) {
             this.say(error.message);
         } finally {

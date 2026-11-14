@@ -11,7 +11,10 @@ Spanish, German, Italian and Portuguese, and any other language an application a
 generator returns a text, a structured result (an inn with its name, its keeper, its staff and its menu) or a map
 (square cells, hexagons, or rooms joined by passages). A list may invent new words from its entries by a Markov chain
 instead of giving them back; a generator may carry a state from one draw to the next — a table with a memory, for the
-weather of a campaign, a journey or the exploration of a map — which the caller keeps and passes back. Random tables
+weather of a campaign, a journey or the exploration of a map — which the caller keeps and passes back. A list, an entry
+and a generator say where their text comes from — source, licence, attribution — and a draw gives the attributions of
+what its results used. Tracery grammars and tables in the subset of Perchance's syntax without JavaScript are imported
+into lists and generators; a map is exported as versioned JSON with its JSON Schema. Random tables
 ready to draw ship in `tables/`, in English and in French: encounters, magic items, loot with unidentified items, shops,
 adventure hooks, rumours, a solo play oracle and fortunes. It does not keep lists or states for anyone, show results or
 serve them: the application holds its own lists, states and pages, and the bundle serves draws.
@@ -24,7 +27,8 @@ It is a PHP library on Twig, whose sandbox runs the templates, Symfony Yaml, whi
 which rolls the dice. Its randomness is a `Random\Randomizer` the caller passes, or the seed of a draw, which makes the
 same draw come again. Every template is compiled and checked when the catalog is built: a template that does not
 compile, leaves the sandbox, or names a list, a tag or a generator that does not exist is an error then, not an empty
-text later.
+text later. Each result has a budget checked inside its templates — steps of loops and assignments, memory, time, the
+length of what `replace` and `join` make —, so that templates written by others are drawn at a bounded cost.
 
 The design is small: a `Reader` or a `FileLoader` gives a `Catalog` of `EntryList` and `GeneratorDefinition`, a
 `Generator` checks it and draws from it into a `DrawResult`, and the `Grammar` classes give the filters of each
@@ -38,13 +42,17 @@ language; `Tables` points to the tables the library ships.
 | Markov lists: words invented from the entries, order and lengths, entries kept out, tags of the pick | Implemented and tested |
 | Tables with a memory: a state given by start and next templates, threaded through a draw and returned | Implemented and tested |
 | Random tables in `tables/`: encounters, magic items, loot, shops, hooks, rumours, solo play oracle, fortunes, in English and French | Implemented and tested |
-| Templates in Twig's sandbox: `pick` by weight, by tag, several without duplicates, with exclusions; `generate`; `roll` | Implemented and tested |
+| Templates in Twig's sandbox: `pick` by weight, by tag, several without duplicates, with exclusions; `generate`, with variables; `roll`; `between` | Implemented and tested |
+| The budget of a result checked inside its templates: steps of loops and assignments, memory, time; `replace` and `join` bounded | Implemented and tested |
+| Attributions: source, licence and attribution of a list, an entry or a generator, given with the results that used them | Implemented and tested |
+| Imports of Tracery grammars and of tables in the subset of Perchance's syntax without JavaScript | Implemented and tested |
+| Maps exported as versioned JSON, with their JSON Schema | Implemented and tested |
 | Checks when the catalog is built: syntax, sandbox, unknown lists, tags and generators, the range operator | Implemented and tested |
 | Variables shared by a result; structured results; square and hex maps; graphs of nodes and passages | Implemented and tested |
 | Grammar filters: French elision, contraction, articles, agreement and plural; English `a`/`an`, articles and plural | Implemented and tested |
 | Spanish, German, Italian and Portuguese grammars: articles by gender and number, contractions and elision, feminine and plural | Implemented and tested |
 | The `Grammar` port, by which an application adds or replaces a language | Implemented and documented |
-| Draws: counts, unique results with a bounded number of attempts, seeds; limits of depth, picks, time, results and cells | Implemented and tested |
+| Draws: counts, unique results with a bounded number of attempts, seeds; limits of depth, picks, steps, memory, time, results and cells | Implemented and tested |
 | Exceptions under one `GeneratorException` interface | Implemented and tested |
 
 ## Documentation
@@ -52,11 +60,12 @@ language; `Tables` points to the tables the library ships.
 | Document | What it covers |
 |---|---|
 | [Installation](doc/installation.md) | Requirements and installing. |
-| [Lists and generators](doc/lists-and-generators.md) | The documents: lists, entries, fields, tags, Markov lists, generators and their kinds. |
-| [Templates](doc/templates.md) | `pick`, `generate`, `roll`, variables, the filters and the sandbox. |
+| [Lists and generators](doc/lists-and-generators.md) | The documents: lists, entries, fields, tags, Markov lists, generators and their kinds, and where their text comes from. |
+| [Templates](doc/templates.md) | `pick`, `generate`, `roll`, `between`, variables, the filters, the sandbox and the budget of a result. |
 | [Grammar](doc/grammar.md) | Elision, articles, agreement and plural in French, English, Spanish, German, Italian and Portuguese; adding a language. |
-| [Maps](doc/maps.md) | Square and hex maps, graphs, their coordinates and their results. |
-| [Drawing](doc/drawing.md) | `Generator`, `Draw`, `DrawResult`, states, uniqueness, seeds, randomness and limits. |
+| [Maps](doc/maps.md) | Square and hex maps, graphs, their coordinates, their results and their JSON export. |
+| [Drawing](doc/drawing.md) | `Generator`, `Draw`, `DrawResult`, attributions, states, uniqueness, seeds, randomness and limits. |
+| [Imports](doc/imports.md) | Tracery grammars and Perchance tables into lists and generators. |
 | [Tables with a memory](doc/memory.md) | A state carried from one draw to the next: writing it, drawing with it, and the weather, journey and hexcrawl examples. |
 | [Random tables](doc/tables.md) | The tables of `tables/` in English and French, what each one gives, and the solo play oracle. |
 | [Extension points](doc/extension-points.md) | The grammar port, the clock, the randomness and the dice a generator takes. |

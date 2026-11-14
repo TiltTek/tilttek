@@ -8,6 +8,8 @@
  #     }) }}
  #
  # A structured result shows its `name` field, or its JSON; the application writes its own template to show more.
+ # The attributions of the lists and generators the results used follow them: each its attribution, or its source,
+ # then its licence.
  #}
 {% set controller = 'tilttek--generator-bundle--generator' %}
 <div class="tilttek-generator" data-controller="{{ controller }}"
@@ -18,6 +20,13 @@
             <li>{{ value is iterable ? (value.name ?? value|json_encode) : value }}</li>
         {% endfor %}
     </ul>
+    <p class="tilttek-generator-attribution" data-{{ controller }}-target="attribution">
+        {%- for credit in result.attributions -%}
+            {%- set text = credit.attribution ?? credit.source -%}
+            {{- text is null ? credit.licence : (credit.licence is null ? text : text ~ ' (' ~ credit.licence ~ ')') -}}
+            {{- loop.last ? '' : '; ' -}}
+        {%- endfor -%}
+    </p>
     <p data-{{ controller }}-target="status" role="status">{{ result.short ? short|default('Fewer results than asked were found.') }}</p>
     <button type="button" data-action="{{ controller }}#draw">{{ again|default('Again') }}</button>
 </div>

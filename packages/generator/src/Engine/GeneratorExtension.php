@@ -10,7 +10,8 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 /**
- * The generator's functions and filters, in the Twig environment of its templates only.
+ * The generator's functions and filters, in the Twig environment of its templates only: `replace` and `join` take the
+ * place of Twig's own, bounded; and the steps a template counts at each turn of a loop and after each assignment.
  *
  * @internal
  */
@@ -20,6 +21,14 @@ final class GeneratorExtension extends AbstractExtension
     {
     }
 
+    /**
+     * Called by the compiled templates at each step (see `StepNode`).
+     */
+    public function step(): void
+    {
+        $this->producer->step();
+    }
+
     #[Override]
     public function getFunctions(): array
     {
@@ -27,6 +36,7 @@ final class GeneratorExtension extends AbstractExtension
             new TwigFunction('pick', $this->producer->pick(...)),
             new TwigFunction('generate', $this->producer->generate(...)),
             new TwigFunction('roll', $this->producer->roll(...)),
+            new TwigFunction('between', $this->producer->between(...)),
         ];
     }
 
@@ -39,6 +49,14 @@ final class GeneratorExtension extends AbstractExtension
             new TwigFilter('article', $this->producer->article(...)),
             new TwigFilter('agree', $this->producer->agree(...)),
             new TwigFilter('plural', $this->producer->plural(...)),
+            new TwigFilter('replace', $this->producer->replace(...)),
+            new TwigFilter('join', $this->producer->join(...)),
         ];
+    }
+
+    #[Override]
+    public function getNodeVisitors(): array
+    {
+        return [new StepVisitor()];
     }
 }

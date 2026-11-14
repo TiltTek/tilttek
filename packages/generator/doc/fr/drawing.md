@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=4df68da0e60df22214959d6a2c91b6e2381fbacadd81ed23f5b2ce91797a244d -->
+<!-- phil-dev source-sha256=39797b2a9dcef1fcc34e5bac8dbcfd2ce95d01393ccc73aac02010c2228b28a7 -->
 # Tirages
 
 `Generator::draw()` prend le nom d'un générateur et un `Draw`, et retourne un `DrawResult` :
@@ -13,6 +13,20 @@ $result->first();     // the first result, or null
 $result->isShort();   // fewer results than asked
 $result->toArray();   // ['generator' => …, 'results' => […], 'requested' => 5, 'short' => false]
 ```
+
+## Attributions
+
+`DrawResult::$attributions` liste l'`Attribution` de chaque liste, entrée et générateur que les résultats ont utilisés
+(une fois chacune, dans l'ordre où le tirage les a utilisés pour la première fois), pour que l'application affiche la
+source, la licence et l'attribution de ce qu'elle imprime. L'attribution propre d'une entrée prend la place de celle de
+sa liste ; un mot qu'invente une liste de Markov porte celle de sa liste. `toArray()` les ajoute sous `attributions`,
+chacune avec les textes qu'elle a, quand il y en a :
+
+```php
+$result->toArray()['attributions'];   // [['source' => 'Old tables', 'licence' => 'CC-BY-4.0'], …]
+```
+
+Voyez [Listes et générateurs](lists-and-generators.md#dou-vient-le-texte).
 
 ## Un état d'un tirage au suivant
 
@@ -54,22 +68,27 @@ tirage ou de le partager par son germe.
 | Limite | Valeur par défaut | Ce qu'elle borne |
 |---|---|---|
 | `depth` | 8 | Les générateurs appelés les uns dans les autres, celui qui est tiré compris : un générateur qui s'appelle lui-même s'arrête. |
-| `picks` | 1000 | Les tirages dans les listes, les lancers, les appels, les passages supplémentaires et les essais d'un mot inventé d'un résultat. |
-| `milliseconds` | 250 | Le temps passé sur un résultat, vérifié à chaque tirage dans une liste, lancer et appel, et avant le rendu de chaque gabarit. |
+| `picks` | 1000 | Les tirages dans les listes, les lancers, `between`, les appels, les passages supplémentaires et les essais d'un mot inventé d'un résultat. |
+| `milliseconds` | 250 | Le temps passé sur un résultat, vérifié à chaque tirage dans une liste, lancer, appel et pas, et avant le rendu de chaque gabarit. |
 | `attempts` | 10 | Les tentatives par résultat demandé à un tirage unique. |
 | `results` | 100 | Les résultats demandés à un tirage. |
 | `cells` | 2500 | Les cases d'une carte ou les nœuds d'un graphe. |
 | `drawMilliseconds` | 1000 | Le temps passé sur tout le tirage (chaque résultat, et chaque tentative d'un tirage unique), vérifié comme le temps d'un résultat. |
+| `steps` | 10000 | Les tours de chaque boucle `for` et les affectations `{% set %}` d'un résultat. |
+| `bytes` | 65536 | Le texte le plus long, en octets d'UTF-8, que `replace` ou `join` retourne, mesuré avant qu'il soit fait. |
+| `megabytes` | 16 | La mémoire dont un résultat peut croître, vérifiée à chaque pas. |
 
 Chaque gabarit est compilé à la construction du générateur : la limite de temps ne compte que le tirage, et non la
-première compilation d'un gabarit.
+première compilation d'un gabarit. Sans répertoire de cache (`$cache`, le dernier argument de `Generator`), Twig charge
+chaque gabarit compilé par `eval()` ; avec un répertoire, il écrit chaque gabarit dans un fichier PHP de ce répertoire
+et charge le fichier, que le cache d'opcodes garde ensuite. Une application de longue durée lui donne un répertoire.
 
 Une valeur d'état plus longue que `Draw::STATE_LENGTH` caractères arrête aussi le tirage avec `LimitExceeded`, puisque
 le tirage suivant ne pourrait pas la rapporter.
 
-Le temps se lit sur un `Timer`, par défaut `SystemTimer`, l'horloge monotone du système. Twig ne peut pas s'arrêter au
-milieu d'un gabarit : les limites de temps sont donc vérifiées avant le rendu de chaque gabarit (chaque case d'une
-carte, chaque champ, chaque valeur d'un état) et entre les tirages. Une boucle qui ne tire jamais s'exécute jusqu'au
-bout, bornée par la liste qu'elle parcourt. Le temps du tirage borne un tirage de nombreux résultats, ou un tirage
-unique qui retombe sans cesse sur le même : vingt cartes demandées à un tirage unique s'arrêtent après une seconde au
-lieu de tourner pendant dix.
+Le temps se lit sur un `Timer`, par défaut `SystemTimer`, l'horloge monotone du système. Les limites de temps sont
+vérifiées avant le rendu de chaque gabarit (chaque case d'une carte, chaque champ, chaque valeur d'un état), à chaque
+tirage dans une liste et à chaque pas dans un gabarit : une boucle s'arrête au tour qui franchit une limite ([Le budget
+d'un résultat](templates.md#le-budget-dun-résultat)). Le temps du tirage borne un tirage de nombreux résultats, ou un
+tirage unique qui retombe sans cesse sur le même : vingt cartes demandées à un tirage unique s'arrêtent après une
+seconde au lieu de tourner pendant dix.

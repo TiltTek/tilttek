@@ -29,3 +29,22 @@ export function resultTexts(results) {
         return JSON.stringify(result);
     });
 }
+
+/**
+ * The attributions of a draw in one line: each its attribution, or its source, then its licence in parentheses,
+ * separated by semicolons.
+ */
+export function attributionText(attributions) {
+    return (attributions ?? [])
+        .map((attribution) => {
+            const credit = attribution.attribution ?? attribution.source ?? '';
+            const licence = attribution.licence ?? '';
+
+            if (credit === '') {
+                return licence;
+            }
+
+            return licence === '' ? credit : `${credit} (${licence})`;
+        })
+        .join('; ');
+}

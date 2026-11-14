@@ -1,0 +1,7 @@
+```perhaps
+colour
+	red
+	blue
+out
+  {a|{b|c}} \[x\] [colour.selectMany(2)]
+```

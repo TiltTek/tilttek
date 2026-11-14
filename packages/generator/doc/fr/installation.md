@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=fa182da44d22c1a21030c62169dc269c8ad6be74fcd9025286eb8121f2818780 -->
+<!-- phil-dev source-sha256=3ec19c9f75b91893d4ac9e7ff9d5df017cd3fa56bfa87af10191da2889fe94d9 -->
 # Installation
 
 ## Prérequis
@@ -23,8 +23,9 @@ use Tilttek\Generator\Generator;
 use Tilttek\Generator\Limits;
 use Tilttek\Generator\Loading\FileLoader;
 
-$generator = new Generator(new FileLoader()->catalog(['config/generators']), new Limits(picks: 200), locale: 'fr');
+$generator = new Generator(new FileLoader()->catalog(['config/generators']), new Limits(picks: 200), locale: 'fr', cache: 'var/cache/generator');
 ```
 
 Construire le générateur compile et vérifie chaque gabarit du catalogue ; construisez-le une fois et gardez-le pour la
-requête ou le processus.
+requête ou le processus. Avec un répertoire de cache, Twig écrit les gabarits compilés dans des fichiers PHP de ce
+répertoire et les charge, plutôt que de les évaluer avec `eval()`.

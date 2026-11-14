@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tilttek\Generator\Loading;
 
+use Tilttek\Generator\Definition\Attribution;
 use Tilttek\Generator\Definition\Body;
 use Tilttek\Generator\Definition\Catalog;
 use Tilttek\Generator\Definition\Entry;
@@ -26,14 +27,19 @@ use Tilttek\Generator\Exception\InvalidDefinition;
  * Reads lists and generators from decoded YAML or JSON documents into a catalog, and says where a document is wrong.
  *
  * A document holds `lists` and `generators` maps by name, or one list (`list`, `entries` and an optional `markov`),
- * or one generator (`generator` and its keys). A list is a sequence of entries, or a map of its `entries` and its
- * `markov` chain.
+ * or one generator (`generator` and its keys). A list is a sequence of entries, or a map of its `entries`, its
+ * `markov` chain and its attribution. A list, an entry and a generator say where their text comes from by `source`,
+ * `licence` and `attribution`.
  */
 final class Reader
 {
     private const string NAME = '/^[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*$/D';
 
-    private const array GENERATOR_KEYS = ['locale', 'state', 'vars', 'templates', 'filters', 'fields', 'map'];
+    private const array GENERATOR_KEYS = ['locale', 'state', 'vars', 'templates', 'filters', 'fields', 'map', ...self::ATTRIBUTION_KEYS];
+
+    private const array ATTRIBUTION_KEYS = ['source', 'licence', 'attribution'];
+
+    private const array LIST_KEYS = ['entries', 'markov', ...self::ATTRIBUTION_KEYS];
 
     private const array MARKOV_KEYS = ['order', 'min_length', 'max_length', 'allow_entries'];
 
@@ -59,8 +65,8 @@ final class Reader
             $document = $this->map($document, $source);
 
             if (\array_key_exists('list', $document)) {
-                $this->keys($document, ['list', 'entries', 'markov'], $source);
-                $lists[] = $this->list($this->name($document['list'], $source), $document['entries'] ?? null, $source, $document['markov'] ?? null);
+                $this->keys($document, ['list', ...self::LIST_KEYS], $source);
+                $lists[] = $this->list($this->name($document['list'], $source), $document['entries'] ?? null, $source, $document['markov'] ?? null, $this->attribution($document, $source));
 
                 continue;
             }
@@ -88,7 +94,7 @@ final class Reader
     }
 
     /**
-     * A list written as a sequence of entries, or as a map of its `entries` and its `markov` chain.
+     * A list written as a sequence of entries, or as a map of its `entries`, its `markov` chain and its attribution.
      */
     private function listOf(string $name, mixed $list, string $at): EntryList
     {
@@ -97,20 +103,46 @@ final class Reader
         }
 
         $list = $this->map($list, $at);
-        $this->keys($list, ['entries', 'markov'], $at);
+        $this->keys($list, self::LIST_KEYS, $at);
 
-        return $this->list($name, $list['entries'] ?? null, $at, $list['markov'] ?? null);
+        return $this->list($name, $list['entries'] ?? null, $at, $list['markov'] ?? null, $this->attribution($list, $at));
     }
 
-    private function list(string $name, mixed $entries, string $at, mixed $markov = null): EntryList
+    private function list(string $name, mixed $entries, string $at, mixed $markov = null, ?Attribution $attribution = null): EntryList
     {
         if (!\is_array($entries) || [] === $entries || !array_is_list($entries)) {
             throw InvalidDefinition::at($at, 'a list is a sequence of at least one entry');
         }
 
         $list = new EntryList($name, ...array_map(fn (mixed $entry, int $index): Entry => $this->entry($entry, $at.' > '.$index), $entries, array_keys($entries)));
+        $list = $attribution instanceof Attribution ? $list->attributed($attribution) : $list;
 
         return null === $markov ? $list : $list->invent($this->markov($markov, $at.' > markov'));
+    }
+
+    /**
+     * The `source`, `licence` and `attribution` of a list, an entry or a generator, or null when it has none of them.
+     *
+     * @param array<string, mixed> $map
+     */
+    private function attribution(array $map, string $at): ?Attribution
+    {
+        $texts = array_intersect_key($map, array_flip(self::ATTRIBUTION_KEYS));
+
+        if ([] === $texts) {
+            return null;
+        }
+
+        if (!array_all($texts, static fn (mixed $text): bool => \is_string($text))) {
+            throw InvalidDefinition::at($at, 'the source, the licence and the attribution are texts');
+        }
+
+        /** @var array<string, string> $texts */
+        try {
+            return new Attribution($texts['source'] ?? null, $texts['licence'] ?? null, $texts['attribution'] ?? null);
+        } catch (InvalidDefinition $invalidDefinition) {
+            throw InvalidDefinition::at($at, $invalidDefinition->getMessage());
+        }
     }
 
     /**
@@ -166,8 +198,10 @@ final class Reader
             $fields[$field] = \is_array($value) ? $this->scalars($value, $at.' > '.$field) : self::scalar($value, $at.' > '.$field);
         }
 
+        $attribution = $this->attribution($entry, $at);
+
         try {
-            return new Entry((string) $text, $weight, $fields, $tags);
+            return new Entry((string) $text, $weight, $fields, $tags, $attribution);
         } catch (InvalidDefinition $invalidDefinition) {
             throw InvalidDefinition::at($at, $invalidDefinition->getMessage());
         }
@@ -200,7 +234,7 @@ final class Reader
         $body = $this->body($generator, $at);
 
         try {
-            return new GeneratorDefinition($name, $body, $vars, $locale, $state);
+            return new GeneratorDefinition($name, $body, $vars, $locale, $state, $this->attribution($generator, $at));
         } catch (InvalidDefinition $invalidDefinition) {
             throw InvalidDefinition::at($at, $invalidDefinition->getMessage());
         }
@@ -365,6 +399,9 @@ final class Reader
 
     private function name(mixed $name, string $at): string
     {
+        // A key made of digits is an integer in PHP.
+        $name = \is_int($name) ? (string) $name : $name;
+
         if (!\is_string($name) || !self::isName($name)) {
             throw InvalidDefinition::at($at, \sprintf('"%s" is not a name: letters, digits, "_" and "-", in parts joined by dots', \is_scalar($name) ? (string) $name : get_debug_type($name)));
         }

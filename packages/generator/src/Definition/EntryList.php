@@ -8,7 +8,7 @@ use Tilttek\Generator\Exception\InvalidDefinition;
 
 /**
  * A list named by its path, such as `name.fantasy.elf.female.first`, and its entries; or a list that invents new words
- * from its entries by a Markov chain.
+ * from its entries by a Markov chain. A list may say where its entries come from.
  */
 final readonly class EntryList
 {
@@ -27,6 +27,11 @@ final readonly class EntryList
      */
     public ?MarkovChain $markov;
 
+    /**
+     * Where the entries come from, unless an entry says otherwise.
+     */
+    public ?Attribution $attribution;
+
     public function __construct(public string $name, Entry ...$entries)
     {
         if ([] === $entries) {
@@ -42,6 +47,7 @@ final readonly class EntryList
 
         $this->tags = $tags;
         $this->markov = null;
+        $this->attribution = null;
     }
 
     /**
@@ -50,6 +56,14 @@ final readonly class EntryList
     public function invent(MarkovChain $chain): self
     {
         return clone ($this, ['markov' => $chain]);
+    }
+
+    /**
+     * The same list, whose entries come from where the attribution says, unless an entry says otherwise.
+     */
+    public function attributed(Attribution $attribution): self
+    {
+        return clone ($this, ['attribution' => $attribution]);
     }
 
     /**

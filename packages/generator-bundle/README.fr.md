@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=70891a421829a75adab3f7234f291a9d49fdefa21cb752ed32f7e525e01c6314 -->
+<!-- phil-dev source-sha256=9d480cd8ec6c3e70daabaed670a029d606e0d1b589812b20847f1f7348f77afe -->
 # tilttek/generator-bundle
 
 **Des générateurs aléatoires pour Symfony : les listes et les gabarits de l'application, tirés dans ses pages, son
@@ -6,7 +6,8 @@ terminal et son API.**
 
 tilttek/generator-bundle intègre `tilttek/generator` à une application Symfony. Il lit les listes et les générateurs
 dans les fichiers YAML et JSON de l'application, les garde en cache, et construit à la première utilisation le
-générateur qui les vérifie. Il ajoute des commandes qui valident les fichiers, écrivent un nouveau générateur et font
+générateur qui les vérifie, dont Twig compile les gabarits dans des fichiers du répertoire du cache et les charge de
+là, jamais par `eval()`. Il ajoute des commandes qui valident les fichiers, écrivent un nouveau générateur et font
 des tirages dans le terminal. Il ajoute aussi une fonction Twig qui fait un tirage dans un gabarit, un gabarit et un
 contrôleur Stimulus qui refont le tirage sur place, et une API de tirage que d'autres sites et applications appellent
 sans jamais recevoir les listes. L'API est désactivée tant que l'application ne l'active pas. Elle n'ouvre que les
@@ -39,8 +40,9 @@ commandes et l'extension Twig utilisent le même générateur.
 | Tables à mémoire : états gardés par générateur et par clé dans un pool de cache, en mémoire ou dans le stockage de l'application | Implémenté et testé |
 | Un verrou facultatif sur `symfony/lock`, pour que deux tirages sur le même état ne perdent pas une mise à jour | Implémenté et testé |
 | Commandes : valider, créer (un texte, des champs, une carte, une table à mémoire, ou une copie d'une table aléatoire) et tirer, avec une clé | Implémenté et testé |
-| Fonction Twig `tilttek_draw`, gabarit et contrôleur Stimulus qui refont le tirage | Implémenté et testé |
-| API de tirage : désactivée par défaut, générateurs publics par adresse, clients par jeton, limites de débit, détails de problème, états renvoyés par le client | Implémenté et testé |
+| Fonction Twig `tilttek_draw`, gabarit et contrôleur Stimulus qui refont le tirage, avec les attributions des résultats | Implémenté et testé |
+| Gabarits compilés dans des fichiers du répertoire du cache, jamais chargés par `eval()` | Implémenté et testé |
+| API de tirage : désactivée par défaut, générateurs publics par adresse, clients par jeton, limites de débit, détails de problème, états renvoyés par le client, attributions | Implémenté et testé |
 | Les dés de `tilttek/dice-bundle` dans les gabarits, quand il est installé | Implémenté et testé |
 
 ## Documentation

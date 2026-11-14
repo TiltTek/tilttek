@@ -6,6 +6,9 @@ namespace Tilttek\GeneratorBundle\Tests\Functional;
 
 use Override;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use ReflectionClass;
+use ReflectionProperty;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -59,6 +62,41 @@ final class GeneratorBundleTest extends KernelTestCase
         self::assertCount(3, $generator->draw('name.short', new Draw(3))->results);
     }
 
+    /**
+     * In a process of its own, so that no template compiled by another test was declared before.
+     */
+    #[RunInSeparateProcess]
+    public function testTheTemplatesAreLoadedFromCompiledFilesNeverByEval(): void
+    {
+        $generator = $this->service(Generator::class, Generator::class);
+        $generator->draw('name.short', new Draw(3));
+
+        $kernel = self::$kernel;
+        self::assertInstanceOf(KernelInterface::class, $kernel);
+        $producer = new ReflectionProperty(Generator::class, 'producer')->getValue($generator);
+        self::assertIsObject($producer);
+        $sources = new ReflectionProperty($producer, 'sources')->getValue($producer);
+        self::assertIsArray($sources);
+        self::assertContains('name.short:template:0', array_keys($sources));
+
+        $directory = realpath($kernel->getCacheDir());
+        self::assertIsString($directory);
+        $compiled = 0;
+
+        // Twig evaluates a compiled template only when its class is still missing once its file is loaded: the class of
+        // every template of this process was declared by a file, those of the generator by files of its directory.
+        foreach (get_declared_classes() as $class) {
+            if (str_starts_with($class, '__TwigTemplate_')) {
+                $file = (string) new ReflectionClass($class)->getFileName();
+                self::assertStringNotContainsString('eval()', $file);
+                self::assertFileExists($file);
+                $compiled += (int) str_starts_with($file, $directory.'/tilttek_generator/twig/');
+            }
+        }
+
+        self::assertSame(\count($sources), $compiled);
+    }
+
     public function testATemplateDrawsAndDrawsAgain(): void
     {
         $html = $this->service('twig', Environment::class)->render('page.html.twig');
@@ -68,6 +106,8 @@ final class GeneratorBundleTest extends KernelTestCase
         self::assertStringContainsString('data-tilttek--generator-bundle--generator-count-value="3"', $html);
         self::assertSame(3 + 1, preg_match_all('/<li>[A-Z][a-z]{3}<\/li>|<li>The [A-Z][a-z]{3}<\/li>/', $html));
         self::assertStringContainsString('>Again</button>', $html);
+        self::assertStringContainsString('data-tilttek--generator-bundle--generator-target="attribution">Syllables by the testers (CC0-1.0)</p>', $html);
+        self::assertStringContainsString('data-tilttek--generator-bundle--generator-target="attribution">Inns of the tests; Syllables by the testers (CC0-1.0)</p>', $html);
         self::assertStringContainsString('>Another</button>', $html);
     }
 
@@ -87,6 +127,7 @@ final class GeneratorBundleTest extends KernelTestCase
         $inn = $kernel->handle(Request::create('/api/generators/inn', server: ['HTTP_AUTHORIZATION' => 'Bearer secret']));
         self::assertSame(200, $inn->getStatusCode());
         self::assertStringContainsString('"staff":[', (string) $inn->getContent());
+        self::assertStringContainsString('"attributions":[{"source":"Inns of the tests"},{"licence":"CC0-1.0","attribution":"Syllables by the testers"}]', (string) $inn->getContent());
         self::assertSame(422, $kernel->handle(Request::create('/api/generators/broken', server: ['HTTP_AUTHORIZATION' => 'Bearer secret']))->getStatusCode());
     }
 
