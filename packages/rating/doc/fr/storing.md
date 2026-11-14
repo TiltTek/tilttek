@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=20466b406bd4ecc1891d774608ecce463c3ff2956f890222c2a9dbc9744bf29f -->
+<!-- phil-dev source-sha256=bbfd8163483c224285203f45368829a8cb638d2e018045f6115f747a8e3d1773 -->
 # Stockage
 
 `Contract\RatingStore` garde un `MemberRating` par membre et par jeu :
@@ -12,7 +12,7 @@
 | `markDelivered($game, $result, ...$keys)` | Oublie les événements de ces clés, envoyés sans exception |
 | `standings($game, $limit, $minGames)` | Les cotes publiques qui ont au moins `$minGames` parties cotées, et une au moins, le score le plus haut d'abord, puis par membre |
 | `ofGame($game)` | Chaque cote du jeu |
-| `replace($game, $ratings, $results)` | Remplace d'un coup chaque cote du jeu, et les résultats qu'il compte : ce qu'une relecture a calculé |
+| `replace($game, $ratings, $results)` | Remplace d'un coup chaque cote du jeu, et les résultats qu'il compte : ce qu'une relecture a calculé ; les événements du jeu pas encore remis sont annulés |
 | `ofMember($member)` | Chaque cote du membre |
 | `forget($member)` | Efface chaque cote du membre, et les événements à son sujet pas encore remis |
 
@@ -25,8 +25,8 @@ jeu et le membre.
 
 Les résultats qu'un jeu compte sont gardés à côté des cotes : dans une base de données, une table du jeu et de
 l'identifiant du résultat avec une clé unique sur les deux, écrite dans la même transaction que les cotes, pour qu'un
-second enregistrement du résultat échoue sur la clé et ne garde rien ; `replace()` vide les lignes du jeu et écrit
-celles de la relecture. Les identifiants sont des références opaques aux résultats, jamais un membre.
+second enregistrement du résultat échoue sur la clé et ne garde rien ; `replace()` vide les lignes du jeu et ses
+événements pas encore remis, et écrit celles de la relecture. Les identifiants sont des références opaques aux résultats, jamais un membre.
 
 Les événements d'un résultat pas encore remis sont gardés dans la même transaction : dans une base de données, une
 table du jeu, du résultat, de la clé de l'événement, du membre et de son genre (`changed` ou `peak`), avec une clé

@@ -101,6 +101,7 @@ final class InMemoryRatingStore implements RatingStore
         $before = $this->ratings[$game] ?? [];
         $this->ratings[$game] = [];
         $this->results[$game] = array_fill_keys($results, true);
+        unset($this->undelivered[$game]);
 
         foreach ($ratings as $rating) {
             $this->ratings[$game][$rating->member] = $rating->withVersion(($before[$rating->member]->version ?? 0) + 1);

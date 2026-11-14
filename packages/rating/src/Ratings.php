@@ -137,7 +137,8 @@ final readonly class Ratings
 
     /**
      * Computes every rating of the game again, from the first result of its source to the last, and replaces the ones
-     * kept; each member keeps the visibility they chose. Nothing is dispatched.
+     * kept; each member keeps the visibility they chose. Nothing is dispatched, and the events of the game's results not
+     * delivered yet are cancelled: a replay is a computation again, whose ratings may no longer give them.
      *
      * @return int the rated results replayed
      *

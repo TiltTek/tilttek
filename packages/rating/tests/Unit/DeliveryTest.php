@@ -9,14 +9,17 @@ use Override;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use Tilttek\Rating\Elo\EloRating;
 use Tilttek\Rating\Elo\EloSystem;
 use Tilttek\Rating\Event\PeakReached;
 use Tilttek\Rating\Event\RatingChanged;
 use Tilttek\Rating\Exception\ResultAlreadyRecorded;
 use Tilttek\Rating\GameResult;
+use Tilttek\Rating\MemberRating;
 use Tilttek\Rating\Ratings;
 use Tilttek\Rating\Store\InMemoryRatingStore;
 use Tilttek\Rating\Tests\Unit\Fixture\FailingDispatcher;
+use Tilttek\Rating\Tests\Unit\Fixture\ListSource;
 
 /**
  * The events of a rated result are kept with it until a listener took each one without an exception: a failure is
@@ -62,6 +65,30 @@ final class DeliveryTest extends TestCase
 
         $this->expectException(ResultAlreadyRecorded::class);
         $ratings->record($duel);
+    }
+
+    public function testAReplayCancelsTheEventsLeftUndelivered(): void
+    {
+        $events = new FailingDispatcher(static fn (object $event): bool => true, 10);
+        $first = GameResult::duel('r1', 'chess', $this->at(1), 'ann', 'bob');
+        $ratings = new Ratings($this->store, new EloSystem(), $events, new ListSource([GameResult::duel('r1', 'chess', $this->at(1), 'bob', 'ann')]), celebrateAfter: 1);
+
+        try {
+            $ratings->record($first);
+            self::fail('The failure of a listener was hidden.');
+        } catch (RuntimeException) {
+        }
+
+        $this->store->save([new MemberRating('go', 'ann', 'elo', new EloRating(1), 1)], 'g1', [new RatingChanged('go', 'ann', 'g1')]);
+        self::assertCount(2, $this->store->undelivered('chess', 'r1'));
+
+        // The replay rates the result the other way round: the events of the result it replaced are stale, and go.
+        self::assertSame(1, $ratings->replay('chess'));
+        self::assertSame([], $this->store->undelivered('chess', 'r1'));
+        self::assertSame(0, $ratings->deliver('chess', 'r1'));
+        self::assertSame([], $events->delivered);
+        self::assertEquals([new RatingChanged('go', 'ann', 'g1')], $this->store->undelivered('go', 'g1'));
+        self::assertGreaterThan($ratings->rating('chess', 'ann')->score, $ratings->rating('chess', 'bob')->score);
     }
 
     public function testDeliverResumesAndSaysHowManyWent(): void
