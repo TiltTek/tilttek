@@ -11,6 +11,7 @@ use Phil\Resource\ResourceReference;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use RoundingMode;
+use RuntimeException;
 use Symfony\Component\Clock\MockClock;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Tilttek\Dice\Exception\InvalidDefinition;
@@ -309,5 +310,173 @@ final class DiceRollsTest extends TestCase
 
         $this->expectExceptionObject(LimitExceeded::of('rolls read at once', 500, 501));
         $dice->recorded(array_map(static fn (int $i): string => \sprintf('%032d', $i), range(0, RecordedRollRepository::MANY)));
+    }
+
+    public function testAKeyedRollIsKeptOnceAndItsEventResumed(): void
+    {
+        $journal = new InMemoryRecordedRollRepository();
+        $events = new EventDispatcher();
+        /** @var ArrayObject<int, mixed> $heard */
+        $heard = new ArrayObject();
+        $failures = 1;
+        $events->addListener(RollRecorded::class, static function (RollRecorded $event) use ($heard, &$failures): void {
+            if ($failures > 0) {
+                --$failures;
+
+                throw new RuntimeException('The listener failed.');
+            }
+
+            $heard[] = $event->key();
+        });
+        $dice = new DiceRolls(Dice::roller(), ScriptedEngine::randomizer(...range(1, 60)), $journal, new MockClock('2026-11-07 03:00:00 UTC'), new NoDiceAppearance(), $events);
+        $member = ResourceReference::of('member', '1');
+
+        try {
+            $dice->rollReplayable('3d6', $member, key: 'turn-4');
+            self::fail('The listener did not fail.');
+        } catch (RuntimeException) {
+        }
+
+        [$kept] = $dice->rollsOf($member, 10);
+        self::assertFalse($kept->isDelivered());
+        self::assertSame(substr(hash('sha256', '["member:1","turn-4"]'), 0, 32), $kept->id());
+
+        // The same key again: the roll kept is not rolled again, and its event is dispatched now.
+        $again = $dice->rollReplayable('3d6', $member, key: 'turn-4');
+        self::assertSame($kept, $again);
+        self::assertTrue($again->isDelivered());
+        self::assertSame([$kept->id()], $heard->getArrayCopy());
+        self::assertSame($again, $dice->rollReplayable('1d20', $member, key: 'turn-4'));
+        self::assertSame([$kept->id()], $heard->getArrayCopy());
+        self::assertCount(1, $dice->rollsOf($member, 10));
+        self::assertTrue($dice->replay($kept->id())->matches());
+
+        // A key is the owner's: another owner, or no owner, rolls anew under the same key.
+        $other = $dice->rollReplayable('3d6', ResourceReference::of('member', '2'), key: 'turn-4');
+        $nobody = $dice->rollReplayable('3d6', key: 'turn-4');
+        self::assertCount(3, array_unique([$kept->id(), $other->id(), $nobody->id()]));
+        self::assertMatchesRegularExpression(Replayer::ID_PATTERN, $other->id());
+        self::assertSame($nobody, $dice->rollReplayable('3d6', key: 'turn-4'));
+        $next = $dice->rollReplayable('3d6', $member, key: 'turn-5');
+        self::assertNotSame($kept->id(), $next->id());
+        self::assertSame([$kept->id(), $other->id(), $nobody->id(), $next->id()], $heard->getArrayCopy());
+    }
+
+    public function testTheEventOfARollIsResumedByDeliver(): void
+    {
+        $journal = new InMemoryRecordedRollRepository();
+        $events = new EventDispatcher();
+        /** @var ArrayObject<int, mixed> $heard */
+        $heard = new ArrayObject();
+        $failures = 1;
+        $events->addListener(RollRecorded::class, static function (RollRecorded $event) use ($heard, &$failures): void {
+            if ($failures > 0) {
+                --$failures;
+
+                throw new RuntimeException('The listener failed.');
+            }
+
+            $heard[] = [$event->id, $event->owner?->toString(), $event->context?->toString()];
+        });
+        $dice = new DiceRolls(Dice::roller(), ScriptedEngine::randomizer(...range(1, 36)), $journal, new MockClock('2026-11-07 03:00:00 UTC'), new NoDiceAppearance(), $events);
+        $table = ResourceReference::of('table', '7');
+
+        try {
+            $dice->rollReplayable('1d6', ResourceReference::of('member', '1'), context: $table);
+            self::fail('The listener did not fail.');
+        } catch (RuntimeException) {
+        }
+
+        [$kept] = $dice->rollsIn($table, 1);
+        self::assertSame([], $heard->getArrayCopy());
+        self::assertTrue($dice->deliver($kept->id()));
+        self::assertSame([[$kept->id(), 'member:1', 'table:7']], $heard->getArrayCopy());
+        self::assertTrue($journal->get($kept->id())?->isDelivered());
+        self::assertFalse($dice->deliver($kept->id()));
+        self::assertCount(1, $heard);
+
+        $this->expectExceptionObject(UnknownRoll::withId('00000000000000000000000000000000'));
+        $dice->deliver('00000000000000000000000000000000');
+    }
+
+    public function testARollNotedDeliveredIsSavedSo(): void
+    {
+        // A journal that hands out copies, as a database does: the note is kept only once it is saved.
+        $journal = new readonly class implements RecordedRollRepository {
+            private InMemoryRecordedRollRepository $rolls;
+
+            public function __construct()
+            {
+                $this->rolls = new InMemoryRecordedRollRepository();
+            }
+
+            public function get(string $id): ?RecordedRoll
+            {
+                $roll = $this->rolls->get($id);
+
+                return $roll instanceof RecordedRoll ? clone $roll : null;
+            }
+
+            public function getMany(array $ids): array
+            {
+                return $this->rolls->getMany($ids);
+            }
+
+            public function save(RecordedRoll $roll): void
+            {
+                $this->rolls->save(clone $roll);
+            }
+
+            public function ofOwner(ResourceReference $owner, int $limit): array
+            {
+                return $this->rolls->ofOwner($owner, $limit);
+            }
+
+            public function ofContext(ResourceReference $context, int $limit): array
+            {
+                return $this->rolls->ofContext($context, $limit);
+            }
+
+            public function eraseOwner(ResourceReference $owner): int
+            {
+                return $this->rolls->eraseOwner($owner);
+            }
+        };
+        $events = new EventDispatcher();
+        $failures = 1;
+        $events->addListener(RollRecorded::class, static function () use (&$failures): void {
+            if ($failures > 0) {
+                --$failures;
+
+                throw new RuntimeException('The listener failed.');
+            }
+        });
+        $dice = new DiceRolls(Dice::roller(), ScriptedEngine::randomizer(...range(1, 36)), $journal, new MockClock('2026-11-07 03:00:00 UTC'), new NoDiceAppearance(), $events);
+
+        try {
+            $dice->rollReplayable('1d6', key: 'failed');
+            self::fail('The listener did not fail.');
+        } catch (RuntimeException) {
+        }
+
+        $id = substr(hash('sha256', '[null,"failed"]'), 0, 32);
+        self::assertFalse($journal->get($id)?->isDelivered());
+        self::assertTrue($dice->deliver($id));
+        $saved = $journal->get($id);
+        self::assertInstanceOf(RecordedRoll::class, $saved);
+        self::assertTrue($saved->isDelivered());
+        self::assertFalse($dice->deliver($id));
+        self::assertTrue($dice->rollReplayable('1d6', key: 'copied')->isDelivered());
+        self::assertTrue($journal->get(substr(hash('sha256', '[null,"copied"]'), 0, 32))?->isDelivered());
+    }
+
+    public function testARollIsDeliveredAtOnceWithoutADispatcher(): void
+    {
+        $dice = Dice::rolls(ScriptedEngine::randomizer(...range(1, 36)));
+        $roll = $dice->rollReplayable('1d6', key: 'once');
+
+        self::assertTrue($roll->isDelivered());
+        self::assertFalse($dice->deliver($roll->id()));
+        self::assertSame($roll, $dice->rollReplayable('1d6', key: 'once'));
     }
 }
