@@ -22,10 +22,15 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
   dispatcher, with the identifiers of the roll, its owner and its context.
 - `DiceRolls::rollsIn()`, a context's latest rolls, and `DiceRolls::recorded()`, rolls by their identifiers in the order
   asked, at most 500 distinct ones at once.
+- `Accessibility`, standard or high contrast: the viewer's accessibility, passed to the appearance by
+  `DiceRolls::appearance()`, `DiceExtension::view()` and `dice_roll_detail()` as a fourth argument, `'high-contrast'`
+  or `'standard'`; any other text is no preference.
 - `doc/upgrading.md`: the migration of the `context` column and the changes from 0.1 to 0.2.
 
 ### Changed
 
+- `DiceAppearance::appearance()` takes the viewer's accessibility, `?Accessibility $viewer = null`; an application's
+  own implementation of the port declares it, even to ignore it.
 - `RecordedRollRepository` has `getMany()`, at most `RecordedRollRepository::MANY` identifiers, and `ofContext()`; an
   application's own implementation of the port adds them.
 - The detail of a roll writes `--tilttek-dice-ink` next to `--tilttek-dice-color` and `data-dice-texture` on a

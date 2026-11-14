@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Translator;
+use Tilttek\DiceBundle\Application\Accessibility;
 use Tilttek\DiceBundle\Application\DieAppearance;
 use Tilttek\DiceBundle\Application\Port\DiceAppearance;
 use Tilttek\DiceBundle\Infrastructure\Twig\DiceExtension;
@@ -122,6 +123,30 @@ final class DiceExtensionTest extends TestCase
         self::assertSame('1d6', $extension->view($result)[0]['notation']);
     }
 
+    public function testTheViewersAccessibilityGoesToTheAppearance(): void
+    {
+        $dice = Dice::rolls(ScriptedEngine::randomizer(0, 0, 0, 0, 0), appearance: Dice::redDice());
+        $result = $dice->roll('1d6');
+        $extension = new DiceExtension($dice);
+        $member = ResourceReference::of('member', '1');
+        $appearance = static fn (array $view): ?array => $view[0]['sets'][0]['appearance'];
+        $standard = ['name' => 'Ember', 'color' => '#aa0000', 'ink' => '#ffffff', 'texture' => 'dice/ember.webp', 'material' => 'resin', 'image' => 'ember.png'];
+        $highContrast = ['name' => 'Ember', 'color' => '#000000', 'ink' => '#ffffff', 'texture' => null, 'material' => null, 'image' => null];
+
+        self::assertSame($highContrast, $appearance($extension->view($result, $member, null, Accessibility::HighContrast)));
+        self::assertSame($highContrast, $appearance($extension->view($result, $member, null, 'high-contrast')));
+        self::assertSame($standard, $appearance($extension->view($result, $member, null, 'standard')));
+        self::assertSame($standard, $appearance($extension->view($result, $member, null, 'loud')));
+        self::assertSame($standard, $appearance($extension->view($result, $member)));
+
+        $loader = new FilesystemLoader();
+        $loader->addPath(\dirname(__DIR__, 3).'/templates', 'TilttekDice');
+
+        $html = $extension->detail(new Environment($loader), $result, $member, null, 'high-contrast');
+
+        self::assertStringContainsString('data-dice-appearance="Ember" style="--tilttek-dice-color: #000000; --tilttek-dice-ink: #ffffff"', $html);
+    }
+
     public function testTheDetailIsRenderedFromTheTemplate(): void
     {
         $loader = new FilesystemLoader();
@@ -151,7 +176,7 @@ final class DiceExtensionTest extends TestCase
                 {
                 }
 
-                public function appearance(ResourceReference $member, int $sides): DieAppearance
+                public function appearance(ResourceReference $member, int $sides, ?Accessibility $viewer = null): DieAppearance
                 {
                     return $this->appearance;
                 }

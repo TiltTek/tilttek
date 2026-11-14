@@ -30,7 +30,7 @@ service the application calls, `DiceMacros` keeps and resolves macros, `Recorded
 | Journal of replayable rolls in Doctrine, or in memory: context of a roll, rolls by owner, by context and many at once | Implemented and tested |
 | `RollRecorded` event | Implemented and tested |
 | `DiceMacros`: macros of a site, a table and a member, named by token, in Doctrine or in memory | Implemented and tested |
-| `DiceAppearance` extension point: colour, ink, material, image, texture; an ink that reads at 4.5:1 when none is given | Implemented and tested |
+| `DiceAppearance` extension point: colour, ink, material, image, texture; an ink that reads at 4.5:1 when none is given; the viewer's high contrast | Implemented and tested |
 | `DiceExpression` constraint and `DiceExpressionType` field | Implemented and tested |
 | Twig: `dice_notation`, `dice_dialect`, `dice_roll`, `dice_roll_detail`, `dice_text` | Implemented and tested |
 | Dialects added by tag | Implemented and tested |

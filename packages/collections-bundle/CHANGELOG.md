@@ -4,11 +4,13 @@ All notable changes to `tilttek/collections-bundle` will be documented in this f
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
-## Unreleased
+## 0.1.1-alpha - 2026-11-14
 
 ### Changed
 
 - `tilttek/dice-bundle` 0.2 accepted as well as 0.1.
+- `CollectionDiceAppearance::appearance()` takes the viewer's accessibility of `tilttek/dice-bundle` 0.2, and gives
+  a set's die the same look whatever it is.
 
 ## 0.1.0-alpha - 2026-11-11
 
