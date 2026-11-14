@@ -14,6 +14,7 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 - `BadgeAwarded` and `BadgeRevoked` are dispatched at least once: a listener that failed is called again when the
   projection is handed the entry again, before the member's next activity, or through `BadgeProjection::deliver()`.
   Listeners must be idempotent.
+- The bundle requires `tilttek/badges` `^0.2@dev`, whose notices of `AwardStore` `DbalAwardStore` implements.
 
 ### Fixed
 

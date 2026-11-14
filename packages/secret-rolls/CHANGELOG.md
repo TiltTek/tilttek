@@ -16,6 +16,7 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 - `SecretRollStore` gains `head()`, which the store keeps as it appends; a store of the application implements it.
 - `SecretRolls::roll()` and `close()` read the head of the journal instead of the whole journal, so that a roll no
   longer costs more as the scene grows; the journal, its chain of hashes and its commitments are unchanged.
+- `tilttek/dice` 0.2 accepted as well as 0.1.
 
 ## 0.1.0-alpha - 2026-11-13
 

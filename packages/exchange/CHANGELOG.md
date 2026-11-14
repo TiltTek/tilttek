@@ -17,6 +17,7 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 - `Redemptions::confirm()` and `cancel()` throw `ReservationPending` while the points are being paid; a payment that
   finds its reservation settled or gone gives its points back, and `RewardReserved` is told once, by the call that
   made the reservation reserved.
+- `tilttek/points` 0.2 accepted as well as 0.1.
 
 ### Fixed
 

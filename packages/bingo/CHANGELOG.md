@@ -21,6 +21,8 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
   constructor.
 - `Activity\BingoActivityObserver` implements `ResumableObserver` of `tilttek/activity`: the same gesture recorded
   again, or the same cancellation given again, is handed to it once more.
+- The package requires `tilttek/activity` `^0.1.1@dev`, whose `ResumableObserver` `Activity\BingoActivityObserver`
+  implements.
 
 ### Fixed
 

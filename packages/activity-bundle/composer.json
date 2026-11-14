@@ -26,7 +26,7 @@
         "psr/clock": "^1.0",
         "symfony/config": "^8.2",
         "symfony/dependency-injection": "^8.2",
-        "tilttek/activity": "^0.1@dev"
+        "tilttek/activity": "^0.1.1@dev"
     },
     "require-dev": {
         "doctrine/doctrine-bundle": "^3.3",
@@ -59,7 +59,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "0.1.x-dev"
+            "dev-main": "0.2.x-dev"
         }
     }
 }

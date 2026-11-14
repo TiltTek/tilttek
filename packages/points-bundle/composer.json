@@ -25,7 +25,7 @@
         "phil/resource": "^0.1@dev",
         "symfony/config": "^8.2",
         "symfony/dependency-injection": "^8.2",
-        "tilttek/points": "^0.1@dev"
+        "tilttek/points": "^0.2@dev"
     },
     "require-dev": {
         "doctrine/doctrine-bundle": "^3.3",
@@ -38,7 +38,7 @@
         "symfony/framework-bundle": "^8.2",
         "symfony/http-kernel": "^8.2",
         "tilttek/activity": "^0.1@dev",
-        "tilttek/activity-bundle": "^0.1@dev"
+        "tilttek/activity-bundle": "^0.1@dev || ^0.2@dev"
     },
     "suggest": {
         "doctrine/orm": "To add the ledger's tables to the schema the ORM generates, and so to the migrations",
@@ -60,7 +60,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "0.1.x-dev"
+            "dev-main": "0.2.x-dev"
         }
     }
 }

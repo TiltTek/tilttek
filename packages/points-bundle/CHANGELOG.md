@@ -13,6 +13,8 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 - `DbalLedger` implements `Ledger::appendAfter()` under the lock row of the debited account, which payments take too,
   and `keptLots()` and `keepLots()` on `tilttek_points_lots`; forgetting the derived movements and erasing a member
   delete the checkpoints.
+- The bundle requires `tilttek/points` `^0.2@dev`, whose `Ledger::appendAfter()`, `keptLots()` and `keepLots()`
+  `DbalLedger` implements.
 
 ### Fixed
 

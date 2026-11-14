@@ -26,7 +26,7 @@
         "psr/event-dispatcher": "^1.0",
         "symfony/config": "^8.2",
         "symfony/dependency-injection": "^8.2",
-        "tilttek/badges": "^0.1@dev"
+        "tilttek/badges": "^0.2@dev"
     },
     "require-dev": {
         "doctrine/doctrine-bundle": "^3.3",
@@ -43,7 +43,7 @@
         "symfony/twig-bundle": "^8.2",
         "symfony/uid": "^8.2",
         "tilttek/activity": "^0.1@dev",
-        "tilttek/activity-bundle": "^0.1@dev",
+        "tilttek/activity-bundle": "^0.1@dev || ^0.2@dev",
         "twig/twig": "^3.21"
     },
     "suggest": {
@@ -70,7 +70,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "0.1.x-dev"
+            "dev-main": "0.2.x-dev"
         }
     }
 }

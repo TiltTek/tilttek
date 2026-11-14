@@ -9,6 +9,7 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 ### Changed
 
 - `tilttek/dice-bundle` 0.2 accepted as well as 0.1.
+- `tilttek/dice` 0.2 accepted as well as 0.1.
 
 ## 0.1.0-alpha - 2026-11-12
 

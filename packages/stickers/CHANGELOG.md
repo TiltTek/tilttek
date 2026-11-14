@@ -6,6 +6,10 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
+### Changed
+
+- `tilttek/sets` 0.2 accepted as well as 0.1.
+
 ### Fixed
 
 - `Stickers::revoke()` removes the placements before taking the sticker back, so that a revocation that failed halfway

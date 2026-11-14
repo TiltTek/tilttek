@@ -23,7 +23,7 @@
         "php": ">=8.5",
         "psr/clock": "^1.0",
         "psr/event-dispatcher": "^1.0",
-        "tilttek/activity": "^0.1@dev"
+        "tilttek/activity": "^0.1.1@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^13.4",
@@ -47,7 +47,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "0.1.x-dev"
+            "dev-main": "0.2.x-dev"
         }
     }
 }

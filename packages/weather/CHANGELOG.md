@@ -4,6 +4,12 @@ All notable changes to `tilttek/weather` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `tilttek/dice` and `tilttek/generator` 0.2 accepted as well as 0.1.
+
 ## 0.1.0-alpha - 2026-11-12
 
 ### Added

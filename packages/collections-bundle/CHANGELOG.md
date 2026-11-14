@@ -10,20 +10,17 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 - `DbalOpeningStore::complete()`: the copies of an opening inserted without them, written by an update once given,
   for `tilttek/collections` whose `Packs::open()` reserves the key before it gives any copy.
+- The bundle requires `tilttek/collections` `^0.2@dev`, whose `Pack\OpeningStore::complete()` `DbalOpeningStore`
+  implements.
+- `tilttek/dice-bundle` 0.2 accepted as well as 0.1.
+- `CollectionDiceAppearance::appearance()` takes the viewer's accessibility of `tilttek/dice-bundle` 0.2, and gives
+  a set's die the same look whatever it is.
 
 ### Fixed
 
 - `CollectionsPrivacy` implements `Phil\PrivacyBundle\Application\Contract\PersonalDataExporter` and `PersonalDataEraser`,
   the interfaces `phil/privacy-bundle` exposes, and the bundle registers it when they exist: the export and the
   erasure of a member now reach it.
-
-## 0.1.1-alpha - 2026-11-14
-
-### Changed
-
-- `tilttek/dice-bundle` 0.2 accepted as well as 0.1.
-- `CollectionDiceAppearance::appearance()` takes the viewer's accessibility of `tilttek/dice-bundle` 0.2, and gives
-  a set's die the same look whatever it is.
 
 ## 0.1.0-alpha - 2026-11-11
 

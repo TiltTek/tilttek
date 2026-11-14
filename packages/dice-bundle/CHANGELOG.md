@@ -36,6 +36,7 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 - The detail of a roll writes `--tilttek-dice-ink` next to `--tilttek-dice-color` and `data-dice-texture` on a
   member's set, and `DiceExtension::view()` gives the appearance's `ink` and `texture`.
 - `psr/event-dispatcher` is required.
+- `tilttek/dice` 0.2 accepted as well as 0.1.
 
 ## 0.1.0-alpha - 2026-11-11
 

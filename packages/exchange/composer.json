@@ -24,7 +24,7 @@
         "php": ">=8.5",
         "phil/resource": "^0.1@dev",
         "psr/clock": "^1.0",
-        "tilttek/points": "^0.1@dev"
+        "tilttek/points": "^0.1@dev || ^0.2@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^13.4"
@@ -43,7 +43,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "0.1.x-dev"
+            "dev-main": "0.2.x-dev"
         }
     }
 }

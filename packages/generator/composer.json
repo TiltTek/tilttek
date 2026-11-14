@@ -26,7 +26,7 @@
         "php": ">=8.5",
         "ext-mbstring": "*",
         "symfony/yaml": "^8.2",
-        "tilttek/dice": "^0.1@dev",
+        "tilttek/dice": "^0.1@dev || ^0.2@dev",
         "twig/twig": "^3.21"
     },
     "require-dev": {
@@ -46,7 +46,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "0.1.x-dev"
+            "dev-main": "0.2.x-dev"
         }
     }
 }

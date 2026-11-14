@@ -10,6 +10,7 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 - `DbalDuelStore::transition()`: an `UPDATE … WHERE status = ?` that changes a duel only from the status it was read
   in, for `tilttek/quests` whose answers, expiries and wins no longer overwrite one another.
+- The bundle requires `tilttek/quests` `^0.2@dev`, whose `Store\DuelStore::transition()` `DbalDuelStore` implements.
 
 ### Fixed
 

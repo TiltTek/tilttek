@@ -21,6 +21,7 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
   by default, `true` naming the default; `false` and an empty text are refused, so that templates are never loaded by
   `eval()`.
 - `tilttek/generator: ^0.2@dev`, for its new limits and attributions.
+- `tilttek/dice` 0.2 accepted as well as 0.1.
 
 ## 0.1.0-alpha - 2026-11-12
 

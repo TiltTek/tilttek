@@ -38,6 +38,7 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 - `source`, `licence` and `attribution` are no longer field names of an entry.
 - The documentation says that templates written by others — members of a site, authors of an imported grammar — may be
   loaded and drawn within the limits.
+- `tilttek/dice` 0.2 accepted as well as 0.1.
 
 ### Fixed
 

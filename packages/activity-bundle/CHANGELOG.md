@@ -16,6 +16,7 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 - `MessengerProjections` implements `ResumableObserver`: an entry recorded or cancelled again sends its message again
   to each projection still before it, the projector given, so that a message lost after the entry was written is made
   up by the repeated request.
+- The bundle requires `tilttek/activity` `^0.1.1@dev`, whose `ResumableObserver` `MessengerProjections` implements.
 
 ### Added
 

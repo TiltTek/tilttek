@@ -4,6 +4,12 @@ All notable changes to `tilttek/loot-tables` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `tilttek/dice` 0.2 accepted as well as 0.1.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added
