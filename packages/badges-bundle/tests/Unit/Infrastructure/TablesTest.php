@@ -46,9 +46,10 @@ final class TablesTest extends TestCase
         self::assertSame(['badge', 'path', 'activity'], array_map(static fn (UnqualifiedName $name): string => $name->toString(), $key->getColumnNames()));
 
         $awards = $schema->getTable(BadgesTables::AWARDS);
-        self::assertSame(['badge', 'member', 'number', 'awarded_at', 'cause', 'manual'], array_map(static fn (Column $column): string => $column->getName(), $awards->getColumns()));
+        self::assertSame(['badge', 'member', 'number', 'awarded_at', 'cause', 'manual', 'notice'], array_map(static fn (Column $column): string => $column->getName(), $awards->getColumns()));
         self::assertFalse($awards->getColumn('cause')->getNotnull());
-        self::assertSame([64, 320, 255], [$awards->getColumn('badge')->getLength(), $awards->getColumn('member')->getLength(), $awards->getColumn('cause')->getLength()]);
+        self::assertFalse($awards->getColumn('notice')->getNotnull());
+        self::assertSame([64, 320, 255, 16], [$awards->getColumn('badge')->getLength(), $awards->getColumn('member')->getLength(), $awards->getColumn('cause')->getLength(), $awards->getColumn('notice')->getLength()]);
         self::assertSame(['tilttek_badges_award_awarded', 'primary'], array_map(static fn (Index $index): string => $index->getObjectName()->toString(), array_values($awards->getIndexes())));
 
         $profiles = $schema->getTable(BadgesTables::PROFILES);

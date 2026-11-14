@@ -4,6 +4,17 @@ All notable changes to `tilttek/badges-bundle` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `DbalAwardStore` implements the notices of `AwardStore`: the `notice` column of `tilttek_badges_award` holds
+  `awarded` for an award whose event is still due and `revoked` for a withdrawn award whose event is still due. An
+  existing table gains the column through the application's next migration.
+- `BadgeAwarded` and `BadgeRevoked` are dispatched at least once: a listener that failed is called again when the
+  projection is handed the entry again, before the member's next activity, or through `BadgeProjection::deliver()`.
+  Listeners must be idempotent.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added

@@ -14,6 +14,11 @@ $journal->record(Activity::of('comment:981', 'member:44', 'news.commented', $now
 When the activity earns a badge, the event dispatcher receives `BadgeAwarded`; when a cancellation withdraws a
 revocable badge, `BadgeRevoked`. Both carry the `Award` and the `Badge`.
 
+An event is dispatched at least once: when a listener fails, the award keeps its notice due, and the event is
+dispatched again when the projection is handed the entry again — the request repeated, or the next catch-up —, before
+the member's next activity, or through `BadgeProjection::deliver($member)`. A listener must therefore be idempotent: it
+recognises an award by its badge, member and number.
+
 ```php
 #[AsEventListener]
 final readonly class CongratulateMember

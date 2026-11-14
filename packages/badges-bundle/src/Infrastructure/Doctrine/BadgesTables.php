@@ -18,7 +18,8 @@ use Tilttek\Badges\Catalog;
  *
  * - `tilttek_badges_contribution`: what each activity brought to each criterion of each badge, one row per badge,
  *   path and activity — the unique index is what makes an activity count once, even when two processes write it;
- * - `tilttek_badges_award`: the members' awards, one row per badge, member and number;
+ * - `tilttek_badges_award`: the members' awards, one row per badge, member and number, with the notice still owed —
+ *   `awarded` or `revoked` —;
  * - `tilttek_badges_profile`: what each member shows — the badges, the showcase, the title —, one row per member who
  *   shows a badge;
  * - `tilttek_badges_grant`: the applications each member allows to read their badges.
@@ -74,6 +75,7 @@ final class BadgesTables
                 ->addColumn(Column::editor()->setUnquotedName('awarded_at')->setTypeName(Types::DATETIME_IMMUTABLE)->create())
                 ->addColumn(Column::editor()->setUnquotedName('cause')->setTypeName(Types::STRING)->setLength(255)->setNotNull(false)->create())
                 ->addColumn(Column::editor()->setUnquotedName('manual')->setTypeName(Types::BOOLEAN)->create())
+                ->addColumn(Column::editor()->setUnquotedName('notice')->setTypeName(Types::STRING)->setLength(16)->setNotNull(false)->create())
                 ->addPrimaryKeyConstraint(PrimaryKeyConstraint::editor()->setUnquotedColumnNames('member', 'badge', 'number')->create())
                 ->addIndex(Index::editor()->setUnquotedName(self::AWARDS.'_awarded')->setUnquotedColumnNames('manual', 'awarded_at')->create())
                 ->create());

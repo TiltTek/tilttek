@@ -3,7 +3,7 @@
 | Table | One row per | Columns |
 |---|---|---|
 | `tilttek_badges_contribution` | badge, path and activity | `badge`, `path`, `activity`, `member`, `quantity`, `occurred_at` |
-| `tilttek_badges_award` | member, badge and number | `badge`, `member`, `number`, `awarded_at`, `cause`, `manual` |
+| `tilttek_badges_award` | member, badge and number | `badge`, `member`, `number`, `awarded_at`, `cause`, `manual`, `notice` |
 | `tilttek_badges_profile` | member who shows a badge | `member`, `shown` (JSON), `featured` (JSON), `title` |
 | `tilttek_badges_grant` | member and application | `member`, `client`, `granted_at` |
 
@@ -14,3 +14,8 @@ the caller. A cancellation reads and deletes the activity's contributions in one
 one transaction. Dates are written in UTC, to the second.
 
 Members are written as their references, `member:44`, up to 320 bytes.
+
+The `notice` column of an award holds the notice the projection still owes its observer: `awarded` until the event of
+an award earned by the activity has been dispatched, `revoked` for a withdrawn award until the event of its withdrawal
+has been dispatched — the row is deleted then —, nothing otherwise. A withdrawn award is no longer held. An existing
+`tilttek_badges_award` table gains the column through the application's next migration.

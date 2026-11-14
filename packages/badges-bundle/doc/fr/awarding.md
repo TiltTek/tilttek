@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=7768397b23d9e17d0fff796e305507b717eeb261f9064f2dc51d508592e7614b -->
+<!-- phil-dev source-sha256=bac400327066047eff26aad5209e7c958a31ecd52329761f1c0f6209db3dda2e -->
 # Attribuer à partir de l'activité
 
 Le bundle enregistre `Tilttek\Badges\BadgeProjection` avec l'étiquette `tilttek_activity.projection` :
@@ -14,6 +14,11 @@ $journal->record(Activity::of('comment:981', 'member:44', 'news.commented', $now
 
 Quand l'activité fait gagner un badge, le répartiteur d'événements reçoit `BadgeAwarded`. Quand une annulation retire
 un badge révocable, il reçoit `BadgeRevoked`. Les deux portent l'`Award` et le `Badge`.
+
+Un événement est réparti au moins une fois : quand un écouteur échoue, l'attribution garde son avis dû, et l'événement
+est réparti de nouveau quand l'entrée est remise à la projection — la requête répétée, ou le rattrapage suivant —, avant
+la prochaine activité du membre, ou par `BadgeProjection::deliver($member)`. Un écouteur doit donc être idempotent : il
+reconnaît une attribution à son badge, son membre et son numéro.
 
 ```php
 #[AsEventListener]
