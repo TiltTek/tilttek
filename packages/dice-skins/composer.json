@@ -23,6 +23,9 @@
         "symfony/clock": "^8.2",
         "tilttek/dice-bundle": "^0.2@dev"
     },
+    "conflict": {
+        "tilttek/dice-bundle": "<0.2"
+    },
     "suggest": {
         "tilttek/dice-bundle": "To dress the dice of its roller with the appearance of a member's dice, through DiceBundle\\DiceSkinsAppearance (0.2.0-alpha or later)"
     },
