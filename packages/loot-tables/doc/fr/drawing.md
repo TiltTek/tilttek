@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=a940befb87bacf58448c68bf982deb88aee38402e9831e79a67a918d88ce2d80 -->
+<!-- phil-dev source-sha256=7d206833486e9f860349348631731ae87a7cde9e80fe3a6a18f0210d6eef92f9 -->
 # Tirer
 
 ## Un tirage vérifiable
@@ -20,7 +20,9 @@ Un tirage est vérifiable quand le résultat n'a pas pu être choisi. La bibliot
 5. **Vérifier.** `LootDrawer::verify($box, $proof)` est vrai quand le germe correspond à l'engagement, que l'expression
    est celle de la boîte, que relancer les dés donne le jet publié et que les faces sont celles du jet. Une preuve
    illisible (un champ manquant ou d'un autre type, un germe qui n'est pas hexadécimal) donne faux, jamais une
-   exception.
+   exception. De même pour une preuve dont la graine client serait refusée à la révélation (vide, de plus de 256 octets
+   ou qui n'est pas du texte UTF-8) : elle est contrôlée avant de relancer les dés, si bien qu'une preuve reçue dans une
+   requête publique ne coûte pas plus qu'une révélation.
 
 Le tirage est fait une seule fois : qui fait le tirage garde le résultat et le redonne quand on le demande, plutôt que
 de révéler une seconde fois.
