@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=68a3b48ca5d28c6cf81e610cf241319feaf3afbbdb3e843094e7c29c6ab6a886 -->
+<!-- phil-dev source-sha256=28bca766a2daf3651df543d68e99b845a87220a72babf2a32a0847825dd466eb -->
 # Enregistrer l'activité
 
 ## Une activité
@@ -38,7 +38,8 @@ tapé. Le journal reste ainsi à l'écart d'une modération ou d'une modificatio
 ## La clé d'idempotence
 
 **La même clé compte une seule fois.** Enregistrer une activité dont la clé est déjà dans le journal renvoie l'entrée
-déjà présente, avec `Appended::$new` à faux, et n'avertit aucun observateur. Construisez la clé à partir de ce qui rend
+déjà présente, avec `Appended::$new` à faux, et n'avertit aucun observateur d'une nouvelle entrée : seuls ceux qui
+gardent un point de reprise se la voient remettre, plus bas. Construisez la clé à partir de ce qui rend
 le geste unique, jamais à partir du moment de son enregistrement :
 
 | Geste | Une bonne clé |
@@ -93,3 +94,11 @@ motifs, tous les verbes sont acceptés.
 Un `JournalObserver` est averti de chaque **nouvelle** entrée, enregistrée ou annulée, juste après son écriture, dans
 le même processus. Un doublon ne l'avertit pas. Un observateur qui échoue laisse passer son exception, une fois
 l'entrée écrite. `LiveProjections` est l'observateur qui tient les projections à jour ([Projections](projections.md)).
+
+L'entrée est écrite avant que les observateurs soient avertis : un échec la laisse donc enregistrée, et la requête
+répétée sous la même clé la trouve. Un observateur qui garde un point de reprise implémente `Contract\ResumableObserver`
+: le journal lui remet l'entrée trouvée, enregistrée ou annulée de nouveau, par `resume()`, et l'observateur la reprend
+si son point de reprise est avant la position de l'entrée (`LiveProjections` fait rattraper les projections qui sont
+encore avant elle). Un point de reprise existe déjà pour chaque projection, si bien qu'aucune boîte d'envoi n'est
+ajoutée : le journal est la boîte d'envoi, les points de reprise disent ce qui a été traité, et la requête répétée,
+l'entrée suivante ou un rattrapage planifié compense un échec.

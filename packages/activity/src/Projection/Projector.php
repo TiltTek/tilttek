@@ -62,6 +62,14 @@ final readonly class Projector
     }
 
     /**
+     * Whether the projection has not seen the entry at the position: its checkpoint is before it.
+     */
+    public function behind(Projection $projection, int $position): bool
+    {
+        return $this->checkpoints->position($projection->name()) < $position;
+    }
+
+    /**
      * How many entries were written after the projection's checkpoint, whether its filter reads them or not.
      */
     public function lag(Projection $projection): int

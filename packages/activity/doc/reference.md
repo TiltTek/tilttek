@@ -4,6 +4,7 @@
 |---|---|
 | `Journal` | The entry of the members' activity: record, cancel, find, read, count, erase |
 | `JournalObserver` | Told of each new entry |
+| `Contract\ResumableObserver` | An observer that keeps a checkpoint, handed again an entry recorded or cancelled again |
 | `Activity` | A fact: member, verb, moment, object, quantity, context, idempotency key |
 | `Verb`, `VerbPattern`, `Verbs` | A verb, a pattern of verbs, the declared verbs |
 | `IdempotencyKey` | What makes a gesture count once |
