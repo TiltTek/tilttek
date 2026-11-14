@@ -19,6 +19,7 @@ then split into its own **read-only** repository, from which Composer installs i
 |---|---|
 | [`tilttek/dice`](https://github.com/TiltTek/dice) | Dice notation parsed, checked and rolled: pools, keep and drop, explosions, rerolls, successes, verifiable and replayable rolls. |
 | [`tilttek/dice-bundle`](https://github.com/TiltTek/dice-bundle) | Dice in a Symfony application: limits and custom dice in configuration, replayable rolls in Doctrine, macros, a form field, Twig and an accessible detail of a roll. |
+| [`tilttek/dice-skins`](https://github.com/TiltTek/dice-skins) | A member's dice appearance — skins, colours, materials and owned dice — applied to the roller, its numbers kept readable, in high contrast for a viewer who asks. |
 | [`tilttek/dice-probability`](https://github.com/TiltTek/dice-probability) | The exact odds of a dice expression, as fractions: distributions, at least and at most, mean, comparisons. |
 | [`tilttek/loot-tables`](https://github.com/TiltTek/loot-tables) | Loot tables rolled with any die, drawn in a way anyone can verify, physical dice included. |
 | [`tilttek/accessible-dice`](https://github.com/TiltTek/accessible-dice) | An accessible dice form for Symfony, with or without JavaScript: large targets, faces spoken by label, shape and value, results announced to screen readers. |
@@ -51,12 +52,14 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/collections-bundle`](https://github.com/TiltTek/collections-bundle) | Collections in a Symfony application: the catalog in configuration or the database, copies in Doctrine DBAL, an album and the item of the day in Twig. |
 | [`tilttek/exchange`](https://github.com/TiltTek/exchange) | Rewards bought with points in two steps, points given between members, and items traded by offers and counter-offers in one transaction. |
 | [`tilttek/leaderboards`](https://github.com/TiltTek/leaderboards) | Leaderboards kept up to date from the activity journal: periods and sliding windows, tie-breaks, snapshots, weekly leagues, titles and teams. |
+| [`tilttek/rating`](https://github.com/TiltTek/rating) | Per-game ratings of players from their results: Elo or OpenSkill, duels, teams and draws, private by default, and a replay that gives the same values. |
 | [`tilttek/advent-calendar`](https://github.com/TiltTek/advent-calendar) | An advent calendar: one box per day in the calendar's timezone, an opening policy, each box opened once and told by an event. |
 | [`tilttek/writing-goals`](https://github.com/TiltTek/writing-goals) | An author's writing goals: a target in words or pages, a plan on a curve, a daily quota recomputed from what remains, no streak counted. |
 | [`tilttek/seasonal-events`](https://github.com/TiltTek/seasonal-events) | Yearly seasons by RFC 5545 rule, with their contents and the multipliers they announce. |
 | [`tilttek/sets`](https://github.com/TiltTek/sets) | Versioned sets with tiers and rewards: a neutral building block that collections and badges build on. |
 | [`tilttek/stickers`](https://github.com/TiltTek/stickers) | Stickers placed on surfaces, with limits per surface and per holder, and moderation. |
 | [`tilttek/bingo`](https://github.com/TiltTek/bingo) | Bingo with cards drawn from a server secret, printed cards that can be verified, and wins checked on the server. |
+| [`tilttek/quiz`](https://github.com/TiltTek/quiz) | Quiz games: six kinds of questions, a timer and a speed bonus, self-paced plays and live sessions with pseudonymous guests and teams. |
 | [`tilttek/game-engine`](https://github.com/TiltTek/game-engine) | Turn-based games as a log of moves: seeded randomness committed in advance, undo, snapshots and replay. |
 | [`tilttek/game-engine-bundle`](https://github.com/TiltTek/game-engine-bundle) | Game tables in Symfony: opaque seat identifiers, the log in DBAL, a lock, and private Mercure updates. |
 | [`tilttek/table-safety`](https://github.com/TiltTek/table-safety) | Safety tools for tabletop games: lines and veils, anonymous signals, and the credits of each tool. |

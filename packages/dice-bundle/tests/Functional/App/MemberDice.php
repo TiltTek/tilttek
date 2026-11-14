@@ -6,6 +6,7 @@ namespace Tilttek\DiceBundle\Tests\Functional\App;
 
 use Override;
 use Phil\Resource\ResourceReference;
+use Tilttek\DiceBundle\Application\Accessibility;
 use Tilttek\DiceBundle\Application\DieAppearance;
 use Tilttek\DiceBundle\Application\Port\DiceAppearance;
 
@@ -15,7 +16,7 @@ use Tilttek\DiceBundle\Application\Port\DiceAppearance;
 final readonly class MemberDice implements DiceAppearance
 {
     #[Override]
-    public function appearance(ResourceReference $member, int $sides): ?DieAppearance
+    public function appearance(ResourceReference $member, int $sides, ?Accessibility $viewer = null): ?DieAppearance
     {
         return 'member:1' === $member->toString() && 20 === $sides ? new DieAppearance('Moss', '#2e8b57', 'glass') : null;
     }

@@ -1,0 +1,22 @@
+{#-
+ # The result of a player's run through a quiz. `result` is a `Tilttek\Quiz\View\ResultView`.
+ #
+ # The Stimulus controller `tilttek--quiz--result` dispatches the DOM event `quiz:completed` on the window once the run
+ # is over, then `quiz:perfect` for a perfect run and `quiz:team-won` when the player's team won, once per run in a
+ # browser tab; their detail says whether the run is a practice play. The block `celebration` is drawn only for a run
+ # that is over: the place of a celebration, empty by default.
+ #}
+<section class="isQuizResult" data-controller="tilttek--quiz--result" data-tilttek--quiz--result-quiz-value="{{ result.quiz }}" data-tilttek--quiz--result-run-value="{{ result.run }}" data-tilttek--quiz--result-completed-value="{{ result.completed ? 'true' : 'false' }}" data-tilttek--quiz--result-perfect-value="{{ result.perfect ? 'true' : 'false' }}" data-tilttek--quiz--result-team-value="{{ result.team ?? '' }}" data-tilttek--quiz--result-team-won-value="{{ result.teamWon ? 'true' : 'false' }}" data-tilttek--quiz--result-practice-value="{{ result.practice ? 'true' : 'false' }}">
+    {%- block summary -%}
+        <p class="isQuizScore"><data value="{{ result.score }}">{{ result.score }}</data> / <data value="{{ result.maxScore }}">{{ result.maxScore }}</data></p>
+        {%- if result.rank is not null -%}
+            <p class="isQuizRank"><data value="{{ result.rank }}">{{ result.rank }}</data></p>
+        {%- endif -%}
+        {%- if result.teamRank is not null -%}
+            <p class="isQuizTeamRank"><data value="{{ result.teamRank }}">{{ result.teamRank }}</data></p>
+        {%- endif -%}
+    {%- endblock -%}
+    {%- if result.completed -%}
+        {%- block celebration %}{% endblock -%}
+    {%- endif -%}
+</section>

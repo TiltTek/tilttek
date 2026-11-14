@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=fea3dceab336178781b5b58d4e174d9f09a5fd04090b33046da45cebb84bcfd0 -->
+<!-- phil-dev source-sha256=d67ed4dd23a942ea366da7d3d68607c5ca4d30abfa97952a1591d586f426244d -->
 # Référence
 
 | Type | Rôle |
@@ -12,6 +12,7 @@
 | `Application\MacroResolution`, `MacroSession` | Interne : les macros d'une entrée cherchées, développées et comptées |
 | `Application\Port\DiceAppearance` | Le point d'extension qui habille les dés d'un membre |
 | `Application\DieAppearance`, `NoDiceAppearance` | Une apparence, avec son encre lisible ; des dés ordinaires |
+| `Application\Accessibility` | Ce que le spectateur a demandé : les dés tels qu'habillés, ou en haut contraste |
 | `Application\Contrast` | Le contraste de deux couleurs tel que le mesure WCAG 2, et l'encre qui se lit sur une face |
 | `Application\Event\RollRecorded` | Un lancer rejouable gardé dans le journal, par identifiants |
 | `Application\Exception\UnknownRoll` | Le rejeu d'un lancer que le journal ne contient pas |

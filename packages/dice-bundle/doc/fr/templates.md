@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=a9d688a6af4b390f85d5cde4359da547330846ad8de2eb19ddaab937bd516217 -->
+<!-- phil-dev source-sha256=5a0ab43973959926d52c9a1084ffd869648634c01cbc2166a7a49b61351fd81c -->
 # Gabarits
 
 | Twig | Donne |
@@ -6,7 +6,7 @@
 | `expression\|dice_notation(locale)` | L'expression dans la notation d'une langue ; une expression invalide telle quelle |
 | `expression\|dice_dialect('roll20')` | Les commandes du dialecte d'une table, ou null quand le dialecte ne peut pas l'écrire |
 | `dice_roll(expression, locale)` | Un `PoolResult` |
-| `dice_roll_detail(result, member, locale)` | Le détail d'un lancer, en HTML |
+| `dice_roll_detail(result, member, locale, viewer)` | Le détail d'un lancer, en HTML |
 | `dice_text(message)` | Un mot du détail, passé par le traducteur |
 
 ## Le détail d'un lancer
@@ -31,7 +31,13 @@ entre parenthèses, en plus des classes :
 | `is-success`, `is-failure` | success, failure |
 | `is-from-reroll`, `is-from-explosion` | — |
 
-Avec un membre, chaque groupe porte l'apparence de ses dés :
+Avec un membre, chaque groupe porte l'apparence de ses dés. Le quatrième argument, `'high-contrast'` ou `'standard'`,
+est l'accessibilité du spectateur (un de ses réglages, ou ce que la page a lu de `prefers-contrast: more` ou de
+`forced-colors: active`), transmise à l'apparence ; tout autre texte, ou aucun, ne marque aucune préférence :
+
+```twig
+{{ dice_roll_detail(roll, member, app.request.locale, 'high-contrast') }}
+```
 
 | Crochet | Contient |
 |---|---|

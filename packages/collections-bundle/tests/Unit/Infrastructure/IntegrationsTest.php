@@ -20,6 +20,7 @@ use Tilttek\CollectionsBundle\Infrastructure\Event\DispatchingObserver;
 use Tilttek\CollectionsBundle\Infrastructure\Exchange\CollectionsInventory;
 use Tilttek\CollectionsBundle\Infrastructure\Twig\CollectionsExtension;
 use Tilttek\CollectionsBundle\Tests\Unit\Fixture\Kit;
+use Tilttek\DiceBundle\Application\Accessibility;
 use Tilttek\DiceBundle\Application\DieAppearance;
 use Tilttek\Exchange\Exception\ExchangeRefused;
 use Tilttek\Exchange\Refusal;
@@ -75,6 +76,7 @@ final class IntegrationsTest extends TestCase
         $kit->dice->choose($member, $die->id);
         $kit->dice->choose($member, $plain->id);
         self::assertEquals(new DieAppearance('d6 de braise', '#c0392b', 'resin', '/img/ember-d6.webp'), $appearance->appearance($member, 6));
+        self::assertEquals(new DieAppearance('d6 de braise', '#c0392b', 'resin', '/img/ember-d6.webp'), $appearance->appearance($member, 6, Accessibility::HighContrast));
         self::assertEquals(new DieAppearance('Plain d20'), $appearance->appearance($member, 20));
         self::assertEquals(new DieAppearance('Ember d6', '#c0392b', 'resin', '/img/ember-d6.webp'), new CollectionDiceAppearance($kit->dice, 'en')->appearance($member, 6));
     }

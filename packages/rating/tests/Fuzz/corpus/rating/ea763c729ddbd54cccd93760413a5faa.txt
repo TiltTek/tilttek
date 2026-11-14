@@ -1,0 +1,1 @@
+{"id": "r1", "game": "chs", "played_at": "2026-11-13T20:00:00Z", "sides": [["ln"], ["bb"]], "ranks": [2, 2]}

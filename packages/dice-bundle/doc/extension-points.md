@@ -3,21 +3,31 @@
 ## A member's dice
 
 `Tilttek\DiceBundle\Application\Port\DiceAppearance` gives, for a member and a number of sides, the appearance of the
-dice to show — the set the member owns, for instance —, or null for the plain ones:
+dice to show — the set the member owns, for instance —, or null for the plain ones. The third argument is the viewer's
+accessibility, when the page knows it: `Accessibility::HighContrast` asks for numbers that stand out more from their
+faces — solid faces, no texture, a stronger contrast —, `Accessibility::Standard` for the dice as dressed, and null
+leaves the choice to the appearance:
 
 ```php
 use Phil\Resource\ResourceReference;
+use Tilttek\DiceBundle\Application\Accessibility;
 use Tilttek\DiceBundle\Application\DieAppearance;
 use Tilttek\DiceBundle\Application\Port\DiceAppearance;
 
 final class OwnedDice implements DiceAppearance
 {
-    public function appearance(ResourceReference $member, int $sides): ?DieAppearance
+    public function appearance(ResourceReference $member, int $sides, ?Accessibility $viewer = null): ?DieAppearance
     {
+        if (Accessibility::HighContrast === $viewer) {
+            return new DieAppearance('Ember', '#000000', ink: '#ffffff');
+        }
+
         return new DieAppearance('Ember', '#aa0000', 'resin', '/images/ember.png', ink: '#ffd700', texture: 'dice/ember');
     }
 }
 ```
+
+An appearance that has one look for every viewer declares the argument and ignores it.
 
 Name the service in `tilttek_dice.appearance`. **The appearance never changes the randomness**: it dresses the dice the
 server rolled. Fudge dice ask for 6 sides; custom dice carry their own faces and ask for none.
