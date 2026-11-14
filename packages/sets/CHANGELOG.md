@@ -4,6 +4,22 @@ All notable changes to `tilttek/sets` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- A completion's event can no longer be lost when a handler fails. The store keeps whether each completion was
+  delivered: `CompletionStore` gains `undelivered()` and `markDelivered()`, which a store written for 0.1 implements.
+  `Sets::record()` tells every undelivered completion of the holder in the set, with the rewards of the version it was
+  earned under, and marks each delivered once its event was dispatched without an exception; a handler that throws
+  leaves its completion undelivered, the others are told all the same, and the first exception is thrown again at the
+  end. A completion is told at least once: the handlers are idempotent.
+
+### Added
+
+- `Sets::deliver()`: every undelivered completion of a holder told again, in every set, to resume after a failure.
+- The delivery of the completions documented: at-least-once delivery, idempotent handlers and resuming.
+
 ## 0.1.0-alpha - 2026-11-13
 
 ### Added

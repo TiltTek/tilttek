@@ -60,6 +60,37 @@ final class StoresTest extends TestCase
         self::assertCount(1, $store->ofHolder($two));
     }
 
+    public function testTheCompletionStoreKeepsWhetherEachWasDelivered(): void
+    {
+        $store = new InMemoryCompletionStore();
+        $one = ResourceReference::of('member', '1');
+        $two = ResourceReference::of('member', '2');
+        $at = new DateTimeImmutable('2026-11-13 12:00:00 UTC');
+        $set = new Completion('s', $one, null, 1, $at);
+        $gold = new Completion('s', $one, 'gold', 1, $at);
+        $other = new Completion('t', $one, null, 1, $at);
+
+        $store->markDelivered($set);
+        self::assertTrue($store->add($set));
+        self::assertTrue($store->add($gold));
+        self::assertTrue($store->add($other));
+        self::assertTrue($store->add($ofTwo = new Completion('s', $two, null, 1, $at)));
+        self::assertTrue($store->add(new Completion('t', $two, null, 1, $at)));
+        self::assertSame([$set, $gold, $other], $store->undelivered($one));
+
+        $store->markDelivered($gold);
+        $store->markDelivered($gold);
+        self::assertSame([$set, $other], $store->undelivered($one));
+        self::assertSame([0, 1], array_keys($store->undelivered($one)));
+        self::assertCount(2, $store->undelivered($two));
+
+        $store->markDelivered($ofTwo);
+        self::assertSame(3, $store->eraseHolder($one));
+        self::assertTrue($store->add($gold));
+        self::assertSame([$gold], $store->undelivered($one));
+        self::assertCount(1, $store->undelivered($two));
+    }
+
     public function testACompletionIsInUtcAndKeyedBySetTierAndHolder(): void
     {
         $holder = ResourceReference::of('member', 'x:1');
