@@ -4,6 +4,24 @@ All notable changes to `tilttek/generator-bundle` will be documented in this fil
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Added
+
+- The limits `steps`, `bytes` and `megabytes` of `tilttek/generator` in `tilttek_generator.limits`.
+- The attributions of the results in the template `@TilttekGenerator/draw.html.twig`, in a paragraph of class
+  `tilttek-generator-attribution`, and in the Stimulus controller's `attribution` target, refreshed with each draw;
+  the API answers them under `attributions`.
+- A test that every template of the generators is loaded from a compiled file of the cache directory, never by
+  `eval()`.
+
+### Changed
+
+- `tilttek_generator.cache` is the directory of Twig's compiled templates, `%kernel.cache_dir%/tilttek_generator/twig`
+  by default, `true` naming the default; `false` and an empty text are refused, so that templates are never loaded by
+  `eval()`.
+- `tilttek/generator: ^0.1.1@dev`, for its new limits and attributions.
+
 ## 0.1.0-alpha - 2026-11-12
 
 ### Added

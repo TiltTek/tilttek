@@ -24,9 +24,12 @@ tilttek_generator:
         results: 100
         cells: 2500
         draw_milliseconds: 1000
+        steps: 10000
+        bytes: 65536
+        megabytes: 16
 
-    # Keeps Twig's compiled templates in %kernel.cache_dir%/tilttek_generator/twig.
-    cache: true
+    # The directory of Twig's compiled templates, loaded from their files rather than by eval().
+    cache: '%kernel.cache_dir%/tilttek_generator/twig'
 
     # Loads the library's random tables too, named table.<name>.
     tables: false
@@ -70,7 +73,7 @@ tilttek_generator:
 | `aspirated` | `[]` | Words added to the French grammar's list of aspirated h. |
 | `stressed_a` | `[]` | Words added to the Spanish grammar's list of feminine words whose first syllable is a stressed a (`el ánima`, `un ánima`), compared without regard to case. |
 | `limits.*` | as shown | The `Limits` of `tilttek/generator`, each at least 1. |
-| `cache` | `true` | Whether Twig keeps its compiled templates in the cache directory. |
+| `cache` | `%kernel.cache_dir%/tilttek_generator/twig` | The directory where Twig writes the compiled templates of the generators, which it then loads from their files, never by `eval()`; `true` names the default. `false` and an empty text are refused: there is always a directory. |
 | `tables` | `false` | Whether the library's random tables of `tables/` are read after the paths; an application's list or generator named like one of them is then an error. |
 | `tables_locale` | `en` | The language of the random tables, `en` or `fr`; both versions have the same names, state values and fields. |
 | `state.store` | `cache` | Where the states of the tables with a memory are kept: `cache`, in the pool below, when `psr/cache` is installed; `memory`, for tests, reset with the kernel; or the service of the application's own `StateStore`. |

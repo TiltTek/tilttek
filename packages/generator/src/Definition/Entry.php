@@ -11,8 +11,8 @@ use Stringable;
 use Tilttek\Generator\Exception\InvalidDefinition;
 
 /**
- * One entry of a list: its text, its weight, its fields — a grammatical gender, a price, a plural form — and its tags,
- * on which a pick filters. Printed in a template, an entry is its text; `entry.price` reads a field, `entry.tags` the
+ * One entry of a list: its text, its weight, its fields — a grammatical gender, a price, a plural form —, its tags, on
+ * which a pick filters, and where its text comes from when it is not where its list comes from. Printed in a template, an entry is its text; `entry.price` reads a field, `entry.tags` the
  * tags.
  *
  * @implements ArrayAccess<string, mixed>
@@ -22,7 +22,7 @@ final readonly class Entry implements ArrayAccess, Stringable
     /**
      * The names an entry keeps for itself; a field cannot take them.
      */
-    public const array RESERVED = ['text', 'weight', 'tags'];
+    public const array RESERVED = ['text', 'weight', 'tags', 'source', 'licence', 'attribution'];
 
     /**
      * @param array<string, scalar|list<scalar>> $fields
@@ -33,6 +33,7 @@ final readonly class Entry implements ArrayAccess, Stringable
         public int $weight = 1,
         private array $fields = [],
         private array $tags = [],
+        public ?Attribution $attribution = null,
     ) {
         if ($weight < 1) {
             throw InvalidDefinition::at($text, 'the weight of an entry is a whole number of at least 1');

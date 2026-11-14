@@ -6,10 +6,49 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
+### Added
+
+- The budget of a result checked inside its templates: each turn of a `for` loop and each `{% set %}` is a step,
+  counted against `Limits::$steps` (10 000), with the memory the result has grown by checked against
+  `Limits::$megabytes` (16) and the times of the result and of the draw checked at each step.
+- `between(min, max)` in the templates: a whole number in a range, with the draw's randomness, counted as a pick.
+- `generate(name, count, with: {…})`: values given to the generator called, as variables of its variables, body and
+  fields.
+- Attributions: `source`, `licence` and `attribution` on a list, an entry or a generator (`Attribution`), an entry's own
+  taking the place of its list's; `DrawResult::$attributions`, once each in the order the draw first used them, and
+  `attributions` in `DrawResult::toArray()`.
+- `TraceryImporter`: Tracery grammars into lists and generators — symbols, `#symbol#`, the modifiers `.capitalize`,
+  `.capitalizeAll`, `.a` and `.s`, actions `[name:rule]` and `[name:one,other]` whose variables are given to the
+  generators drawn after them, as far down as they read them —, with a prefix, an attribution and a language.
+- `PerchanceImporter`: tables in the subset of Perchance's syntax without JavaScript, as the specification of the
+  project perhaps delimits it — sections, weights, references, `selectUnique` and `selectMany`, inline choices,
+  ranges and dice, comments, fenced blocks of Markdown —, with a prefix, an attribution and a language.
+- `Imported`: the document an import made, the generator to start from, and the document read into a catalog.
+- `MapSchema`: a map exported as JSON with the identifier and the version of its schema, and the JSON Schema
+  (draft 2020-12) of square, hex and graph maps, shipped as `schema/map.v1.json`.
+- Fuzz targets of the two importers, `tracery` and `perchance`.
+- The documentation of the imports, the attributions, the budget of a result and the export of maps.
+
+### Changed
+
+- `replace` and `join` in the templates are the generator's own: they refuse to make a text longer than
+  `Limits::$bytes` (65 536), measured before the text is made, and refuse a part that is not a text.
+- The time limits are also checked at each step inside a template, so that a loop that never picks stops at the turn
+  that crosses them.
+- `source`, `licence` and `attribution` are no longer field names of an entry.
+- The documentation says that templates written by others — members of a site, authors of an imported grammar — may be
+  loaded and drawn within the limits.
+
 ### Fixed
 
 - The table `hook`, in English and in French: the entry whose text holds a comma is quoted, so that it is read whole
   instead of cut at the comma; Symfony Yaml 8.2.0-BETA2 refuses the unquoted form.
+- A list or a generator whose name is made of digits only, which YAML and JSON decode as an integer key, is read.
+
+### Security
+
+- A template could loop over picks without counting the turns, and grow a text by `~`, `replace` or `join` until the
+  memory ran out: the steps, the memory and the bytes made are now bounded inside each render.
 
 ## 0.1.0-alpha - 2026-11-12
 

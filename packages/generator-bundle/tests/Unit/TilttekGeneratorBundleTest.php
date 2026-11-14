@@ -58,7 +58,7 @@ final class TilttekGeneratorBundleTest extends TestCase
         );
         self::assertSame([GeneratorServices::class, 'catalog'], $container->getDefinition(CachedCatalog::class)->getFactory());
         self::assertSame([null, '%kernel.project_dir%', '%kernel.cache_dir%/tilttek_generator/catalog.php', '%kernel.debug%', false, 'en'], $container->getDefinition(CachedCatalog::class)->getArguments());
-        self::assertSame([8, 1000, 250, 10, 100, 2500, 1000], $container->getDefinition(Limits::class)->getArguments());
+        self::assertSame([8, 1000, 250, 10, 100, 2500, 1000, 10_000, 65_536, 16], $container->getDefinition(Limits::class)->getArguments());
         self::assertSame([GeneratorServices::class, 'grammars'], $container->getDefinition(Grammars::class)->getFactory());
         self::assertSame([[], []], $container->getDefinition(Grammars::class)->getArguments());
         self::assertEquals([
@@ -102,8 +102,8 @@ final class TilttekGeneratorBundleTest extends TestCase
             'locale' => 'fr',
             'aspirated' => ['hobgobelin'],
             'stressed_a' => ['Ánima'],
-            'limits' => ['depth' => 1, 'picks' => 2, 'milliseconds' => 3, 'attempts' => 4, 'results' => 5, 'cells' => 6, 'draw_milliseconds' => 7],
-            'cache' => false,
+            'limits' => ['depth' => 1, 'picks' => 2, 'milliseconds' => 3, 'attempts' => 4, 'results' => 5, 'cells' => 6, 'draw_milliseconds' => 7, 'steps' => 8, 'bytes' => 9, 'megabytes' => 10],
+            'cache' => '/srv/twig',
             'tables' => true,
             'tables_locale' => 'fr',
             'state' => ['pool' => 'cache.states', 'lock' => 'lock.factory'],
@@ -122,10 +122,10 @@ final class TilttekGeneratorBundleTest extends TestCase
         self::assertSame([['/srv/generators'], '%kernel.project_dir%', '%kernel.cache_dir%/tilttek_generator/catalog.php', '%kernel.debug%', true, 'fr'], $container->getDefinition(CachedCatalog::class)->getArguments());
         self::assertEquals([new Reference('cache.states')], $container->getDefinition(CacheStateStore::class)->getArguments());
         self::assertEquals(new Definition(SymfonyStateLock::class, [new Reference('lock.factory')]), $container->getDefinition(MemoryTables::class)->getArgument(2));
-        self::assertSame([1, 2, 3, 4, 5, 6, 7], $container->getDefinition(Limits::class)->getArguments());
+        self::assertSame([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], $container->getDefinition(Limits::class)->getArguments());
         self::assertFalse($container->hasDefinition(GeneratorServices::PUBLIC_LIMITER));
         self::assertSame([['hobgobelin'], ['Ánima']], $container->getDefinition(Grammars::class)->getArguments());
-        self::assertSame(['fr', false], [$container->getDefinition(GeneratorFactory::class)->getArgument(2), $container->getDefinition(GeneratorFactory::class)->getArgument(5)]);
+        self::assertSame(['fr', '/srv/twig'], [$container->getDefinition(GeneratorFactory::class)->getArgument(2), $container->getDefinition(GeneratorFactory::class)->getArgument(5)]);
         self::assertSame(5, $container->getDefinition(DrawController::class)->getArgument(2));
         self::assertEquals([
             true,
@@ -169,7 +169,25 @@ final class TilttekGeneratorBundleTest extends TestCase
 
     public function testEachLimitMayBeOne(): void
     {
-        self::assertSame([1, 1, 1, 1, 1, 1, 1], $this->load(['limits' => ['depth' => 1, 'picks' => 1, 'milliseconds' => 1, 'attempts' => 1, 'results' => 1, 'cells' => 1, 'draw_milliseconds' => 1], 'api' => ['max_count' => 1, 'public_limit' => ['limit' => 1]]])->getDefinition(Limits::class)->getArguments());
+        self::assertSame([1, 1, 1, 1, 1, 1, 1, 1, 1, 1], $this->load(['limits' => ['depth' => 1, 'picks' => 1, 'milliseconds' => 1, 'attempts' => 1, 'results' => 1, 'cells' => 1, 'draw_milliseconds' => 1, 'steps' => 1, 'bytes' => 1, 'megabytes' => 1], 'api' => ['max_count' => 1, 'public_limit' => ['limit' => 1]]])->getDefinition(Limits::class)->getArguments());
+    }
+
+    public function testTwigCompilesIntoTheCacheDirectoryByDefault(): void
+    {
+        self::assertSame(TilttekGeneratorBundle::TWIG_CACHE, $this->load([])->getDefinition(GeneratorFactory::class)->getArgument(5));
+        self::assertSame('%kernel.cache_dir%/tilttek_generator/twig', $this->load(['cache' => true])->getDefinition(GeneratorFactory::class)->getArgument(5));
+    }
+
+    public function testTwigAlwaysHasACacheDirectory(): void
+    {
+        foreach ([false, null, '', ' '] as $cache) {
+            try {
+                $this->load(['cache' => $cache]);
+                self::fail(\sprintf('The Twig cache took %s.', var_export($cache, true)));
+            } catch (InvalidConfigurationException $exception) {
+                self::assertStringContainsString('The Twig cache is a directory: templates compiled without one would be loaded by eval().', $exception->getMessage());
+            }
+        }
     }
 
     public function testTheMaximumCountStaysWithinTheLimits(): void
@@ -193,7 +211,7 @@ final class TilttekGeneratorBundleTest extends TestCase
 
     public function testTheLimitsAreAtLeastOne(): void
     {
-        foreach (['depth', 'picks', 'milliseconds', 'attempts', 'results', 'cells', 'draw_milliseconds'] as $limit) {
+        foreach (['depth', 'picks', 'milliseconds', 'attempts', 'results', 'cells', 'draw_milliseconds', 'steps', 'bytes', 'megabytes'] as $limit) {
             try {
                 $this->load(['limits' => [$limit => 0]]);
                 self::fail(\sprintf('The limit of %s took 0.', $limit));

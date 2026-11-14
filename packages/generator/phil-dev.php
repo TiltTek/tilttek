@@ -13,6 +13,8 @@ return [
         'targets' => [
             'document' => 'tests/Fuzz/document.php',
             'markov' => 'tests/Fuzz/markov.php',
+            'perchance' => 'tests/Fuzz/perchance.php',
+            'tracery' => 'tests/Fuzz/tracery.php',
         ],
     ],
     'infection' => [

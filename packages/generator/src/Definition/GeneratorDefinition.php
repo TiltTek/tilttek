@@ -9,8 +9,8 @@ use Tilttek\Generator\Exception\InvalidDefinition;
 
 /**
  * A generator: its name, what it returns, the variables its templates share — set once per result, before the body —,
- * the language of its grammar filters, and the state it carries from one result to the next, if it has one: a table
- * with a memory.
+ * the language of its grammar filters, the state it carries from one result to the next, if it has one — a table
+ * with a memory —, and where the text of its templates comes from, when it says.
  */
 final readonly class GeneratorDefinition
 {
@@ -29,6 +29,7 @@ final readonly class GeneratorDefinition
         public array $vars = [],
         public ?string $locale = null,
         public array $state = [],
+        public ?Attribution $attribution = null,
     ) {
         if (\count($state) > Draw::STATE_VALUES) {
             throw InvalidDefinition::at($name, \sprintf('a state holds at most %d values', Draw::STATE_VALUES));

@@ -243,6 +243,15 @@ final class ReaderTest extends TestCase
         self::assertTrue($catalog->hasList('Name_1.elf-female.x'));
     }
 
+    public function testANameMayBeMadeOfDigits(): void
+    {
+        $catalog = new Reader()->catalog(['f' => ['lists' => ['12' => ['a']], 'generators' => ['7' => ['templates' => 'x']]], 'g' => ['list' => 3, 'entries' => ['b']]]);
+
+        self::assertTrue($catalog->hasList('12'));
+        self::assertTrue($catalog->hasList('3'));
+        self::assertTrue($catalog->hasGenerator('7'));
+    }
+
     public function testItSaysWhatANameIs(): void
     {
         self::assertTrue(Reader::isName('name.elf-female_2'));

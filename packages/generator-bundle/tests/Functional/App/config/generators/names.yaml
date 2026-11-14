@@ -1,10 +1,11 @@
 lists:
-  name.syllable: [ka, ri, to]
+  name.syllable: { entries: [ka, ri, to], attribution: Syllables by the testers, licence: CC0-1.0 }
 generators:
   name.short:
     templates: "{% set a = pick('name.syllable') %}{{ a }}{{ pick('name.syllable', not: a) }}"
     filters: [capitalize]
   inn:
+    source: Inns of the tests
     fields:
       name: "The {{ generate('name.short') }}"
       sign: Café

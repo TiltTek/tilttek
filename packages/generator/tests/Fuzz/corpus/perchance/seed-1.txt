@@ -1,0 +1,7 @@
+animal
+  dog
+  cat ^2
+  owl ^0.5 // note
+
+output
+  A {big|small^3} [animal] with {1-6} legs, 2d6+1, [animal.selectUnique(2)]

@@ -10,14 +10,19 @@ use Tilttek\Generator\Limits;
 use Tilttek\Generator\Timer;
 
 /**
- * The making of one result: its randomness, the picks it has made, the time it and the whole draw have taken, and the
- * generators it is inside, each with its language — the default one outside them.
+ * The making of one result: its randomness, the picks and steps it has made, the memory it has grown by, the time it
+ * and the whole draw have taken, and the generators it is inside, each with its language — the default one outside
+ * them.
  *
  * @internal
  */
 final class Run
 {
     private int $picks = 0;
+
+    private int $steps = 0;
+
+    private readonly int $memory;
 
     /**
      * @var list<string>
@@ -40,6 +45,24 @@ final class Run
     ) {
         $this->started = $timer->now();
         $this->drawStarted = $drawStarted ?? $this->started;
+        $this->memory = memory_get_usage();
+    }
+
+    /**
+     * Counts one step — a turn of a loop, an assignment — and stops the result past the limits of steps, memory or
+     * time: a loop that never picks, or a text that doubles at each assignment, stops at the step that crosses them.
+     */
+    public function step(): void
+    {
+        if (++$this->steps > $this->limits->steps) {
+            throw LimitExceeded::of('steps per result', $this->limits->steps);
+        }
+
+        if (memory_get_usage() - $this->memory > $this->limits->megabytes * 1_048_576) {
+            throw LimitExceeded::of('megabytes per result', $this->limits->megabytes);
+        }
+
+        $this->checkTime();
     }
 
     /**

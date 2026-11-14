@@ -12,6 +12,7 @@ use Stringable;
 use Throwable;
 use Tilttek\Dice\DiceRoller;
 use Tilttek\Dice\Exception\DiceException;
+use Tilttek\Generator\Definition\Attribution;
 use Tilttek\Generator\Definition\Body;
 use Tilttek\Generator\Definition\Catalog;
 use Tilttek\Generator\Definition\Entry;
@@ -70,6 +71,11 @@ final class Producer
     private ?Run $run = null;
 
     /**
+     * @var array<string, Attribution> the attributions of the lists, entries and generators the draw used, by their texts
+     */
+    private array $credits = [];
+
+    /**
      * @var array<string, list<array{array<string, list<string>>, list<Entry>, list<int>, ?MarkovModel}>> by list, the
      *                                                                                                    tags a pick
      *                                                                                                    filtered on,
@@ -110,8 +116,8 @@ final class Producer
     {
         $problems = [];
 
-        foreach ($this->catalog->generators() as $name => $generator) {
-            array_push($problems, ...$this->checkDefinition($name, $generator));
+        foreach ($this->catalog->generators() as $generator) {
+            array_push($problems, ...$this->checkDefinition($generator->name, $generator));
         }
 
         foreach ($this->sources as $name => $source) {
@@ -142,14 +148,20 @@ final class Producer
 
         // The time of the whole draw counts from here: every result, and every attempt of a unique draw.
         $started = $this->timer->now();
+        $this->credits = [];
 
-        if ($definition->hasState()) {
-            return $this->remember($definition, $draw, $randomizer, $started);
+        try {
+            if ($definition->hasState()) {
+                return $this->remember($definition, $draw, $randomizer, $started);
+            }
+
+            $make = fn (): mixed => $this->once($randomizer, fn (): mixed => $this->produce($definition), $started);
+            $results = $draw->unique ? $this->distinct($draw->count, $make) : array_map(static fn (): mixed => $make(), range(1, $draw->count));
+
+            return new DrawResult($name, $results, $draw->count, attributions: $this->credits());
+        } finally {
+            $this->credits = [];
         }
-
-        $make = fn (): mixed => $this->once($randomizer, fn (): mixed => $this->produce($definition), $started);
-
-        return new DrawResult($name, $draw->unique ? $this->distinct($draw->count, $make) : array_map(static fn (): mixed => $make(), range(1, $draw->count)), $draw->count);
     }
 
     /**
@@ -169,13 +181,15 @@ final class Producer
         [, $candidates, $running, $model] = $this->pool($entries, $tags);
 
         if ($model instanceof MarkovModel) {
+            $this->credit($entries->attribution);
+
             return $this->invent($list, $model, $tags, $count, $excluded);
         }
 
         if (null === $count && [] === $excluded && [] !== $candidates) {
             $run->tick();
 
-            return $candidates[$this->choose($running, $run->randomizer)];
+            return $this->credited($candidates[$this->choose($running, $run->randomizer)], $entries);
         }
 
         $candidates = array_values(array_filter($candidates, static fn (Entry $entry): bool => !\in_array($entry->text, $excluded, true)));
@@ -184,7 +198,7 @@ final class Producer
         while (\count($picked) < ($count ?? 1) && [] !== $candidates) {
             $run->tick();
             $entry = $candidates[$this->weighted(array_map(static fn (Entry $entry): int => $entry->weight, $candidates), $run->randomizer)];
-            $picked[] = $entry;
+            $picked[] = $this->credited($entry, $entries);
             $candidates = array_values(array_filter($candidates, static fn (Entry $candidate): bool => $candidate->text !== $entry->text));
         }
 
@@ -196,17 +210,97 @@ final class Producer
     }
 
     /**
-     * `generate('npc')`, `generate('dish', 3)`: another generator's result, or several without duplicates.
+     * `generate('npc')`, `generate('dish', 3)`, `generate('story', with: {hero: name})`: another generator's result, or
+     * several without duplicates; the values given `with` are variables of its templates.
+     *
+     * @param array<array-key, mixed> $with
      */
-    public function generate(string $name, ?int $count = null): mixed
+    public function generate(string $name, ?int $count = null, array $with = []): mixed
     {
         $definition = $this->catalog->generator($name);
+        $with = $this->with($with);
 
         if (null === $count) {
-            return $this->produce($definition);
+            return $this->produce($definition, $with);
         }
 
-        return $this->distinct($count, fn (): mixed => $this->produce($definition));
+        return $this->distinct($count, fn (): mixed => $this->produce($definition, $with));
+    }
+
+    /**
+     * `between(1, 100)`: a whole number from the first to the second, both included, with the draw's randomness.
+     */
+    public function between(int $min, int $max): int
+    {
+        if ($min > $max) {
+            throw new InvalidArgumentException(\sprintf('The range from %d to %d is empty.', $min, $max));
+        }
+
+        $run = $this->run();
+        $run->tick();
+
+        return $run->randomizer->getInt($min, $max);
+    }
+
+    /**
+     * One step of a template: a turn of a loop or an assignment (see `StepVisitor`).
+     */
+    public function step(): void
+    {
+        $this->run()->step();
+    }
+
+    /**
+     * `text|replace({'a': 'b'})`: Twig's `replace`, refused when the text it would return could be longer than the
+     * limit of bytes — measured before any replacement is made.
+     *
+     * @param iterable<mixed, mixed> $from
+     */
+    public function replace(mixed $text, iterable $from): string
+    {
+        $text = null === $text ? '' : $this->text($text);
+        $pairs = [];
+        $bound = \strlen($text);
+
+        foreach ($from as $search => $replacement) {
+            $search = $this->text($search);
+            $replacement = null === $replacement ? '' : $this->text($replacement);
+
+            if ('' === $search) {
+                continue;
+            }
+
+            $pairs[$search] = $replacement;
+            // At most as many replacements as the text has occurrences of the search apart, each growing it by the
+            // difference of their lengths.
+            $bound += substr_count($text, $search) * max(0, \strlen($replacement) - \strlen($search));
+        }
+
+        $this->bound($bound, 'replace');
+
+        return strtr($text, $pairs);
+    }
+
+    /**
+     * `list|join(', ')`, `list|join(', ', ' and ')`: Twig's `join`, refused when the text it would return is longer
+     * than the limit of bytes — measured before it is made.
+     */
+    public function join(mixed $values, string $glue = '', ?string $and = null): string
+    {
+        $values = array_map($this->text(...), is_iterable($values) ? iterator_to_array($values, false) : [$values]);
+        $count = \count($values);
+
+        if (0 === $count) {
+            return '';
+        }
+
+        $this->bound(array_sum(array_map(strlen(...), $values)) + ($count - 1) * max(\strlen($glue), \strlen($and ?? $glue)), 'join');
+
+        if (null === $and || 1 === $count) {
+            return implode($glue, $values);
+        }
+
+        return implode($glue, \array_slice($values, 0, -1)).$and.$values[$count - 1];
     }
 
     /**
@@ -293,7 +387,8 @@ final class Producer
     {
         $sources = [];
 
-        foreach ($catalog->generators() as $name => $generator) {
+        foreach ($catalog->generators() as $generator) {
+            $name = $generator->name;
             $sources += $this->stateSources($name, $generator);
 
             foreach ($generator->vars as $var => $source) {
@@ -438,26 +533,31 @@ final class Producer
         return $problems;
     }
 
-    private function produce(GeneratorDefinition $definition): mixed
+    /**
+     * @param array<string, mixed> $with
+     */
+    private function produce(GeneratorDefinition $definition, array $with = []): mixed
     {
-        return $this->make($definition, null)[0];
+        return $this->make($definition, null, $with)[0];
     }
 
     /**
      * One result and the state it leaves: the state first, from the previous one, then the variables, then the body.
      *
      * @param array<string, string>|null $previous
+     * @param array<string, mixed>       $with     the variables the caller gives
      *
      * @return array{mixed, array<string, string>}
      */
-    private function make(GeneratorDefinition $definition, ?array $previous): array
+    private function make(GeneratorDefinition $definition, ?array $previous, array $with = []): array
     {
         $run = $this->run();
         $run->enter($definition->locale ?? $this->locale);
+        $this->credit($definition->attribution);
 
         try {
             $state = $this->advance($definition, $previous);
-            $context = $definition->hasState() ? ['previous' => $previous ?? [], 'state' => $state] : [];
+            $context = ($definition->hasState() ? ['previous' => $previous ?? [], 'state' => $state] : []) + $with;
 
             return [$this->body($definition, $context), $state];
         } finally {
@@ -692,7 +792,7 @@ final class Producer
             $state = $next;
         }
 
-        return new DrawResult($definition->name, $results, $draw->count, $state);
+        return new DrawResult($definition->name, $results, $draw->count, $state, $this->credits());
     }
 
     /**
@@ -880,6 +980,63 @@ final class Producer
         }
 
         throw new InvalidArgumentException(\sprintf('A text is expected, not %s.', get_debug_type($value)));
+    }
+
+    /**
+     * The variables given to `generate()`: names of a letter then letters, digits or `_`, never `loop`, `state` or
+     * `previous`.
+     *
+     * @param array<array-key, mixed> $with
+     *
+     * @return array<string, mixed>
+     */
+    private function with(array $with): array
+    {
+        foreach (array_keys($with) as $name) {
+            if (!\is_string($name) || 1 !== preg_match('/^[A-Za-z]\w*$/D', $name) || \in_array($name, ['loop', ...GeneratorDefinition::STATE_NAMES], true)) {
+                throw new InvalidArgumentException(\sprintf('"%s" is not a name of a variable given to a generator.', $name));
+            }
+        }
+
+        /** @var array<string, mixed> $with */
+        return $with;
+    }
+
+    /**
+     * Refuses a text a filter would make past the limit of bytes.
+     */
+    private function bound(int $bytes, string $filter): void
+    {
+        if ($bytes > $this->limits->bytes) {
+            throw LimitExceeded::of(\sprintf('bytes made by "%s"', $filter), $this->limits->bytes);
+        }
+    }
+
+    /**
+     * An entry picked, whose attribution — or its list's — the draw keeps.
+     */
+    private function credited(Entry $entry, EntryList $list): Entry
+    {
+        $this->credit($entry->attribution ?? $list->attribution);
+
+        return $entry;
+    }
+
+    /**
+     * The attributions the draw used so far, in the order it first used them.
+     *
+     * @return list<Attribution>
+     */
+    private function credits(): array
+    {
+        return array_values($this->credits);
+    }
+
+    private function credit(?Attribution $attribution): void
+    {
+        if ($attribution instanceof Attribution) {
+            $this->credits[implode("\0", [$attribution->source, $attribution->licence, $attribution->attribution])] ??= $attribution;
+        }
     }
 
     private function grammar(): Grammar

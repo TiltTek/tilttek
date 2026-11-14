@@ -47,3 +47,22 @@ graph can still take. Edges are pairs of node identifiers, the smaller first, in
 
 A map has at most `Limits::$cells` cells or nodes. Placing the nodes in space, the terrain that follows its neighbours
 and the drawing are left to the application or to more specific packages.
+
+## Exporting a map
+
+`MapSchema` writes a map as JSON for another program — a map editor, a virtual tabletop, a printer — with the
+identifier of the schema it follows and its version first:
+
+```php
+use Tilttek\Generator\MapSchema;
+
+$json = MapSchema::json($generator->draw('dungeon')->first(), JSON_PRETTY_PRINT);
+// {"$schema": "urn:tilttek:generator:map:1", "version": 1, "layout": "graph", "nodes": […], "edges": […]}
+```
+
+`MapSchema::export()` gives the same as an array, and refuses with `InvalidDefinition` an array that is not a map a
+generator made. `MapSchema::schema()` gives the JSON Schema (draft 2020-12) of an exported map, which the package also
+ships as `schema/map.v1.json`: a square grid with `x` and `y`, a hex grid with `col`, `row`, `q` and `r`, or a graph of
+nodes with their `id` and of edges as pairs of identifiers; the `value` of a cell or a node is a text or the fields of
+a structured result. `MapSchema::VERSION` is raised, and `MapSchema::ID` with it, whenever an exported map changes in a
+way an older reader would misread; a reader checks `$schema` before it reads the rest.

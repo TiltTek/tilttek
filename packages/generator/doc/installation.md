@@ -22,8 +22,9 @@ use Tilttek\Generator\Generator;
 use Tilttek\Generator\Limits;
 use Tilttek\Generator\Loading\FileLoader;
 
-$generator = new Generator(new FileLoader()->catalog(['config/generators']), new Limits(picks: 200), locale: 'fr');
+$generator = new Generator(new FileLoader()->catalog(['config/generators']), new Limits(picks: 200), locale: 'fr', cache: 'var/cache/generator');
 ```
 
 Building the generator compiles and checks every template of the catalog; build it once and keep it for the request or
-the process.
+the process. With a cache directory, Twig writes the compiled templates to PHP files there and loads them, rather than
+evaluate them with `eval()`.

@@ -55,6 +55,7 @@ final class GeneratorBench
             'generators' => [
                 'npc' => ['templates' => "{{ pick('names', where: {kind: 'even'}) }} {{ pick('titles') }} ({{ roll('3d6') }})"],
                 'word' => ['templates' => "{{ pick('invented', where: {kind: 'even'}) }}"],
+                'loop' => ['templates' => "{% for a in pick('titles', 3) %}{% for b in pick('titles', 3) %}{% set s = a ~ ' ' ~ b %}{{ s|replace({'the': 'a'}) }} {% endfor %}{% endfor %}{{ pick('names', 3)|join(', ', ' and ') }}"],
                 'days' => ['state' => ['day' => ['start' => '1', 'next' => '{{ state.day + 1 }}'], 'title' => ['start' => "{{ pick('titles') }}", 'next' => "{{ pick('titles', not: state.title) }}"]], 'templates' => '{{ state.day }} {{ state.title }}'],
             ],
         ]];
@@ -88,6 +89,20 @@ final class GeneratorBench
     public function benchInvent(): void
     {
         $this->generator->draw('word', new Draw($this->count, $this->unique));
+    }
+
+    /**
+     * Loops whose turns and assignments count as steps, with `replace` and `join` bounded.
+     *
+     * @ParamProviders("draws")
+     *
+     * @Revs(5)
+     *
+     * @Iterations(3)
+     */
+    public function benchLoop(): void
+    {
+        $this->generator->draw('loop', new Draw($this->count, $this->unique));
     }
 
     /**

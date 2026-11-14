@@ -21,6 +21,10 @@ Authorization: Bearer <token>
 | `seed` | A text of 1 to 128 characters, in UTF-8, that makes the same draw come again. |
 | `state` | For a table with a memory, the state its last answer gave, as `state[day]=3&state[season]=winter`: at most 32 names to texts of at most 1024 characters, in UTF-8. |
 
+The answer gives the attributions of the lists, entries and generators its results used, when they have any, each as
+the texts it has: `"attributions": [{"source": "Old tables", "licence": "CC-BY-4.0", "attribution": "Tables by A. Author"}]`;
+a client shows them with the results.
+
 A table with a memory answers its new state with its results — `"state": {"day": "4", "season": "winter"}` — and the
 client sends it back with its next draw. The API keeps no state: a site that wants the bundle to keep it calls
 `MemoryTables` in its own controller, behind its own access rules ([Tables with a memory](memory.md)).

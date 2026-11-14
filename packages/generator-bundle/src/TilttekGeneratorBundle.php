@@ -31,7 +31,8 @@ use Tilttek\GeneratorBundle\Infrastructure\DependencyInjection\PublicRateLimiter
  * ```
  *
  * The lists and the generators are read from the files of the paths — and the library's random tables, when asked —
- * and kept in the cache; the generator checks them on first use. The tables with a memory keep their states in a cache
+ * and kept in the cache; the generator checks them on first use, and Twig compiles their templates into files of the
+ * cache, which it loads rather than evaluates. The tables with a memory keep their states in a cache
  * pool, in memory, or in a store of the application, behind a lock when one is named. The draw API is off until it is
  * enabled, and opens only the generators named, to anyone or to the clients that show their token, under the rate
  * limits of `framework.rate_limiter`: the public draws are limited by address by default, sixty a minute.
@@ -39,6 +40,11 @@ use Tilttek\GeneratorBundle\Infrastructure\DependencyInjection\PublicRateLimiter
 final class TilttekGeneratorBundle extends AbstractBundle
 {
     public const string CONTROLLERS_DIR = __DIR__.'/../assets/src';
+
+    /**
+     * The default directory of Twig's compiled templates.
+     */
+    public const string TWIG_CACHE = '%kernel.cache_dir%/tilttek_generator/twig';
 
     #[Override]
     protected string $extensionAlias = 'tilttek_generator';
@@ -77,11 +83,22 @@ final class TilttekGeneratorBundle extends AbstractBundle
                         ->integerNode('results')->min(1)->defaultValue(100)->end()
                         ->integerNode('cells')->min(1)->defaultValue(2500)->end()
                         ->integerNode('draw_milliseconds')->info('The time of a whole draw: every result, and every attempt of a unique draw.')->min(1)->defaultValue(1000)->end()
+                        ->integerNode('steps')->info('The turns of every loop and the assignments of one result.')->min(1)->defaultValue(10_000)->end()
+                        ->integerNode('bytes')->info('The longest text a replace or a join returns, in bytes.')->min(1)->defaultValue(65_536)->end()
+                        ->integerNode('megabytes')->info('The memory one result may grow by, checked at each step.')->min(1)->defaultValue(16)->end()
                     ->end()
                 ->end()
-                ->booleanNode('cache')
-                    ->info("Keeps Twig's compiled templates in the cache directory.")
-                    ->defaultTrue()
+                ->scalarNode('cache')
+                    ->info("The directory of Twig's compiled templates, loaded from their files rather than by eval().")
+                    ->defaultValue(self::TWIG_CACHE)
+                    ->beforeNormalization()
+                        ->ifTrue(static fn (mixed $cache): bool => true === $cache)
+                        ->then(static fn (): string => self::TWIG_CACHE)
+                    ->end()
+                    ->validate()
+                        ->ifTrue(static fn (mixed $cache): bool => !\is_string($cache) || '' === trim($cache))
+                        ->thenInvalid('The Twig cache is a directory: templates compiled without one would be loaded by eval().')
+                    ->end()
                 ->end()
                 ->booleanNode('tables')
                     ->info("Loads the library's random tables too, named table.<name>.")
@@ -176,7 +193,7 @@ final class TilttekGeneratorBundle extends AbstractBundle
     #[Override]
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        /** @var array{paths: ?list<string>, locale: string, aspirated: list<string>, stressed_a: list<string>, limits: array{depth: int, picks: int, milliseconds: int, attempts: int, results: int, cells: int, draw_milliseconds: int}, cache: bool, tables: bool, tables_locale: string, state: array{store: string, pool: string, lock: ?string}, api: array{enabled: bool, max_count: int, public: list<string>, rate_limiter: ?string, public_limit: array{limit: int, interval: string}, clients: array<string, array{token: string, generators: list<string>, rate_limiter: ?string}>}} $config */
+        /** @var array{paths: ?list<string>, locale: string, aspirated: list<string>, stressed_a: list<string>, limits: array{depth: int, picks: int, milliseconds: int, attempts: int, results: int, cells: int, draw_milliseconds: int, steps: int, bytes: int, megabytes: int}, cache: string, tables: bool, tables_locale: string, state: array{store: string, pool: string, lock: ?string}, api: array{enabled: bool, max_count: int, public: list<string>, rate_limiter: ?string, public_limit: array{limit: int, interval: string}, clients: array<string, array{token: string, generators: list<string>, rate_limiter: ?string}>}} $config */
         GeneratorServices::register($builder, $config);
     }
 }
