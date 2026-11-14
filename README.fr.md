@@ -19,6 +19,7 @@ ensuite copié dans son propre dépôt, en **lecture seule**, d'où Composer l'i
 |---|---|
 | [`tilttek/dice`](https://github.com/TiltTek/dice) | La notation des dés lue, vérifiée et lancée : réserves, dés gardés et écartés, explosions, relances, succès, lancers vérifiables et rejouables. |
 | [`tilttek/dice-bundle`](https://github.com/TiltTek/dice-bundle) | Des dés dans une application Symfony : limites et dés personnalisés dans la configuration, lancers rejouables dans Doctrine, macros, champ de formulaire, Twig et détail accessible d'un lancer. |
+| [`tilttek/dice-skins`](https://github.com/TiltTek/dice-skins) | L'apparence des dés d'un membre (skins, couleurs, matières et dés possédés) appliquée au lanceur, ses chiffres toujours lisibles, en contraste élevé pour un spectateur qui le demande. |
 | [`tilttek/dice-probability`](https://github.com/TiltTek/dice-probability) | Les probabilités exactes d'une expression de dés, en fractions : distributions, au moins et au plus, moyenne, comparaisons. |
 | [`tilttek/loot-tables`](https://github.com/TiltTek/loot-tables) | Des tables de butin lancées avec n'importe quel dé, tirées d'une façon que chacun peut vérifier, dés physiques compris. |
 | [`tilttek/accessible-dice`](https://github.com/TiltTek/accessible-dice) | Un formulaire de dés accessible pour Symfony, avec ou sans JavaScript : grandes cibles, faces dites par libellé, forme et valeur, résultats annoncés aux lecteurs d'écran. |

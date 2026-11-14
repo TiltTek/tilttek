@@ -19,6 +19,7 @@ then split into its own **read-only** repository, from which Composer installs i
 |---|---|
 | [`tilttek/dice`](https://github.com/TiltTek/dice) | Dice notation parsed, checked and rolled: pools, keep and drop, explosions, rerolls, successes, verifiable and replayable rolls. |
 | [`tilttek/dice-bundle`](https://github.com/TiltTek/dice-bundle) | Dice in a Symfony application: limits and custom dice in configuration, replayable rolls in Doctrine, macros, a form field, Twig and an accessible detail of a roll. |
+| [`tilttek/dice-skins`](https://github.com/TiltTek/dice-skins) | A member's dice appearance — skins, colours, materials and owned dice — applied to the roller, its numbers kept readable, in high contrast for a viewer who asks. |
 | [`tilttek/dice-probability`](https://github.com/TiltTek/dice-probability) | The exact odds of a dice expression, as fractions: distributions, at least and at most, mean, comparisons. |
 | [`tilttek/loot-tables`](https://github.com/TiltTek/loot-tables) | Loot tables rolled with any die, drawn in a way anyone can verify, physical dice included. |
 | [`tilttek/accessible-dice`](https://github.com/TiltTek/accessible-dice) | An accessible dice form for Symfony, with or without JavaScript: large targets, faces spoken by label, shape and value, results announced to screen readers. |
