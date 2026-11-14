@@ -219,6 +219,40 @@ final class BudgetTest extends TestCase
         }
     }
 
+    public function testReplaceDoesNotCountWhatItShortens(): void
+    {
+        // Forty bytes; 'x' shortens each of them, 'xx' grows each of its twenty occurrences by four: 40 + 80.
+        $this->expectExceptionObject(LimitExceeded::of('bytes made by "replace"', 100));
+
+        $this->generator("{{ '".str_repeat('x', 40)."'|replace({'x': '', 'xx': 'xxxxxx'}) }}", new Limits(bytes: 100))->draw('g');
+    }
+
+    public function testJoinWritesItsValuesAsTexts(): void
+    {
+        self::assertSame('a and b', $this->generator("{{ {x: 'a', y: 'b'}|join(', ', ' and ') }}")->draw('g')->first());
+        self::assertSame('', $this->generator("{{ []|join(', ', ' and ') }}")->draw('g')->first());
+        self::assertSame('1.5, 1', $this->generator("{{ [1.5, true]|join(', ') }}")->draw('g')->first());
+
+        try {
+            $this->generator("{{ ['a', none]|join('-') }}")->draw('g');
+            self::fail('A null was joined.');
+        } catch (GenerationFailed $generationFailed) {
+            self::assertStringContainsString('A text is expected, not null.', $generationFailed->getMessage());
+        }
+    }
+
+    public function testTheNameOfAVariableGivenToAGeneratorEndsAtItsEnd(): void
+    {
+        $generator = Catalogs::generator([], [
+            'g' => ['templates' => "{{ generate('h', with: {\"a\\n\": 1}) }}"],
+            'h' => ['templates' => 'x'],
+        ]);
+
+        $this->expectException(GenerationFailed::class);
+
+        $generator->draw('g');
+    }
+
     public function testTheStepsComeAfterTheSandbox(): void
     {
         self::assertSame(10, new StepVisitor()->getPriority());

@@ -67,9 +67,9 @@ final readonly class TableParser
     /**
      * A section's name as the library names it: in lower case, its spaces read as hyphens.
      */
-    public function name(string $name, string $at): string
+    private function name(string $name, string $at): string
     {
-        $name = (string) preg_replace('/\s+/', '-', mb_strtolower(trim($name)));
+        $name = (string) preg_replace('/\s+/', '-', mb_strtolower($name));
 
         if (!Reader::isName($this->prefix.$name)) {
             throw InvalidDefinition::at($at, \sprintf('"%s" is not a name: letters, digits, "_" and "-", in parts joined by dots', $name));
@@ -170,7 +170,7 @@ final readonly class TableParser
      */
     private function uncomment(string $line): string
     {
-        return 1 === preg_match('/(^|[ \t])\/\//', $line, $match, \PREG_OFFSET_CAPTURE) ? substr($line, 0, $match[0][1]) : $line;
+        return 1 === preg_match('/(?:^|[ \t])\/\//', $line, $match, \PREG_OFFSET_CAPTURE) ? substr($line, 0, $match[0][1]) : $line;
     }
 
     /**
@@ -233,7 +233,7 @@ final readonly class TableParser
             array_push($segments, ...$this->plain($plain));
             $plain = '';
             $segments[] = match ($character) {
-                '\\' => new Text($position < $length ? $text[$position++] : '\\', true),
+                '\\' => new Text($position < $length ? $text[$position++] : '\\'),
                 '[' => $this->reference($text, $position, $at),
                 default => $this->brace($text, $position, $depth + 1, $at),
             };
@@ -287,21 +287,21 @@ final readonly class TableParser
         $inside = trim(substr($text, $position, $close - $position));
         $position = $close + 1;
 
-        if (1 !== preg_match('/^([^.\[\]{}()]+?)(?:\s*\.\s*(selectUnique|selectMany)\s*\(\s*(\d{1,3})\s*\))?$/D', $inside, $match)) {
+        if (1 !== preg_match('/^(?<name>[^.\[\]{}()]+?)(?:\s*\.\s*(?<method>selectUnique|selectMany)\s*\(\s*(?<count>\d{1,3})\s*\))?$/D', $inside, $match)) {
             throw InvalidDefinition::at($at, \sprintf('"[%s]" is not supported: a reference is [name], [name.selectUnique(n)] or [name.selectMany(n)]', $inside));
         }
 
-        if (!isset($match[3])) {
-            return new Reference($this->name($match[1], $at));
+        if (!isset($match['method'], $match['count'])) {
+            return new Reference($this->name($match['name'], $at));
         }
 
-        $count = (int) $match[3];
+        $count = (int) $match['count'];
 
         if ($count < 1 || $count > self::MAX_SELECT) {
             throw InvalidDefinition::at($at, \sprintf('a selection takes from 1 to %d entries', self::MAX_SELECT));
         }
 
-        return new Reference($this->name($match[1], $at), $match[2], $count);
+        return new Reference($this->name($match['name'], $at), $match['method'], $count);
     }
 
     /**
@@ -311,14 +311,16 @@ final readonly class TableParser
     {
         $close = strpos($text, '}', $position);
 
-        if (false !== $close && 1 === preg_match('/^\s*(\d{1,9})\s*-\s*(\d{1,9})\s*$/D', substr($text, $position, $close - $position), $match)) {
+        if (false !== $close && 1 === preg_match('/^\s*(?<min>\d{1,9})\s*-\s*(?<max>\d{1,9})\s*$/D', substr($text, $position, $close - $position), $match)) {
             $position = $close + 1;
+            $min = (int) $match['min'];
+            $max = (int) $match['max'];
 
-            if ((int) $match[1] > (int) $match[2]) {
-                throw InvalidDefinition::at($at, \sprintf('the range {%s-%s} is empty', $match[1], $match[2]));
+            if ($min > $max) {
+                throw InvalidDefinition::at($at, \sprintf('the range {%d-%d} is empty', $min, $max));
             }
 
-            return new Range((int) $match[1], (int) $match[2]);
+            return new Range($min, $max);
         }
 
         $branches = [];
@@ -349,7 +351,7 @@ final readonly class TableParser
     {
         $last = array_last($segments);
 
-        if (!$last instanceof Text || $last->kept) {
+        if (!$last instanceof Text) {
             return new Branch($segments);
         }
 

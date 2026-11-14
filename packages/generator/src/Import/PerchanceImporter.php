@@ -155,8 +155,8 @@ final readonly class PerchanceImporter
     }
 
     /**
-     * Weights as whole numbers in the same proportions: scaled by the most digits after the point, at most three, then
-     * divided by their greatest common divisor.
+     * Weights as whole numbers in the same proportions: scaled by the digits after the point they keep, then divided by
+     * their greatest common divisor.
      *
      * @param non-empty-list<string> $weights
      *
@@ -164,8 +164,7 @@ final readonly class PerchanceImporter
      */
     private function weights(array $weights): array
     {
-        $decimals = min(self::WEIGHT_DECIMALS, max(array_map(static fn (string $weight): int => str_contains($weight, '.') ? \strlen($weight) - (int) strpos($weight, '.') - 1 : 0, $weights)));
-        $scaled = array_map(static fn (string $weight): int => max(1, (int) round((float) $weight * 10 ** $decimals)), $weights);
+        $scaled = array_map(static fn (string $weight): int => max(1, (int) round((float) $weight * 10 ** self::WEIGHT_DECIMALS)), $weights);
         $divisor = array_reduce($scaled, static function (int $carry, int $weight): int {
             while (0 !== $weight) {
                 [$carry, $weight] = [$weight, $carry % $weight];
@@ -227,7 +226,7 @@ final readonly class PerchanceImporter
         return match ($reference->method) {
             null => $call.')',
             'selectUnique' => $call.', '.$reference->count.")|join(', ')",
-            default => '['.implode(', ', array_fill(0, $reference->count, $call.')'))."]|join(', ')",
+            default => '['.implode(', ', array_pad([], $reference->count, $call.')'))."]|join(', ')",
         };
     }
 

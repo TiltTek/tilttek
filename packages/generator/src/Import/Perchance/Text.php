@@ -12,7 +12,7 @@ namespace Tilttek\Generator\Import\Perchance;
  */
 final readonly class Text
 {
-    public function __construct(public string $text, public bool $kept = false)
+    public function __construct(public string $text)
     {
     }
 }

@@ -150,18 +150,14 @@ final class Producer
         $started = $this->timer->now();
         $this->credits = [];
 
-        try {
-            if ($definition->hasState()) {
-                return $this->remember($definition, $draw, $randomizer, $started);
-            }
-
-            $make = fn (): mixed => $this->once($randomizer, fn (): mixed => $this->produce($definition), $started);
-            $results = $draw->unique ? $this->distinct($draw->count, $make) : array_map(static fn (): mixed => $make(), range(1, $draw->count));
-
-            return new DrawResult($name, $results, $draw->count, attributions: $this->credits());
-        } finally {
-            $this->credits = [];
+        if ($definition->hasState()) {
+            return $this->remember($definition, $draw, $randomizer, $started);
         }
+
+        $make = fn (): mixed => $this->once($randomizer, fn (): mixed => $this->produce($definition), $started);
+        $results = $draw->unique ? $this->distinct($draw->count, $make) : array_map(static fn (): mixed => $make(), range(1, $draw->count));
+
+        return new DrawResult($name, $results, $draw->count, attributions: $this->credits());
     }
 
     /**

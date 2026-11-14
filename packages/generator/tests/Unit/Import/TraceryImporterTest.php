@@ -155,6 +155,11 @@ final class TraceryImporterTest extends TestCase
         yield 'an action in a value' => ['{"origin": "[a:[b:c]]"}', "tracery > origin: an action inside an action's value is not supported"];
         yield 'a tag with an action in a value' => ['{"origin": "[a:#[b:c]d#]", "d": "x"}', "tracery > origin: an action inside an action's value is not supported"];
         yield 'too deep a nesting' => ['{"origin": "'.str_repeat('[a:', 17).str_repeat(']', 17).'"}', 'tracery > origin > 0: actions and tags nest at most 16 deep'];
+        yield 'a scalar' => ['3', 'tracery: a grammar is an object of 1 to 4096 symbols'];
+        yield 'a text' => ['"a"', 'tracery: a grammar is an object of 1 to 4096 symbols'];
+        yield 'too deep a JSON' => ['{"origin": [[["a"]]]}', 'tracery: Maximum stack depth exceeded'];
+        yield 'a symbol unknown in an action value' => ['{"origin": "[a:#nope#]"}', 'tracery > origin: the symbol "nope" does not exist'];
+        yield 'an action in the value of a tag in an action, with its variable read elsewhere' => ['{"origin": "[a:#[b:c]d#]", "d": "x", "other": "#b#"}', "tracery > origin: an action inside an action's value is not supported"];
     }
 
     #[DataProvider('refusals')]
@@ -185,6 +190,104 @@ final class TraceryImporterTest extends TestCase
         $this->expectExceptionObject(InvalidDefinition::at('tracery > origin', 'a symbol is a name of letters, digits, "_" and "-"'));
 
         new TraceryImporter('bad prefix.')->import('{"origin": "a"}');
+    }
+
+    public function testAPlainSymbolToStartFromMadeOfDigitsIsAGenerator(): void
+    {
+        $imported = new TraceryImporter(start: '1')->import('{"1": "x"}');
+
+        self::assertSame(['generators' => ['1' => ['locale' => 'en', 'templates' => ['x']]]], $imported->document);
+    }
+
+    public function testThePrefixIsPutBeforeEveryName(): void
+    {
+        $imported = new TraceryImporter('p.')->import('{"origin": "#sub# #animal#", "sub": "#animal#!", "animal": ["owl"]}');
+
+        self::assertSame([
+            'generators' => [
+                'p.origin' => ['locale' => 'en', 'templates' => ["{{ generate('p.sub') }} {{ pick('p.animal') }}"]],
+                'p.sub' => ['locale' => 'en', 'templates' => ["{{ pick('p.animal') }}!"]],
+            ],
+            'lists' => ['p.animal' => ['entries' => ['owl']]],
+        ], $imported->document);
+        self::assertSame('owl! owl', new Generator($imported->catalog())->draw('p.origin')->first());
+    }
+
+    public function testAGrammarMayHoldTheBoundInBytes(): void
+    {
+        $json = '{"origin": "'.str_repeat('a', TraceryImporter::MAX_BYTES - 14).'"}';
+        self::assertSame(TraceryImporter::MAX_BYTES, \strlen($json));
+
+        self::assertSame('origin', new TraceryImporter()->import($json)->start);
+    }
+
+    public function testAGrammarMayHoldTheMostSymbolsAndRules(): void
+    {
+        $symbols = ['origin' => 'a'];
+        for ($index = 1; $index < TraceryImporter::MAX_SYMBOLS; ++$index) {
+            $symbols['s'.$index] = 'a';
+        }
+
+        self::assertCount(TraceryImporter::MAX_SYMBOLS, $symbols);
+        self::assertSame('origin', new TraceryImporter()->import(json_encode($symbols, \JSON_THROW_ON_ERROR))->start);
+
+        $rules = array_fill(0, TraceryImporter::MAX_SYMBOLS, 'a');
+        self::assertCount(TraceryImporter::MAX_SYMBOLS, Documents::templates(new TraceryImporter()->import(json_encode(['origin' => $rules], \JSON_THROW_ON_ERROR)), 'origin'));
+    }
+
+    public function testAnActionHasAsManyValuesAsItIsGiven(): void
+    {
+        self::assertSame(["{% set v_x = ['a', 'b', 'c'][between(0, 2)] %}{{ v_x }}"], Documents::templates(new TraceryImporter()->import('{"origin": "[x:a,b,c]#x#"}'), 'origin'));
+    }
+
+    public function testActionsAndTagsNestSixteenDeep(): void
+    {
+        $parser = new RuleParser();
+
+        self::assertCount(1, $parser->parse(str_repeat('[a:', 16).'x'.str_repeat(']', 16), 'at'));
+        self::assertCount(1, $parser->parse(str_repeat('#[a:', 8).'x'.str_repeat(']#', 8), 'at'));
+
+        foreach ([str_repeat('[a:', 17).'x'.str_repeat(']', 17), str_repeat('#[a:', 9).'x'.str_repeat(']#', 9), str_repeat('#', 1).str_repeat('[a:#', 16).'x'.str_repeat(']#', 16)] as $rule) {
+            try {
+                $parser->parse($rule, 'at');
+                self::fail('A rule nested too deep was read.');
+            } catch (InvalidDefinition $invalidDefinition) {
+                self::assertSame('at: actions and tags nest at most 16 deep', $invalidDefinition->getMessage());
+            }
+        }
+    }
+
+    public function testAGeneratorReceivesWhatEveryGeneratorItDrawsReads(): void
+    {
+        $imported = new TraceryImporter()->import('{"origin": "[hero:a][place:b][tail:c]#story#", "story": "#hero# #moral# #end#", "moral": "#place#", "end": "#tail#"}');
+
+        self::assertSame(["{{ v_hero }} {{ generate('moral', with: {v_place: v_place}) }} {{ generate('end', with: {v_tail: v_tail}) }}"], Documents::templates($imported, 'story'));
+        self::assertSame(["{% set v_hero = 'a' %}{% set v_place = 'b' %}{% set v_tail = 'c' %}{{ generate('story', with: {v_hero: v_hero, v_place: v_place, v_tail: v_tail}) }}"], Documents::templates($imported, 'origin'));
+        self::assertSame('a b c', new Generator($imported->catalog())->draw('origin')->first());
+    }
+
+    public function testEveryCallerOfAGeneratorReceivesWhatItReads(): void
+    {
+        $imported = new TraceryImporter()->import('{"origin": "[v:x]#a# #c#", "a": "#b#", "c": "#b#", "b": "#v#"}');
+
+        self::assertSame(["{{ generate('b', with: {v_v: v_v}) }}"], Documents::templates($imported, 'a'));
+        self::assertSame(["{{ generate('b', with: {v_v: v_v}) }}"], Documents::templates($imported, 'c'));
+        self::assertSame('x x', new Generator($imported->catalog())->draw('origin')->first());
+    }
+
+    public function testGeneratorsThatDrawEachOtherAreRead(): void
+    {
+        $imported = new TraceryImporter()->import('{"origin": "#a#", "a": ["x#b#", "y"], "b": ["z#a#"]}');
+
+        self::assertSame(['x{{ generate(\'b\') }}', 'y'], Documents::templates($imported, 'a'));
+    }
+
+    public function testTheVariablesAreGivenByName(): void
+    {
+        $imported = new TraceryImporter()->import('{"origin": "[1:x][z:y][b:w]#a#", "a": "#z##b##1#"}');
+
+        self::assertSame("{% set v_1 = 'x' %}{% set v_z = 'y' %}{% set v_b = 'w' %}{{ generate('a', with: {v_1: v_1, v_b: v_b, v_z: v_z}) }}", Documents::templates($imported, 'origin')[0]);
+        self::assertSame('ywx', new Generator($imported->catalog())->draw('origin')->first());
     }
 
     /**

@@ -36,6 +36,14 @@ final class MapSchemaTest extends TestCase
         self::assertStringContainsString("\n", MapSchema::json((array) $generator->draw('graph')->first(), \JSON_PRETTY_PRINT));
     }
 
+    public function testTheFlagsAreThoseGivenAndNoOtherByDefault(): void
+    {
+        $map = ['layout' => 'graph', 'nodes' => [['id' => 0, 'value' => '<a>']], 'edges' => []];
+
+        self::assertStringContainsString('"value":"<a>"', MapSchema::json($map));
+        self::assertStringContainsString('"value":"\\u003Ca\\u003E"', MapSchema::json($map, \JSON_HEX_TAG));
+    }
+
     public function testOnlyAMapIsExported(): void
     {
         foreach ([[], ['layout' => 'round', 'width' => 1, 'height' => 1, 'cells' => []], ['layout' => 'square', 'cells' => []], ['layout' => 'graph', 'width' => 1, 'height' => 1, 'cells' => []], ['layout' => 'hex', 'width' => 1, 'height' => 1, 'cells' => [], 'more' => 1]] as $map) {

@@ -29,14 +29,12 @@ final class StepVisitor implements NodeVisitorInterface
     #[Override]
     public function leaveNode(Node $node, Environment $env): Node
     {
-        if ($node instanceof ForNode) {
-            $node->setNode('body', new Nodes([new StepNode($node->getTemplateLine()), $node->getNode('body')]));
-
-            return $node;
-        }
-
         if ($node instanceof SetNode) {
             return new Nodes([$node, new StepNode($node->getTemplateLine())]);
+        }
+
+        if ($node instanceof ForNode) {
+            $node->setNode('body', new Nodes([new StepNode($node->getTemplateLine()), $node->getNode('body')]));
         }
 
         return $node;

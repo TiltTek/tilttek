@@ -176,6 +176,15 @@ final class PerchanceImporterTest extends TestCase
         yield 'none selected' => ["a\n  b\noutput\n  [a.selectUnique(0)]\n", 'perchance > line 4: a selection takes from 1 to 100 entries'];
         yield 'not UTF-8' => ["output\n  \xC3\n", 'perchance: the tables are written in UTF-8'];
         yield 'too deep' => ["output\n  ".str_repeat('{a|', 11).str_repeat('}', 11)."\n", 'perchance > line 2: choices nest at most 10 deep'];
+        yield 'a weight that starts with a letter' => ["output\n  a ^x12\n", 'perchance > line 2: "x12" is not a weight: a positive number of at most 1000000'];
+        yield 'a weight that starts with a point' => ["output\n  a ^.5\n", 'perchance > line 2: ".5" is not a weight: a positive number of at most 1000000'];
+        yield 'a weight that ends with a letter' => ["output\n  a ^12x\n", 'perchance > line 2: "12x" is not a weight: a positive number of at most 1000000'];
+        yield 'a range that starts with a letter' => ["output\n  {x1-6}\n", 'perchance > line 2: a choice has at least two parts: {a|b}'];
+        yield 'a range that ends with a letter' => ["output\n  {1-6x}\n", 'perchance > line 2: a choice has at least two parts: {a|b}'];
+        yield 'a fence that does not start its line' => ["foo ```perhaps\nanimal\n  owl\n", 'perchance > line 1: "foo-```perhaps" is not a name: letters, digits, "_" and "-", in parts joined by dots'];
+        yield 'a fence followed by a word' => ["```perhaps x\nanimal\n  owl\n", 'perchance > line 1: "```perhaps-x" is not a name: letters, digits, "_" and "-", in parts joined by dots'];
+        yield 'a section name in capitals that is not a name' => ["\u{C9}lan\n  a\n", 'perchance > line 1: "élan" is not a name: letters, digits, "_" and "-", in parts joined by dots'];
+        yield 'a reference in capitals that is not a name' => ["output\n  [\u{C9}lan]\n", 'perchance > line 2: "élan" is not a name: letters, digits, "_" and "-", in parts joined by dots'];
     }
 
     #[DataProvider('refusals')]
@@ -211,5 +220,124 @@ final class PerchanceImporterTest extends TestCase
         $this->expectExceptionObject(InvalidDefinition::at('perchance > line 8193', 'the tables have at most 4096 sections'));
 
         new PerchanceImporter()->import($text);
+    }
+
+    public function testASectionMadeOfDigitsDrawnFirstIsAGenerator(): void
+    {
+        $imported = new PerchanceImporter()->import("1\n  x\n");
+
+        self::assertSame('1', $imported->start);
+        self::assertSame(['x'], Documents::templates($imported, '1'));
+        self::assertArrayNotHasKey('lists', $imported->document);
+    }
+
+    public function testThePrefixIsPutBeforeTheNamesOfTheLists(): void
+    {
+        $imported = new PerchanceImporter('t.')->import("animal\n  owl\noutput\n  [animal]\n");
+
+        self::assertSame(['t.animal'], array_keys($imported->document['lists'] ?? []));
+        self::assertSame(["{{ pick('t.animal') }}"], Documents::templates($imported, 't.output'));
+        self::assertSame('owl', new Generator($imported->catalog())->draw('t.output')->first());
+    }
+
+    public function testThePrefixMakesTheNames(): void
+    {
+        $this->expectExceptionObject(InvalidDefinition::at('perchance > line 1', '"a" is not a name: letters, digits, "_" and "-", in parts joined by dots'));
+
+        new PerchanceImporter('bad prefix.')->import("a\n  x\n");
+    }
+
+    public function testALineOfSpacesIsEmpty(): void
+    {
+        self::assertSame(['a', 'b'], Documents::templates(new PerchanceImporter()->import("l\n  a\n   \n  b\n"), 'l'));
+    }
+
+    public function testASectionNameKeepsItsInnerSpacesAsOneHyphen(): void
+    {
+        self::assertSame('a-b', new PerchanceImporter()->import("a  b\n  x\n")->start);
+        self::assertSame('a-b', new PerchanceImporter()->import("A \t B\n  x\n")->start);
+    }
+
+    public function testASectionNamedAgainKeepsItsEntries(): void
+    {
+        self::assertSame(['x', 'z'], Documents::templates(new PerchanceImporter()->import("a\n  x\nb\n  y\na\n  z\n"), 'a'));
+    }
+
+    public function testASectionNamedAgainOrTheTitleDoesNotCountAtTheBound(): void
+    {
+        $sections = implode('', array_map(static fn (int $index): string => 's'.$index."\n  a\n", range(1, PerchanceImporter::MAX_SECTIONS)));
+
+        self::assertSame(['a', 'b'], Documents::templates(new PerchanceImporter()->import($sections."s1\n  b\n"), 's1'));
+        self::assertSame('s1', new PerchanceImporter()->import($sections."title\n  T\n")->start);
+    }
+
+    public function testOnlyLinesThatStartWithAFenceAreFences(): void
+    {
+        self::assertSame(['a ```', 'b'], Documents::templates(new PerchanceImporter()->import("```perhaps\noutput\n  a ```\n  b\n```\n"), 'output'));
+        self::assertSame(['a', '``` x', 'b'], Documents::templates(new PerchanceImporter()->import("```perhaps\noutput\n  a\n  ``` x\n  b\n```\n"), 'output'));
+        self::assertSame(['a'], Documents::templates(new PerchanceImporter()->import("  ~~~PERCHANCE  \noutput\n  a\n  ~~~  \nignored\n  b\n"), 'output'));
+    }
+
+    public function testAReferenceIsTrimmed(): void
+    {
+        $imported = new PerchanceImporter()->import("a\n  x\noutput\n  [ a ] [ a . selectUnique( 2 ) ] [\ta.selectMany(2)\t]\n");
+
+        self::assertSame(["{{ pick('a') }} {{ pick('a', 2)|join(', ') }} {{ [pick('a'), pick('a')]|join(', ') }}"], Documents::templates($imported, 'output'));
+    }
+
+    public function testASelectionTakesFromOneToAHundredEntries(): void
+    {
+        $imported = new PerchanceImporter()->import("a\n  x\noutput\n  [a.selectUnique(1)] [a.selectMany(100)]\n");
+
+        $template = Documents::text(Documents::templates($imported, 'output')[0]);
+        self::assertStringStartsWith("{{ pick('a', 1)|join(', ') }} {{ [pick('a'), ", $template);
+        self::assertSame(100, substr_count($template, "pick('a')"));
+    }
+
+    public function testTheHeaviestWeightIsAMillion(): void
+    {
+        self::assertSame([['template' => 'a', 'weight' => 1_000_000], 'b'], Documents::templates(new PerchanceImporter()->import("output\n  a ^1000000\n  b\n"), 'output'));
+    }
+
+    public function testWeightsAreRoundedToThreeDigits(): void
+    {
+        $imported = new PerchanceImporter()->import("down\n  a ^1.2344\n  b\nup\n  a ^1.2346\n  b\noutput\n  [down][up]\n");
+
+        self::assertSame([['text' => 'a', 'weight' => 617], ['text' => 'b', 'weight' => 500]], Documents::entries($imported, 'down'));
+        self::assertSame([['text' => 'a', 'weight' => 247], ['text' => 'b', 'weight' => 200]], Documents::entries($imported, 'up'));
+    }
+
+    public function testTenChoicesMayNest(): void
+    {
+        $imported = new PerchanceImporter()->import("output\n  ".str_repeat('{a|', 10).'b'.str_repeat('}', 10)."\n");
+
+        self::assertContains(new Generator($imported->catalog())->draw('output')->first(), ['a', 'b']);
+    }
+
+    public function testATrailingBackslashIsKept(): void
+    {
+        self::assertSame('a\\', new Generator(new PerchanceImporter()->import("output\n  a\\\n")->catalog())->draw('output')->first());
+    }
+
+    public function testARangeMayHaveOneNumber(): void
+    {
+        self::assertSame(['{{ between(3, 3) }}'], Documents::templates(new PerchanceImporter()->import("output\n  {3-3}\n"), 'output'));
+        self::assertSame(['{{ between(0, 7) }}'], Documents::templates(new PerchanceImporter()->import("output\n  { 00 - 7 }\n"), 'output'));
+    }
+
+    public function testTheTablesMayHoldTheBound(): void
+    {
+        $text = "output\n  ".str_repeat('a', PerchanceImporter::MAX_BYTES - 9);
+        self::assertSame(PerchanceImporter::MAX_BYTES, \strlen($text));
+
+        self::assertSame('output', new PerchanceImporter()->import($text)->start);
+    }
+
+    public function testBracesAloneAreWrittenAsStrings(): void
+    {
+        self::assertSame("{{ 'a{b' }}", TemplateText::literal('a{b'));
+        self::assertSame("{{ 'a}b' }}", TemplateText::literal('a}b'));
+        self::assertSame('ab', TemplateText::literal('ab'));
+        self::assertSame('', TemplateText::literal(''));
     }
 }
