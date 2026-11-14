@@ -50,7 +50,7 @@ final class Dice
         return new class implements DiceAppearance {
             public function appearance(ResourceReference $member, int $sides): ?DieAppearance
             {
-                return 'member:1' === $member->toString() && 6 === $sides ? new DieAppearance('Ember', '#aa0000', 'resin', 'ember.png') : null;
+                return 'member:1' === $member->toString() && 6 === $sides ? new DieAppearance('Ember', '#aa0000', 'resin', 'ember.png', texture: 'dice/ember.webp') : null;
             }
         };
     }

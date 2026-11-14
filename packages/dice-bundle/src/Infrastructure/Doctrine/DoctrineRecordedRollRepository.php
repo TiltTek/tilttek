@@ -27,6 +27,24 @@ final readonly class DoctrineRecordedRollRepository implements RecordedRollRepos
     }
 
     #[Override]
+    public function getMany(array $ids): array
+    {
+        $ids = array_values(array_unique($ids));
+
+        if ([] === $ids) {
+            return [];
+        }
+
+        $found = [];
+
+        foreach ($this->entityManager->getRepository(RecordedRoll::class)->findBy(['id' => $ids]) as $roll) {
+            $found[$roll->id()] = $roll;
+        }
+
+        return array_values(array_filter(array_map(static fn (string $id): ?RecordedRoll => $found[$id] ?? null, $ids)));
+    }
+
+    #[Override]
     public function save(RecordedRoll $roll): void
     {
         $this->entityManager->persist($roll);
@@ -37,6 +55,12 @@ final readonly class DoctrineRecordedRollRepository implements RecordedRollRepos
     public function ofOwner(ResourceReference $owner, int $limit): array
     {
         return $this->entityManager->getRepository(RecordedRoll::class)->findBy(['owner' => $owner->toString()], ['rolledAt' => 'DESC', 'id' => 'ASC'], $limit);
+    }
+
+    #[Override]
+    public function ofContext(ResourceReference $context, int $limit): array
+    {
+        return $this->entityManager->getRepository(RecordedRoll::class)->findBy(['context' => $context->toString()], ['rolledAt' => 'DESC', 'id' => 'ASC'], $limit);
     }
 
     #[Override]

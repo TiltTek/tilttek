@@ -6,6 +6,7 @@ namespace Tilttek\DiceBundle\Tests\Unit\Infrastructure;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\Index\IndexedColumn;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -34,10 +35,12 @@ final class DoctrineRepositoryTest extends RepositoryTestCase
         $table = $schema->getTable(RecordedRoll::TABLE);
         self::assertSame(['id'], $table->getPrimaryKey()?->getColumns());
         self::assertSame(
-            ['id' => [32, true], 'expression' => [null, true], 'seed' => [64, true], 'result' => [null, true], 'owner' => [320, false], 'rolled_at' => [null, true], 'rounding' => [32, true]],
+            ['id' => [32, true], 'expression' => [null, true], 'seed' => [64, true], 'result' => [null, true], 'owner' => [320, false], 'rolled_at' => [null, true], 'rounding' => [32, true], 'context' => [320, false]],
             array_merge(...array_map(static fn (Column $column): array => [$column->getName() => [$column->getLength(), $column->getNotnull()]], $table->getColumns())),
         );
-        self::assertSame(['owner'], $table->getIndex('tilttek_dice_roll_owner')->getColumns());
+        $columns = static fn (string $index): array => array_map(static fn (IndexedColumn $column): string => $column->getColumnName()->getIdentifier()->getValue(), $table->getIndex($index)->getIndexedColumns());
+        self::assertSame(['owner'], $columns('tilttek_dice_roll_owner'));
+        self::assertSame(['context', 'rolled_at'], $columns('tilttek_dice_roll_context'));
     }
 
     #[Override]

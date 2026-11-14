@@ -15,10 +15,13 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\FormFactoryInterface;
 use Tilttek\DiceBundle\Application\DiceMacros;
 use Tilttek\DiceBundle\Application\DiceRolls;
+use Tilttek\DiceBundle\Application\Event\RollRecorded;
 use Tilttek\DiceBundle\Application\MacroShelves;
 use Tilttek\DiceBundle\Domain\MacroLevel;
+use Tilttek\DiceBundle\Domain\Model\RecordedRoll;
 use Tilttek\DiceBundle\Domain\Repository\RecordedRollRepository;
 use Tilttek\DiceBundle\Infrastructure\Form\DiceExpressionType;
+use Tilttek\DiceBundle\Tests\Functional\App\HeardRolls;
 use Tilttek\DiceBundle\Tests\Functional\App\TestKernel;
 use Tilttek\DiceBundle\TilttekDiceBundle;
 use Twig\Environment;
@@ -63,6 +66,18 @@ final class DiceBundleTest extends KernelTestCase
         self::assertSame(1, $dice->eraseOwner($member));
     }
 
+    public function testARollMadeAtATableIsAnnouncedAndListed(): void
+    {
+        $dice = $this->service(DiceRolls::class, DiceRolls::class);
+        $table = ResourceReference::of('table', '7');
+        $recorded = $dice->rollReplayable('1d20', ResourceReference::of('member', '1'), context: $table);
+        $this->service('doctrine.orm.entity_manager', EntityManagerInterface::class)->clear();
+
+        self::assertEquals([new RollRecorded($recorded->id(), ResourceReference::of('member', '1'), $table)], $this->service(HeardRolls::class, HeardRolls::class)->events);
+        self::assertSame([$recorded->id()], array_map(static fn (RecordedRoll $roll): string => $roll->id(), $dice->rollsIn($table, 10)));
+        self::assertSame([$recorded->id()], array_map(static fn (RecordedRoll $roll): string => $roll->id(), $dice->recorded([$recorded->id()])));
+    }
+
     public function testMacrosAreKeptInDoctrineAndResolved(): void
     {
         $macros = $this->service(DiceMacros::class, DiceMacros::class);
@@ -83,7 +98,7 @@ final class DiceBundleTest extends KernelTestCase
 
         self::assertStringStartsWith('2W6+1|/r 4d6ro1|none|dropped', $html);
         self::assertStringContainsString('<code class="tilttek-dice-notation">1d20</code>', $html);
-        self::assertStringContainsString('data-dice-appearance="Moss" data-dice-material="glass" style="--tilttek-dice-color: #2e8b57"', $html);
+        self::assertStringContainsString('data-dice-appearance="Moss" data-dice-material="glass" style="--tilttek-dice-color: #2e8b57; --tilttek-dice-ink: #000000"', $html);
     }
 
     public function testTheFormFieldIsCheckedByItsConstraint(): void

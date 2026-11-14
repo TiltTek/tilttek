@@ -4,10 +4,11 @@
 
 tilttek/dice-bundle integrates `tilttek/dice` with Symfony. It builds the library from the configuration — its limits,
 the custom dice of the application, the notations of more languages —, rolls from a secure source, keeps replayable
-rolls in a Doctrine journal and replays them, keeps the macros of a site, a table and a member, makes verifiable rolls,
-and gives a form field with its constraint, Twig filters and functions, and an accessible detail of a roll. An extension point dresses a member's dice with the
-appearance of a set they own. It does not animate dice, draw the roller's page, decide who may roll, nor own any dice
-set: the application does.
+rolls in a Doctrine journal — by member and by table, each one announced by an event — and replays them, keeps the
+macros of a site, a table and a member, makes verifiable rolls, and gives a form field with its constraint, Twig
+filters and functions, and an accessible detail of a roll. An extension point dresses a member's dice with the
+appearance of a set they own — colour, ink, material, texture —, and the numbers always read on it. It does not animate
+dice, draw the roller's page, decide who may roll, nor own any dice set: the application does.
 
 It is for Symfony applications that roll dice for their members: a dice roller page, a play-by-post forum, a character
 sheet, a game table. An application without Symfony takes `tilttek/dice` alone.
@@ -17,8 +18,8 @@ registered only when Symfony Form, Validator and Twig are installed. A member is
 `phil/resource`: the bundle reads no name, address or account.
 
 The design is small: the bundle class reads the configuration, `DiceServices` registers the services, `DiceRolls` is the
-service the application calls, `DiceMacros` keeps and resolves macros, `RecordedRoll` is a row of the journal, and
-`DiceAppearance` is the port that dresses a member's dice.
+service the application calls, `DiceMacros` keeps and resolves macros, `RecordedRoll` is a row of the journal,
+`RollRecorded` announces it, and `DiceAppearance` is the port that dresses a member's dice.
 
 ## Status
 
@@ -26,9 +27,10 @@ service the application calls, `DiceMacros` keeps and resolves macros, `Recorded
 |---|---|
 | Configuration: limits, custom dice, notations, appearance, translation domain, store, entity manager | Implemented and tested |
 | `DiceRolls`: parse, read DiceParser, write, translate, roll, replayable rolls, replay, verifiable rolls and verification, a member's rolls and their erasure | Implemented and tested |
-| Journal of replayable rolls in Doctrine, or in memory | Implemented and tested |
+| Journal of replayable rolls in Doctrine, or in memory: context of a roll, rolls by owner, by context and many at once | Implemented and tested |
+| `RollRecorded` event | Implemented and tested |
 | `DiceMacros`: macros of a site, a table and a member, named by token, in Doctrine or in memory | Implemented and tested |
-| `DiceAppearance` extension point | Implemented and tested |
+| `DiceAppearance` extension point: colour, ink, material, image, texture; an ink that reads at 4.5:1 when none is given | Implemented and tested |
 | `DiceExpression` constraint and `DiceExpressionType` field | Implemented and tested |
 | Twig: `dice_notation`, `dice_dialect`, `dice_roll`, `dice_roll_detail`, `dice_text` | Implemented and tested |
 | Dialects added by tag | Implemented and tested |
@@ -39,14 +41,15 @@ service the application calls, `DiceMacros` keeps and resolves macros, `Recorded
 |---|---|
 | [Installation](doc/installation.md) | Requirements, registering the bundle, the journal's table. |
 | [Configuration](doc/configuration.md) | Every option of `tilttek_dice`, with its default. |
-| [Rolling](doc/rolling.md) | `DiceRolls`: plain, replayable and verifiable rolls, the journal, erasing a member's rolls. |
+| [Rolling](doc/rolling.md) | `DiceRolls`: plain, replayable and verifiable rolls, the journal and its contexts, erasing a member's rolls. |
 | [Macros](doc/macros.md) | `DiceMacros`: the shelves of a site, a table and a member, defining, resolving and erasing macros. |
 | [Forms and validation](doc/forms.md) | `DiceExpressionType` and the `DiceExpression` constraint. |
 | [Templates](doc/templates.md) | The Twig filters and functions, the detail of a roll, its classes and its words. |
-| [Extension points](doc/extension-points.md) | `DiceAppearance`, dialects by tag, the journal's port. |
+| [Extension points](doc/extension-points.md) | `DiceAppearance` and the readable ink, dialects by tag, the journal's port, `RollRecorded`. |
 | [Exceptions](doc/exceptions.md) | What the bundle raises. |
 | [Testing](doc/testing.md) | The bundle's tests, and how to test an application that rolls dice. |
 | [Reference](doc/reference.md) | Every type of the bundle, with its role. |
+| [Upgrading](doc/upgrading.md) | From 0.1 to 0.2: the context column, the journal's port, the appearance. |
 
 ## Quick start
 

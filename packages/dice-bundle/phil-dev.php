@@ -10,7 +10,7 @@ return [
     'phpstan' => [
         'ignoreErrors' => [
             // à corriger : API de schéma DBAL dépréciée dans les tests (getColumns(), getName(), getPrimaryKey()).
-            ['identifier' => 'method.deprecated', 'path' => 'tests/Unit/Infrastructure/DoctrineRepositoryTest.php', 'count' => 4],
+            ['identifier' => 'method.deprecated', 'path' => 'tests/Unit/Infrastructure/DoctrineRepositoryTest.php', 'count' => 3],
             // à corriger : getName()/getObjectName() appelées sur des classes internes de DBAL dans les tests.
             ['identifier' => 'method.internalClass', 'path' => 'tests/Unit/Infrastructure/DoctrineRepositoryTest.php', 'count' => 1],
             // à corriger : DoctrineExtension est interne à DoctrineBundle, le test doit charger la configuration autrement.

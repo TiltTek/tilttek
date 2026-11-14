@@ -10,7 +10,9 @@
 | `Application\MacroShelves` | The site, the table and the member whose macros an input names |
 | `Application\MacroResolution`, `MacroSession` | Internal: the macros of one input looked for, expanded and counted |
 | `Application\Port\DiceAppearance` | The extension point that dresses a member's dice |
-| `Application\DieAppearance`, `NoDiceAppearance` | An appearance; plain dice |
+| `Application\DieAppearance`, `NoDiceAppearance` | An appearance, with its readable ink; plain dice |
+| `Application\Contrast` | The contrast of two colours as WCAG 2 measures it, and the ink that reads on a face |
+| `Application\Event\RollRecorded` | A replayable roll kept in the journal, by identifiers |
 | `Application\Exception\UnknownRoll` | A replay of a roll the journal does not hold |
 | `Application\Exception\InvalidMacro` | A macro whose name is not one, or whose level has no owner |
 | `Domain\MacroLevel` | Site, table or member |

@@ -26,6 +26,12 @@ final class InMemoryRecordedRollRepository implements RecordedRollRepository
     }
 
     #[Override]
+    public function getMany(array $ids): array
+    {
+        return array_values(array_filter(array_map(fn (string $id): ?RecordedRoll => $this->rolls[$id] ?? null, array_values(array_unique($ids)))));
+    }
+
+    #[Override]
     public function save(RecordedRoll $roll): void
     {
         $this->rolls[$roll->id()] = $roll;
@@ -34,10 +40,13 @@ final class InMemoryRecordedRollRepository implements RecordedRollRepository
     #[Override]
     public function ofOwner(ResourceReference $owner, int $limit): array
     {
-        $rolls = $this->owned($owner);
-        usort($rolls, static fn (RecordedRoll $a, RecordedRoll $b): int => [$b->rolledAt()->getTimestamp(), $a->id()] <=> [$a->rolledAt()->getTimestamp(), $b->id()]);
+        return $this->latest($this->owned($owner), $limit);
+    }
 
-        return \array_slice($rolls, 0, $limit);
+    #[Override]
+    public function ofContext(ResourceReference $context, int $limit): array
+    {
+        return $this->latest(array_filter($this->rolls, static fn (RecordedRoll $roll): bool => true === $roll->context()?->equals($context)), $limit);
     }
 
     #[Override]
@@ -59,6 +68,18 @@ final class InMemoryRecordedRollRepository implements RecordedRollRepository
     public function reset(): void
     {
         $this->rolls = [];
+    }
+
+    /**
+     * @param array<string, RecordedRoll> $rolls
+     *
+     * @return list<RecordedRoll>
+     */
+    private function latest(array $rolls, int $limit): array
+    {
+        usort($rolls, static fn (RecordedRoll $a, RecordedRoll $b): int => [$b->rolledAt()->getTimestamp(), $a->id()] <=> [$a->rolledAt()->getTimestamp(), $b->id()]);
+
+        return \array_slice($rolls, 0, $limit);
     }
 
     /**

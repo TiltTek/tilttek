@@ -6,6 +6,7 @@ namespace Tilttek\DiceBundle\Application;
 
 use Phil\Resource\ResourceReference;
 use Psr\Clock\ClockInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Random\Randomizer;
 use RoundingMode;
 use Tilttek\Dice\Dialect\Translation;
@@ -19,6 +20,7 @@ use Tilttek\Dice\Fairness\Commitment;
 use Tilttek\Dice\Fairness\Seed;
 use Tilttek\Dice\Fairness\VerifiableRoll;
 use Tilttek\Dice\Result\PoolResult;
+use Tilttek\DiceBundle\Application\Event\RollRecorded;
 use Tilttek\DiceBundle\Application\Exception\UnknownRoll;
 use Tilttek\DiceBundle\Application\Port\DiceAppearance;
 use Tilttek\DiceBundle\Domain\Model\RecordedRoll;
@@ -26,8 +28,8 @@ use Tilttek\DiceBundle\Domain\Repository\RecordedRollRepository;
 
 /**
  * The dice of the application: inputs parsed in the reader's notation or read from Rolisteam's DiceParser, pools written in a language or a table's
- * dialect, plain rolls from a secure source, replayable rolls kept in the journal and replayed from it, verifiable
- * rolls by commitment, and the appearance of a member's dice. Each roll takes the rounding of its divisions — down by
+ * dialect, plain rolls from a secure source, replayable rolls kept in the journal — `RollRecorded` dispatched for each
+ * — and replayed from it, verifiable rolls by commitment, and the appearance of a member's dice. Each roll takes the rounding of its divisions — down by
  * default; up for one side and down for the other when a game says so —, which a replay and a verification keep.
  */
 final readonly class DiceRolls
@@ -38,6 +40,7 @@ final readonly class DiceRolls
         private RecordedRollRepository $rolls,
         private ClockInterface $clock,
         private DiceAppearance $appearance = new NoDiceAppearance(),
+        private ?EventDispatcherInterface $events = null,
     ) {
     }
 
@@ -87,19 +90,43 @@ final readonly class DiceRolls
     }
 
     /**
-     * Rolls and keeps the roll in the journal, to be replayed by its identifier.
+     * Rolls and keeps the roll in the journal, to be replayed by its identifier, then dispatches `RollRecorded`.
+     *
+     * @param ?ResourceReference $context where the roll is made — a table, a game —, or nowhere in particular
      *
      * @throws InvalidExpression
      * @throws LimitExceeded
      * @throws CannotRoll
      */
-    public function rollReplayable(Pool|string $pool, ?ResourceReference $owner = null, ?string $locale = null, RoundingMode $rounding = RoundingMode::NegativeInfinity): RecordedRoll
+    public function rollReplayable(Pool|string $pool, ?ResourceReference $owner = null, ?string $locale = null, RoundingMode $rounding = RoundingMode::NegativeInfinity, ?ResourceReference $context = null): RecordedRoll
     {
         $roll = $this->roller->rollReplayable($this->pool($pool, $locale), $this->secure, $rounding);
-        $recorded = RecordedRoll::record($roll, $owner, $this->clock->now());
+        $recorded = RecordedRoll::record($roll, $owner, $this->clock->now(), $context);
         $this->rolls->save($recorded);
+        $this->events?->dispatch(new RollRecorded($recorded->id(), $owner, $context));
 
         return $recorded;
+    }
+
+    /**
+     * The recorded rolls of these identifiers, in the order asked, each once; an identifier the journal does not hold
+     * is skipped.
+     *
+     * @param list<string> $ids
+     *
+     * @return list<RecordedRoll>
+     *
+     * @throws LimitExceeded past `RecordedRollRepository::MANY` identifiers
+     */
+    public function recorded(array $ids): array
+    {
+        $ids = array_values(array_unique($ids));
+
+        if (\count($ids) > RecordedRollRepository::MANY) {
+            throw LimitExceeded::of('rolls read at once', RecordedRollRepository::MANY, \count($ids));
+        }
+
+        return $this->rolls->getMany($ids);
     }
 
     /**
@@ -149,6 +176,16 @@ final readonly class DiceRolls
     public function rollsOf(ResourceReference $owner, int $limit): array
     {
         return $this->rolls->ofOwner($owner, $limit);
+    }
+
+    /**
+     * The rolls made in a context — a table, a game —, the latest first.
+     *
+     * @return list<RecordedRoll>
+     */
+    public function rollsIn(ResourceReference $context, int $limit): array
+    {
+        return $this->rolls->ofContext($context, $limit);
     }
 
     /**

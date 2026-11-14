@@ -41,6 +41,10 @@ bin/console doctrine:migrations:migrate
 | `owner` | `varchar(320)`, null | Who rolled, as a `ResourceReference`; indexed |
 | `rolled_at` | `datetime_immutable` | When |
 | `rounding` | `varchar(32)`, `NegativeInfinity` by default | How the roll's divisions rounded, by the name of PHP's `RoundingMode` |
+| `context` | `varchar(320)`, null | Where the roll was made — a table, a game —, as a `ResourceReference`; indexed with `rolled_at` |
+
+An application that has the table without the `context` column adds it with a migration of its own; the
+[upgrade guide](upgrading.md) gives it.
 
 ## The macros' table
 
