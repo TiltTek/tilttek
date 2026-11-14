@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tilttek\DiceBundle\Tests\Unit\Application;
 
+use ArrayObject;
 use DateTimeImmutable;
+use Override;
 use Phil\Resource\ResourceReference;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -241,6 +243,55 @@ final class DiceRollsTest extends TestCase
 
         self::assertSame([$second, $first], $dice->recorded([$second->id(), 'unknown', $first->id(), $second->id()]));
         self::assertSame([], $dice->recorded([]));
+
+        /** @var ArrayObject<int, list<string>> $asked */
+        $asked = new ArrayObject();
+        $spy = new class($asked) implements RecordedRollRepository {
+            /** @param ArrayObject<int, list<string>> $asked */
+            public function __construct(private readonly ArrayObject $asked)
+            {
+            }
+
+            #[Override]
+            public function get(string $id): ?RecordedRoll
+            {
+                return null;
+            }
+
+            #[Override]
+            public function getMany(array $ids): array
+            {
+                $this->asked->append($ids);
+
+                return [];
+            }
+
+            #[Override]
+            public function save(RecordedRoll $roll): void
+            {
+            }
+
+            #[Override]
+            public function ofOwner(ResourceReference $owner, int $limit): array
+            {
+                return [];
+            }
+
+            #[Override]
+            public function ofContext(ResourceReference $context, int $limit): array
+            {
+                return [];
+            }
+
+            #[Override]
+            public function eraseOwner(ResourceReference $owner): int
+            {
+                return 0;
+            }
+        };
+        Dice::rolls(ScriptedEngine::randomizer(...range(1, 12)), $spy)->recorded(['a', 'a', 'b']);
+        self::assertSame([['a', 'b']], $asked->getArrayCopy());
+
         self::assertCount(1, $dice->recorded([...array_fill(0, RecordedRollRepository::MANY + 1, $first->id())]));
         self::assertSame([$first], $dice->recorded([$first->id(), ...array_map(static fn (int $i): string => \sprintf('%032d', $i), range(1, RecordedRollRepository::MANY - 1))]));
 

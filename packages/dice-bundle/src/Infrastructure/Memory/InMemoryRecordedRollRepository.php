@@ -28,7 +28,7 @@ final class InMemoryRecordedRollRepository implements RecordedRollRepository
     #[Override]
     public function getMany(array $ids): array
     {
-        return array_values(array_filter(array_map(fn (string $id): ?RecordedRoll => $this->rolls[$id] ?? null, array_values(array_unique($ids)))));
+        return array_values(array_filter(array_map(fn (string $id): ?RecordedRoll => $this->rolls[$id] ?? null, array_unique($ids))));
     }
 
     #[Override]

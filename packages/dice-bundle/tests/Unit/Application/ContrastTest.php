@@ -27,6 +27,21 @@ final class ContrastTest extends TestCase
         self::assertEqualsWithDelta(0.08546047599232483, Contrast::luminance('#aa0000'), 1e-15);
     }
 
+    public function testAColourIsWrittenWholeAndNothingElse(): void
+    {
+        $taken = [];
+
+        foreach (['x#aabbcc', '#aabbcc ', '#aabbc', ''] as $colour) {
+            try {
+                Contrast::luminance($colour);
+                $taken[] = $colour;
+            } catch (InvalidDefinition) {
+            }
+        }
+
+        self::assertSame([], $taken);
+    }
+
     public function testTheRatioGoesFromOneToTwentyOneEitherWay(): void
     {
         self::assertSame(21.0, Contrast::ratio('#000000', '#ffffff'));

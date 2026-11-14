@@ -60,7 +60,7 @@ final class Contrast
      */
     private static function linear(string $hex): float
     {
-        $channel = (int) hexdec($hex);
+        $channel = hexdec($hex);
 
         return $channel <= 10 ? $channel / 255 / 12.92 : (($channel / 255 + 0.055) / 1.055) ** 2.4;
     }

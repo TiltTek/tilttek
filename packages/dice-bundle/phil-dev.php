@@ -25,5 +25,23 @@ return [
             ['identifier' => 'symplify.requireAttributeNamespace', 'path' => 'src/Infrastructure/Validator/DiceExpression.php'],
         ],
     ],
+    'infection' => [
+        'mutators' => [
+            // The ink of `Contrast`: of the 16 777 216 colours written #rrggbb, none has a luminance that makes the two
+            // ratios exactly equal (checked over all of them), so `>=` is worth `>` there.
+            'GreaterThanOrEqualTo' => [
+                'ignoreSourceCodeByRegex' => [
+                    'return \\(\\$luminance \\+ 0\\.05\\) / 0\\.05 >= 1\\.05 / \\(\\$luminance \\+ 0\\.05\\) \\? self::BLACK : self::WHITE;',
+                ],
+            ],
+            // The journal of Doctrine reads only the rolls asked, and returns them in the order asked from the map by
+            // identifier: a read of every roll would give the same list, only slower.
+            'ArrayItemRemoval' => [
+                'ignoreSourceCodeByRegex' => [
+                    '.*->findBy\\(\\[\'id\' => \\$ids\\]\\).*',
+                ],
+            ],
+        ],
+    ],
     'docs' => ['public' => true],
 ];

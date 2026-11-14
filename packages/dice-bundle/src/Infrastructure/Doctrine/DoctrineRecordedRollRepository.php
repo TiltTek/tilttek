@@ -29,12 +29,7 @@ final readonly class DoctrineRecordedRollRepository implements RecordedRollRepos
     #[Override]
     public function getMany(array $ids): array
     {
-        $ids = array_values(array_unique($ids));
-
-        if ([] === $ids) {
-            return [];
-        }
-
+        $ids = array_unique($ids);
         $found = [];
 
         foreach ($this->entityManager->getRepository(RecordedRoll::class)->findBy(['id' => $ids]) as $roll) {
