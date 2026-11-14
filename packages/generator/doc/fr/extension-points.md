@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=d4fa97eb369ddf5fa8d0733038eaf3b5bbffd41b20da12797f03d2c413e676ee -->
+<!-- phil-dev source-sha256=04b143fb172f53fc7020fca6e964a23c92c24d362327ea92a6376a7f1bf62ce0 -->
 # Points d'extension
 
 Le `Generator` prend ses collaborateurs dans son constructeur ; chacun a une valeur par défaut et peut être remplacé.
@@ -11,3 +11,5 @@ Le `Generator` prend ses collaborateurs dans son constructeur ; chacun a une val
 | `Random\Randomizer` | un moteur sûr | Le hasard d'un tirage sans germe : un moteur scénarisé ou doté d'un germe dans les tests. |
 | `Tilttek\Dice\DiceRoller` | un `DiceRoller` avec les limites par défaut | Lance les `roll()` des gabarits, avec les dés personnalisés et les notations de l'application. |
 | `Tilttek\Generator\Loading\Reader`, `FileLoader` | — | Transforment des documents et des fichiers en `Catalog` ; une application qui garde ses listes ailleurs construit elle-même le `Catalog`. |
+| `TraceryImporter`, `PerchanceImporter` | — | Transforment les grammaires et les tables d'autres outils en documents ; un importateur d'un autre format écrit les mêmes documents et laisse `Reader` les vérifier. Voyez [Importations](imports.md). |
+| Le répertoire du cache (`$cache`) | `false` | Où Twig écrit les gabarits compilés, chargés de leurs fichiers plutôt que par `eval()`. Voyez [Tirages](drawing.md#limites). |

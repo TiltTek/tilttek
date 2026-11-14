@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=185de0c559487568ed32cef8a7e8215ac8a7a632217bcef5a2447dd94e89b1fa -->
+<!-- phil-dev source-sha256=2672849b36905f5c6a9e671b6cb653fab580568eae7582d5c752a1c363839c03 -->
 # Listes et générateurs
 
 Un catalogue se lit à partir de documents YAML ou JSON décodés. Un document contient des tables `lists` et
@@ -31,7 +31,8 @@ ou deux générateurs du même nom sont une erreur, où qu'ils soient.
 
 Un nom est fait de lettres, de chiffres, de `_` et de `-`, en parties reliées par des points :
 `name.fantasy.elf.female.first`. Les points ne servent qu'à ordonner les noms pour les gens ; la bibliothèque ne les
-lit pas. `Reader::isName()` dit si un texte est un nom.
+lit pas. `Reader::isName()` dit si un texte est un nom. Un nom fait de chiffres seulement, comme `12`, que YAML et JSON décodent
+comme un nombre quand il est une clé, se lit comme un nom.
 
 ## Listes et entrées
 
@@ -49,10 +50,11 @@ lists:
 | `text` | Ce qu'affiche l'entrée. Obligatoire dans une table. |
 | `weight` | Un nombre entier d'au moins 1, 1 par défaut : une entrée de poids 3 revient trois fois plus souvent. |
 | `tags` | Une table d'étiquettes, chacune avec une valeur ou une séquence de valeurs, sur lesquelles filtre `pick(…, where: …)`. |
+| `source`, `licence`, `attribution` | D'où vient cette entrée, quand ce n'est pas d'où vient sa liste ; voyez [D'où vient le texte](#dou-vient-le-texte). |
 | toute autre clé | Un champ : un scalaire ou une séquence de scalaires, lu dans un gabarit comme `entry.price`. |
 
-Une liste peut aussi s'écrire comme une table de ses entrées (`entries`) et de sa chaîne de Markov (`markov`) ; voyez
-[Listes de Markov](#listes-de-markov).
+Une liste peut aussi s'écrire comme une table de ses entrées (`entries`), de sa chaîne de Markov (`markov`) et de son
+origine ; voyez [Listes de Markov](#listes-de-markov) et [D'où vient le texte](#dou-vient-le-texte).
 
 Ce que d'autres générateurs écrivent en intervalles d'index (« les six premiers adjectifs ne vont qu'avec les quatre
 premiers noms ») s'écrit ici avec des étiquettes. Un filtre sur une étiquette qu'aucune entrée de la liste ne porte est
@@ -105,6 +107,7 @@ Un générateur a exactement un corps, et peut avoir une langue, des variables e
 | `vars` | Des gabarits par nom de variable, rendus une fois par résultat, dans l'ordre, avant le corps ; chacun voit les précédents. |
 | `locale` | La langue des filtres de grammaire, comme `fr` ou `en_CA` ; sinon, celle du générateur par défaut. |
 | `state` | Des valeurs portées d'un résultat au suivant : une table à mémoire ; voyez [Tables à mémoire](memory.md). |
+| `source`, `licence`, `attribution` | D'où vient le texte de ses gabarits ; voyez [D'où vient le texte](#dou-vient-le-texte). |
 
 Les champs d'un résultat structuré sont remplis dans l'ordre, et chacun voit les précédents comme des variables :
 
@@ -123,6 +126,33 @@ generators:
 
 Un champ rempli par `generate` garde le résultat de l'autre générateur tel quel (un texte, un résultat structuré, une
 carte), et un nombre donne une liste de résultats différents.
+
+## D'où vient le texte
+
+Une liste, une entrée et un générateur disent d'où vient leur texte par trois textes, chacun facultatif mais au moins
+un donné, chacun de 1 à 1024 caractères en UTF-8 :
+
+| Clé | Signification |
+|---|---|
+| `source` | D'où le texte a été pris : un livre, un site, un ensemble de tables. |
+| `licence` | La licence qui le couvre, de préférence écrite comme un identifiant SPDX tel que `CC-BY-4.0`. |
+| `attribution` | Le crédit que sa licence demande d'afficher, tel qu'il doit être affiché. |
+
+```yaml
+lists:
+  oracle.action:
+    source: The tables of a shared game
+    licence: CC-BY-4.0
+    attribution: Oracle tables by A. Author, CC BY 4.0
+    entries:
+      - seek
+      - { text: defend, source: Another book, licence: CC0-1.0 }
+```
+
+Les textes propres d'une entrée prennent la place de ceux de sa liste. Un tirage donne les attributions de chaque
+liste, entrée et générateur que ses résultats ont utilisés ([Tirages](drawing.md#attributions)), que l'application
+affiche avec eux. Les noms `source`, `licence` et `attribution` ne sont pas des champs d'une entrée. Les importateurs
+donnent une attribution à chaque liste et à chaque générateur qu'ils font ([Importations](imports.md)).
 
 ## Exemples neutres
 
