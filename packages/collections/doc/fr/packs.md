@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=0070c2cf4c49f47f28e6842566a90e3307d0fc39e2056133d10c0bc0dc437b36 -->
+<!-- phil-dev source-sha256=10470c761de6d4b99698b047a5438c30e72ef5363f6f8030b4c7bddcd3f0ff9f -->
 # Paquets
 
 ## Chances publiées
@@ -21,8 +21,10 @@ Un paquet s'ouvre en deux temps, pour que ni le site ni le membre ne puisse choi
 
 L'ouverture réserve sa clé avant de remettre quoi que ce soit : elle est ajoutée sans exemplaires, puis les exemplaires
 sont remis et enregistrés. De deux requêtes qui ouvrent la même clé au même moment, seule celle dont l'ajout a écrit
-remet des exemplaires ; l'autre ne remet rien et renvoie l'ouverture gagnante — ou est refusée, quand la gagnante venait
-d'un autre germe du client. La même ouverture en attente, ouverte de nouveau avec le même germe du client, renvoie
+tire l'ouverture ; l'autre renvoie l'ouverture gagnante, toujours complète — ou est refusée, quand la gagnante venait
+d'un autre germe du client. Quand la gagnante n'a pas encore remis ses exemplaires, ou s'est arrêtée avant, l'autre les
+remet sous les mêmes clés, qui ne remettent chaque exemplaire qu'une fois, de sorte que l'ouverture qu'elle renvoie
+nomme des exemplaires qui existent. La même ouverture en attente, ouverte de nouveau avec le même germe du client, renvoie
 l'ouverture qu'elle a faite, et remet les exemplaires d'une ouverture dont la remise a été interrompue ; une clé qui a
 ouvert un autre paquet, ou pour un autre membre, ou à partir d'un autre germe ou d'un autre germe du client, est
 refusée.

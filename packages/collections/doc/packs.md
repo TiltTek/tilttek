@@ -19,9 +19,10 @@ A pack opens in two steps, so that neither the site nor the member can choose th
    place of the item.
 
 The opening reserves its key before it gives anything: it is added with no copies, then the copies are given and
-recorded. Of two requests that open the same key at the same moment, only the one whose addition wrote gives copies;
-the other gives nothing, and returns the winner's opening — or is refused, when the winner came from another client
-seed. The same pending opening and client seed opened again return the opening they made, and give the copies of one
+recorded. Of two requests that open the same key at the same moment, only the one whose addition wrote draws the
+opening; the other returns the winner's opening, always complete — or is refused, when the winner came from another
+client seed. When the winner has not given its copies yet, or stopped before, the other gives them under the same keys,
+which give each copy once, so that the opening it returns names copies that exist. The same pending opening and client seed opened again return the opening they made, and give the copies of one
 whose giving was interrupted; a key that opened another pack, or for another member, or from another seed or client
 seed, is refused.
 

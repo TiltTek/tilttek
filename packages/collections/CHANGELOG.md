@@ -11,8 +11,8 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 - `Pack\OpeningStore::complete()`: a store records the copies of an opening added without them; a store written for
   0.1 implements it.
 - `Packs::open()` reserves the key, by adding the opening with no copies, before it gives any copy: an opening that
-  loses the race for its key to another at the same moment gives nothing, and returns the winner's opening, or is
-  refused when the winner came from another client seed. The same opening opened again gives the copies of one whose
+  loses the race for its key to another at the same moment returns the winner's opening only complete — giving, under
+  the same keys, the copies the winner had not given yet — or is refused when the winner came from another client seed. The same opening opened again gives the copies of one whose
   giving was interrupted.
 
 ### Added
