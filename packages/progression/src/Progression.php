@@ -170,12 +170,34 @@ final readonly class Progression
     }
 
     /**
-     * The experience gains of the subject, for an export.
+     * The experience gains of the subject.
      *
      * @return list<Experience\Gain>
      */
     public function gains(ResourceReference $subject): array
     {
         return $this->experience->of($subject);
+    }
+
+    /**
+     * The member's experience gains and those their gestures brought to another subject — a character —, for the
+     * member's export: what `erase()` removes.
+     *
+     * @return list<Experience\Gain>
+     */
+    public function gainsOfMember(ResourceReference $member): array
+    {
+        return $this->experience->ofMember($member);
+    }
+
+    /**
+     * The member's milestones and those their gestures reached for another subject — a character —, for the member's
+     * export: what `erase()` removes.
+     *
+     * @return list<ReachedMilestone>
+     */
+    public function milestonesOfMember(ResourceReference $member): array
+    {
+        return $this->milestones->ofMember($member);
     }
 }

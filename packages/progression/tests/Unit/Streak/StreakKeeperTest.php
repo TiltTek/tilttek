@@ -9,6 +9,7 @@ use DateTimeZone;
 use Phil\Resource\ResourceReference;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Tilttek\Progression\Store\InMemoryStreakStore;
 use Tilttek\Progression\Streak\StreakBroken;
 use Tilttek\Progression\Streak\StreakGesture;
@@ -110,6 +111,24 @@ final class StreakKeeperTest extends TestCase
         self::assertSame(['broken daily member:1 2 20760 2026-11-05 00:00'], $this->recorder->told);
         self::assertSame(0, $this->store->state('daily', $this->member)?->current);
         self::assertSame(2, $this->store->state('daily', $this->member)->best);
+    }
+
+    public function testABrokenRunTheObserverFailedToTakeIsToldAgain(): void
+    {
+        $this->record('k1', '2026-11-02 10:00');
+        $this->record('k2', '2026-11-03 10:00');
+        $this->recorder->failures = 1;
+
+        try {
+            $this->keeper->sweep($this->at('2026-11-05 00:00'));
+            self::fail('The observer did not fail.');
+        } catch (RuntimeException) {
+        }
+
+        self::assertSame(2, $this->store->state('daily', $this->member)?->current);
+        self::assertSame(1, $this->keeper->sweep($this->at('2026-11-05 00:00')));
+        self::assertSame(['broken daily member:1 2 20760 2026-11-05 00:00'], $this->recorder->told);
+        self::assertSame(0, $this->store->state('daily', $this->member)?->current);
     }
 
     public function testAKeeperWithoutAnObserver(): void

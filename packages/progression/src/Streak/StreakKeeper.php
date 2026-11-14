@@ -116,7 +116,7 @@ final readonly class StreakKeeper
 
     /**
      * Brings the member's state up to `now`: a run that was alive and is over is told to the observer when
-     * `announce` says so.
+     * `announce` says so, before the state is saved, so that a failed observer is told again by the next refresh.
      *
      * @return bool whether a run broke
      */
@@ -133,12 +133,14 @@ final readonly class StreakKeeper
         }
 
         $status = StreakCalculator::status($rule->name, $units, $this->store->frozen($rule->name, $member), $rule->grace, $rule->unit->index($now, $timezone));
-        $this->store->save(new StreakState($rule->name, $member, $status->current, $status->best, $status->start, $units[\count($units) - 1], $timezone->getName()));
         $broke = $state instanceof StreakState && $state->isAlive() && (null === $status->start || $status->start > $state->lastActive);
 
+        // The observer is told before the state is saved: when it fails, the run kept alive is found broken again.
         if ($broke && $announce) {
             $this->observer?->streakBroken(new StreakBroken($rule->name, $member, $state->current, $state->lastActive, $now));
         }
+
+        $this->store->save(new StreakState($rule->name, $member, $status->current, $status->best, $status->start, $units[\count($units) - 1], $timezone->getName()));
 
         return $broke;
     }

@@ -6,7 +6,21 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
+### Changed
+
+- `DbalExperienceStore` and `DbalMilestoneStore` implement the notices of `tilttek/progression` 0.2: a `delivered`
+  column on `tilttek_progression_gain` and `tilttek_progression_milestone`, true by default for the rows already there,
+  false on insertion and turned true once the observer was told; `ofMember()` reads a member's rows for the export.
+  An existing table gains the column through the application's next migration.
+- `LevelUp`, `ReachedMilestone` and `StreakBroken` are dispatched at least once: a listener that failed is called again
+  when the projection is handed the entry again, with the subject's next activity, or through
+  `ProgressionProjection::deliver()`. Listeners must be idempotent.
+- The bundle requires `tilttek/progression` `^0.2@dev`.
+
 ### Fixed
+
+- The export of a member lists the gains and the milestones their gestures brought to a character, which the erasure
+  already deleted.
 
 - `ProgressionPrivacy` implements `Phil\PrivacyBundle\Application\Contract\PersonalDataExporter` and `PersonalDataEraser`,
   the interfaces `phil/privacy-bundle` exposes, and the bundle registers it when they exist: the export and the

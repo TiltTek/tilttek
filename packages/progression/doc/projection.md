@@ -17,6 +17,21 @@ For each track whose rules match, by name, and whose subject the activity has:
 For each streak whose rule matches, the member's unit — in their timezone — is made active and the streak's state
 brought up to the moment the journal wrote the entry: a run found over is told.
 
+## Notices given at least once
+
+A gain is written with its notice due, and each milestone it passes is reached with its notice due, before the
+observer is told; each is noted delivered once the observer was told. When the observer throws, the exception reaches
+the journal and the notices stay due. They are given again when the entry is handed again — the request repeated
+under the same idempotency key, or the next catch-up —, with the subject's next activity on the track, or by
+`$projection->deliver($subject)`, which returns how many gains and milestones it settled. The levels the gains still due
+brought are told at once, from the level before the first of them to the level after the last; a notice of a track the
+configuration no longer holds is let go. A broken streak is told before its state is saved: an observer that failed is
+told again by the next gesture or sweep.
+
+The observer may thus be told twice of the same change, and is idempotent: it recognises a level by its track,
+subject, season and number, a milestone by its track, code, subject and season, a broken streak by its streak, member
+and last active unit. A level lost is told once, when the cancellation is applied.
+
 ## A cancellation
 
 Every gain of the cancelled activity is taken back; a subject whose level falls is told by `leveledDown()`. A

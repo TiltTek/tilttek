@@ -19,18 +19,38 @@ final class InMemoryExperienceStore implements ExperienceStore
      */
     private array $gains = [];
 
+    /**
+     * The gains whose notice is due; one the store no longer holds is not listed.
+     *
+     * @var array<string, Gain>
+     */
+    private array $due = [];
+
     #[Override]
     public function add(Gain $gain): bool
     {
-        $key = json_encode([$gain->track, $gain->rule, $gain->activity], \JSON_THROW_ON_ERROR);
+        $key = $this->key($gain);
 
         if (isset($this->gains[$key])) {
             return false;
         }
 
         $this->gains[$key] = $gain;
+        $this->due[$key] = $gain;
 
         return true;
+    }
+
+    #[Override]
+    public function undelivered(ResourceReference $subject): array
+    {
+        return $this->ordered(array_filter(array_intersect_key($this->gains, $this->due), static fn (Gain $gain): bool => $gain->subject->equals($subject)));
+    }
+
+    #[Override]
+    public function markDelivered(Gain $gain): void
+    {
+        unset($this->due[$this->key($gain)]);
     }
 
     #[Override]
@@ -96,10 +116,13 @@ final class InMemoryExperienceStore implements ExperienceStore
     #[Override]
     public function of(ResourceReference $subject): array
     {
-        $gains = array_filter($this->gains, static fn (Gain $gain): bool => $gain->subject->equals($subject));
-        usort($gains, static fn (Gain $a, Gain $b): int => $a->occurredAt <=> $b->occurredAt);
+        return $this->ordered(array_filter($this->gains, static fn (Gain $gain): bool => $gain->subject->equals($subject)));
+    }
 
-        return $gains;
+    #[Override]
+    public function ofMember(ResourceReference $member): array
+    {
+        return $this->ordered(array_filter($this->gains, static fn (Gain $gain): bool => $gain->subject->equals($member) || $gain->member->equals($member)));
     }
 
     #[Override]
@@ -127,6 +150,26 @@ final class InMemoryExperienceStore implements ExperienceStore
     public function reset(): void
     {
         $this->gains = [];
+        $this->due = [];
+    }
+
+    private function key(Gain $gain): string
+    {
+        return json_encode([$gain->track, $gain->rule, $gain->activity], \JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * The gains in the order they occurred.
+     *
+     * @param array<string, Gain> $gains
+     *
+     * @return list<Gain>
+     */
+    private function ordered(array $gains): array
+    {
+        usort($gains, static fn (Gain $a, Gain $b): int => $a->occurredAt <=> $b->occurredAt);
+
+        return $gains;
     }
 
     /**
