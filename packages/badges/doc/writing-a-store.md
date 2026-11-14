@@ -14,12 +14,21 @@ library's tests check on the implementations in memory, and that `tilttek/badges
 
 ## `AwardStore`
 
-- `add()` keeps an award once per badge, member and number, and returns false for one already there.
-- `remove()` removes the award of that badge, member and number.
-- `of($member, $badge)` lists the member's awards — of one badge when it is named — by the moment they were earned,
-  then badge and number.
-- `forgetDerived($since)` removes and returns the awards not made by hand earned from `since` on, all of them when null.
-- `eraseMember()` removes the member's awards.
+- `add()` keeps an award once per badge, member and number, and returns false for one already there, held or
+  withdrawn — even when two processes write it at the same moment. An award not made by hand is kept with its notice
+  due; an award made by hand is owed none.
+- `markDelivered()` notes that the notice of the award was given; `undelivered($member)` lists the member's awards
+  whose notice is due, by badge and number.
+- `withdraw()` takes the award out of those the member holds and returns true: it waits for the notice of its
+  withdrawal. An award whose own notice is still due is removed at once and owed no notice, and an award the member
+  does not hold is left alone: false for both. `withdrawn($member)` lists the withdrawn awards whose notice is due, by
+  badge and number.
+- `remove()` removes the award of that badge, member and number, held or withdrawn.
+- `of($member, $badge)` lists the awards the member holds — of one badge when it is named — by the moment they were
+  earned, then badge and number; withdrawn awards are left out.
+- `forgetDerived($since)` removes the awards not made by hand earned from `since` on, all of them when null, held or
+  withdrawn, and returns those held whose notice was given.
+- `eraseMember()` removes the member's awards, held or withdrawn.
 
 ## `ProfileStore`
 

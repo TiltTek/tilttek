@@ -10,6 +10,7 @@ use Override;
 use Phil\Resource\ResourceReference;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Tilttek\Activity\Activity;
 use Tilttek\Activity\Filter;
 use Tilttek\Activity\IdempotencyKey;
@@ -172,6 +173,104 @@ final class BadgeProjectionTest extends TestCase
         self::assertCount(4, $this->observer->told());
     }
 
+    public function testAnAwardNoticeTheObserverFailedIsGivenWhenTheRequestIsRepeated(): void
+    {
+        $journal = $this->journal(['first' => ['criterion' => ['first' => ['verbs' => ['news.*']]]], 'twice' => ['repeatable' => true, 'criterion' => ['first' => ['verbs' => ['news.*']]]]]);
+        $this->observer->failures = 1;
+
+        try {
+            $journal->record(Activity::of('n1', 'member:1', 'news.read', $this->at('2026-11-01 10:00:00')));
+            self::fail('The observer did not fail.');
+        } catch (RuntimeException) {
+        }
+
+        self::assertSame([], $this->observer->told());
+        self::assertSame([['first', 1, '2026-11-01T10:00:00+00:00', 'n1', false]], $this->awardsOf('1'));
+
+        $journal->record(Activity::of('n1', 'member:1', 'news.read', $this->at('2026-11-01 10:00:00')));
+        self::assertSame(['awarded first member:1 #1', 'awarded twice member:1 #1'], $this->observer->told());
+
+        $journal->record(Activity::of('n1', 'member:1', 'news.read', $this->at('2026-11-01 10:00:00')));
+        $journal->record(Activity::of('n2', 'member:1', 'news.read', $this->at('2026-11-02 10:00:00')));
+        self::assertSame(['awarded first member:1 #1', 'awarded twice member:1 #1', 'awarded twice member:1 #2'], $this->observer->told());
+    }
+
+    public function testARevocationNoticeTheObserverFailedIsGivenWhenTheCancellationIsRepeated(): void
+    {
+        $journal = $this->journal(['once' => ['revocable' => true, 'criterion' => ['first' => ['verbs' => ['book.read']]]]]);
+        $journal->record(Activity::of('r1', 'member:1', 'book.read', $this->at('2026-11-01 10:00:00')));
+
+        $this->observer->failures = 1;
+
+        try {
+            $journal->cancel('r1');
+            self::fail('The observer did not fail.');
+        } catch (RuntimeException) {
+        }
+
+        self::assertSame(['awarded once member:1 #1'], $this->observer->told());
+        self::assertSame([], $this->awardsOf('1'));
+
+        $journal->cancel('r1');
+        self::assertSame(['awarded once member:1 #1', 'revoked once member:1 #1'], $this->observer->told());
+        $journal->cancel('r1');
+        self::assertCount(2, $this->observer->told());
+        self::assertSame([], $this->awards->withdrawn(ResourceReference::of('member', '1')));
+    }
+
+    public function testTheNoticesDueAreGivenOnRequest(): void
+    {
+        $projection = $this->projection(['first' => ['revocable' => true, 'criterion' => ['first' => ['verbs' => ['a']]]]]);
+        $projector = new Projector($this->log, new InMemoryCheckpoints());
+        $member = ResourceReference::of('member', '1');
+        $this->log->append(Activity::of('a1', 'member:1', 'a', $this->at('2026-11-01 10:00:00')), $this->at('2026-11-01 10:00:00'));
+        $this->observer->failures = 1;
+
+        try {
+            $projector->catchUp($projection);
+            self::fail('The observer did not fail.');
+        } catch (RuntimeException) {
+        }
+
+        // A withdrawn award whose notice was given is owed the notice of its withdrawal; one whose notice was not given
+        // is owed none.
+        $given = new Award('first', $member, 2, $this->at('2026-11-01 10:00:00'), 'a1');
+        $this->awards->add($given);
+        $this->awards->markDelivered($given);
+        self::assertTrue($this->awards->withdraw($given));
+        $this->awards->add(new Award('first', $member, 3, $this->at('2026-11-01 10:00:00'), 'a1'));
+        self::assertFalse($this->awards->withdraw(new Award('first', $member, 3, $this->at('2026-11-01 10:00:00'), 'a1')));
+        // A notice of a badge the catalog no longer holds is let go.
+        $this->awards->add(new Award('old', $member, 1, $this->at('2026-11-01 10:00:00'), 'x'));
+        $older = new Award('older', $member, 1, $this->at('2026-11-01 10:00:00'), 'x');
+        $this->awards->add($older);
+        $this->awards->markDelivered($older);
+        $this->awards->withdraw($older);
+
+        self::assertSame(4, $projection->deliver($member));
+        self::assertSame(['revoked first member:1 #2', 'awarded first member:1 #1'], $this->observer->told());
+        self::assertSame([], $this->awards->undelivered($member));
+        self::assertSame([], $this->awards->withdrawn($member));
+        self::assertSame(0, $projection->deliver($member));
+        self::assertSame(0, $projection->deliver(ResourceReference::of('member', '2')));
+    }
+
+    public function testARebuildAnnouncesAnAwardWhoseNoticeWasNotGiven(): void
+    {
+        $catalog = ['first' => ['criterion' => ['first' => ['verbs' => ['a']]]]];
+        $this->log->append(Activity::of('a1', 'member:1', 'a', $this->at('2026-11-01 10:00:00')), $this->at('2026-11-01 10:00:00'));
+        $this->observer->failures = 1;
+
+        try {
+            new Projector($this->log, new InMemoryCheckpoints())->catchUp($this->projection($catalog));
+            self::fail('The observer did not fail.');
+        } catch (RuntimeException) {
+        }
+
+        new Projector($this->log, new InMemoryCheckpoints())->rebuild($this->projection($catalog));
+        self::assertSame(['awarded first member:1 #1'], $this->observer->told());
+    }
+
     public function testAManualAwardStandsForANonRepeatableBadge(): void
     {
         $journal = $this->journal(['once' => ['revocable' => true, 'criterion' => ['first' => ['verbs' => ['book.read']]]]]);
@@ -236,6 +335,13 @@ final class BadgeProjectionTest extends TestCase
         self::assertCount(1, $this->awardsOf('1'));
         $journal->cancel('k');
         self::assertSame([], $this->awardsOf('1'));
+
+        $withdrawn = new Award('once', ResourceReference::of('member', '1'), 2, $this->at('2026-11-01 10:00:00'), 'k');
+        $this->awards->add($withdrawn);
+        $this->awards->markDelivered($withdrawn);
+        $this->awards->withdraw($withdrawn);
+        self::assertSame(1, $projection->deliver(ResourceReference::of('member', '1')));
+        self::assertSame([], $this->awards->withdrawn(ResourceReference::of('member', '1')));
     }
 
     public function testARebuildAnnouncesTheAwardsThatAreNew(): void

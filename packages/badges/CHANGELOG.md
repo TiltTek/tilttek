@@ -4,6 +4,30 @@ All notable changes to `tilttek/badges` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- A notice of the projection can no longer be lost when the observer fails. `AwardStore` keeps the notice each award
+  is owed: an award earned by the activity is kept with its notice due until `markDelivered()`, listed by
+  `undelivered()`; an award withdrawn by `withdraw()` leaves the awards held but stays, listed by `withdrawn()`, until
+  the observer was told and `remove()` deletes it. A store written for 0.1 implements these four methods; `of()` leaves
+  out the withdrawn awards, and `forgetDerived()` returns only the awards held whose notice was given.
+- `BadgeProjection` gives the notices a member is owed before evaluating their activity or cancellation, so that the
+  request repeated after a failure, or the next catch-up, tells the observer again; an award withdrawn before its notice
+  was given is owed none, and a rebuild announces an award whose first notice was never given. The observer is told at
+  least once, and must be idempotent.
+- `Badges::award()` no longer returns an award the store did not keep. When an award made at the same moment took the
+  number, a badge that is not repeatable returns the award kept, and a repeatable badge takes the next number, at most
+  `Badges::AWARD_ATTEMPTS` times.
+- `Badges::share()` shares the award of the highest number, rather than the one whose activity is dated last.
+
+### Added
+
+- `BadgeProjection::deliver()`: every notice a member is owed given to the observer, to resume after a failure.
+- `AwardConflict`, raised when other awards took the number of a repeatable badge awarded by hand at every attempt.
+- The delivery of the notices documented: at-least-once delivery, idempotent observers and resuming.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added

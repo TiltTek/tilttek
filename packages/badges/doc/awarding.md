@@ -33,15 +33,35 @@ left out.
 clock; a badge that is not repeatable and is already held is not awarded again. `Badges::revoke()` withdraws the awards
 made by hand; those earned by the activity stay, since the activity would earn them again.
 
+Two awards by hand made at the same moment read the same awards and choose the same number; the store keeps one of
+them. The other reads the awards again. For a badge that is not repeatable, it returns the award the store kept, so
+both callers hold the same award. For a repeatable badge, both awards are wanted: it takes the next number, at most
+`Badges::AWARD_ATTEMPTS` times, 5, and raises `AwardConflict` when other awards took the number at every attempt.
+
 ## Observers
 
 An `AwardObserver` passed to the projection is told `awarded()` and `revoked()`, to notify the member or show the badge
 at once. An award made by hand is the application's own act and is not told.
 
+The observer is told at least once. An award earned by the activity is kept with its notice due, and the store notes it
+delivered once the observer has been told; an award withdrawn leaves the member's awards at once, but stays in the store
+until the observer has been told of its withdrawal, and is removed then. When the observer fails, the notice stays due,
+and is given:
+
+- when the same entry is handed to the projection again: the request repeated under the same idempotency key, whose
+  entry the journal hands again to the projections still before it, or the next catch-up;
+- before the member's next activity or cancellation is evaluated;
+- by `BadgeProjection::deliver($member)`, which gives every notice the member is owed, withdrawals first, and returns
+  how many it settled. A notice of a badge the catalog no longer holds is let go without the observer.
+
+An award withdrawn before its own notice was given is owed no notice at all. Since a notice can be given again after a
+failure, an observer must be idempotent: it recognises an award by its badge, member and number, and does nothing for a
+notice it has already acted on.
+
 ## When a rule changes
 
 `Projector::rebuild($projection, $since)` forgets the contributions of the activities from `since` on — all of them
 when `since` is null — and the awards derived from them, then replays the journal under the new catalog. An award earned
-again with the same badge, member and number during the rebuild is not told again; an award the new rules no longer
-give is withdrawn without being told. Awards made by hand are kept. A `Measure` is read again as it is when the rebuild
-runs.
+again with the same badge, member and number during the rebuild is not told again, unless its first notice was never
+given; an award the new rules no longer give is withdrawn without being told. Awards made by hand are kept. A
+`Measure` is read again as it is when the rebuild runs.

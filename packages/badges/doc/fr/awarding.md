@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=a215635fcf7b3160e081a27ed63847d38ae20a24cb8aef3c0160d4ad6759efd4 -->
+<!-- phil-dev source-sha256=5f666c4a6731a1eb81af298401ec46d3ea773dfceca3f20828d75aa4e0090b12 -->
 # Attribuer
 
 ## La projection
@@ -36,15 +36,37 @@ par l'horloge. Un badge qui n'est pas répétable et qui est déjà détenu n'es
 `Badges::revoke()` retire les attributions faites à la main. Celles gagnées par l'activité restent, car l'activité les
 ferait gagner de nouveau.
 
+Deux attributions à la main faites au même moment lisent les mêmes attributions et choisissent le même numéro ; le
+magasin en garde une. L'autre relit les attributions. Pour un badge qui n'est pas répétable, elle renvoie l'attribution
+que le magasin a gardée, de sorte que les deux appelants obtiennent la même. Pour un badge répétable, les deux
+attributions sont voulues : elle prend le numéro suivant, au plus `Badges::AWARD_ATTEMPTS` fois, 5, et lève
+`AwardConflict` quand d'autres attributions ont pris le numéro à chaque tentative.
+
 ## Observateurs
 
 Un `AwardObserver` passé à la projection est averti par `awarded()` et `revoked()`, pour aviser le membre ou montrer le
 badge sur-le-champ. Une attribution faite à la main est un acte propre à l'application et n'est pas annoncée.
+
+L'observateur est averti au moins une fois. Une attribution gagnée par l'activité est gardée avec son avis dû, et le
+magasin la note remise une fois l'observateur averti ; une attribution retirée quitte sur-le-champ les attributions du
+membre, mais reste dans le magasin jusqu'à ce que l'observateur soit averti de son retrait, et est supprimée alors.
+Quand l'observateur échoue, l'avis reste dû, et il est donné :
+
+- quand la même entrée est remise de nouveau à la projection : la requête répétée sous la même clé d'idempotence, dont
+  le journal remet l'entrée aux projections encore en retard sur elle, ou le rattrapage suivant ;
+- avant que la prochaine activité ou annulation du membre soit évaluée ;
+- par `BadgeProjection::deliver($member)`, qui donne tous les avis dus au membre, les retraits d'abord, et renvoie
+  combien il en a réglé. L'avis d'un badge que le catalogue ne contient plus est abandonné sans l'observateur.
+
+Une attribution retirée avant que son propre avis soit donné n'appelle aucun avis. Comme un avis peut être redonné après
+un échec, un observateur doit être idempotent : il reconnaît une attribution à son badge, son membre et son numéro, et
+ne fait rien pour un avis sur lequel il a déjà agi.
 
 ## Quand une règle change
 
 `Projector::rebuild($projection, $since)` oublie les contributions des activités à partir de `since` — toutes quand
 `since` est null — et les attributions qui en découlent, puis rejoue le journal sous le nouveau catalogue. Une
 attribution gagnée de nouveau avec le même badge, le même membre et le même numéro pendant la reconstruction n'est pas
-annoncée de nouveau. Une attribution que les nouvelles règles ne donnent plus est retirée sans être annoncée. Les
-attributions faites à la main sont gardées. Une `Measure` est relue telle qu'elle est au moment de la reconstruction.
+annoncée de nouveau, sauf si son premier avis n'a jamais été donné. Une attribution que les nouvelles règles ne
+donnent plus est retirée sans être annoncée. Les attributions faites à la main sont gardées. Une `Measure` est relue
+telle qu'elle est au moment de la reconstruction.

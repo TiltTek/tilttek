@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=9502cecab7bf9969c48ead2e7e3c62f9681b9ef9af0c0235cd414abe7224558b -->
+<!-- phil-dev source-sha256=5e7ac0a8327cc2b7e8602eba5935f140688cd25faf2ead9c3cf51fc051efcd23 -->
 # Écrire un stockage
 
 Une application garde les badges sur son propre stockage en implémentant les quatre stockages. Chaque contrat est le
@@ -17,13 +17,20 @@ comportement que vérifient les tests de la bibliothèque sur les implémentatio
 ## `AwardStore`
 
 - `add()` garde une attribution une seule fois par badge, membre et numéro, et renvoie faux pour une attribution déjà
-  présente.
-- `remove()` supprime l'attribution de ce badge, de ce membre et de ce numéro.
-- `of($member, $badge)` énumère les attributions du membre — d'un seul badge quand il est nommé — selon le moment où
-  elles ont été gagnées, puis par badge et par numéro.
-- `forgetDerived($since)` supprime et renvoie les attributions non faites à la main gagnées à partir de `since`, toutes
-  quand il est null.
-- `eraseMember()` supprime les attributions du membre.
+  présente, détenue ou retirée — même quand deux processus l'écrivent au même moment. Une attribution qui n'est pas
+  faite à la main est gardée avec son avis dû ; une attribution faite à la main n'en appelle aucun.
+- `markDelivered()` note que l'avis de l'attribution a été donné ; `undelivered($member)` énumère les attributions du
+  membre dont l'avis est dû, par badge et par numéro.
+- `withdraw()` sort l'attribution de celles que détient le membre et renvoie vrai : elle attend l'avis de son retrait.
+  Une attribution dont l'avis est encore dû est supprimée sur-le-champ sans appeler d'avis, et une attribution que le
+  membre ne détient pas est laissée telle quelle : faux dans les deux cas. `withdrawn($member)` énumère les
+  attributions retirées dont l'avis est dû, par badge et par numéro.
+- `remove()` supprime l'attribution de ce badge, de ce membre et de ce numéro, détenue ou retirée.
+- `of($member, $badge)` énumère les attributions que détient le membre — d'un seul badge quand il est nommé — selon le
+  moment où elles ont été gagnées, puis par badge et par numéro ; les attributions retirées sont omises.
+- `forgetDerived($since)` supprime les attributions non faites à la main gagnées à partir de `since`, toutes quand il
+  est null, détenues ou retirées, et renvoie celles qui sont détenues et dont l'avis a été donné.
+- `eraseMember()` supprime les attributions du membre, détenues ou retirées.
 
 ## `ProfileStore`
 

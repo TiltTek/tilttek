@@ -15,8 +15,9 @@ Showing, featuring or wearing a badge the member has not earned raises `NotEarne
 
 ## Sharing
 
-`Badges::share($member, $code, $channel)` shares the latest award of an earned badge through a `ShareChannel` — an image,
-a link, a post on the Fediverse — and returns what the channel made of it. The library never shares on its own: the
+`Badges::share($member, $code, $channel)` shares the award of the highest number of an earned badge — the last one
+earned, even when an activity made offline and recorded later carries an earlier date — through a `ShareChannel` — an
+image, a link, a post on the Fediverse — and returns what the channel made of it. The library never shares on its own: the
 application calls it when the member asks.
 
 ## Another application

@@ -16,18 +16,21 @@ use Tilttek\Badges\Catalog;
 use Tilttek\Badges\Contribution;
 use Tilttek\Badges\Evaluator;
 use Tilttek\Badges\Exception\AccessDenied;
+use Tilttek\Badges\Exception\AwardConflict;
 use Tilttek\Badges\Exception\InvalidBadge;
 use Tilttek\Badges\Exception\NotEarned;
 use Tilttek\Badges\Exception\UnknownBadge;
 use Tilttek\Badges\Profile;
 use Tilttek\Badges\Showcase;
 use Tilttek\Badges\Standing;
+use Tilttek\Badges\Store\AwardStore;
 use Tilttek\Badges\Store\InMemoryAwardStore;
 use Tilttek\Badges\Store\InMemoryGrantStore;
 use Tilttek\Badges\Store\InMemoryProfileStore;
 use Tilttek\Badges\Store\InMemoryProgressStore;
 use Tilttek\Badges\Tests\Unit\Fixture\Channel;
 use Tilttek\Badges\Tests\Unit\Fixture\Clock;
+use Tilttek\Badges\Tests\Unit\Fixture\RacingAwardStore;
 
 #[CoversClass(Badges::class)]
 final class BadgesTest extends TestCase
@@ -107,6 +110,54 @@ final class BadgesTest extends TestCase
         self::assertSame(4, $this->badges->award($this->member, 'games')->number);
     }
 
+    public function testTwoManualAwardsOfARepeatableBadgeAtOnceAreBothKept(): void
+    {
+        $store = new RacingAwardStore();
+        $store->rivals = [new Award('games', $this->member, 1, $this->at('2026-11-07 12:00:00'), 'Won the first round', true)];
+
+        $award = $this->badges($store)->award($this->member, 'games', 'Won the second round');
+        self::assertSame([2, 'Won the second round'], [$award->number, $award->cause]);
+        self::assertSame([[1, 'Won the first round'], [2, 'Won the second round']], array_map(static fn (Award $award): array => [$award->number, $award->cause], $store->of($this->member, 'games')));
+    }
+
+    public function testAManualAwardOfANonRepeatableBadgeAtOnceReturnsTheAwardKept(): void
+    {
+        $store = new RacingAwardStore();
+        $store->rivals = [new Award('hand', $this->member, 1, $this->at('2026-11-06 12:00:00'), 'Organised the convention', true)];
+
+        $award = $this->badges($store)->award($this->member, 'hand', 'Ran the registration desk');
+        self::assertSame([1, 'Organised the convention'], [$award->number, $award->cause]);
+        self::assertCount(1, $store->of($this->member));
+    }
+
+    public function testAManualAwardTakesANumberAfterTheWithdrawnAwardsOfItsBadge(): void
+    {
+        foreach ([new Award('games', $this->member, 1, $this->at('2026-11-01 10:00:00'), 'g1'), new Award('hand', $this->member, 3, $this->at('2026-11-01 10:00:00'), 'h1')] as $award) {
+            $this->awards->add($award);
+            $this->awards->markDelivered($award);
+            $this->awards->withdraw($award);
+        }
+
+        self::assertSame(2, $this->badges->award($this->member, 'games')->number);
+    }
+
+    public function testAManualAwardGivesUpAfterItsAttempts(): void
+    {
+        $store = new RacingAwardStore();
+        $store->rivals = array_map(fn (int $number): Award => new Award('games', $this->member, $number, $this->at('2026-11-07 12:00:00'), null, true), range(1, Badges::AWARD_ATTEMPTS));
+
+        try {
+            $this->badges($store)->award($this->member, 'games');
+            self::fail('The award was not given up.');
+        } catch (AwardConflict $awardConflict) {
+            self::assertSame(\sprintf('The badge "games" could not be awarded by hand to member:1: other awards took its number %d times in a row.', Badges::AWARD_ATTEMPTS), $awardConflict->getMessage());
+        }
+
+        self::assertCount(Badges::AWARD_ATTEMPTS, $store->of($this->member));
+        $store->rivals = array_map(fn (int $number): Award => new Award('games', $this->member, $number, $this->at('2026-11-07 12:00:00'), null, true), range(Badges::AWARD_ATTEMPTS + 1, 2 * Badges::AWARD_ATTEMPTS - 1));
+        self::assertSame(2 * Badges::AWARD_ATTEMPTS, $this->badges($store)->award($this->member, 'games')->number);
+    }
+
     public function testAnUnknownBadgeIsNotAwarded(): void
     {
         $this->expectExceptionObject(UnknownBadge::named('platinum'));
@@ -180,7 +231,7 @@ final class BadgesTest extends TestCase
 
     public function testAShowcaseHasALimit(): void
     {
-        $badges = $this->badges(2);
+        $badges = $this->badges(showcase: 2);
         $badges->award($this->member, 'hand');
         $badges->award($this->member, 'games');
         $badges->feature($this->member, ['hand', 'games']);
@@ -193,9 +244,9 @@ final class BadgesTest extends TestCase
     public function testAShowcaseHoldsABadge(): void
     {
         self::assertSame(6, Badges::DEFAULT_SHOWCASE_SIZE);
-        self::assertInstanceOf(Badges::class, $this->badges(1));
+        self::assertInstanceOf(Badges::class, $this->badges(showcase: 1));
         $this->expectExceptionObject(InvalidBadge::because('A showcase holds at least one badge; 0 is not a size.'));
-        $this->badges(0);
+        $this->badges(showcase: 0);
     }
 
     public function testTheDefaultShowcaseHoldsSix(): void
@@ -219,6 +270,15 @@ final class BadgesTest extends TestCase
         self::assertSame('https://example.org/shared/games/2', $this->badges->share($this->member, 'games', new Channel()));
         $this->expectExceptionObject(NotEarned::badge('hand', 'member:1'));
         $this->badges->share($this->member, 'hand', new Channel());
+    }
+
+    public function testASharedBadgeIsTheAwardOfTheHighestNumber(): void
+    {
+        // The second award comes from an activity made offline, recorded after the first and dated before it.
+        $this->awards->add(new Award('games', $this->member, 1, $this->at('2026-11-05 10:00:00'), 'g1'));
+        $this->awards->add(new Award('games', $this->member, 2, $this->at('2026-11-01 10:00:00'), 'g2'));
+
+        self::assertSame('https://example.org/shared/games/2', $this->badges->share($this->member, 'games', new Channel()));
     }
 
     public function testAnotherApplicationReadsWithConsent(): void
@@ -269,7 +329,7 @@ final class BadgesTest extends TestCase
         self::assertSame([0, 0, 0, false], [$again->awards, $again->contributions, $again->grants, $again->profile]);
     }
 
-    private function badges(int $showcase = Badges::DEFAULT_SHOWCASE_SIZE): Badges
+    private function badges(?AwardStore $awards = null, int $showcase = Badges::DEFAULT_SHOWCASE_SIZE): Badges
     {
         $catalog = Catalog::fromArray([
             'commenter' => ['criterion' => ['count' => ['verbs' => ['news.commented'], 'times' => 3]]],
@@ -279,7 +339,7 @@ final class BadgesTest extends TestCase
             'games' => ['repeatable' => true, 'criterion' => ['manual' => true]],
         ]);
 
-        return new Badges(new Evaluator($catalog, $this->progress), $this->progress, $this->awards, $this->profiles, $this->grants, new Clock(), $showcase);
+        return new Badges(new Evaluator($catalog, $this->progress), $this->progress, $awards ?? $this->awards, $this->profiles, $this->grants, new Clock(), $showcase);
     }
 
     private function at(string $moment): DateTimeImmutable

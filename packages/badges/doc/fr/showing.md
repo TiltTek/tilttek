@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=00524afeb54a84774d0aa1d80a444a8d8774e9648639a207a4de66b78867de97 -->
+<!-- phil-dev source-sha256=b7a9d3ec43b36d13c9c19d188f20957c59b4ddcd0075d631e3ccc2712c5ec6fd -->
 # Ce que montre un membre
 
 **Un badge gagné reste privé tant que le membre ne le montre pas.** `Badges` garde les choix de chaque membre dans un
@@ -17,9 +17,10 @@ Montrer, mettre en vitrine ou porter un badge que le membre n'a pas gagné lève
 
 ## Partage
 
-`Badges::share($member, $code, $channel)` partage la dernière attribution d'un badge gagné par un `ShareChannel` — une
-image, un lien, une publication sur le Fédivers — et renvoie ce que le canal en a fait. La bibliothèque ne partage
-jamais d'elle-même : l'application l'appelle quand le membre le demande.
+`Badges::share($member, $code, $channel)` partage l'attribution du numéro le plus élevé d'un badge gagné — la dernière
+gagnée, même quand une activité faite hors ligne et enregistrée plus tard porte une date antérieure — par un
+`ShareChannel` — une image, un lien, une publication sur le Fédivers — et renvoie ce que le canal en a fait. La
+bibliothèque ne partage jamais d'elle-même : l'application l'appelle quand le membre le demande.
 
 ## Une autre application
 

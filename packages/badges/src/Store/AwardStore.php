@@ -9,19 +9,53 @@ use Phil\Resource\ResourceReference;
 use Tilttek\Badges\Award;
 
 /**
- * Where the members' awards are kept: one per badge, member and number.
+ * Where the members' awards are kept: one per badge, member and number, with the notice the observer is still owed —
+ * that of an award earned by the activity, until it is given, or that of an award withdrawn, which stays until its
+ * notice is given and it is removed.
  */
 interface AwardStore
 {
     /**
-     * Keeps the award; false when the member already holds this number of the badge.
+     * Keeps the award; false when the member already holds this number of the badge, or a withdrawn award of this
+     * number still waits for its notice. An award earned by the activity is kept with its notice due, until
+     * `markDelivered()`; an award made by hand is owed no notice.
      */
     public function add(Award $award): bool;
 
+    /**
+     * Notes that the notice of the award was given.
+     */
+    public function markDelivered(Award $award): void;
+
+    /**
+     * The member's awards whose notice is due, by badge and number.
+     *
+     * @return list<Award>
+     */
+    public function undelivered(ResourceReference $member): array;
+
+    /**
+     * Withdraws the award the member holds: no longer held, it waits for the notice of its withdrawal, then for
+     * `remove()`; true when that notice is due. An award whose own notice was not given yet is removed at once, and
+     * owed no notice: false, as when the member does not hold it.
+     */
+    public function withdraw(Award $award): bool;
+
+    /**
+     * The member's withdrawn awards whose notice is due, by badge and number.
+     *
+     * @return list<Award>
+     */
+    public function withdrawn(ResourceReference $member): array;
+
+    /**
+     * Removes the award, held or withdrawn, with the notice it was owed.
+     */
     public function remove(Award $award): void;
 
     /**
-     * The member's awards — of one badge when it is named —, by the moment they were earned, then badge and number.
+     * The awards the member holds — of one badge when it is named —, by the moment they were earned, then badge and
+     * number; the withdrawn awards are not held.
      *
      * @return list<Award>
      */
@@ -29,14 +63,14 @@ interface AwardStore
 
     /**
      * Forgets the awards derived from the activity — not those awarded by hand — earned from `since` on, all of them
-     * when `since` is null, before a rebuild; returns them.
+     * when `since` is null, before a rebuild, held or withdrawn; returns those held whose notice was given.
      *
      * @return list<Award>
      */
     public function forgetDerived(?DateTimeImmutable $since): array;
 
     /**
-     * @return int how many awards of the member were removed
+     * @return int how many awards of the member were removed, held or withdrawn
      */
     public function eraseMember(ResourceReference $member): int;
 }

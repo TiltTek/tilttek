@@ -7,6 +7,7 @@ namespace Tilttek\Badges;
 use Phil\Resource\ResourceReference;
 use Psr\Clock\ClockInterface;
 use Tilttek\Badges\Exception\AccessDenied;
+use Tilttek\Badges\Exception\AwardConflict;
 use Tilttek\Badges\Exception\InvalidBadge;
 use Tilttek\Badges\Exception\NotEarned;
 use Tilttek\Badges\Exception\UnknownBadge;
@@ -26,6 +27,11 @@ use Tilttek\Badges\Store\ProgressStore;
 final readonly class Badges
 {
     public const int DEFAULT_SHOWCASE_SIZE = 6;
+
+    /**
+     * How many times an award by hand takes the next number, when awards made at the same time take it first.
+     */
+    public const int AWARD_ATTEMPTS = 5;
 
     public function __construct(
         private Evaluator $evaluator,
@@ -97,21 +103,33 @@ final readonly class Badges
      * Awards the badge by hand — whatever its criterion —, for the reason given; a badge that is not repeatable and is
      * already held is not awarded again, and the award held is returned.
      *
+     * Two awards made at the same time read the same awards and choose the same number; the store keeps one. The other
+     * reads the awards again: for a badge that is not repeatable, it returns the award kept; for a repeatable badge,
+     * both awards are wanted, and it takes the next number, `AWARD_ATTEMPTS` times at most.
+     *
      * @throws UnknownBadge
+     * @throws AwardConflict when other awards took the next number at every attempt
      */
     public function award(ResourceReference $member, string $code, ?string $reason = null): Award
     {
         $badge = $this->catalog()->get($code);
-        $held = $this->awards->of($member, $code);
 
-        if (!$badge->repeatable && [] !== $held) {
-            return $held[0];
+        for ($attempt = 0; $attempt < self::AWARD_ATTEMPTS; ++$attempt) {
+            $held = $this->awards->of($member, $code);
+
+            if (!$badge->repeatable && [] !== $held) {
+                return $held[0];
+            }
+
+            $taken = [...$held, ...array_filter($this->awards->withdrawn($member), static fn (Award $award): bool => $award->badge === $code)];
+            $award = new Award($code, $member, max([0, ...array_map(static fn (Award $award): int => $award->number, $taken)]) + 1, $this->clock->now(), $reason, true);
+
+            if ($this->awards->add($award)) {
+                return $award;
+            }
         }
 
-        $award = new Award($code, $member, max([0, ...array_map(static fn (Award $award): int => $award->number, $held)]) + 1, $this->clock->now(), $reason, true);
-        $this->awards->add($award);
-
-        return $award;
+        throw AwardConflict::after($code, $member->toString(), self::AWARD_ATTEMPTS);
     }
 
     /**
@@ -201,7 +219,8 @@ final readonly class Badges
     }
 
     /**
-     * Shares an earned badge through the channel, at the member's request; returns what the channel made of it.
+     * Shares the award of the highest number of an earned badge through the channel, at the member's request — the
+     * last one earned, whatever the moment its activity says —; returns what the channel made of it.
      *
      * @throws UnknownBadge
      * @throws NotEarned
@@ -209,8 +228,9 @@ final readonly class Badges
     public function share(ResourceReference $member, string $code, ShareChannel $channel): string
     {
         $held = $this->awards->of($member, $this->earned($member, $code));
+        usort($held, static fn (Award $a, Award $b): int => $b->number <=> $a->number);
 
-        return $channel->share($held[\count($held) - 1], $this->catalog()->get($code));
+        return $channel->share($held[0], $this->catalog()->get($code));
     }
 
     /**
