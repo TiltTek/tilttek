@@ -41,6 +41,31 @@ abstract class LogStoreTestCase extends TestCase
         self::assertSame(['2026-11-02' => 999_999_999], $store->progress('novel')->toArray());
     }
 
+    public function testAGoalReachedIsDueUntilItIsDelivered(): void
+    {
+        $store = $this->store();
+        $day = Day::fromString('2026-11-02');
+
+        self::assertNull($store->undelivered('novel'));
+        $store->markReached('novel', $day);
+        $store->markReached('poems', $day->plus(1));
+        self::assertSame('2026-11-02', $store->undelivered('novel')?->toString());
+
+        // A notice of another day is not the one due: it is left due.
+        $store->markDelivered('novel', $day->plus(1));
+        self::assertSame('2026-11-02', $store->undelivered('novel')?->toString());
+        $store->markDelivered('novel', $day);
+        self::assertNull($store->undelivered('novel'));
+        $store->markDelivered('novel', $day);
+        self::assertSame('2026-11-03', $store->undelivered('poems')?->toString());
+
+        // Reached again, the latest day is due; forgetting the goal forgets it.
+        $store->markReached('poems', $day->plus(4));
+        self::assertSame('2026-11-06', $store->undelivered('poems')?->toString());
+        $store->forget('poems');
+        self::assertNull($store->undelivered('poems'));
+    }
+
     public function testACountIsReplacedAndAGoalForgotten(): void
     {
         $store = $this->store();

@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=a92c685f2f1f6ba6748deb040bd684992c14265b6f66b1996c1aaf55e13d8f55 -->
+<!-- phil-dev source-sha256=be69dc79f0e9287313097f8e803997dd6377436ba0360bdd9168eab95512891e -->
 # Consigner
 
 ## Consigner ce qui a été écrit
@@ -26,6 +26,12 @@ Quand un compte fait passer l'objectif de sous sa cible à sa cible ou au-delà,
 ensuite ne l'envoie pas de nouveau ; un objectif ramené sous sa cible par une correction, puis atteint de nouveau, l'envoie
 de nouveau, et deux comptes consignés en même temps peuvent l'envoyer tous deux. Un écouteur qui accorde quelque chose —
 un badge, des points — ne l'accorde qu'une fois grâce à la clé `idempotencyKey()` de l'événement, une par objectif.
+
+L'objectif atteint est noté dans le magasin des comptes avec son événement dû, et noté remis une fois l'événement envoyé
+sans exception. Quand un écouteur lève une exception, elle atteint l'appelant et l'avis reste dû : le prochain compte
+consigné ou corrigé pour l'objectif — `log($id, 0)` suffit — l'envoie de nouveau, avec le jour où l'objectif a été
+atteint, et `$goals->deliver($id)` reprend sans rien consigner, faux quand rien n'était dû. L'événement est donc envoyé
+au moins une fois.
 
 ## Célébrer
 

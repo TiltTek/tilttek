@@ -19,6 +19,11 @@ final class InMemoryLogStore implements LogStore
      */
     private array $progress = [];
 
+    /**
+     * @var array<string, Day> the day of each goal's notice still due
+     */
+    private array $due = [];
+
     #[Override]
     public function progress(string $goal): Progress
     {
@@ -42,8 +47,28 @@ final class InMemoryLogStore implements LogStore
     }
 
     #[Override]
+    public function markReached(string $goal, Day $day): void
+    {
+        $this->due[$goal] = $day;
+    }
+
+    #[Override]
+    public function undelivered(string $goal): ?Day
+    {
+        return $this->due[$goal] ?? null;
+    }
+
+    #[Override]
+    public function markDelivered(string $goal, Day $day): void
+    {
+        if ($this->undelivered($goal)?->toString() === $day->toString()) {
+            unset($this->due[$goal]);
+        }
+    }
+
+    #[Override]
     public function forget(string $goal): void
     {
-        unset($this->progress[$goal]);
+        unset($this->progress[$goal], $this->due[$goal]);
     }
 }

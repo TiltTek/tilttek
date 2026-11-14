@@ -7,6 +7,7 @@ namespace Tilttek\WritingGoals\Tests\Unit;
 use Phil\Resource\ResourceReference;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Symfony\Component\Clock\MockClock;
 use Tilttek\WritingGoals\Day;
 use Tilttek\WritingGoals\Event\GoalReached;
@@ -140,6 +141,50 @@ final class WritingGoalsTest extends TestCase
         $this->goals->correct('novel', 1000);
 
         self::assertCount(2, $this->events->events);
+    }
+
+    public function testAGoalReachedWhoseListenerFailedIsToldAgain(): void
+    {
+        $this->goals->log('novel', 600, Day::fromString('2026-11-01'));
+        $this->events->failures = 1;
+
+        try {
+            $this->goals->log('novel', 400);
+            self::fail('The listener did not fail.');
+        } catch (RuntimeException) {
+        }
+
+        self::assertSame('2026-11-02', $this->logs->undelivered('novel')?->toString());
+
+        // The next count logged, even nothing, tells it, with the day the goal was reached on.
+        $plan = $this->goals->log('novel', 0);
+        self::assertTrue($plan->isReached());
+        self::assertCount(1, $this->events->events);
+        $event = $this->events->events[0];
+        self::assertInstanceOf(GoalReached::class, $event);
+        self::assertSame(['novel', '2026-11-02'], [$event->goal, $event->day->toString()]);
+        self::assertNull($this->logs->undelivered('novel'));
+        $this->goals->log('novel', 10);
+        self::assertCount(1, $this->events->events);
+    }
+
+    public function testDeliverResumesAGoalReached(): void
+    {
+        $this->events->failures = 1;
+
+        try {
+            $this->goals->correct('novel', 1000);
+            self::fail('The listener did not fail.');
+        } catch (RuntimeException) {
+        }
+
+        self::assertTrue($this->goals->deliver('novel'));
+        self::assertCount(1, $this->events->events);
+        self::assertFalse($this->goals->deliver('novel'));
+        self::assertCount(1, $this->events->events);
+
+        $this->expectException(UnknownGoal::class);
+        $this->goals->deliver('unknown');
     }
 
     public function testAnUnknownGoal(): void
