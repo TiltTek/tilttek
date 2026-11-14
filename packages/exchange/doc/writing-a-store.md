@@ -6,11 +6,15 @@ contract is also a test case in the library's tests — `ReservationStoreTestCas
 
 ## `ReservationStore`
 
-- `add()` writes a reservation once per key — false when the key is there — and checks the units of the reward's
-  reserved and confirmed reservations against the stock and the member's limit **in the same step**, so that two
-  members never get the last unit: under a lock, or in one statement.
-- `settle()` moves a reservation out of `reserved` only while it is reserved, and says whether this call did.
-- `discard()` deletes a reservation still reserved; `held()`, `due()`, `ofMember()` and `eraseMember()` read and erase.
+- `add()` writes a reservation, `paying`, once per key — false when the key is there — and checks the units of the
+  reward's paying, reserved and confirmed reservations against the stock and the member's limit **in the same step**,
+  so that two members never get the last unit: under a lock, or in one statement.
+- `transition()` moves a reservation from one status to another only while it is in the first — a compare-and-set,
+  such as `UPDATE … SET status = ? WHERE key = ? AND status = ?` — and says whether this call did: `paying` to
+  `reserved` once its points are paid, an open status to `confirmed`, `cancelled` or `expired`, with the moment it was
+  settled.
+- `discard()` deletes a reservation still paying; `held()`, `due()` — the paying and reserved reservations past their
+  lifetime —, `ofMember()` and `eraseMember()` read and erase.
 
 ## `TransferLog`
 

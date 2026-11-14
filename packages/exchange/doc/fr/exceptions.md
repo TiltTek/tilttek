@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=50f5c878513744e9686d3f2c28783adce94762e863b776323cf9738d4119c459 -->
+<!-- phil-dev source-sha256=89962f0de8225bcb425825347a83f361e88031809609ace990a80b9680ca21df -->
 # Exceptions
 
 Chaque exception de la bibliothèque implémente `Tilttek\Exchange\Exception\ExchangeException`. Les exceptions de
@@ -12,6 +12,7 @@ l'appelant telles quelles.
 | `UnknownExchange` | Aucune réservation ni offre n'est écrite sous la clé | `No offer is written under the key "trade:9".` |
 | `ExchangeConflict` | Une clé déjà écrite est donnée pour une autre réservation, un autre transfert ou une autre offre | `The key "gift:1" is already written for another transfer.` |
 | `ExchangeClosed` | Une réservation ou une offre n'est plus ouverte pour l'opération | `The reservation "order:1" is expired; it cannot be confirmed.` |
+| `ReservationPending` | Les points d'une réservation sont en train d'être payés : la confirmer ou l'annuler un moment plus tard | `The points of the reservation "order:1" are being paid; ask again in a moment.` |
 | `ExchangeRefused` | Les règles refusent l'échange ; son `refusal` dit pourquoi | `"member:3" has not been a member long enough to exchange with others.` |
 
 ## Refus

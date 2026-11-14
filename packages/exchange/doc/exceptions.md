@@ -11,6 +11,7 @@ as they are.
 | `UnknownExchange` | No reservation or offer is written under the key | `No offer is written under the key "trade:9".` |
 | `ExchangeConflict` | A key already written is given for another reservation, transfer or offer | `The key "gift:1" is already written for another transfer.` |
 | `ExchangeClosed` | A reservation or an offer is no longer open for the operation | `The reservation "order:1" is expired; it cannot be confirmed.` |
+| `ReservationPending` | The points of a reservation are being paid: confirm or cancel it a moment later | `The points of the reservation "order:1" are being paid; ask again in a moment.` |
 | `ExchangeRefused` | The rules refuse the exchange; its `refusal` tells why | `"member:3" has not been a member long enough to exchange with others.` |
 
 ## Refusals

@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=27a493b5c4dddbea13ebb766fff4820ac1dc354c28ad1ff48805532238fa1ebf -->
+<!-- phil-dev source-sha256=2840e86ca49bf804ce9495ae67861977e7ac737cf9b6212ff516d4631276b3a5 -->
 # Récompenses
 
 ## Le catalogue
@@ -38,6 +38,12 @@ ensuite les points dans le grand livre sous `exchange:reservation:` et la clé, 
 code. Quand les points ne peuvent pas être payés, la réservation est supprimée, ses unités redeviennent libres et
 `InsufficientPoints` parvient à l'appelant.
 
+La réservation est écrite `paying` et devient `reserved` une fois ses points dépensés, par un compare-et-écrit du
+stockage. Pendant son paiement, rien ne la confirme ni ne l'annule (`confirm()` et `cancel()` lèvent
+`ReservationPending`, à redemander un moment plus tard) et rien ne la fait expirer avant la fin de sa durée de vie. Un
+paiement qui dépasse la durée de vie trouve la réservation expirée : il rend les points qu'il vient de dépenser, et
+`reserve()` retourne la réservation telle qu'elle est.
+
 L'application livre ensuite, à partir de l'événement `RewardReserved` ou tout de suite, et appelle `confirm($key)` :
 les points restent dépensés. Ou elle appelle `cancel($key)` : les points reviennent au membre par un remboursement du
 grand livre, et les unités au stock. Une réservation confirmée ne peut pas être annulée, ni une réservation annulée
@@ -58,7 +64,8 @@ try {
 
 La clé permet d'exécuter chaque étape deux fois sans danger. La même clé ne réserve qu'une fois et retourne la
 réservation, même si sa récompense a quitté le catalogue depuis ; une réservation interrompue avant l'écriture de sa
-dépense est payée quand on la redemande. La même clé pour un autre membre, une autre récompense ou une autre quantité
+dépense est payée quand on la redemande, et `RewardReserved` n'est annoncé qu'une fois, par l'appel qui l'a rendue
+réservée. La même clé pour un autre membre, une autre récompense ou une autre quantité
 est un `ExchangeConflict`. Une réservation confirmée confirmée de nouveau, une réservation annulée annulée de nouveau,
 sont retournées telles quelles.
 

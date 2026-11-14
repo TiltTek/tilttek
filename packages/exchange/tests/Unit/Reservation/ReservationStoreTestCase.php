@@ -55,43 +55,58 @@ abstract class ReservationStoreTestCase extends TestCase
         self::assertSame(1, $store->held('seat', self::member(2)));
         self::assertSame(0, $store->held('seat', self::member(3)));
 
-        // A cancelled or expired reservation gives its units back; a confirmed one keeps them.
-        self::assertTrue($store->settle(ExchangeKey::fromString('a'), ReservationStatus::Cancelled, self::at('12:10')));
-        self::assertTrue($store->settle(ExchangeKey::fromString('c'), ReservationStatus::Confirmed, self::at('12:10')));
+        // A paying or reserved reservation holds its units; a cancelled or expired one gives them back; a confirmed
+        // one keeps them.
+        self::assertTrue($store->transition(ExchangeKey::fromString('c'), ReservationStatus::Paying, ReservationStatus::Reserved, self::at('12:01')));
+        self::assertSame(3, $store->held('seat'));
+        self::assertTrue($store->transition(ExchangeKey::fromString('a'), ReservationStatus::Paying, ReservationStatus::Cancelled, self::at('12:10')));
+        self::assertTrue($store->transition(ExchangeKey::fromString('c'), ReservationStatus::Reserved, ReservationStatus::Confirmed, self::at('12:10')));
         self::assertSame(1, $store->held('seat'));
         self::assertTrue($store->add(self::reservation('f', 1, 'seat', 2), 3, 2));
         self::assertSame(3, $store->held('seat'));
-        self::assertTrue($store->settle(ExchangeKey::fromString('f'), ReservationStatus::Expired, self::at('12:40')));
+        self::assertTrue($store->transition(ExchangeKey::fromString('f'), ReservationStatus::Paying, ReservationStatus::Expired, self::at('12:40')));
         self::assertSame(1, $store->held('seat'));
     }
 
-    public function testAReservationLeavesReservedOnce(): void
+    public function testAReservationMovesOnlyFromTheStatusItIsIn(): void
     {
         $store = $this->store();
         $store->add(self::reservation('a', 1, 'seat', 1), null, null);
+        self::assertSame(ReservationStatus::Paying, $store->find(ExchangeKey::fromString('a'))?->status);
 
-        self::assertFalse($store->settle(ExchangeKey::fromString('b'), ReservationStatus::Confirmed, self::at('12:10')));
-        self::assertTrue($store->settle(ExchangeKey::fromString('a'), ReservationStatus::Confirmed, self::at('12:10')));
-        self::assertFalse($store->settle(ExchangeKey::fromString('a'), ReservationStatus::Cancelled, self::at('12:11')));
+        self::assertFalse($store->transition(ExchangeKey::fromString('b'), ReservationStatus::Paying, ReservationStatus::Reserved, self::at('12:01')));
+        self::assertFalse($store->transition(ExchangeKey::fromString('a'), ReservationStatus::Reserved, ReservationStatus::Confirmed, self::at('12:01')));
+        self::assertTrue($store->transition(ExchangeKey::fromString('a'), ReservationStatus::Paying, ReservationStatus::Reserved, self::at('12:01')));
+        self::assertFalse($store->transition(ExchangeKey::fromString('a'), ReservationStatus::Paying, ReservationStatus::Reserved, self::at('12:02')));
+
+        $reserved = $store->find(ExchangeKey::fromString('a'));
+        self::assertSame(ReservationStatus::Reserved, $reserved->status);
+        self::assertNull($reserved->settledAt);
+
+        self::assertTrue($store->transition(ExchangeKey::fromString('a'), ReservationStatus::Reserved, ReservationStatus::Confirmed, self::at('12:10')));
+        self::assertFalse($store->transition(ExchangeKey::fromString('a'), ReservationStatus::Reserved, ReservationStatus::Cancelled, self::at('12:11')));
 
         $settled = $store->find(ExchangeKey::fromString('a'));
-        self::assertSame(ReservationStatus::Confirmed, $settled?->status);
+        self::assertSame(ReservationStatus::Confirmed, $settled->status);
         self::assertSame('2026-11-07 12:10:00', $settled->settledAt?->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s'));
     }
 
-    public function testOnlyAReservedReservationIsDiscarded(): void
+    public function testOnlyAPayingReservationIsDiscarded(): void
     {
         $store = $this->store();
         $store->add(self::reservation('a', 1, 'seat', 1), null, null);
         $store->add(self::reservation('b', 1, 'seat', 1), null, null);
-        $store->settle(ExchangeKey::fromString('b'), ReservationStatus::Confirmed, self::at('12:10'));
+        $store->add(self::reservation('c', 1, 'seat', 1), null, null);
+        $store->transition(ExchangeKey::fromString('b'), ReservationStatus::Paying, ReservationStatus::Reserved, self::at('12:01'));
+        $store->transition(ExchangeKey::fromString('c'), ReservationStatus::Paying, ReservationStatus::Expired, self::at('12:40'));
 
-        $store->discard(ExchangeKey::fromString('a'));
-        $store->discard(ExchangeKey::fromString('b'));
-        $store->discard(ExchangeKey::fromString('c'));
+        foreach (['a', 'b', 'c', 'd'] as $key) {
+            $store->discard(ExchangeKey::fromString($key));
+        }
 
         self::assertNull($store->find(ExchangeKey::fromString('a')));
-        self::assertSame(ReservationStatus::Confirmed, $store->find(ExchangeKey::fromString('b'))?->status);
+        self::assertSame(ReservationStatus::Reserved, $store->find(ExchangeKey::fromString('b'))?->status);
+        self::assertSame(ReservationStatus::Expired, $store->find(ExchangeKey::fromString('c'))?->status);
         self::assertTrue($store->add(self::reservation('a', 1, 'seat', 1), null, null));
     }
 
@@ -103,7 +118,8 @@ abstract class ReservationStoreTestCase extends TestCase
         $store->add(self::reservation('a', 3, 'seat', 1, '12:20'), null, null);
         $store->add(self::reservation('d', 1, 'seat', 1, '12:30'), null, null);
         $store->add(self::reservation('e', 1, 'seat', 1, '12:05'), null, null);
-        $store->settle(ExchangeKey::fromString('e'), ReservationStatus::Confirmed, self::at('12:01'));
+        $store->transition(ExchangeKey::fromString('b'), ReservationStatus::Paying, ReservationStatus::Reserved, self::at('12:01'));
+        $store->transition(ExchangeKey::fromString('e'), ReservationStatus::Paying, ReservationStatus::Confirmed, self::at('12:01'));
 
         self::assertSame(['b', 'a', 'c'], $this->keys($store->due(self::at('12:20'), 10)));
         self::assertSame(['b', 'a'], $this->keys($store->due(self::at('12:20'), 2)));
@@ -129,7 +145,7 @@ abstract class ReservationStoreTestCase extends TestCase
 
     protected static function reservation(string $key, int $member, string $reward, int $quantity, string $expiresAt = '12:30', string $reservedAt = '12:00'): Reservation
     {
-        return new Reservation(ExchangeKey::fromString($key), self::member($member), $reward, $quantity, 10 * $quantity, 'points', self::at($reservedAt), self::at($expiresAt));
+        return new Reservation(ExchangeKey::fromString($key), self::member($member), $reward, $quantity, 10 * $quantity, 'points', self::at($reservedAt), self::at($expiresAt), ReservationStatus::Paying);
     }
 
     protected static function member(int $id): ResourceReference

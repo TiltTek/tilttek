@@ -35,7 +35,7 @@ final readonly class SettledElsewhereStore implements ReservationStore
     }
 
     #[Override]
-    public function settle(ExchangeKey $key, ReservationStatus $status, DateTimeImmutable $at): bool
+    public function transition(ExchangeKey $key, ReservationStatus $from, ReservationStatus $to, DateTimeImmutable $at): bool
     {
         return false;
     }

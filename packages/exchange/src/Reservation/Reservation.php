@@ -12,7 +12,8 @@ use Tilttek\Exchange\ExchangeKey;
 
 /**
  * A member's reservation of a reward: the units, the points they cost in a currency, when it was made and when it
- * expires unless confirmed, where it stands and when it was settled. Its points are a spending of the ledger under
+ * expires unless confirmed, where it stands and when it was settled. It is written `Paying`, before its points are
+ * spent, and becomes `Reserved` once they are. Its points are a spending of the ledger under
  * `spendingKey()`, given back when the reservation is cancelled or expires.
  */
 final readonly class Reservation
@@ -37,8 +38,8 @@ final readonly class Reservation
             throw InvalidExchange::because(\sprintf('The reservation "%s" expires before it is made.', $key->value));
         }
 
-        if ((ReservationStatus::Reserved === $status) !== (!$settledAt instanceof DateTimeImmutable)) {
-            throw InvalidExchange::because(\sprintf('The reservation "%s" is settled when, and only when, it is no longer reserved.', $key->value));
+        if ($status->isOpen() === $settledAt instanceof DateTimeImmutable) {
+            throw InvalidExchange::because(\sprintf('The reservation "%s" is settled when, and only when, it is no longer paying nor reserved.', $key->value));
         }
     }
 
@@ -51,19 +52,20 @@ final readonly class Reservation
     }
 
     /**
-     * Whether the reservation is still reserved past its lifetime.
+     * Whether the reservation is still paying or reserved past its lifetime.
      */
     public function isDue(DateTimeImmutable $now): bool
     {
-        return ReservationStatus::Reserved === $this->status && $this->expiresAt <= $now;
+        return $this->status->isOpen() && $this->expiresAt <= $now;
     }
 
     /**
-     * The reservation settled: confirmed, cancelled or expired at the moment.
+     * The reservation in the status: confirmed, cancelled or expired at the moment, or reserved once its points are
+     * paid.
      */
     public function settled(ReservationStatus $status, DateTimeImmutable $at): self
     {
-        return new self($this->key, $this->member, $this->reward, $this->quantity, $this->amount, $this->currency, $this->reservedAt, $this->expiresAt, $status, $at);
+        return new self($this->key, $this->member, $this->reward, $this->quantity, $this->amount, $this->currency, $this->reservedAt, $this->expiresAt, $status, $status->isOpen() ? null : $at);
     }
 
     /**
