@@ -196,9 +196,12 @@ final readonly class DiceRolls
         return $this->rolls->eraseOwner($owner);
     }
 
-    public function appearance(ResourceReference $member, int $sides): ?DieAppearance
+    /**
+     * The appearance of a member's dice of that many sides, in high contrast when the viewer asked for it.
+     */
+    public function appearance(ResourceReference $member, int $sides, ?Accessibility $viewer = null): ?DieAppearance
     {
-        return $this->appearance->appearance($member, $sides);
+        return $this->appearance->appearance($member, $sides, $viewer);
     }
 
     private function pool(Pool|string $pool, ?string $locale): Pool

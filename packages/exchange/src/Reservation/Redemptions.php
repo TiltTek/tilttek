@@ -18,6 +18,7 @@ use Tilttek\Exchange\Exception\ExchangeClosed;
 use Tilttek\Exchange\Exception\ExchangeConflict;
 use Tilttek\Exchange\Exception\ExchangeRefused;
 use Tilttek\Exchange\Exception\InvalidExchange;
+use Tilttek\Exchange\Exception\ReservationPending;
 use Tilttek\Exchange\Exception\UnknownExchange;
 use Tilttek\Exchange\Exception\UnknownReward;
 use Tilttek\Exchange\ExchangeKey;
@@ -115,6 +116,10 @@ final readonly class Redemptions
      * Reserves units of the reward for the member: the points are spent and the units held until the application
      * confirms or cancels, or the reservation expires. The same key given again returns the same reservation.
      *
+     * The reservation is written `Paying`, which nothing confirms, cancels or expires before its lifetime ends, then
+     * becomes `Reserved` once its points are spent. When it was settled meanwhile — its lifetime ended while the
+     * payment ran —, the points just spent come back, and the reservation is returned as it stands.
+     *
      * @throws UnknownReward
      * @throws ExchangeRefused    when the reward is not available, a condition is unmet, the stock or the member's
      *                            limit is reached
@@ -144,7 +149,7 @@ final readonly class Redemptions
             throw ExchangeRefused::because(Refusal::RequirementUnmet, \sprintf('"%s" does not meet "%s", which the reward "%s" requires.', $member->toString(), $unmet, $code));
         }
 
-        $reservation = new Reservation($key, $member, $code, $quantity, $reward->cost($quantity), $this->currencies->get($reward->currency)->code, $now, $now->add($this->lifetime));
+        $reservation = new Reservation($key, $member, $code, $quantity, $reward->cost($quantity), $this->currencies->get($reward->currency)->code, $now, $now->add($this->lifetime), ReservationStatus::Paying);
 
         if (!$this->reservations->add($reservation, $reward->stock, $reward->perMember)) {
             return $this->resume($this->reservations->find($key) ?? $reservation, $member, $code, $quantity);
@@ -158,7 +163,9 @@ final readonly class Redemptions
      * returns it as it is.
      *
      * @throws UnknownExchange
-     * @throws ExchangeClosed  when the reservation was cancelled or has expired — its points are back with the member
+     * @throws ExchangeClosed     when the reservation was cancelled or has expired — its points are back with the
+     *                            member
+     * @throws ReservationPending when its points are being paid
      */
     public function confirm(string $key): Reservation
     {
@@ -170,7 +177,8 @@ final readonly class Redemptions
      * returns it as it is.
      *
      * @throws UnknownExchange
-     * @throws ExchangeClosed  when the reservation was confirmed or has expired
+     * @throws ExchangeClosed     when the reservation was confirmed or has expired
+     * @throws ReservationPending when its points are being paid
      */
     public function cancel(string $key): Reservation
     {
@@ -179,7 +187,8 @@ final readonly class Redemptions
 
     /**
      * Expires the reservations whose lifetime has ended, giving their points back: the task a scheduler runs. Returns
-     * how many expired.
+     * how many expired. A reservation still paying at the end of its lifetime expires too: a payment that was still
+     * running gives its points back itself.
      */
     public function expireDue(int $batchSize = self::DEFAULT_BATCH_SIZE): int
     {
@@ -222,28 +231,39 @@ final readonly class Redemptions
             throw ExchangeConflict::on('reservation', $existing->key->value);
         }
 
-        return ReservationStatus::Reserved === $existing->status ? $this->pay($existing) : $existing;
+        return ReservationStatus::Paying === $existing->status ? $this->pay($existing) : $existing;
     }
 
     /**
-     * Spends the reservation's points, once: a reservation whose points cannot be paid is discarded, and its units
-     * are free again.
+     * Spends the reservation's points, once, then moves it from `Paying` to `Reserved`: a reservation whose points
+     * cannot be paid is discarded, and its units are free again; one settled or discarded meanwhile gets its points
+     * back.
      */
     private function pay(Reservation $reservation): Reservation
     {
         try {
-            $spent = $this->points->spend($reservation->member, $reservation->amount, $reservation->spendingKey(), $reservation->redemption(), $reservation->currency);
+            $this->points->spend($reservation->member, $reservation->amount, $reservation->spendingKey(), $reservation->redemption(), $reservation->currency);
         } catch (InsufficientPoints $insufficientPoints) {
             $this->reservations->discard($reservation->key);
 
             throw $insufficientPoints;
         }
 
-        if ($spent->new) {
-            $this->announcer->announce(new RewardReserved($reservation));
+        $now = $this->clock->now();
+
+        if ($this->reservations->transition($reservation->key, ReservationStatus::Paying, ReservationStatus::Reserved, $now)) {
+            $this->announcer->announce(new RewardReserved($reservation->settled(ReservationStatus::Reserved, $now)));
         }
 
-        return $reservation;
+        // As it stands now: reserved by this call or by another process that paid it, or settled once its lifetime
+        // ended, or discarded. The points of a reservation settled without them, or gone, come back.
+        $current = $this->reservations->find($reservation->key);
+
+        if (!$current instanceof Reservation || !\in_array($current->status, ReservationStatus::holding(), true)) {
+            $this->refund($reservation);
+        }
+
+        return $current ?? throw ExchangeClosed::because(\sprintf('The reservation "%s" was withdrawn while its points were paid; they are back with the member.', $reservation->key->value));
     }
 
     /**
@@ -263,8 +283,13 @@ final readonly class Redemptions
     private function settle(string $key, ReservationStatus $status): Reservation
     {
         $reservation = $this->get($key);
+        $due = $reservation->isDue($this->clock->now());
 
-        $this->close($reservation, $reservation->isDue($this->clock->now()) ? ReservationStatus::Expired : $status);
+        if (ReservationStatus::Paying === $reservation->status && !$due) {
+            throw ReservationPending::of($key);
+        }
+
+        $this->close($reservation, $due ? ReservationStatus::Expired : $status);
 
         $current = $this->get($key);
 
@@ -272,29 +297,30 @@ final readonly class Redemptions
             return $current;
         }
 
+        if ($current->status->isOpen()) {
+            // Its payment ended between the read and the write: settle it as it is now.
+            return $this->settle($key, $status);
+        }
+
         throw ExchangeClosed::because(\sprintf('The reservation "%s" is %s; it cannot be %s.', $key, $current->status->value, $status->value));
     }
 
     /**
-     * Settles the reservation if it is still reserved, gives the points back unless it is confirmed, and tells it;
-     * returns whether this call settled it.
+     * Settles the reservation if it is still in the status it was read in, gives the points back unless it is
+     * confirmed, and tells it; returns whether this call settled it.
      */
     private function close(Reservation $reservation, ReservationStatus $status): bool
     {
         $now = $this->clock->now();
 
-        if (!$this->reservations->settle($reservation->key, $status, $now)) {
+        if (!$reservation->status->isOpen() || !$this->reservations->transition($reservation->key, $reservation->status, $status, $now)) {
             return false;
         }
 
         $settled = $reservation->settled($status, $now);
 
         if (ReservationStatus::Confirmed !== $status) {
-            try {
-                $this->points->refund($reservation->spendingKey());
-            } catch (UnknownMovement) {
-                // The points of a reservation interrupted before its spending was written were never taken.
-            }
+            $this->refund($reservation);
         }
 
         $this->announcer->announce(match ($status) {
@@ -304,5 +330,18 @@ final readonly class Redemptions
         });
 
         return true;
+    }
+
+    /**
+     * Gives the reservation's points back, once.
+     */
+    private function refund(Reservation $reservation): void
+    {
+        try {
+            $this->points->refund($reservation->spendingKey());
+        } catch (UnknownMovement) {
+            // The points of a reservation settled before its spending was written were never taken; the payment, if
+            // it still runs, gives them back itself.
+        }
     }
 }

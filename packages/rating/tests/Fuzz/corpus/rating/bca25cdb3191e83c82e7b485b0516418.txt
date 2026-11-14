@@ -1,0 +1,1 @@
+{"id": "r2", "game": "khess", "played_at": "2026-12-13T20:00:00.5+01:00", "sides": [["ann"], ["bob"]], "ranks": [1, 1], "friehdly": true}

@@ -14,6 +14,7 @@ use Tilttek\Dice\Custom\Shape;
 use Tilttek\Dice\DiceRoller;
 use Tilttek\Dice\Notation\Notation;
 use Tilttek\Dice\Notation\Notations;
+use Tilttek\DiceBundle\Application\Accessibility;
 use Tilttek\DiceBundle\Application\DiceRolls;
 use Tilttek\DiceBundle\Application\DieAppearance;
 use Tilttek\DiceBundle\Application\Port\DiceAppearance;
@@ -48,9 +49,15 @@ final class Dice
     public static function redDice(): DiceAppearance
     {
         return new class implements DiceAppearance {
-            public function appearance(ResourceReference $member, int $sides): ?DieAppearance
+            public function appearance(ResourceReference $member, int $sides, ?Accessibility $viewer = null): ?DieAppearance
             {
-                return 'member:1' === $member->toString() && 6 === $sides ? new DieAppearance('Ember', '#aa0000', 'resin', 'ember.png', texture: 'dice/ember.webp') : null;
+                if ('member:1' !== $member->toString() || 6 !== $sides) {
+                    return null;
+                }
+
+                return Accessibility::HighContrast === $viewer
+                    ? new DieAppearance('Ember', '#000000', ink: '#ffffff')
+                    : new DieAppearance('Ember', '#aa0000', 'resin', 'ember.png', texture: 'dice/ember.webp');
             }
         };
     }

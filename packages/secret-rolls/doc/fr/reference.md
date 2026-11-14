@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=b9c87798dc50a6d8573706a0bf1aaa6ac498980618bde984bb822248cc3f8271 -->
+<!-- phil-dev source-sha256=c7fe5d4650711ccdd0d02bcb2ed98ebbcac5b6a0da5ffa99726fe44aaecd5a4b -->
 # Référence
 
 | Type | Rôle |
@@ -10,6 +10,7 @@
 | `RollVerifier` | Vérifie une ouverture avec son engagement et la relance à partir de son germe |
 | `Journal\SceneJournal` | Le journal public d'une scène : son état, ses jets retenus, sa vérification et son export JSON |
 | `Journal\JournalEntry` | Une entrée du journal, chaînée à la précédente par son empreinte |
+| `Journal\JournalHead` | Où en est un journal sans ses entrées : sa longueur, sa dernière empreinte, s'il est clos |
 | `Journal\EntryKind` | `Committed`, `Revealed` ou `Closed` |
 | `Contract\SecretRollStore` | Où les journaux et les jets scellés sont gardés |
 | `Contract\JournalPublisher` | Informé de chaque entrée ajoutée |

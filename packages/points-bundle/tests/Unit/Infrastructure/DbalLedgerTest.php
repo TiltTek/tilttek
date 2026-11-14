@@ -6,6 +6,8 @@ namespace Tilttek\PointsBundle\Tests\Unit\Infrastructure;
 
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception as DriverException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\Platforms\MariaDBPlatform;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Platforms\OraclePlatform;
@@ -18,10 +20,12 @@ use LogicException;
 use Override;
 use Phil\Resource\ResourceReference;
 use PHPUnit\Framework\Attributes\CoversClass;
+use RuntimeException;
 use Tilttek\Points\Account;
 use Tilttek\Points\Exception\InsufficientPoints;
 use Tilttek\Points\Exception\InvalidPoints;
 use Tilttek\Points\Ledger\Ledger;
+use Tilttek\Points\LotsCheckpoint;
 use Tilttek\Points\MovementKey;
 use Tilttek\Points\MovementKind;
 use Tilttek\PointsBundle\Infrastructure\Doctrine\DbalLedger;
@@ -67,6 +71,13 @@ final class DbalLedgerTest extends LedgerTestCase
             ['account' => [340, true], 'currency' => [32, true], 'payments' => [null, true]],
             array_merge(...array_map(static fn (Column $column): array => [$column->getName() => [$column->getLength(), $column->getNotnull()]], $locks->getColumns())),
         );
+
+        $lots = $schema->getTable(PointsTables::LOTS);
+        self::assertSame(['account', 'currency'], $lots->getPrimaryKey()?->getColumns());
+        self::assertSame(
+            ['account' => [340, true], 'currency' => [32, true], 'position' => [null, true], 'lots' => [null, true]],
+            array_merge(...array_map(static fn (Column $column): array => [$column->getName() => [$column->getLength(), $column->getNotnull()]], $lots->getColumns())),
+        );
     }
 
     public function testTablesAlreadyThereAreLeftAsTheyAre(): void
@@ -74,9 +85,10 @@ final class DbalLedgerTest extends LedgerTestCase
         $schema = PointsTables::configure(new Schema());
         $again = PointsTables::configure($schema);
 
-        self::assertCount(2, $again->getTables());
+        self::assertCount(3, $again->getTables());
         self::assertSame($schema->getTable(PointsTables::MOVEMENTS)->getColumns(), $again->getTable(PointsTables::MOVEMENTS)->getColumns());
         self::assertSame($schema->getTable(PointsTables::LOCKS)->getColumns(), $again->getTable(PointsTables::LOCKS)->getColumns());
+        self::assertSame($schema->getTable(PointsTables::LOTS)->getColumns(), $again->getTable(PointsTables::LOTS)->getColumns());
     }
 
     public function testTheInsertionsWriteNothingWhenTheKeyIsThere(): void
@@ -224,6 +236,82 @@ final class DbalLedgerTest extends LedgerTestCase
         self::assertSame([$insertion, $update, $read.' LOCK IN SHARE MODE', $balance.' LOCK IN SHARE MODE'], $this->mySqlPayment(true));
     }
 
+    public function testAnExpiryLocksItsAccountsRow(): void
+    {
+        $ledger = $this->ledger();
+        $ledger->append(self::movement('a', MovementKind::Granted, 'issuance:manual', 'member:member:1', 10), self::at());
+
+        self::assertNull($ledger->appendAfter(self::movement('b', MovementKind::Expired, 'member:member:1', 'expiry:expired', 4), self::at(), 0));
+        self::assertTrue($ledger->appendAfter(self::movement('b', MovementKind::Expired, 'member:member:1', 'expiry:expired', 4), self::at(), 1)?->new);
+        self::assertFalse($this->connection->isTransactionActive());
+        self::assertSame([['member:member:1', 'points', 2]], $this->connection->fetchAllNumeric('SELECT account, currency, payments FROM tilttek_points_lock'));
+    }
+
+    public function testACheckpointRowThatDoesNotReadIsRefused(): void
+    {
+        $ledger = $this->ledger();
+        $member = Account::fromString('member:member:1');
+        $ledger->keepLots(new LotsCheckpoint($member, 'points', 3, [], 2));
+        self::assertSame([['member:member:1', 'points', 3, '{"debt":2,"lots":[]}']], $this->connection->fetchAllNumeric('SELECT account, currency, position, lots FROM tilttek_points_lots'));
+
+        foreach (['{' => 'The lots of "member:member:1" in points are not JSON.', '[[[[[[[[]]]]]]]]' => 'The lots of "member:member:1" in points are not JSON.', '3' => 'The lots of "member:member:1" in points are not a JSON object.'] as $lots => $message) {
+            $this->connection->executeStatement('UPDATE tilttek_points_lots SET lots = ?', [$lots]);
+
+            try {
+                $ledger->keptLots($member, 'points');
+                self::fail('The lots '.$lots.' were read.');
+            } catch (UnexpectedValueException $exception) {
+                self::assertSame($message, $exception->getMessage());
+            }
+        }
+
+        $this->connection->executeStatement('UPDATE tilttek_points_lots SET lots = ?', ['[[[[[[[]]]]]]]']);
+        $this->expectExceptionObject(InvalidPoints::because('A checkpoint holds its debt and its lots.'));
+        $ledger->keptLots($member, 'points');
+    }
+
+    public function testACheckpointAnotherProcessKeptAtTheSameMomentIsLeft(): void
+    {
+        $statements = [];
+        $connection = self::createStub(Connection::class);
+        $connection->method('getDatabasePlatform')->willReturn(new OraclePlatform());
+        $connection->method('executeStatement')->willReturnCallback(static function (string $sql) use (&$statements): int {
+            $statements[] = $sql;
+
+            if (str_starts_with($sql, 'INSERT')) {
+                throw new UniqueConstraintViolationException(new class('duplicate') extends RuntimeException implements DriverException {
+                    #[Override] public function getSQLState(): string
+                    {
+                        return '23000';
+                    }
+                }, null);
+            }
+
+            return 0;
+        });
+
+        new DbalLedger($connection)->keepLots(new LotsCheckpoint(Account::fromString('member:member:1'), 'points', 3));
+        self::assertSame([
+            'INSERT INTO tilttek_points_lots (account, currency, position, lots) VALUES (?, ?, ?, ?)',
+            'UPDATE tilttek_points_lots SET position = ?, lots = ? WHERE account = ? AND currency = ? AND position < ?',
+        ], $statements);
+    }
+
+    /**
+     * An expiry on MySQL, which a stub of the connection stands in for, refused since the account has a newer entry:
+     * started on its own, it reads committed rows; inside a transaction the caller opened, through shared locks.
+     */
+    public function testAnExpiryOnMySqlReadsCommittedRowsOnItsOwnAndThroughLocksInsideATransaction(): void
+    {
+        $insertion = DbalLedger::lockInsertion(new MySQLPlatform());
+        $update = 'UPDATE tilttek_points_lock SET payments = payments + 1 WHERE account = ? AND currency = ?';
+        $read = 'SELECT position, movement_key, kind, currency, debit, credit, amount, occurred_at, recorded_at, cause, reverses FROM tilttek_points_movement WHERE movement_key = ?';
+        $newer = 'SELECT COUNT(*) FROM tilttek_points_movement WHERE position > ? AND currency = ? AND (credit = ? OR debit = ?)';
+
+        self::assertSame(['SET TRANSACTION ISOLATION LEVEL READ COMMITTED', $insertion, $update, $read, $newer], $this->mySqlExpiry(false));
+        self::assertSame([$insertion, $update, $read.' LOCK IN SHARE MODE', $newer.' LOCK IN SHARE MODE'], $this->mySqlExpiry(true));
+    }
+
     #[Override]
     protected function ledger(): Ledger
     {
@@ -264,6 +352,39 @@ final class DbalLedgerTest extends LedgerTestCase
         } catch (InsufficientPoints $insufficientPoints) {
             self::assertSame('The account "member:member:1" holds 0 points; 100 cannot be paid from it.', $insufficientPoints->getMessage());
         }
+
+        return $statements;
+    }
+
+    /**
+     * The statements an expiry sends to a connection that says it is MySQL, when the account has a newer entry.
+     *
+     * @return list<string>
+     */
+    private function mySqlExpiry(bool $inTransaction): array
+    {
+        $statements = [];
+        $connection = self::createStub(Connection::class);
+        $connection->method('getDatabasePlatform')->willReturn(new MySQLPlatform());
+        $connection->method('isTransactionActive')->willReturn($inTransaction);
+        $connection->method('transactional')->willReturnCallback(static fn (callable $work): mixed => $work($connection));
+        $connection->method('executeStatement')->willReturnCallback(static function (string $sql) use (&$statements): int {
+            $statements[] = $sql;
+
+            return 1;
+        });
+        $connection->method('fetchAssociative')->willReturnCallback(static function (string $sql) use (&$statements): false {
+            $statements[] = $sql;
+
+            return false;
+        });
+        $connection->method('fetchOne')->willReturnCallback(static function (string $sql) use (&$statements): int {
+            $statements[] = $sql;
+
+            return 1;
+        });
+
+        self::assertNull(new DbalLedger($connection)->appendAfter(self::movement('expire', MovementKind::Expired, 'member:member:1', 'expiry:expired', 100), self::at(), 7));
 
         return $statements;
     }

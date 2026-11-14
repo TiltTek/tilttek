@@ -9,6 +9,7 @@
 | `RollVerifier` | Checks an opening against its commitment and rolls it again from its seed |
 | `Journal\SceneJournal` | The public journal of a scene: its state, its withheld rolls, its check and its JSON export |
 | `Journal\JournalEntry` | One entry of the journal, chained to the one before by its hash |
+| `Journal\JournalHead` | Where a journal stands without its entries: its length, its last hash, whether it is closed |
 | `Journal\EntryKind` | `Committed`, `Revealed` or `Closed` |
 | `Contract\SecretRollStore` | Where the journals and the sealed rolls are kept |
 | `Contract\JournalPublisher` | Told of each entry appended |

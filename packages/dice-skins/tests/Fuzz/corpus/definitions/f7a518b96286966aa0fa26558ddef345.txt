@@ -1,0 +1,1 @@
+[{"key": "embr", "label": "r", "face": "#9b1b30", "ink": "#fff", "material": "pearl", "texture": "pe/soft", "types": {"2": {}}}]

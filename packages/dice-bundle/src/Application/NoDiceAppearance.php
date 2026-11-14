@@ -14,7 +14,7 @@ use Tilttek\DiceBundle\Application\Port\DiceAppearance;
 final readonly class NoDiceAppearance implements DiceAppearance
 {
     #[Override]
-    public function appearance(ResourceReference $member, int $sides): ?DieAppearance
+    public function appearance(ResourceReference $member, int $sides, ?Accessibility $viewer = null): ?DieAppearance
     {
         return null;
     }

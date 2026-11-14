@@ -6,9 +6,13 @@
 |---|---|---|
 | `tilttek_points_movement` | `position` (auto-increment), `movement_key` (400), `kind` (16), `currency` (32), `debit` and `credit` (340), `amount` (bigint), `occurred_at`, `recorded_at`, `cause` (255, null), `reverses` (400, null) | unique `movement_key`; `debit, currency`; `credit, currency`; `cause`; `kind, occurred_at` |
 | `tilttek_points_lock` | `account` (340), `currency` (32), `payments` (bigint) | primary key on `account, currency` |
+| `tilttek_points_lots` | `account` (340), `currency` (32), `position` (bigint), `lots` (text, JSON) | primary key on `account, currency` |
 
 The ledger has no balance column: a balance is the sum of an account's movements, computed in SQL. A lock row holds
-no amount either: it counts the payments made from the account, and exists so that each payment can lock it.
+no amount either: it counts the payments and the expiries made from the account, and exists so that each one can lock
+it. A row of `tilttek_points_lots` is the checkpoint of an account's lots that the expiry kept: the position it stands
+at and, as JSON, the lots with points left and the debt; it is replaced only by a checkpoint at a later position,
+deleted with the member's movements, and deleted for every account when the derived movements are forgotten.
 
 ## Written once
 
@@ -38,6 +42,13 @@ On MySQL and MariaDB, whose default isolation, REPEATABLE READ, holds a transact
 read, the payment's transaction runs at READ COMMITTED. A payment made inside a transaction the application already
 opened cannot change its isolation: it reads the movement and the balance with `LOCK IN SHARE MODE`, which reads the
 latest committed rows whatever the transaction read before.
+
+## Expiries
+
+An expiry takes the same lock row as a payment, then counts the account's movements in the currency after the
+position its lots were read up to, and writes the expiry only when there are none: a spending that slipped in between
+sends the expiry back to read the lots again. On MySQL and MariaDB, it reads at READ COMMITTED, or through
+`LOCK IN SHARE MODE` inside a transaction the application opened, as a payment does.
 
 ## Dates
 

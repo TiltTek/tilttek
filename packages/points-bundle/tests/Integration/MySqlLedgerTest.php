@@ -39,13 +39,13 @@ final class MySqlLedgerTest extends LedgerTestCase
     {
         $this->connection = self::connect();
 
-        foreach ([PointsTables::MOVEMENTS, PointsTables::LOCKS] as $table) {
+        foreach ([PointsTables::MOVEMENTS, PointsTables::LOCKS, PointsTables::LOTS] as $table) {
             $this->connection->executeStatement('DROP TABLE IF EXISTS '.$table);
         }
 
         $schema = PointsTables::configure($this->connection->createSchemaManager()->introspectSchema());
 
-        foreach ($this->connection->getDatabasePlatform()->getCreateTablesSQL([$schema->getTable(PointsTables::MOVEMENTS), $schema->getTable(PointsTables::LOCKS)]) as $sql) {
+        foreach ($this->connection->getDatabasePlatform()->getCreateTablesSQL([$schema->getTable(PointsTables::MOVEMENTS), $schema->getTable(PointsTables::LOCKS), $schema->getTable(PointsTables::LOTS)]) as $sql) {
             $this->connection->executeStatement($sql);
         }
     }

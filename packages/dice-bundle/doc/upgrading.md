@@ -48,3 +48,10 @@ stylesheet that wrote a fixed colour for the numbers of coloured dice reads `var
 overridden `roll_detail.html.twig` adds the two hooks from the bundle's template.
 
 The appearance in the view of a roll, `DiceExtension::view()`, has the keys `ink` and `texture` too.
+
+### The viewer's accessibility
+
+`DiceAppearance::appearance()` takes a third argument, `?Accessibility $viewer = null`: the viewer's accessibility,
+standard or high contrast, or null when the page does not know it. An application's own implementation of the port
+declares it, even to ignore it — PHP refuses an implementation that drops an argument of its interface. A call with two
+arguments works unchanged. `DiceRolls::appearance()`, `DiceExtension::view()` and `dice_roll_detail()` pass it on.

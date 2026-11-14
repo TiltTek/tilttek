@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=c6f8b4abf5266d90c0bb43610a5bf87fbf6a3215e2338be0c36a1611e30e38e7 -->
+<!-- phil-dev source-sha256=afdd1450a8922fdc358830ed9b613378f54969572ab636355e3392a6c214d858 -->
 # Référence
 
 | Type | Rôle |
@@ -14,10 +14,11 @@
 | `Recorded` | Une entrée et si cet appel l'a écrite |
 | `Erasure` | Ce qu'effacer un membre a supprimé et détaché |
 | `Lot`, `Lots` | Ce qui reste de chaque crédit, premiers entrés, premiers sortis |
+| `LotsCheckpoint` | Les lots à une position, gardés pour que l'expiration ne lise que les entrées qui suivent |
 | `Ledger\Ledger` | Où le registre est gardé |
 | `Ledger\InMemoryLedger` | Le registre en mémoire |
 | `Ledger\Reading` | Les bornes d'une lecture |
 | `Rule\EarningRule` | Des points pour un geste |
 | `Rule\Cap`, `Rule\Period` | Le plus qu'une règle donne à un membre sur une période |
 | `Rule\Rules` | Les règles par nom et leur fuseau horaire |
-| `Exception\PointsException` et ses cinq exceptions | [Exceptions](exceptions.md) |
+| `Exception\PointsException` et ses six exceptions | [Exceptions](exceptions.md) |

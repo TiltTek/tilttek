@@ -5,7 +5,7 @@
 | `expression\|dice_notation(locale)` | The expression in the notation of a language; an invalid one as it is |
 | `expression\|dice_dialect('roll20')` | The commands of a table's dialect, or null when the dialect cannot write it |
 | `dice_roll(expression, locale)` | A `PoolResult` |
-| `dice_roll_detail(result, member, locale)` | The detail of a roll, as HTML |
+| `dice_roll_detail(result, member, locale, viewer)` | The detail of a roll, as HTML |
 | `dice_text(message)` | A word of the detail, through the translator |
 
 ## The detail of a roll
@@ -29,7 +29,13 @@ classes:
 | `is-success`, `is-failure` | success, failure |
 | `is-from-reroll`, `is-from-explosion` | — |
 
-With a member, each set carries the appearance of their dice:
+With a member, each set carries the appearance of their dice. The fourth argument, `'high-contrast'` or `'standard'`, is
+the viewer's accessibility — a setting of theirs, or what the page read from `prefers-contrast: more` or
+`forced-colors: active` —, passed to the appearance; any other text, or none, is no preference:
+
+```twig
+{{ dice_roll_detail(roll, member, app.request.locale, 'high-contrast') }}
+```
 
 | Hook | Holds |
 |---|---|

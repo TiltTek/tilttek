@@ -1,0 +1,49 @@
+{
+    "name": "tilttek/rating",
+    "description": "Per-game ratings of players from their results: Elo with a decreasing K, OpenSkill with Plackett-Luce or Thurstone-Mosteller and a conservative ranking, duels, games of several players and teams, draws, an unrated friendly mode, ratings private by default, a replay that gives the same values, and the events of a celebration.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "rating",
+        "elo",
+        "openskill",
+        "ranking",
+        "game"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "psr/event-dispatcher": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4"
+    },
+    "suggest": {
+        "tilttek/play-log": "To replay the ratings of a game from its log of plays, through a source of results"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Rating\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Rating\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

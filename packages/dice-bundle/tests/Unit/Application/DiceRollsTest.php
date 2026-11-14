@@ -19,6 +19,7 @@ use Tilttek\Dice\Fairness\Seed;
 use Tilttek\Dice\Parser\DiceParser;
 use Tilttek\Dice\Replay\ReplayableRoll;
 use Tilttek\Dice\Replay\Replayer;
+use Tilttek\DiceBundle\Application\Accessibility;
 use Tilttek\DiceBundle\Application\DiceRolls;
 use Tilttek\DiceBundle\Application\DieAppearance;
 use Tilttek\DiceBundle\Application\Event\RollRecorded;
@@ -153,6 +154,17 @@ final class DiceRollsTest extends TestCase
 
         $appearance = Dice::rolls(ScriptedEngine::randomizer(), appearance: Dice::redDice())->appearance($member, 6);
         self::assertSame(['Ember', '#aa0000', 'resin', 'ember.png', null, 'dice/ember.webp'], [$appearance?->name, $appearance?->color, $appearance?->material, $appearance?->image, $appearance?->ink, $appearance?->texture]);
+    }
+
+    public function testTheViewersAccessibilityReachesTheExtensionPoint(): void
+    {
+        $member = ResourceReference::of('member', '1');
+        $dice = Dice::rolls(ScriptedEngine::randomizer(), appearance: Dice::redDice());
+
+        self::assertNull(new NoDiceAppearance()->appearance($member, 6, Accessibility::HighContrast));
+        self::assertSame(['#000000', '#ffffff', null], [$dice->appearance($member, 6, Accessibility::HighContrast)?->color, $dice->appearance($member, 6, Accessibility::HighContrast)?->ink, $dice->appearance($member, 6, Accessibility::HighContrast)?->texture]);
+        self::assertSame('#aa0000', $dice->appearance($member, 6, Accessibility::Standard)?->color);
+        self::assertSame(['standard', 'high-contrast'], array_map(static fn (Accessibility $case): string => $case->value, Accessibility::cases()));
     }
 
     public function testTheInkIsTheOneGivenOrOneThatReadsOnTheColour(): void

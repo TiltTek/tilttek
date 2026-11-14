@@ -9,13 +9,15 @@ use Phil\Resource\ResourceReference;
 use Tilttek\Collections\CollectibleDie;
 use Tilttek\Collections\Dice\DiceShelf;
 use Tilttek\Collections\Item;
+use Tilttek\DiceBundle\Application\Accessibility;
 use Tilttek\DiceBundle\Application\DieAppearance;
 use Tilttek\DiceBundle\Application\Port\DiceAppearance;
 
 /**
  * The dice a member chose among those of their sets, as `tilttek/dice-bundle` dresses its rolls: the item's name in
  * the site's locale, the die's colour and material, and the item's image. Name this service in
- * `tilttek_dice.appearance`; the appearance never changes the randomness.
+ * `tilttek_dice.appearance`; the appearance never changes the randomness. A set's die has one look, whatever the
+ * viewer's accessibility: the bundle writes its numbers in the ink that reads best on its colour.
  */
 final readonly class CollectionDiceAppearance implements DiceAppearance
 {
@@ -26,7 +28,7 @@ final readonly class CollectionDiceAppearance implements DiceAppearance
     }
 
     #[Override]
-    public function appearance(ResourceReference $member, int $sides): ?DieAppearance
+    public function appearance(ResourceReference $member, int $sides, ?Accessibility $viewer = null): ?DieAppearance
     {
         $item = $this->shelf->chosen($member, $sides);
         $die = $item?->die;

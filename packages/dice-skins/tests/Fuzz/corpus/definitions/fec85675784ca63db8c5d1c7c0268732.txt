@@ -1,0 +1,1 @@
+[{"key": "ember", "label": "Ember", "face": "#8b1b30", "ink": "#fff", "material": "pearl", "texture": "pearof", "types": {"8": {"face": "#1fbEmber", "face": "#9bf", "material": "pearl", "texture": "arl5f5"}, "4": {"material": "metal"}}}, {"klael": "#0"}]

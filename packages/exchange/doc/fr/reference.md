@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=7d09e7eb5982f7cf1d7b26eac923faac006a9ffe550de95b22ce77902735d339 -->
+<!-- phil-dev source-sha256=c194f4a30d55999ca84e39f00ba63dd8bfc984f74b6fb93f46b238f7ca474723 -->
 # Référence
 
 | Type | Rôle |
@@ -27,4 +27,4 @@
 | `Announcer`, `SilentAnnouncer` | Informé de chaque événement ; n'informe personne |
 | `Event\ExchangeEvent` et ses onze événements | [Événements](events.md) |
 | `Erasure`, `ExchangeErasure` | Ce qu'a fait l'effacement d'un membre ; l'effacement |
-| `Exception\ExchangeException` et ses six exceptions | [Exceptions](exceptions.md) |
+| `Exception\ExchangeException` et ses sept exceptions | [Exceptions](exceptions.md) |

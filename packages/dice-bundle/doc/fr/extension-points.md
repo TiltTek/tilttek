@@ -1,24 +1,34 @@
-<!-- phil-dev source-sha256=a7d343a6de07c95df054b09e8e96b7c4be0ac7a1fc9b3966476ef78b3bf0f4c5 -->
+<!-- phil-dev source-sha256=e73b0eef9465d91d0ebd783e7de43ff89db4b851ab3ffd2de6afc99ebae4163a -->
 # Points d'extension
 
 ## Les dés d'un membre
 
 `Tilttek\DiceBundle\Application\Port\DiceAppearance` donne, pour un membre et un nombre de faces, l'apparence des dés à
-afficher, par exemple le jeu que possède le membre, ou null pour des dés ordinaires :
+afficher, par exemple le jeu que possède le membre, ou null pour des dés ordinaires. Le troisième argument est
+l'accessibilité du spectateur, quand la page la connaît : `Accessibility::HighContrast` demande des nombres qui se
+détachent davantage de leurs faces (faces unies, sans texture, contraste plus fort), `Accessibility::Standard` les dés
+tels qu'habillés, et null laisse le choix à l'apparence :
 
 ```php
 use Phil\Resource\ResourceReference;
+use Tilttek\DiceBundle\Application\Accessibility;
 use Tilttek\DiceBundle\Application\DieAppearance;
 use Tilttek\DiceBundle\Application\Port\DiceAppearance;
 
 final class OwnedDice implements DiceAppearance
 {
-    public function appearance(ResourceReference $member, int $sides): ?DieAppearance
+    public function appearance(ResourceReference $member, int $sides, ?Accessibility $viewer = null): ?DieAppearance
     {
+        if (Accessibility::HighContrast === $viewer) {
+            return new DieAppearance('Ember', '#000000', ink: '#ffffff');
+        }
+
         return new DieAppearance('Ember', '#aa0000', 'resin', '/images/ember.png', ink: '#ffd700', texture: 'dice/ember');
     }
 }
 ```
+
+Une apparence qui a le même aspect pour tous les spectateurs déclare l'argument et l'ignore.
 
 Nommez le service dans `tilttek_dice.appearance`. **L'apparence ne change jamais le hasard** : elle habille les dés que
 le serveur a lancés. Les dés Fudge demandent 6 faces ; les dés personnalisés portent leurs propres faces et n'en

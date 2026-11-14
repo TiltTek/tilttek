@@ -7,6 +7,7 @@ namespace Tilttek\SecretRolls\Contract;
 use Tilttek\SecretRolls\Exception\JournalConflict;
 use Tilttek\SecretRolls\HiddenRoll;
 use Tilttek\SecretRolls\Journal\JournalEntry;
+use Tilttek\SecretRolls\Journal\JournalHead;
 
 /**
  * Where the journals of the scenes and the sealed openings are kept. The journal only grows: an entry is appended at the
@@ -21,6 +22,13 @@ interface SecretRollStore
      * @return list<JournalEntry>
      */
     public function entries(string $scene): array;
+
+    /**
+     * Where the scene's journal stands — its length, the hash of its last entry, whether it is closed —, read without
+     * its entries: the store keeps it as it appends, so that a roll costs the same in a long scene as in a short one.
+     * An empty head for a scene that has no entry.
+     */
+    public function head(string $scene): JournalHead;
 
     /**
      * Keeps the hidden roll sealed and appends the entry of its commitment, both or neither.

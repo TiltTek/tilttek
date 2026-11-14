@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=b4f6239962d5f510d3cdf440c8b6ce67aca21756dab59528d6f611b3e172b64b -->
+<!-- phil-dev source-sha256=bca4639ce12837fede44a2983daba37fd213ac3210267aa67f1d147eabf06b4d -->
 # Mise à niveau
 
 ## De 0.1 à 0.2
@@ -50,3 +50,11 @@ dés colorés lit plutôt `var(--tilttek-dice-ink)` ; un `roll_detail.html.twig`
 partir du gabarit du bundle.
 
 L'apparence dans la vue d'un lancer, `DiceExtension::view()`, a aussi les clés `ink` et `texture`.
+
+### L'accessibilité du spectateur
+
+`DiceAppearance::appearance()` prend un troisième argument, `?Accessibility $viewer = null` : l'accessibilité du
+spectateur, standard ou haut contraste, ou null quand la page ne la connaît pas. L'implémentation du port propre à une
+application le déclare, même pour l'ignorer : PHP refuse une implémentation qui retire un argument de son interface. Un
+appel à deux arguments fonctionne sans changement. `DiceRolls::appearance()`, `DiceExtension::view()` et
+`dice_roll_detail()` le transmettent.

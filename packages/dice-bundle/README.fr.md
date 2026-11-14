@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=ff3e3ed8f5db74bf279b3bc68aa696c50468d957b506079ffd4d52b90585e162 -->
+<!-- phil-dev source-sha256=f244d030b6dc3479d0d788a142dda3c26ff24477de9003c722bc0f550491773b -->
 # tilttek/dice-bundle
 
 **Des dés pour une application Symfony : configurés, lancés, gardés pour être rejoués, vérifiés dans les formulaires et
@@ -34,7 +34,7 @@ journal, `RollRecorded` l'annonce et `DiceAppearance` est le port qui habille le
 | Journal des lancers rejouables dans Doctrine ou en mémoire : contexte d'un lancer, lancers par propriétaire, par contexte et plusieurs à la fois | Implémenté et testé |
 | Événement `RollRecorded` | Implémenté et testé |
 | `DiceMacros` : macros d'un site, d'une table et d'un membre, nommées par jeton, dans Doctrine ou en mémoire | Implémenté et testé |
-| Point d'extension `DiceAppearance` : couleur, encre, matériau, image, texture ; une encre qui se lit à 4,5:1 quand aucune n'est donnée | Implémenté et testé |
+| Point d'extension `DiceAppearance` : couleur, encre, matériau, image, texture ; une encre qui se lit à 4,5:1 quand aucune n'est donnée ; le haut contraste du spectateur | Implémenté et testé |
 | Contrainte `DiceExpression` et champ `DiceExpressionType` | Implémentés et testés |
 | Twig : `dice_notation`, `dice_dialect`, `dice_roll`, `dice_roll_detail`, `dice_text` | Implémenté et testé |
 | Dialectes ajoutés par étiquette | Implémentés et testés |

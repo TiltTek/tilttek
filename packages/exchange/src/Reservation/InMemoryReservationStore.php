@@ -48,15 +48,15 @@ final class InMemoryReservationStore implements ReservationStore
     }
 
     #[Override]
-    public function settle(ExchangeKey $key, ReservationStatus $status, DateTimeImmutable $at): bool
+    public function transition(ExchangeKey $key, ReservationStatus $from, ReservationStatus $to, DateTimeImmutable $at): bool
     {
         $reservation = $this->find($key);
 
-        if (ReservationStatus::Reserved !== $reservation?->status) {
+        if ($from !== $reservation?->status) {
             return false;
         }
 
-        $this->reservations[$key->value] = $reservation->settled($status, $at);
+        $this->reservations[$key->value] = $reservation->settled($to, $at);
 
         return true;
     }
@@ -64,7 +64,7 @@ final class InMemoryReservationStore implements ReservationStore
     #[Override]
     public function discard(ExchangeKey $key): void
     {
-        if (ReservationStatus::Reserved === $this->find($key)?->status) {
+        if (ReservationStatus::Paying === $this->find($key)?->status) {
             unset($this->reservations[$key->value]);
         }
     }

@@ -11,6 +11,7 @@
 | `Application\MacroResolution`, `MacroSession` | Internal: the macros of one input looked for, expanded and counted |
 | `Application\Port\DiceAppearance` | The extension point that dresses a member's dice |
 | `Application\DieAppearance`, `NoDiceAppearance` | An appearance, with its readable ink; plain dice |
+| `Application\Accessibility` | What the viewer asked for: the dice as dressed, or in high contrast |
 | `Application\Contrast` | The contrast of two colours as WCAG 2 measures it, and the ink that reads on a face |
 | `Application\Event\RollRecorded` | A replayable roll kept in the journal, by identifiers |
 | `Application\Exception\UnknownRoll` | A replay of a roll the journal does not hold |
