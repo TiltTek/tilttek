@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=10d7d785bdb6dd010a062142c04a8cf49ce3382ea708f21b83800fabba938ad1 -->
+<!-- phil-dev source-sha256=0aa12160fd0c122def7c581a35345625c8a5a6514421d4e6cd1b204efdc51bc9 -->
 # Ouvrir les cases
 
 ## Ouvrir une fois
@@ -23,7 +23,7 @@ faux.
 
 ## Accorder la surprise
 
-Chaque première ouverture envoie `Event\BoxOpened`, une seule fois, avec l'identifiant du calendrier, le membre, le jour,
+Chaque première ouverture envoie `Event\BoxOpened` avec l'identifiant du calendrier, le membre, le jour,
 la surprise et le moment. L'écouteur de l'application accorde la surprise : il crédite les points, décerne l'insigne,
 révèle le contenu ou tire un code dans la réserve.
 
@@ -43,6 +43,14 @@ public function __invoke(BoxOpened $event): void
 `idempotencyKey()` — `advent:<calendar>:<member>:<day>` — permet à un registre de refuser un second crédit quand un
 écouteur est relancé. L'événement ne porte que des références ; un écouteur qui confie le travail à une file de messages
 les envoie telles quelles.
+
+L'événement est envoyé au moins une fois. Le magasin garde chaque ouverture non remise jusqu'à ce que son `BoxOpened`
+soit envoyé sans exception. Quand un écouteur lève une exception, l'ouverture reste non remise, les autres ouvertures non
+remises du membre dans le calendrier sont annoncées quand même, et la première exception est relancée à la fin. Le
+prochain `open()` du calendrier par le membre — la même case ou une autre — l'annonce de nouveau, et
+`$advent->deliver($calendar, $member)` reprend sans rien ouvrir, en renvoyant combien d'ouvertures il a réglées.
+L'ouverture d'un jour que le calendrier ne contient plus est abandonnée sans les écouteurs. Comme une ouverture peut
+ainsi être annoncée deux fois, un écouteur est idempotent : il accorde une seule fois par `idempotencyKey()`.
 
 ## Les cases qu'un membre voit
 

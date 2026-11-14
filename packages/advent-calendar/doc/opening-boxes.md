@@ -20,7 +20,7 @@ box at once, one keeps its opening; the other finds it there and answers it, wit
 
 ## Granting the surprise
 
-Each first opening dispatches `Event\BoxOpened`, once, with the calendar's identifier, the member, the day, the
+Each first opening dispatches `Event\BoxOpened` with the calendar's identifier, the member, the day, the
 surprise and the moment. The application's listener grants the surprise: it credits the points, awards the badge,
 reveals the content or draws a code from the pool.
 
@@ -40,6 +40,14 @@ public function __invoke(BoxOpened $event): void
 `idempotencyKey()` — `advent:<calendar>:<member>:<day>` — lets a ledger refuse a second credit when a listener is
 retried. The event carries references only, so a listener that hands the work to a message queue sends them as they
 are.
+
+The event is dispatched at least once. The store keeps each opening undelivered until its `BoxOpened` was dispatched
+without an exception. When a listener throws, the opening stays undelivered, the member's other undelivered openings of
+the calendar are told all the same, and the first exception is thrown again at the end. The next `open()` of the
+calendar by the member — the same box again, or another — tells it again, and `$advent->deliver($calendar, $member)`
+resumes without opening anything, returning how many openings it settled. An opening of a day the calendar no longer
+holds is let go without the listeners. Since an opening may thus be told twice, a listener is idempotent: it grants
+once per `idempotencyKey()`.
 
 ## The boxes a member sees
 

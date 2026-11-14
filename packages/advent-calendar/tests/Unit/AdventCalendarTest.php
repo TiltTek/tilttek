@@ -10,6 +10,7 @@ use DateTimeZone;
 use Phil\Resource\ResourceReference;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Symfony\Component\Clock\MockClock;
 use Tilttek\AdventCalendar\AdventCalendar;
 use Tilttek\AdventCalendar\BoxState;
@@ -214,7 +215,80 @@ final class AdventCalendarTest extends TestCase
         self::assertFalse($opened->first);
         self::assertSame($other, $opened->opening);
         self::assertSame('badge-3', $opened->surprise->reference);
-        self::assertSame([], $this->events->events);
+        // The other request's opening is still undelivered here: it is told, at least once.
+        self::assertCount(1, $this->events->events);
+    }
+
+    public function testAnOpeningWhoseListenerFailedIsToldAgain(): void
+    {
+        $calendar = $this->calendar();
+        $this->events->failures = 1;
+
+        try {
+            $this->advent->open($calendar, $this->member, 3);
+            self::fail('The listener did not fail.');
+        } catch (RuntimeException) {
+        }
+
+        self::assertCount(1, $this->store->undelivered($this->member));
+
+        // The same opening again tells it now, once.
+        $again = $this->advent->open($calendar, $this->member, 3);
+        self::assertFalse($again->first);
+        self::assertCount(1, $this->events->events);
+        $event = $this->events->events[0];
+        self::assertInstanceOf(BoxOpened::class, $event);
+        self::assertSame(['advent-2026', 3, 'badge-3', '2026-12-03T10:00:00+01:00'], [$event->calendar, $event->day, $event->surprise->reference, $event->openedAt->format(DateTimeInterface::ATOM)]);
+        self::assertSame('advent:advent-2026:member:1:3', $event->idempotencyKey());
+        self::assertCount(0, $this->store->undelivered($this->member));
+        $this->advent->open($calendar, $this->member, 3);
+        self::assertCount(1, $this->events->events);
+    }
+
+    public function testDeliverResumesTheOpeningsOfACalendar(): void
+    {
+        $calendar = $this->calendar();
+        $other = Calendar::of('other', 'Europe/Paris', '2026-12-01', [Surprise::badge('other-1'), Surprise::badge('other-2'), Surprise::badge('other-3')]);
+        $this->events->failures = 100;
+
+        foreach ([[$calendar, 2], [$calendar, 3], [$other, 3]] as [$of, $day]) {
+            try {
+                $this->advent->open($of, $this->member, $day);
+                self::fail('The listener did not fail.');
+            } catch (RuntimeException) {
+            }
+        }
+
+        // A listener that fails on every opening: each stays undelivered, and the first failure is thrown at the end.
+        $this->events->failures = 2;
+
+        try {
+            $this->advent->deliver($calendar, $this->member);
+            self::fail('The listener did not fail.');
+        } catch (RuntimeException $runtimeException) {
+            self::assertSame('The listener failed, time 5.', $runtimeException->getMessage());
+        }
+
+        // A listener that fails on one opening leaves the next ones told.
+        $this->events->failures = 1;
+
+        try {
+            $this->advent->deliver($calendar, $this->member);
+            self::fail('The listener did not fail.');
+        } catch (RuntimeException) {
+        }
+
+        self::assertSame([3], array_map(static fn (object $event): int => $event instanceof BoxOpened ? $event->day : 0, $this->events->events));
+        self::assertSame(1, $this->advent->deliver($calendar, $this->member));
+        self::assertSame(0, $this->advent->deliver($calendar, $this->member));
+        self::assertSame(['advent-2026', 'advent-2026'], array_map(static fn (object $event): string => $event instanceof BoxOpened ? $event->calendar : '', $this->events->events));
+        self::assertCount(1, $this->store->undelivered($this->member));
+
+        // An opening of a day the calendar no longer holds is let go without the listener.
+        $shorter = Calendar::of('other', 'Europe/Paris', '2026-12-01', [Surprise::badge('other-1')]);
+        self::assertSame(1, $this->advent->deliver($shorter, $this->member));
+        self::assertCount(2, $this->events->events);
+        self::assertSame([], $this->store->undelivered($this->member));
     }
 
     public function testErasingAMember(): void

@@ -9,8 +9,10 @@ use Phil\Resource\ResourceReference;
 use Tilttek\AdventCalendar\Surprise;
 
 /**
- * Dispatched once, when a member first opens a box: the application grants the surprise — credits the points, awards
- * the badge, reveals the content, hands out a code — and may start a celebration. It carries references only.
+ * Dispatched when a member first opens a box: the application grants the surprise — credits the points, awards the
+ * badge, reveals the content, hands out a code — and may start a celebration. It carries references only. It is
+ * dispatched at least once: told again after a listener failed, so a listener keeps what it grants once by
+ * `idempotencyKey()`.
  */
 final readonly class BoxOpened
 {

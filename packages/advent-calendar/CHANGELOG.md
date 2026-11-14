@@ -4,6 +4,27 @@ All notable changes to `tilttek/advent-calendar` will be documented in this file
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `Contract\OpeningStore` keeps whether each opening was delivered: `undelivered($member)`, the member's openings not
+  yet marked delivered, by calendar then day, and `markDelivered($opening)`. An opening is added undelivered. A store
+  written for 0.1 implements the two methods; `doc/writing-a-store.md` gives the column.
+- `BoxOpened` is dispatched at least once: an opening is marked delivered once its event was dispatched without an
+  exception. A listener that throws leaves it undelivered without stopping the others, and the first exception is
+  thrown again at the end; the next `open()` of the calendar by the member tells it again. Listeners must be
+  idempotent, by `idempotencyKey()`.
+
+### Added
+
+- `AdventCalendar::deliver()`: the member's undelivered openings of a calendar told again, to resume after a listener
+  failed; an opening of a day the calendar no longer holds is let go.
+
+### Fixed
+
+- A listener of `BoxOpened` that failed no longer loses the surprise of an opening already recorded.
+
 ## 0.1.0-alpha - 2026-11-12
 
 ### Added

@@ -19,6 +19,11 @@ final class InMemoryOpeningStore implements OpeningStore
      */
     private array $openings = [];
 
+    /**
+     * @var array<string, array<string, array<int, Opening>>> calendar, member, day: the openings not yet delivered
+     */
+    private array $undelivered = [];
+
     #[Override]
     public function find(string $calendar, ResourceReference $member, int $day): ?Opening
     {
@@ -35,8 +40,34 @@ final class InMemoryOpeningStore implements OpeningStore
         }
 
         $this->openings[$opening->calendar][$member][$opening->day] = $opening;
+        $this->undelivered[$opening->calendar][$member][$opening->day] = $opening;
 
         return true;
+    }
+
+    #[Override]
+    public function undelivered(ResourceReference $member): array
+    {
+        $key = $member->toString();
+        $undelivered = [];
+        ksort($this->undelivered);
+
+        foreach ($this->undelivered as $members) {
+            $openings = $members[$key] ?? [];
+            ksort($openings);
+
+            foreach ($openings as $opening) {
+                $undelivered[] = $opening;
+            }
+        }
+
+        return $undelivered;
+    }
+
+    #[Override]
+    public function markDelivered(Opening $opening): void
+    {
+        unset($this->undelivered[$opening->calendar][$opening->member->toString()][$opening->day]);
     }
 
     #[Override]
@@ -56,7 +87,7 @@ final class InMemoryOpeningStore implements OpeningStore
 
         foreach (array_keys($this->openings) as $calendar) {
             $removed += \count($this->openings[$calendar][$key] ?? []);
-            unset($this->openings[$calendar][$key]);
+            unset($this->openings[$calendar][$key], $this->undelivered[$calendar][$key]);
         }
 
         return $removed;
