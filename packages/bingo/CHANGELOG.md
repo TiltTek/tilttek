@@ -4,6 +4,39 @@ All notable changes to `tilttek/bingo` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- An event of the game can no longer be lost when a listener fails. A tick, a call or a win is written with its event,
+  in the same version of the card or the game, and the event stays there until it was dispatched without an
+  exception: `Card::undelivered()` and `Card::markDelivered()`, `BingoGame::undelivered()` and
+  `BingoGame::markDelivered()`. A listener that throws leaves its event undelivered, the other events are dispatched
+  all the same, and the first exception is thrown again at the end; the same call repeated — the gesture recorded
+  again, the square called again, the claim made again — dispatches it again. Each delivery is one more change of the
+  card or the game.
+- A card's win takes its place among the game's winners() right before its event is dispatched, so that a win whose step
+  failed is resumed with its event.
+- `SquareTicked` carries the idempotency key of the gesture that ticked the square, `gesture`, a new argument of its
+  constructor.
+- `Activity\BingoActivityObserver` implements `ResumableObserver` of `tilttek/activity`: the same gesture recorded
+  again, or the same cancellation given again, is handed to it once more.
+
+### Fixed
+
+- A cell ticked by more gestures than `Card::MOST_KEYS` could be unticked when the gestures it remembered were
+  cancelled, while a gesture it could not remember still stood. Such a cell is now pinned: it stays ticked for good,
+  and `Card::pinned()` lists it. A card stored before reads with no cell pinned; nothing is migrated.
+
+### Added
+
+- `Bingo::deliver()`: the game's undelivered calls and, given a serial, the card's undelivered ticks and win
+  dispatched again, to resume after a failure.
+- `key()` on `BingoWon`, `SquareTicked` and `SquareCalled`: a stable key, the same each time the event is dispatched
+  again, under which an idempotent listener acts once.
+- The delivery of the events documented: at-least-once delivery, idempotent listeners keyed by `key()`, resuming, and
+  the cards and games stored before.
+
 ## 0.1.0-alpha - 2026-11-13
 
 ### Added

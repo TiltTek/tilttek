@@ -25,5 +25,14 @@ game under a unique index.
 
 A game keeps its pool, grid, patterns and mode, the number of cards dealt, the squares called and the serials that won.
 A card keeps its game, serial, player reference — none for a printed card —, layout, the idempotency keys of the
-gestures that ticked each cell, and the pattern and moment of its win. No label a player wrote and no name is kept:
+gestures that ticked each cell, the cells pinned by more gestures than they remember, the pattern and moment of its
+win, and the events of its ticks and its win not delivered yet. A game also keeps the squares called whose event is not
+delivered yet. No label a player wrote and no name is kept:
 players are the references the application gives.
+
+## Cards and games stored before
+
+The cells pinned and the events not delivered are properties a card or a game stored before them does not have: read
+again, the card has no cell pinned and the game and the card have no event to deliver, which is what they had. A store
+that serializes the objects with PHP reads them as they are; a store that maps their properties to columns adds the
+new ones, empty by default. Nothing is migrated.

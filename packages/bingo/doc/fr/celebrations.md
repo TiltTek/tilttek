@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=732efa65defb061faaad3db66c0839f7d832c18d031c3a9ed9876917bb075a6d -->
+<!-- phil-dev source-sha256=1588fd3ed4dc37ebcbd366eb976a59a971b7d3a18f8abebc89d146c6c533dafc -->
 # Célébrations
 
 Une ligne pleine, un carton plein : un moment à célébrer. La bibliothèque dit quand ; la page le joue, avec le composant
@@ -9,11 +9,16 @@ de célébration du kit PHIL UX ou tout autre.
 | Événement | Quand | Porte |
 |---|---|---|
 | `Event\BingoWon` | Un carton gagne, une fois par carton | `game`, `serial`, `player` — nul pour un carton imprimé —, `pattern` |
-| `Event\SquareTicked` | Un geste coche une case d'un carton | `game`, `serial`, `square` |
+| `Event\SquareTicked` | Un geste coche une case d'un carton | `game`, `serial`, `square`, `gesture` — la clé d'idempotence du geste |
 | `Event\SquareCalled` | L'animateur appelle une case, la première fois | `game`, `square` |
 
 Chaque événement ne porte que des identifiants : un écouteur qui pousse de nouveau le carton, remet un prix ou envoie un
 message de Messenger lit le reste dans le dépôt. Les [mises à jour en direct](live-updates.md) les poussent vers les écrans des joueurs.
+
+Un événement est envoyé au moins une fois : un écouteur qui a échoué l'entend de nouveau, et deux processus peuvent le
+remettre au même moment ; voir [La remise des événements](running-a-game.md#la-remise-des-événements). La `key()` de
+chaque événement reste la même chaque fois qu'il est envoyé de nouveau : un écouteur qui remet un prix ou envoie un
+message le fait une fois par clé.
 
 ## Le gabarit du carton
 

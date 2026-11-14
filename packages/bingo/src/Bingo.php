@@ -7,6 +7,7 @@ namespace Tilttek\Bingo;
 use Closure;
 use Psr\Clock\ClockInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Throwable;
 use Tilttek\Activity\Activity;
 use Tilttek\Bingo\Contract\BingoStore;
 use Tilttek\Bingo\Event\BingoWon;
@@ -25,6 +26,12 @@ use Tilttek\Bingo\Exception\InvalidBingo;
  *
  * A change that meets a newer version in the store is read again and made again, a few times. It keeps no state
  * between calls: the games and cards live in the store.
+ *
+ * Each tick, call and win is written with its event, which stays in the card or the game until it was dispatched
+ * without an exception: a listener that throws leaves it there, the other events are dispatched all the same, and the
+ * first exception is thrown again at the end. The same call repeated — the gesture recorded again, the square called
+ * again, the claim made again —, or `deliver()`, dispatches it again. An event may thus be dispatched more than once:
+ * the listeners are idempotent, keyed by the event's `key()`.
  */
 final readonly class Bingo
 {
@@ -152,24 +159,45 @@ final readonly class Bingo
     }
 
     /**
-     * Calls a square for every card of a game whose squares are called.
+     * Calls a square for every card of a game whose squares are called, then dispatches every call of the game not
+     * delivered yet, this one included.
      */
     public function call(string $game, string $square): void
     {
-        [, $new] = $this->changeGame($game, static fn (BingoGame $live): bool => $live->call($square));
+        [$current] = $this->changeGame($game, static fn (BingoGame $live): bool => $live->call($square));
 
-        if ($new) {
-            $this->events->dispatch(new SquareCalled($game, $square));
+        $this->rethrow($this->deliverGame($current)[1]);
+    }
+
+    /**
+     * Dispatches again the events of the game not delivered yet — its squares called — and, given a serial, those of
+     * the card — its ticks, then its win —, to resume after a listener failed.
+     *
+     * @return int how many were delivered
+     */
+    public function deliver(string $game, ?int $serial = null): int
+    {
+        [$delivered, $failure] = $this->deliverGame($this->game($game));
+
+        if (null !== $serial) {
+            [$more, $cardFailure] = $this->deliverCard($this->card($game, $serial));
+            $delivered += $more;
+            $failure ??= $cardFailure;
         }
+
+        $this->rethrow($failure);
+
+        return $delivered;
     }
 
     /**
      * Ticks, on the member's cards of the open games ticked by activity, the squares the gesture triggers, and wins a
-     * card whose pattern it completes.
+     * card whose pattern it completes; then dispatches every event of those cards not delivered yet.
      */
     public function record(Activity $activity): void
     {
         $player = $activity->member->toString();
+        $failure = null;
 
         foreach ($this->store->openCardsOf($player, self::MOST_OPEN_CARDS) as $held) {
             $game = $this->store->game($held->game);
@@ -193,14 +221,12 @@ final readonly class Bingo
             }
 
             $key = $activity->key->value;
-            [$card, $ticked] = $this->changeCard($held->game, $held->serial, static fn (Card $card): array => $card->tickAll($squares, $key));
-
-            foreach ($ticked as $square) {
-                $this->events->dispatch(new SquareTicked($card->game, $card->serial, $square));
-            }
-
-            $this->settle($game, $card);
+            [$card] = $this->changeCard($held->game, $held->serial, static fn (Card $card): array => $card->tickAll($squares, $key));
+            [, $cardFailure] = $this->deliverCard($this->settle($game, $card));
+            $failure ??= $cardFailure;
         }
+
+        $this->rethrow($failure);
     }
 
     /**
@@ -249,6 +275,7 @@ final readonly class Bingo
             $card = $this->settle($current, $card);
         }
 
+        $this->rethrow($this->deliverCard($card)[1]);
         $ticked = $this->ticked($current, $card);
         sort($ticked);
 
@@ -304,7 +331,7 @@ final readonly class Bingo
     }
 
     /**
-     * Wins the card when its ticks complete a pattern, and says so once.
+     * Wins the card when its ticks complete a pattern, its event kept in the card until it is delivered.
      */
     private function settle(BingoGame $game, Card $card): Card
     {
@@ -315,23 +342,99 @@ final readonly class Bingo
         }
 
         $now = $this->clock->now();
-        [$won, $first] = $this->changeCard($card->game, $card->serial, static function (Card $card) use ($pattern, $now): bool {
-            $first = !$card->hasWon();
+
+        return $this->changeCard($card->game, $card->serial, static function (Card $card) use ($pattern, $now): null {
             $card->win($pattern->name, $now);
 
-            return $first;
+            return null;
+        })[0];
+    }
+
+    /**
+     * Dispatches the game's events not delivered yet, and forgets those dispatched without an exception.
+     *
+     * @return array{int, ?Throwable} how many were delivered, and the first exception thrown
+     */
+    private function deliverGame(BingoGame $game): array
+    {
+        [$keys, $failure] = $this->dispatchAll($game->undelivered(), static function (): void {
         });
 
-        if ($first) {
-            $this->changeGame($game->id, static function (BingoGame $live) use ($won): null {
-                $live->won($won->serial);
+        if ([] !== $keys) {
+            $this->changeGame($game->id, static function (BingoGame $live) use ($keys): null {
+                $live->markDelivered(...$keys);
 
                 return null;
             });
-            $this->events->dispatch(new BingoWon($won->game, $won->serial, $won->player, $pattern->name));
         }
 
-        return $won;
+        return [\count($keys), $failure];
+    }
+
+    /**
+     * Dispatches the card's events not delivered yet — a win once the game holds the card among its winners —, and
+     * forgets those dispatched without an exception.
+     *
+     * @return array{int, ?Throwable} how many were delivered, and the first exception thrown
+     */
+    private function deliverCard(Card $card): array
+    {
+        [$keys, $failure] = $this->dispatchAll($card->undelivered(), function (SquareCalled|SquareTicked|BingoWon $event): void {
+            if ($event instanceof BingoWon) {
+                $this->changeGame($event->game, static function (BingoGame $live) use ($event): null {
+                    $live->won($event->serial);
+
+                    return null;
+                });
+            }
+        });
+
+        if ([] !== $keys) {
+            $this->changeCard($card->game, $card->serial, static function (Card $live) use ($keys): null {
+                $live->markDelivered(...$keys);
+
+                return null;
+            });
+        }
+
+        return [\count($keys), $failure];
+    }
+
+    /**
+     * Dispatches each event after its step before; an event whose step or listener throws is passed over.
+     *
+     * @param list<SquareCalled|SquareTicked|BingoWon>          $events
+     * @param Closure(SquareCalled|SquareTicked|BingoWon): void $before
+     *
+     * @return array{list<string>, ?Throwable} the keys of the events dispatched without an exception, and the first
+     *                                         exception thrown
+     */
+    private function dispatchAll(array $events, Closure $before): array
+    {
+        $keys = [];
+        $failure = null;
+
+        foreach ($events as $event) {
+            try {
+                $before($event);
+                $this->events->dispatch($event);
+            } catch (Throwable $thrown) {
+                $failure ??= $thrown;
+
+                continue;
+            }
+
+            $keys[] = $event->key();
+        }
+
+        return [$keys, $failure];
+    }
+
+    private function rethrow(?Throwable $failure): void
+    {
+        if ($failure instanceof Throwable) {
+            throw $failure;
+        }
     }
 
     /**

@@ -8,11 +8,15 @@ component of the PHIL UX kit or anything else.
 | Event | When | Carries |
 |---|---|---|
 | `Event\BingoWon` | A card wins, once per card | `game`, `serial`, `player` — null for a printed card —, `pattern` |
-| `Event\SquareTicked` | A gesture ticks a square of a card | `game`, `serial`, `square` |
+| `Event\SquareTicked` | A gesture ticks a square of a card | `game`, `serial`, `square`, `gesture` — the idempotency key of the gesture |
 | `Event\SquareCalled` | The host calls a square, the first time | `game`, `square` |
 
 Every event carries identifiers only: a listener that pushes the card again, gives a prize or sends a Messenger message
 reads the rest from the store. [Live updates](live-updates.md) push them to the players' screens.
+
+An event is dispatched at least once: a listener that failed hears it again, and two processes may deliver it at the
+same moment; see [Delivering the events](running-a-game.md#delivering-the-events). Each event's `key()` stays the same
+each time it is dispatched again: a listener that gives a prize or sends a message does it once per key.
 
 ## The card template
 

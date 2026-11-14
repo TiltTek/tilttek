@@ -1,11 +1,11 @@
-<!-- phil-dev source-sha256=ee80a5816a81b0a0fdc65058b1529f324de0891736d8b5f13d8e486f5b28722a -->
+<!-- phil-dev source-sha256=5d6478e859bbd7bf1b0344b0e99d663594ac18e6ec8965c3cb3814f5fa615abd -->
 # Référence
 
 | Type | Rôle |
 |---|---|
-| `Bingo` | Crée les jeux, distribue et imprime les cartons, appelle les cases, enregistre et annule les gestes, reçoit les réclamations, vérifie par numéro de série ou par étiquette et ferme |
-| `BingoGame` | Un jeu : réserve, grille, motifs, mode, cartons distribués, cases appelées et gagnants, à une version |
-| `Card` | Un carton, celui d'un joueur ou un carton imprimé : numéro de série, disposition, cases cochées et victoire, à une version |
+| `Bingo` | Crée les jeux, distribue et imprime les cartons, appelle les cases, enregistre et annule les gestes, reçoit les réclamations, vérifie par numéro de série ou par étiquette, ferme, et envoie de nouveau les événements non remis |
+| `BingoGame` | Un jeu : réserve, grille, motifs, mode, cartons distribués, cases appelées et gagnants, et les appels non remis, à une version |
+| `Card` | Un carton, celui d'un joueur ou un carton imprimé : numéro de série, disposition, cases cochées, cellules épinglées et victoire, et les événements non remis, à une version |
 | `CardDealer` | Tire une disposition et une étiquette du secret du serveur ; l'empreinte d'une disposition |
 | `SerialLabel` | L'étiquette d'un carton imprimé : son numéro de série et son code de vérification, lue comme saisie |
 | `Claim` | Ce que le serveur a trouvé sur un carton : les cellules cochées et le motif gagnant |
