@@ -32,6 +32,32 @@ abstract class OpeningStoreTestCase extends TestCase
         self::assertNull($store->find('advent-2026', ResourceReference::of('member', '2'), 3));
     }
 
+    public function testAnOpeningIsKeptUndeliveredUntilItIsMarkedDelivered(): void
+    {
+        $store = $this->store();
+        $member = ResourceReference::of('member', '1');
+        $first = new Opening('advent-2026', $member, 3, new DateTimeImmutable('2026-12-03 08:00 UTC'));
+        $store->add($first);
+        $store->add(new Opening('advent-2026', $member, 1, new DateTimeImmutable('2026-12-03 09:00 UTC')));
+        $store->add(new Opening('advent-2025', $member, 5, new DateTimeImmutable('2026-12-03 10:00 UTC')));
+        $store->add(new Opening('advent-2026', ResourceReference::of('member', '2'), 1, new DateTimeImmutable('2026-12-03 08:00 UTC')));
+
+        $key = static fn (Opening $opening): string => $opening->calendar.':'.$opening->day;
+
+        self::assertSame(['advent-2025:5', 'advent-2026:1', 'advent-2026:3'], array_map($key, $store->undelivered($member)));
+        self::assertEquals($first, $store->undelivered($member)[2]);
+        $store->markDelivered(new Opening('advent-2026', $member, 3, new DateTimeImmutable('2026-12-09 08:00 UTC')));
+        $store->markDelivered(new Opening('advent-2026', $member, 3, new DateTimeImmutable('2026-12-09 08:00 UTC')));
+        $store->markDelivered(new Opening('advent-2026', $member, 9, new DateTimeImmutable('2026-12-09 08:00 UTC')));
+        self::assertSame(['advent-2025:5', 'advent-2026:1'], array_map($key, $store->undelivered($member)));
+        self::assertSame(['advent-2026:1'], array_map($key, $store->undelivered(ResourceReference::of('member', '2'))));
+        self::assertNotNull($store->find('advent-2026', $member, 3));
+        self::assertSame(3, $store->eraseMember($member));
+        self::assertCount(0, $store->undelivered($member));
+        self::assertTrue($store->add($first));
+        self::assertCount(1, $store->undelivered($member));
+    }
+
     public function testTheOpeningsOfAMemberComeByDay(): void
     {
         $store = $this->store();

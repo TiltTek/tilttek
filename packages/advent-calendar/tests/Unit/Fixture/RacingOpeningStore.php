@@ -41,6 +41,18 @@ final class RacingOpeningStore implements OpeningStore
     }
 
     #[Override]
+    public function undelivered(ResourceReference $member): array
+    {
+        return $this->inner->undelivered($member);
+    }
+
+    #[Override]
+    public function markDelivered(Opening $opening): void
+    {
+        $this->inner->markDelivered($opening);
+    }
+
+    #[Override]
     public function openingsOf(string $calendar, ResourceReference $member): array
     {
         return $this->inner->openingsOf($calendar, $member);
