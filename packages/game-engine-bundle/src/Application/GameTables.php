@@ -101,13 +101,17 @@ final readonly class GameTables
     }
 
     /**
-     * The log of a table, seed included: what the players are shown once the game is over, never before.
+     * The log of a table, seed included: what the players are shown once the game is over, never before. It is
+     * refused while the game goes on, since the seed would tell the draws to come: the same as `finishedLog()`.
      *
+     * @throws GameInProgress when the game goes on
+     * @throws ConcurrentMove when the log read is not the one of the finished state
+     * @throws InvalidGame
      * @throws UnknownTable
      */
     public function log(string $gameId): GameLog
     {
-        return $this->tables->log($gameId);
+        return $this->tables->finishedLog($gameId);
     }
 
     /**

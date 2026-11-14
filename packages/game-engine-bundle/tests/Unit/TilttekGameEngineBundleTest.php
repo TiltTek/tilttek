@@ -81,7 +81,7 @@ final class TilttekGameEngineBundleTest extends TestCase
         self::assertEquals([new Reference(GameTables::class), new Reference(ViewerResolver::class), null], $container->getDefinition(TableController::class)->getArguments());
         self::assertTrue($container->getDefinition(TableController::class)->hasTag('controller.service_arguments'));
         self::assertTrue($container->getDefinition(TableController::class)->isPublic());
-        self::assertEquals([new Reference(GameTables::class), new Reference(Games::class), new Reference(Engine::class)], $container->getDefinition(VerifyCommand::class)->getArguments());
+        self::assertEquals([new Reference(Tables::class), new Reference(Games::class), new Reference(Engine::class)], $container->getDefinition(VerifyCommand::class)->getArguments());
         self::assertTrue($container->getDefinition(VerifyCommand::class)->hasTag('console.command'));
         self::assertEquals([new Reference('doctrine.dbal.default_connection')], $container->getDefinition(SetupCommand::class)->getArguments());
         self::assertTrue($container->getDefinition(SetupCommand::class)->hasTag('console.command'));

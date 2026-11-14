@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=f705d52187dc1c07b34b71621be41e6aea04cf65beea3db3dc156ccae7732b2d -->
+<!-- phil-dev source-sha256=2d46da6c0ba6af6a1353e9a6a15c898b15784701126b750a651a469d09cc0f95 -->
 # Tables en direct
 
 La page d'un joueur montre la table, s'abonne à son sujet Mercure, et relit la vue de son siège à chaque mise à jour.
@@ -77,6 +77,12 @@ Faire des coups est le travail du contrôleur de l'application : il vérifie le 
 `GameTables::play()` avec le siège qu'il connaît et le nombre de coups que le joueur a vus. `GameTables::undo()` reprend le dernier coup de la même façon, et lève
 `GameOver` une fois la partie terminée : le point de terminaison du journal a alors pu montrer le germe, qui dit chaque
 tirage à venir.
+
+`GameTables::log()` et `GameTables::finishedLog()` ne donnent le journal d'une table, germe compris, qu'une fois sa
+partie terminée : tant qu'elle continue, les deux lèvent `GameInProgress` de `tilttek/game-engine`, si bien qu'aucun
+appelant du service ne montre le germe trop tôt. Un outil du serveur qui doit lire le journal d'une partie en cours —
+un rejeu, un audit — le lit dans le `Tables` de la bibliothèque, comme le fait `tilttek:game-engine:verify`, et ne
+montre jamais le germe.
 
 ## Le gabarit et le contrôleur Stimulus
 

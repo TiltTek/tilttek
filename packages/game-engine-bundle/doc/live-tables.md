@@ -77,6 +77,11 @@ the seat it knows and the number of moves the player saw. `GameTables::undo()` t
 and throws `GameOver` once the game is over: by then the log endpoint may have shown the seed, which tells every draw
 to come.
 
+`GameTables::log()` and `GameTables::finishedLog()` give the log of a table, seed included, only once its game is
+over: while it goes on, both throw `GameInProgress` of `tilttek/game-engine`, so no caller of the service shows the seed
+too early. A server-side tool that must read the log of a game still going on — a replay, an audit — reads it from the
+library's `Tables`, as `tilttek:game-engine:verify` does, and never shows the seed.
+
 ## The template and the Stimulus controller
 
 `@TilttekGameEngine/table.html.twig` shows a table as anyone at it may see it — its number of moves, phase, round, the

@@ -4,6 +4,18 @@ All notable changes to `tilttek/game-engine-bundle` will be documented in this f
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Fixed
+
+- `GameTables::log()` gave the log of a table, seed included, while its game went on, though the seed tells the draws
+  to come. It is now refused with `GameInProgress` until the game is over, the same as `finishedLog()`.
+
+### Changed
+
+- `tilttek:game-engine:verify` reads the log through the library's `Tables`, a game still going on included: its
+  constructor takes `Tables` instead of `GameTables`. It shows the commitment to the seed, never the seed.
+
 ## 0.1.0-alpha - 2026-11-13
 
 ### Added
