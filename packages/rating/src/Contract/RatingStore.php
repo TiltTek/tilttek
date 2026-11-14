@@ -75,7 +75,9 @@ interface RatingStore
     public function ofGame(string $game): array;
 
     /**
-     * Replaces every rating of the game, and the results it counts, with these, at once: what a replay computed.
+     * Replaces every rating of the game, and the results it counts, with these, at once: what a replay computed. The
+     * events of the game's results not delivered yet are cancelled in the same write: computed before the replay, they
+     * may tell a change or a peak it no longer gives, and a replay tells nothing new.
      *
      * @param list<MemberRating> $ratings
      * @param list<string>       $results the identifiers of the results the ratings count

@@ -10,7 +10,9 @@ It reads every result of the game from the `Contract\PlaySource` given to `Ratin
 rates each from the initial ratings, skips the friendly ones, and replaces every rating of the game in the store at
 once, with the results the game counts: those the replay rated, so that recording one of them again is refused and a
 result deleted from the source may be recorded anew. Each member keeps the visibility they chose; a member with a public rating and no result left keeps it, at the
-initial rating. Nothing is dispatched: a replay changes no member's history, it corrects it.
+initial rating. Nothing is dispatched: a replay changes no member's history, it corrects it. The events of the game's
+results not delivered yet are cancelled with the ratings they were computed from: a replay may change or remove the
+result they told, and `deliver()` then finds none of them.
 
 Replay a game after a result was corrected or deleted, after a member was erased from the source, or to change the
 system or a setting: a `Ratings` with another system refuses the ratings of the old one until the game is replayed with

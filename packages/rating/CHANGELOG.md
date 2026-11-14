@@ -31,7 +31,8 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 - `Event\RatingChanged` and `Event\PeakReached`, carrying identifiers only and a stable `key()`, for a celebration once
   a member has played the rated games asked for; kept with the result until each was dispatched without an exception,
   the events left dispatched by recording the result again — which rates nothing again — or by `Ratings::deliver()`,
-  a failed listener never stopping the others.
+  a failed listener never stopping the others. A replay cancels the events of the game not delivered yet, which it may
+  no longer give: `RatingStore::replace()` empties them with the ratings.
 - `Exception\RatingException`, with `InvalidRating`, `RatingRefused`, `ResultAlreadyRecorded` and `RatingConflict`.
 - A fuzz target for the computation of a rating, and benchmarks of a replay of 10 000 results by each system.
 - The documentation in `doc/`, one file per topic, indexed by the README.

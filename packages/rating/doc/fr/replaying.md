@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=05c51ec904d3ac8c2149e332c678b7b32a10dae4ee6a6ea30ecf56fc826aaef4 -->
+<!-- phil-dev source-sha256=9d8be2a3de0f42d2d160c0343ffade7e376d055b92dde2082276a6995f803c09 -->
 # Rejouer
 
 Les cotes d'un jeu sont ce que ses résultats ont donné, l'un après l'autre. `replay()` les calcule de nouveau depuis le
@@ -12,7 +12,9 @@ Elle lit chaque résultat du jeu dans le `Contract\PlaySource` donné à `Rating
 chacun à partir des cotes initiales, saute les amicaux, et remplace d'un coup toutes les cotes du jeu dans le dépôt de
 stockage, avec les résultats que le jeu compte : ceux que la relecture a cotés, pour qu'en enregistrer un de nouveau soit
 refusé et qu'un résultat supprimé de la source puisse être enregistré de nouveau. Chaque membre garde la visibilité qu'il a choisie ; un membre qui a une cote publique et plus aucun résultat la
-garde, à la cote initiale. Rien n'est envoyé : une relecture ne change l'historique d'aucun membre, elle le corrige.
+garde, à la cote initiale. Rien n'est envoyé : une relecture ne change l'historique d'aucun membre, elle le corrige. Les
+événements des résultats du jeu pas encore remis sont annulés avec les cotes dont ils venaient : une relecture peut
+changer ou retirer le résultat qu'ils annonçaient, et `deliver()` n'en trouve alors plus aucun.
 
 Rejouez un jeu après qu'un résultat a été corrigé ou supprimé, après qu'un membre a été effacé de la source, ou pour
 changer de système ou de réglage : un `Ratings` avec un autre système refuse les cotes de l'ancien jusqu'à ce que le jeu
