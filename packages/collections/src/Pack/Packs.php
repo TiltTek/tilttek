@@ -11,7 +11,6 @@ use Random\Engine\Xoshiro256StarStar;
 use Random\Randomizer;
 use Tilttek\Collections\CollectionKey;
 use Tilttek\Collections\Collections;
-use Tilttek\Collections\Copy;
 use Tilttek\Collections\Exception\CollectionRefused;
 use Tilttek\Collections\Exception\InvalidCollection;
 use Tilttek\Collections\Exception\NotFound;
@@ -96,7 +95,8 @@ final readonly class Packs
      * the key by adding the opening with no copies, then gives a copy of each item, under the key followed by `#` and
      * the place of the item in the pack. The same pending opening and client seed opened again return the opening they
      * made — and give the copies of one whose giving was interrupted. An opening that loses the race for its key to
-     * another at the same moment gives nothing: it returns the winner, or refuses as a later opening would.
+     * another at the same moment draws nothing of its own: it returns the winner complete — giving, under the same
+     * keys, the copies the winner may not have given yet —, or refuses as a later opening would.
      *
      * @throws NotFound          when the catalog has no such pack
      * @throws InvalidCollection when the client seed is empty, longer than 256 bytes or not UTF-8 text
@@ -123,7 +123,9 @@ final readonly class Packs
             $winner = $this->openings->find($pending->key) ?? throw CollectionRefused::because(\sprintf('The key "%s" is being opened by another request.', $pending->key));
             $this->checkSame($winner, $pending, $clientSeed);
 
-            return [] === $winner->copies ? $winner->withCopies($this->copiesOf($winner, $collectionKey)) : $winner;
+            // The winner may still be giving its copies, or have stopped: the copies are given under their keys, which
+            // give each one once, so the opening returned is always complete.
+            return [] === $winner->copies ? $this->give($winner, $collectionKey) : $winner;
         }
 
         return $this->give($reserved, $collectionKey);
@@ -194,16 +196,6 @@ final readonly class Packs
         $this->openings->complete($opening->key, $copies);
 
         return $opening->withCopies($copies);
-    }
-
-    /**
-     * The identifiers of the copies an opening gives, one for each item, without giving them.
-     *
-     * @return list<string>
-     */
-    private function copiesOf(PackOpening $opening, CollectionKey $key): array
-    {
-        return array_map(static fn (int $place): string => Copy::idFor($key->derive(\sprintf('%d', $place + 1))), array_keys($opening->items));
     }
 
     /**
