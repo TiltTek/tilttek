@@ -132,6 +132,34 @@ abstract class StoresTestCase extends TestCase
         self::assertSame([], $store->recent(ResourceReference::of('table', '9')));
     }
 
+    public function testTheLastCheckInIsReadWithEveryAnswerAfterIt(): void
+    {
+        $store = $this->signals();
+        $table = ResourceReference::of('table', '7');
+        $last = $this->signal('7', SignalKind::CheckIn, '20:10');
+        $answers = [];
+
+        for ($i = 11; $i <= 59; ++$i) {
+            $answers[] = $this->signal('7', 0 === $i % 2 ? SignalKind::AllGood : SignalKind::Unsure, \sprintf('20:%02d', $i));
+        }
+
+        $store->add($this->signal('7', SignalKind::NotOkay, '19:59'));
+        $store->add($this->signal('7', SignalKind::CheckIn, '20:00'));
+        $store->add($this->signal('7', SignalKind::NotOkay, '20:01'));
+        $store->add($last);
+        $store->add($this->signal('7', SignalKind::XCard, '20:30'));
+
+        foreach (array_reverse($answers) as $answer) {
+            $store->add($answer);
+        }
+
+        $store->add($this->signal('8', SignalKind::CheckIn, '20:20'));
+
+        self::assertSame([], $store->lastCheckIn(ResourceReference::of('table', '9')));
+        self::assertEquals([$last, ...$answers], $store->lastCheckIn($table));
+        self::assertCount(1, $store->lastCheckIn(ResourceReference::of('table', '8')));
+    }
+
     public function testASignalIsAcknowledgedOnce(): void
     {
         $store = $this->signals();

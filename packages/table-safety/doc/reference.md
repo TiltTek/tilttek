@@ -26,7 +26,7 @@ Every public type of the package, with its role.
 | `Signal\CheckInTally` | The answers to the last check-in, counted. |
 | `Feedback\StarsAndWishes` | A participant's stars and wishes. |
 | `Feedback\Feedback` | The stars and wishes of one participant for one session. |
-| `Feedback\FeedbackSummary` | A session's stars and wishes, without their authors. |
+| `Feedback\FeedbackSummary` | A session's stars and wishes, without their authors, in whole groups of a threshold of participants. |
 | `Contract\TableStore` | Where the settings are kept. |
 | `Contract\ParticipationStore` | Where the answers are kept. |
 | `Contract\SignalStore` | Where the signals are kept. |

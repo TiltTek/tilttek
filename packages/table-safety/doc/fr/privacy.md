@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=961d0d0ef01ca3161446ae06f813dc565ce842187bd8e214381c3cd08a0fc4a7 -->
+<!-- phil-dev source-sha256=89efa874a550b1629d5e4e45568dbb06abd5567f4f4e513b923663ba081bd9d5 -->
 # Vie privée
 
 Les réponses des outils de sécurité disent ce qui blesse une personne. La bibliothèque en garde le minimum, pour leur
@@ -11,6 +11,25 @@ table seulement, et ne laisse rien de ce qu'elle résume dire qui a donné quell
 - Un signal anonyme n'a d'auteur nulle part : ni dans le stockage, ni dans ce que l'observateur diffuse.
 - Un signal nominatif n'existe qu'à une table qui a choisi des signaux nominatifs ; une réponse à un point d'étape est
   toujours anonyme.
+
+## Le sommaire des étoiles et des souhaits
+
+Les étoiles et les souhaits sont du texte libre : dans un petit groupe, un sommaire d'une ou deux réponses dirait qui les
+a écrites. Le sommaire d'une séance ne contient donc des réponses que par groupes entiers d'un seuil de participants — 3
+par défaut, choisi par l'application par le `feedbackThreshold` de `TableSafety`, jamais par une table —, pris dans
+l'ordre où ils les ont données. Sous le seuil, il ne contient rien et dit seulement qu'il n'y a pas assez de réponses ;
+au-delà, les réponses d'un groupe incomplet attendent qu'il se remplisse, pour qu'une réponse de plus n'ajoute jamais
+les seules réponses d'une personne.
+
+Ce que le seuil ne cache pas :
+
+- Un texte libre peut nommer son auteur ou se reconnaître à son style, quel que soit le nombre de réponses.
+- Un participant qui a répondu connaît ses propres réponses et peut les mettre de côté : avec un seuil de 3, chacun des
+  trois premiers apprend les réponses des deux autres ensemble, pas qui a écrit quoi.
+- Répondre de nouveau place le participant à la fin de l'ordre. Au-delà du seuil, quand le dernier groupe est incomplet,
+  une modification peut échanger les réponses d'un participant contre celles d'un autre entre deux lectures ; un
+  effacement aussi. Une table qui ne veut rien de cela lit le sommaire une fois, quand tout le monde a répondu.
+- Le nombre de réponses en attente n'est pas montré, mais une application qui montre qui a répondu le dit.
 
 ## Ce qui est gardé
 

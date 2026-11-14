@@ -4,6 +4,24 @@ All notable changes to `tilttek/table-safety` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `SignalStore` gains `lastCheckIn()`: the table's last check-in followed by every answer raised after it, with no
+  limit. `TableSafety::checkIn()` counts through it, so that a check-in followed by more than 100 signals is still
+  counted; a store written for 0.1 implements it. `recent()` and its limit of 100 remain for the screens.
+- `FeedbackSummary` holds answers only in whole groups of a threshold of participants, 3 by default, taken in the order
+  they were given: under the threshold it holds nothing, `respondents` is 0 and `hasEnoughAnswers()` is false; past it,
+  the answers of a group that is not full wait for the group to fill. `FeedbackSummary::of()` takes the threshold, and
+  `TableSafety` takes it as `feedbackThreshold`; a threshold under 1 is an `InvalidAnswer`.
+
+### Added
+
+- `FeedbackSummary::$threshold`, `FeedbackSummary::hasEnoughAnswers()`, `FeedbackSummary::assertThreshold()` and
+  `FeedbackSummary::DEFAULT_THRESHOLD`.
+- The privacy documentation of the summary of stars and wishes: the threshold and what it does not hide.
+
 ## 0.1.0-alpha - 2026-11-13
 
 ### Added

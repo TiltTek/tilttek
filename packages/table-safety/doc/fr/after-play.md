@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=0022e715a844a49f37719d6bd01781fe794e21309f395eba1b3300bdb1e24a09 -->
+<!-- phil-dev source-sha256=2386b8448329e5d30d41c9b20f93ee3c50199eedcac40796d9bb485be55b8085 -->
 # Après la partie
 
 ## Étoiles et souhaits
@@ -17,13 +17,34 @@ de thème. Les donner de nouveau remplace les étoiles et les souhaits antérieu
 ## Le sommaire d'une séance
 
 `TableSafety::feedback()` rassemble les étoiles et les souhaits d'une séance sans dire qui a donné quoi : chaque étoile
-et chaque souhait en ordre alphabétique plutôt que dans l'ordre où ils ont été donnés, et le nombre de participants qui
-ont répondu.
+et chaque souhait en ordre alphabétique plutôt que dans l'ordre où ils ont été donnés, et le nombre de participants dont
+il contient les réponses.
 
 ```php
 $summary = $safety->feedback($table, '2026-11-12');
 
-$summary->stars;        // ['Bards', 'The heist']
-$summary->wishes;       // ['More downtime']
-$summary->respondents;  // 2
+$summary->hasEnoughAnswers();  // false: "not enough answers yet"
+$summary->stars;               // ['Bards', 'More maps', 'The heist'] once it has enough
+$summary->wishes;              // ['More downtime']
+$summary->respondents;         // 3
 ```
+
+## Le seuil
+
+Dans un petit groupe, un sommaire d'une ou deux réponses dit qui les a écrites. Un sommaire ne contient donc des
+réponses que par groupes entiers d'un **seuil** de participants, 3 par défaut, pris dans l'ordre de leurs réponses :
+
+- sous le seuil, il ne contient rien : `hasEnoughAnswers()` est faux, `stars` et `wishes` sont vides et `respondents`
+  vaut 0, quel que soit le nombre de réponses ;
+- au-delà, les réponses d'un groupe incomplet attendent : avec un seuil de 3, quatre ou cinq réponses donnent le
+  sommaire des trois premières, six les donnent toutes.
+
+Une réponse de plus ne change donc jamais le sommaire des seules réponses d'une personne. L'application choisit le seuil
+— jamais une table, dont le meneur de jeu lit le sommaire :
+
+```php
+$safety = new TableSafety($catalogue, $tables, $participations, $signals, $feedback, feedbackThreshold: 4);
+```
+
+Un seuil de 1 montre chaque réponse dès qu'elle est donnée. [Vie privée](privacy.md#le-sommaire-des-étoiles-et-des-souhaits)
+dit ce que le seuil ne cache pas.

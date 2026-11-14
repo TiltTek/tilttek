@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=e8789575b23ea1af6c6c4ab246158e91bc90c3fdfca416fea60985d4fc621f71 -->
+<!-- phil-dev source-sha256=776c45542512166475355aca9a0040d5c7382d386ea592764682afce98a41efc -->
 # Référence
 
 Chaque type public du paquet, avec son rôle.
@@ -27,7 +27,7 @@ Chaque type public du paquet, avec son rôle.
 | `Signal\CheckInTally` | Les réponses au dernier point d'étape, comptées. |
 | `Feedback\StarsAndWishes` | Les étoiles et les souhaits d'un participant. |
 | `Feedback\Feedback` | Les étoiles et les souhaits d'un participant pour une séance. |
-| `Feedback\FeedbackSummary` | Les étoiles et les souhaits d'une séance, sans leurs auteurs. |
+| `Feedback\FeedbackSummary` | Les étoiles et les souhaits d'une séance, sans leurs auteurs, par groupes entiers d'un seuil de participants. |
 | `Contract\TableStore` | Où les réglages sont gardés. |
 | `Contract\ParticipationStore` | Où les réponses sont gardées. |
 | `Contract\SignalStore` | Où les signaux sont gardés. |

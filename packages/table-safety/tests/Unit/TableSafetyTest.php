@@ -299,6 +299,22 @@ final class TableSafetyTest extends TestCase
         self::assertEquals($this->now, $tally->askedAt);
     }
 
+    public function testTheLastCheckInIsCountedHoweverManySignalsFollowIt(): void
+    {
+        $this->safety->raise($this->table, $this->bo, SignalKind::CheckIn, true, $this->now);
+
+        for ($i = 1; $i <= TableSafety::SIGNALS_LIMIT + 5; ++$i) {
+            $this->safety->raise($this->table, $this->ana, 0 === $i % 5 ? SignalKind::NotOkay : SignalKind::AllGood, false, $this->now->modify(\sprintf('+%d seconds', $i)));
+        }
+
+        $tally = $this->safety->checkIn($this->table);
+
+        self::assertEquals($this->now, $tally->askedAt);
+        self::assertSame(TableSafety::SIGNALS_LIMIT + 5, $tally->answers());
+        self::assertSame(21, $tally->notOkay);
+        self::assertCount(TableSafety::SIGNALS_LIMIT, $this->safety->signals($this->table, true));
+    }
+
     public function testStarsAndWishesAreGatheredWithoutTheirAuthors(): void
     {
         $feedback = $this->safety->giveFeedback($this->table, 's1', $this->ana, new StarsAndWishes(['the heist'], ['zeppelins']), $this->now);
@@ -306,11 +322,36 @@ final class TableSafetyTest extends TestCase
 
         self::assertSame('s1', $feedback->session);
         self::assertSame($this->ana, $feedback->participant);
+        self::assertFalse($this->safety->feedback($this->table, 's1')->hasEnoughAnswers());
+
+        $this->safety->giveFeedback($this->table, 's1', ResourceReference::of('member', 'cy'), new StarsAndWishes(['Bards']), $this->now);
 
         $summary = $this->safety->feedback($this->table, 's1');
-        self::assertSame(['apples', 'the heist'], $summary->stars);
+        self::assertSame(['apples', 'Bards', 'the heist'], $summary->stars);
         self::assertSame(['zeppelins'], $summary->wishes);
-        self::assertSame(2, $summary->respondents);
+        self::assertSame(3, $summary->respondents);
+    }
+
+    public function testTheSummaryHoldsTheFirstAnswersGivenInWholeGroups(): void
+    {
+        $this->safety->giveFeedback($this->table, 's1', $this->ana, new StarsAndWishes(['last']), $this->now->modify('+3 minutes'));
+        $this->safety->giveFeedback($this->table, 's1', $this->bo, new StarsAndWishes(['first']), $this->now);
+        $this->safety->giveFeedback($this->table, 's1', ResourceReference::of('member', 'cy'), new StarsAndWishes(['second']), $this->now->modify('+1 minute'));
+        $this->safety->giveFeedback($this->table, 's1', ResourceReference::of('member', 'dee'), new StarsAndWishes(['third']), $this->now->modify('+2 minutes'));
+
+        self::assertSame(['first', 'second', 'third'], $this->safety->feedback($this->table, 's1')->stars);
+    }
+
+    public function testTheApplicationChoosesTheFeedbackThreshold(): void
+    {
+        $safety = new TableSafety(Catalogues::small(), $this->tables, $this->participations, $this->signals, new InMemoryFeedbackStore(), feedbackThreshold: 1);
+        $safety->giveFeedback($this->table, 's1', $this->ana, new StarsAndWishes(['the heist']), $this->now);
+
+        self::assertSame(['the heist'], $safety->feedback($this->table, 's1')->stars);
+
+        $this->expectException(InvalidAnswer::class);
+
+        new TableSafety(Catalogues::small(), $this->tables, $this->participations, $this->signals, new InMemoryFeedbackStore(), feedbackThreshold: 0);
     }
 
     public function testAFeedbackSessionHasAKey(): void
