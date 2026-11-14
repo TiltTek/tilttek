@@ -12,6 +12,7 @@ use Tilttek\Points\Erasure;
 use Tilttek\Points\Exception\InsufficientPoints;
 use Tilttek\Points\Exception\MovementConflict;
 use Tilttek\Points\LedgerEntry;
+use Tilttek\Points\LotsCheckpoint;
 use Tilttek\Points\Movement;
 use Tilttek\Points\MovementKey;
 use Tilttek\Points\Recorded;
@@ -27,6 +28,11 @@ final class InMemoryLedger implements Ledger
     private array $entries = [];
 
     private int $last = 0;
+
+    /**
+     * @var array<string, LotsCheckpoint>
+     */
+    private array $checkpoints = [];
 
     #[Override]
     public function append(Movement $movement, DateTimeImmutable $at): Recorded
@@ -56,6 +62,24 @@ final class InMemoryLedger implements Ledger
 
         if ($balance < $movement->amount) {
             throw InsufficientPoints::in($movement->debit, $movement->currency, $balance, $movement->amount);
+        }
+
+        return $this->append($movement, $at);
+    }
+
+    #[Override]
+    public function appendAfter(Movement $movement, DateTimeImmutable $at, int $after): ?Recorded
+    {
+        $existing = $this->find($movement->key);
+
+        if ($existing instanceof LedgerEntry) {
+            return $this->duplicate($existing, $movement);
+        }
+
+        foreach ($this->entries as $position => $entry) {
+            if ($position > $after && $movement->currency === $entry->movement->currency && 0 !== $entry->movement->amountFor($movement->debit)) {
+                return null;
+            }
         }
 
         return $this->append($movement, $at);
@@ -142,8 +166,25 @@ final class InMemoryLedger implements Ledger
     }
 
     #[Override]
+    public function keptLots(Account $account, string $currency): ?LotsCheckpoint
+    {
+        return $this->checkpoints[$currency.' '.$account->toString()] ?? null;
+    }
+
+    #[Override]
+    public function keepLots(LotsCheckpoint $checkpoint): void
+    {
+        $kept = $this->keptLots($checkpoint->account, $checkpoint->currency);
+
+        if (!$kept instanceof LotsCheckpoint || $kept->position < $checkpoint->position) {
+            $this->checkpoints[$checkpoint->currency.' '.$checkpoint->account->toString()] = $checkpoint;
+        }
+    }
+
+    #[Override]
     public function forgetDerived(?DateTimeImmutable $since): int
     {
+        $this->checkpoints = [];
         $before = \count($this->entries);
         $this->entries = array_filter(
             $this->entries,
@@ -158,6 +199,7 @@ final class InMemoryLedger implements Ledger
     public function eraseMember(ResourceReference $member): Erasure
     {
         $account = Account::member($member);
+        $this->checkpoints = array_filter($this->checkpoints, static fn (LotsCheckpoint $checkpoint): bool => !$checkpoint->account->equals($account));
         $deleted = 0;
         $detached = 0;
 
@@ -203,6 +245,7 @@ final class InMemoryLedger implements Ledger
     {
         $this->entries = [];
         $this->last = 0;
+        $this->checkpoints = [];
     }
 
     private function duplicate(LedgerEntry $existing, Movement $movement): Recorded

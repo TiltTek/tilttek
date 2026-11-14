@@ -3,13 +3,14 @@
 **The points of a Symfony application's members, earned from their activity and kept in the database line by line.**
 
 tilttek/points-bundle integrates `tilttek/points` with Symfony. It keeps the double-entry ledger in a table on a
-Doctrine DBAL connection, with the lock rows that make a payment check the balance one at a time, and adds both tables
-to the schema the ORM generates so that the application's migrations create them. It builds the currencies and the
-earning rules from the configuration, checked when the container is compiled, and registers the projection that turns
-the members' activity into points, which `tilttek/activity-bundle` keeps up to date as the journal is written, catches
-up and rebuilds. `Points` gives the application balances and histories, grants, spendings, refunds and transfers; two
-commands expire the credits due and show a member's history; a module answers the export and erasure requests of
-`phil/privacy-bundle` for a member's points.
+Doctrine DBAL connection, with the lock rows that make a payment check the balance one at a time and the checkpoints
+that spare the expiry the whole history, and adds the tables to the schema the ORM generates so that the application's
+migrations create them. It builds the currencies and the earning rules from the configuration, checked when the
+container is compiled, and registers the projection that turns the members' activity into points, which
+`tilttek/activity-bundle` keeps up to date as the journal is written, catches up and rebuilds. `Points` gives the
+application balances and histories, grants, spendings, refunds and transfers; two commands expire the credits due and
+show a member's history; a module answers the export and erasure requests of `phil/privacy-bundle` for a member's
+points.
 
 It is for a Symfony application that rewards what its members do with points they spend on rewards or give to each
 other, and wants every balance explained by its movements.
@@ -27,7 +28,7 @@ The design follows the other bundles of the monorepo: an `AbstractBundle` with i
 | Part | State |
 |---|---|
 | Configuration `tilttek_points`: store, connection, currencies, default currency, timezone, rules, projection, batch size, member kind | Implemented and tested |
-| `DbalLedger`, with the tables `tilttek_points_movement` and `tilttek_points_lock` | Implemented and tested |
+| `DbalLedger`, with the tables `tilttek_points_movement`, `tilttek_points_lock` and `tilttek_points_lots` | Implemented and tested |
 | The tables in the schema the ORM generates, for the migrations | Implemented and tested |
 | The projection tagged for `tilttek/activity-bundle` | Implemented and tested |
 | Commands `tilttek:points:expire` and `tilttek:points:history` | Implemented and tested |
@@ -39,7 +40,7 @@ The design follows the other bundles of the monorepo: an `AbstractBundle` with i
 |---|---|
 | [Installation](doc/installation.md) | Requirements, enabling the bundle, the migration. |
 | [Configuration](doc/configuration.md) | Every key of `tilttek_points`, with its default. |
-| [The ledger in the database](doc/database.md) | The two tables, the idempotent insertion and the lock per platform, dates. |
+| [The ledger in the database](doc/database.md) | The three tables, the idempotent insertion and the lock per platform, the expiries, dates. |
 | [Earning from the activity](doc/earning.md) | The projection with `tilttek/activity-bundle`, live or by command, and rebuilds. |
 | [Moving points](doc/moving-points.md) | `Points` in a controller or a handler: balances, histories, spendings, refunds, transfers. |
 | [Commands](doc/commands.md) | `tilttek:points:expire` and `tilttek:points:history`. |

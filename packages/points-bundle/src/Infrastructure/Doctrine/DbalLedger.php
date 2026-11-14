@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace Tilttek\PointsBundle\Infrastructure\Doctrine;
 
+use Closure;
 use DateTimeImmutable;
 use DateTimeZone;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Platforms\SQLitePlatform;
 use Doctrine\DBAL\Types\Types;
+use JsonException;
 use LogicException;
 use Override;
 use Phil\Resource\ResourceReference;
@@ -25,6 +28,7 @@ use Tilttek\Points\Exception\MovementConflict;
 use Tilttek\Points\Ledger\Ledger;
 use Tilttek\Points\Ledger\Reading;
 use Tilttek\Points\LedgerEntry;
+use Tilttek\Points\LotsCheckpoint;
 use Tilttek\Points\Movement;
 use Tilttek\Points\MovementKey;
 use Tilttek\Points\MovementKind;
@@ -45,7 +49,11 @@ use UnexpectedValueException;
  * reads anything: two payments from the same account check the balance one after the other, and the second one reads
  * the movements the first one committed. On MySQL and MariaDB, the transaction runs at READ COMMITTED, so that its
  * reads are not held to a snapshot older than the lock; inside a transaction the caller opened, whose snapshot may be
- * older, the movement and the balance are read with `LOCK IN SHARE MODE`. Dates are written in UTC, to the second.
+ * older, the movement and the balance are read with `LOCK IN SHARE MODE`. A movement appended after a position — an
+ * expiry — takes the same lock, then checks that the account has no newer entry. Dates are written in UTC, to the
+ * second.
+ *
+ * The checkpoints of the members' lots are kept in `tilttek_points_lots`, as JSON, one row per account and currency.
  */
 final readonly class DbalLedger implements Ledger
 {
@@ -69,26 +77,7 @@ final readonly class DbalLedger implements Ledger
     #[Override]
     public function appendCovered(Movement $movement, DateTimeImmutable $at): Recorded
     {
-        $platform = $this->connection->getDatabasePlatform();
-        $mysql = $platform instanceof AbstractMySQLPlatform;
-        // Inside a transaction the caller opened, whose snapshot may predate the lock, MySQL reads through locks.
-        $current = $mysql && $this->connection->isTransactionActive();
-
-        if ($mysql && !$current) {
-            $this->connection->executeStatement('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
-        }
-
-        return $this->connection->transactional(function (Connection $connection) use ($movement, $at, $platform, $current): Recorded {
-            $account = $movement->debit->toString();
-            $connection->executeStatement(self::lockInsertion($platform), [$account, $movement->currency]);
-            $locked = $connection->executeStatement(\sprintf('UPDATE %s SET payments = payments + 1 WHERE account = ? AND currency = ?', PointsTables::LOCKS), [$account, $movement->currency]);
-
-            if (1 !== $this->integer($locked)) {
-                throw new LogicException(\sprintf('The lock row of "%s" in %s is neither written nor found.', $account, $movement->currency));
-            }
-
-            $lock = $current ? ' LOCK IN SHARE MODE' : '';
-
+        return $this->locked($movement, function (Connection $connection, string $lock) use ($movement, $at): Recorded {
             if ($this->read($movement->key, $lock) instanceof LedgerEntry) {
                 return $this->write($movement, $at, $lock);
             }
@@ -100,6 +89,24 @@ final readonly class DbalLedger implements Ledger
             }
 
             return $this->write($movement, $at, $lock);
+        });
+    }
+
+    #[Override]
+    public function appendAfter(Movement $movement, DateTimeImmutable $at, int $after): ?Recorded
+    {
+        return $this->locked($movement, function (Connection $connection, string $lock) use ($movement, $at, $after): ?Recorded {
+            if ($this->read($movement->key, $lock) instanceof LedgerEntry) {
+                return $this->write($movement, $at, $lock);
+            }
+
+            $account = $movement->debit->toString();
+            $newer = $connection->fetchOne(
+                \sprintf('SELECT COUNT(*) FROM %s WHERE position > ? AND currency = ? AND (credit = ? OR debit = ?)', PointsTables::MOVEMENTS).$lock,
+                [$after, $movement->currency, $account, $account],
+            );
+
+            return 0 === $this->integer($newer) ? $this->write($movement, $at, $lock) : null;
         });
     }
 
@@ -184,8 +191,52 @@ final readonly class DbalLedger implements Ledger
     }
 
     #[Override]
+    public function keptLots(Account $account, string $currency): ?LotsCheckpoint
+    {
+        $row = $this->connection->fetchAssociative(\sprintf('SELECT position, lots FROM %s WHERE account = ? AND currency = ?', PointsTables::LOTS), [$account->toString(), $currency]);
+
+        if (false === $row) {
+            return null;
+        }
+
+        try {
+            $lots = json_decode($this->text($row['lots']), true, 8, \JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            throw new UnexpectedValueException(\sprintf('The lots of "%s" in %s are not JSON.', $account->toString(), $currency));
+        }
+
+        if (!\is_array($lots)) {
+            throw new UnexpectedValueException(\sprintf('The lots of "%s" in %s are not a JSON object.', $account->toString(), $currency));
+        }
+
+        return LotsCheckpoint::fromArray($account, $currency, $this->integer($row['position']), $lots);
+    }
+
+    #[Override]
+    public function keepLots(LotsCheckpoint $checkpoint): void
+    {
+        $account = $checkpoint->account->toString();
+        $lots = json_encode($checkpoint->toArray(), \JSON_THROW_ON_ERROR);
+
+        try {
+            $this->connection->executeStatement(
+                self::ignoring($this->connection->getDatabasePlatform(), \sprintf('INTO %s (account, currency, position, lots) VALUES (?, ?, ?, ?)', PointsTables::LOTS), 'account, currency'),
+                [$account, $checkpoint->currency, $checkpoint->position, $lots],
+            );
+        } catch (UniqueConstraintViolationException) {
+            // The row is there already, kept by an earlier expiry or by another process at the same moment.
+        }
+
+        $this->connection->executeStatement(
+            \sprintf('UPDATE %s SET position = ?, lots = ? WHERE account = ? AND currency = ? AND position < ?', PointsTables::LOTS),
+            [$checkpoint->position, $lots, $account, $checkpoint->currency, $checkpoint->position],
+        );
+    }
+
+    #[Override]
     public function forgetDerived(?DateTimeImmutable $since): int
     {
+        $this->connection->executeStatement(\sprintf('DELETE FROM %s', PointsTables::LOTS));
         $kinds = array_map(static fn (MovementKind $kind): string => $kind->value, MovementKind::derived());
         $sql = \sprintf('DELETE FROM %s WHERE kind IN (?)', PointsTables::MOVEMENTS);
 
@@ -212,6 +263,7 @@ final readonly class DbalLedger implements Ledger
             $detached = $this->integer($connection->executeStatement(\sprintf('UPDATE %s SET debit = ? WHERE debit = ?', $table), [$erased, $account]))
                 + $this->integer($connection->executeStatement(\sprintf('UPDATE %s SET credit = ? WHERE credit = ?', $table), [$erased, $account]));
             $connection->executeStatement(\sprintf('DELETE FROM %s WHERE account = ?', PointsTables::LOCKS), [$account]);
+            $connection->executeStatement(\sprintf('DELETE FROM %s WHERE account = ?', PointsTables::LOTS), [$account]);
 
             return new Erasure($this->integer($deleted), $detached);
         });
@@ -242,6 +294,40 @@ final readonly class DbalLedger implements Ledger
             $platform instanceof SQLitePlatform => 'INSERT OR IGNORE '.$into,
             default => 'INSERT '.$into,
         };
+    }
+
+    /**
+     * Runs the steps in a transaction that first updates the debited account's row of `tilttek_points_lock`, holding
+     * its lock until the transaction ends, and gives them the locking clause their reads take.
+     *
+     * @template T
+     *
+     * @param Closure(Connection, string): T $steps
+     *
+     * @return T
+     */
+    private function locked(Movement $movement, Closure $steps): mixed
+    {
+        $platform = $this->connection->getDatabasePlatform();
+        $mysql = $platform instanceof AbstractMySQLPlatform;
+        // Inside a transaction the caller opened, whose snapshot may predate the lock, MySQL reads through locks.
+        $current = $mysql && $this->connection->isTransactionActive();
+
+        if ($mysql && !$current) {
+            $this->connection->executeStatement('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
+        }
+
+        return $this->connection->transactional(function (Connection $connection) use ($movement, $platform, $current, $steps): mixed {
+            $account = $movement->debit->toString();
+            $connection->executeStatement(self::lockInsertion($platform), [$account, $movement->currency]);
+            $locked = $connection->executeStatement(\sprintf('UPDATE %s SET payments = payments + 1 WHERE account = ? AND currency = ?', PointsTables::LOCKS), [$account, $movement->currency]);
+
+            if (1 !== $this->integer($locked)) {
+                throw new LogicException(\sprintf('The lock row of "%s" in %s is neither written nor found.', $account, $movement->currency));
+            }
+
+            return $steps($connection, $current ? ' LOCK IN SHARE MODE' : '');
+        });
     }
 
     /**

@@ -13,10 +13,11 @@
 | `Recorded` | An entry and whether this call wrote it |
 | `Erasure` | What erasing a member deleted and detached |
 | `Lot`, `Lots` | What is left of each credit, first in first out |
+| `LotsCheckpoint` | The lots at a position, kept so that the expiry reads only the entries after it |
 | `Ledger\Ledger` | Where the ledger is kept |
 | `Ledger\InMemoryLedger` | The ledger in memory |
 | `Ledger\Reading` | The bounds of a read |
 | `Rule\EarningRule` | Points for a gesture |
 | `Rule\Cap`, `Rule\Period` | The most a rule gives a member over a period |
 | `Rule\Rules` | The rules by name and their timezone |
-| `Exception\PointsException` and its five exceptions | [Exceptions](exceptions.md) |
+| `Exception\PointsException` and its six exceptions | [Exceptions](exceptions.md) |

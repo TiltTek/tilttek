@@ -4,6 +4,21 @@ All notable changes to `tilttek/points-bundle` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `PointsTables` adds a third table, `tilttek_points_lots`, which keeps the checkpoint of each account's lots in a
+  currency, as JSON at a position; the application's next migration creates it.
+- `DbalLedger` implements `Ledger::appendAfter()` under the lock row of the debited account, which payments take too,
+  and `keptLots()` and `keepLots()` on `tilttek_points_lots`; forgetting the derived movements and erasing a member
+  delete the checkpoints.
+
+### Fixed
+
+- An expiry no longer leaves a balance below zero when a spending of the same account slips between its read of the
+  lots and its write, and no longer reads the whole history of the account at each spending.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added

@@ -25,7 +25,7 @@ expires, and no rule earns anything: points move only by what the application de
 
 ## The migration
 
-When the ORM is installed, the bundle adds its two tables to the schema the ORM generates for the ledger's
+When the ORM is installed, the bundle adds its three tables to the schema the ORM generates for the ledger's
 connection:
 
 ```sh

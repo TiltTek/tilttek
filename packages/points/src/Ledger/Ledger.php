@@ -12,6 +12,7 @@ use Tilttek\Points\Exception\InsufficientPoints;
 use Tilttek\Points\Exception\InvalidPoints;
 use Tilttek\Points\Exception\MovementConflict;
 use Tilttek\Points\LedgerEntry;
+use Tilttek\Points\LotsCheckpoint;
 use Tilttek\Points\Movement;
 use Tilttek\Points\MovementKey;
 use Tilttek\Points\Recorded;
@@ -38,6 +39,16 @@ interface Ledger
      * @throws MovementConflict   when the key is written for another movement
      */
     public function appendCovered(Movement $movement, DateTimeImmutable $at): Recorded;
+
+    /**
+     * Appends the movement if the debited account has no entry in the movement's currency after the position, checked
+     * and written as one step that a covered append from the same account cannot slip between; returns null, writing
+     * nothing, when it has one. The entry already written under the key is returned without checking: its `new` is
+     * false.
+     *
+     * @throws MovementConflict when the key is written for another movement
+     */
+    public function appendAfter(Movement $movement, DateTimeImmutable $at, int $after): ?Recorded;
 
     public function find(MovementKey $key): ?LedgerEntry;
 
@@ -78,14 +89,26 @@ interface Ledger
     public function membersCreditedBefore(string $currency, DateTimeImmutable $cutoff): array;
 
     /**
+     * The checkpoint of the account's lots in the currency that `keepLots()` kept last; null when none is kept.
+     */
+    public function keptLots(Account $account, string $currency): ?LotsCheckpoint;
+
+    /**
+     * Keeps the checkpoint of its account's lots in its currency, in place of the one kept, unless that one stands at
+     * the same position or a later one.
+     */
+    public function keepLots(LotsCheckpoint $checkpoint): void;
+
+    /**
      * Deletes the derived movements — earned, reversed, expired — whose moment is `since` or later, all of them when
-     * `since` is null, before the activity of that period is replayed; returns how many it deleted.
+     * `since` is null, before the activity of that period is replayed, and every checkpoint of lots; returns how many
+     * movements it deleted.
      */
     public function forgetDerived(?DateTimeImmutable $since): int;
 
     /**
-     * Deletes the movements between the member and the ledger's own accounts, and writes `erased:member` in place of
-     * the member in the movements with another member.
+     * Deletes the movements between the member and the ledger's own accounts and the checkpoints of the member's lots,
+     * and writes `erased:member` in place of the member in the movements with another member.
      */
     public function eraseMember(ResourceReference $member): Erasure;
 }

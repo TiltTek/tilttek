@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=eedab6c88acadb960c7932f5edd46da2b2f8dd4e1ff663cfbff2c9969a177854 -->
+<!-- phil-dev source-sha256=e509e0b4a0a9057ba43148b6a794ea1cefd72dc488c681f2c677485fcae0d517 -->
 # Installation
 
 ## Prérequis
@@ -26,7 +26,7 @@ jamais, et aucune règle ne rapporte quoi que ce soit : les points ne bougent qu
 
 ## La migration
 
-Quand l'ORM est installé, le bundle ajoute ses deux tables au schéma que génère l'ORM pour la connexion du registre :
+Quand l'ORM est installé, le bundle ajoute ses trois tables au schéma que génère l'ORM pour la connexion du registre :
 
 ```sh
 bin/console doctrine:migrations:diff

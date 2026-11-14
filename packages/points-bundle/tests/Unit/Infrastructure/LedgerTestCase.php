@@ -15,6 +15,8 @@ use Tilttek\Points\Exception\InvalidPoints;
 use Tilttek\Points\Exception\MovementConflict;
 use Tilttek\Points\Ledger\Ledger;
 use Tilttek\Points\LedgerEntry;
+use Tilttek\Points\Lot;
+use Tilttek\Points\LotsCheckpoint;
 use Tilttek\Points\Movement;
 use Tilttek\Points\MovementKey;
 use Tilttek\Points\MovementKind;
@@ -102,6 +104,68 @@ abstract class LedgerTestCase extends TestCase
         self::assertFalse($again->new);
         self::assertSame(3, $again->entry->position);
         self::assertSame(0, $ledger->balance($member, 'points'));
+    }
+
+    public function testAMovementIsAppendedAfterAPositionOnlyWhenTheAccountHasNothingNewer(): void
+    {
+        $ledger = $this->ledger();
+        $member = Account::fromString('member:member:1');
+        $ledger->append(self::movement('a', MovementKind::Granted, 'issuance:manual', 'member:member:1', 10), self::at());
+        $ledger->append(self::movement('b', MovementKind::Granted, 'issuance:manual', 'member:member:2', 10), self::at());
+        $ledger->append(self::movement('c', MovementKind::Granted, 'issuance:manual', 'member:member:1', 5, currency: 'stars'), self::at());
+
+        // Another account's entry, or one in another currency, does not count.
+        $expired = $ledger->appendAfter(self::movement('x', MovementKind::Expired, 'member:member:1', 'expiry:expired', 4), self::at('2026-11-08 12:00:00'), 1);
+        self::assertTrue($expired?->new);
+        self::assertSame(4, $expired->entry->position);
+        self::assertSame('2026-11-08 12:00:00', $expired->entry->at->format('Y-m-d H:i:s'));
+        self::assertSame(6, $ledger->balance($member, 'points'));
+
+        // An entry of the account after the position does.
+        self::assertNull($ledger->appendAfter(self::movement('y', MovementKind::Expired, 'member:member:1', 'expiry:expired', 1), self::at(), 3));
+        self::assertNull($ledger->find(MovementKey::fromString('y')));
+        self::assertSame(6, $ledger->balance($member, 'points'));
+        self::assertTrue($ledger->appendAfter(self::movement('y', MovementKind::Expired, 'member:member:1', 'expiry:expired', 1), self::at(), 4)?->new);
+
+        // The key already written is returned without checking.
+        $again = $ledger->appendAfter(self::movement('x', MovementKind::Expired, 'member:member:1', 'expiry:expired', 4), self::at(), 0);
+        self::assertFalse($again?->new);
+        self::assertSame(4, $again->entry->position);
+
+        $this->expectException(MovementConflict::class);
+        $ledger->appendAfter(self::movement('x', MovementKind::Expired, 'member:member:1', 'expiry:expired', 3), self::at(), 0);
+    }
+
+    public function testACheckpointOfLotsIsKeptUnlessALaterOneIs(): void
+    {
+        $ledger = $this->ledger();
+        $member = Account::fromString('member:member:1');
+        $other = Account::fromString('member:member:2');
+        self::assertNull($ledger->keptLots($member, 'points'));
+
+        $lot = new Lot(MovementKey::fromString('a'), self::at('2026-11-01 10:00:00.250000'), 7, null);
+        $ledger->keepLots(new LotsCheckpoint($member, 'points', 4, [$lot], 0));
+        $ledger->keepLots(new LotsCheckpoint($member, 'stars', 2, [], 3));
+        $ledger->keepLots(new LotsCheckpoint($other, 'points', 9));
+
+        self::assertSame([4, ['debt' => 0, 'lots' => [['key' => 'a', 'credited_at' => '2026-11-01T10:00:00.250000+00:00', 'remaining' => 7]]]], self::kept($ledger, $member, 'points'));
+        self::assertSame([2, ['debt' => 3, 'lots' => []]], self::kept($ledger, $member, 'stars'));
+
+        $ledger->keepLots(new LotsCheckpoint($member, 'points', 4, [], 1));
+        $ledger->keepLots(new LotsCheckpoint($member, 'points', 3, [], 2));
+        self::assertSame(4, self::kept($ledger, $member, 'points')[0]);
+        self::assertSame(0, self::kept($ledger, $member, 'points')[1]['debt']);
+
+        $ledger->keepLots(new LotsCheckpoint($member, 'points', 5, [], 5));
+        self::assertSame([5, ['debt' => 5, 'lots' => []]], self::kept($ledger, $member, 'points'));
+
+        $ledger->eraseMember(ResourceReference::of('member', '1'));
+        self::assertNull($ledger->keptLots($member, 'points'));
+        self::assertNull($ledger->keptLots($member, 'stars'));
+        self::assertSame(9, self::kept($ledger, $other, 'points')[0]);
+
+        $ledger->forgetDerived(self::at());
+        self::assertNull($ledger->keptLots($other, 'points'));
     }
 
     public function testFindAndCause(): void
@@ -273,6 +337,21 @@ abstract class LedgerTestCase extends TestCase
             $cause,
             null === $reverses ? null : MovementKey::fromString($reverses),
         );
+    }
+
+    /**
+     * The position and the plain values of the checkpoint kept, which the test expects.
+     *
+     * @return array{int, array{debt: int, lots: list<array{key: string, credited_at: string, remaining: int}>}}
+     */
+    protected static function kept(Ledger $ledger, Account $account, string $currency): array
+    {
+        $kept = $ledger->keptLots($account, $currency);
+        self::assertInstanceOf(LotsCheckpoint::class, $kept);
+        self::assertTrue($kept->account->equals($account));
+        self::assertSame($currency, $kept->currency);
+
+        return [$kept->position, $kept->toArray()];
     }
 
     protected static function at(string $moment = '2026-11-07 12:00:00'): DateTimeImmutable
