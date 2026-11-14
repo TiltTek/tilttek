@@ -6,14 +6,17 @@ namespace Tilttek\CollectionsBundle\Tests\Unit;
 
 use DateTimeZone;
 use Phil\Almanac\Almanac;
-use Phil\PrivacyBundle\Application\Port\PersonalDataEraser;
+use Phil\PrivacyBundle\Application\Contract\PersonalDataEraser;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\ConfigurationExtensionInterface;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Tilttek\Collections\CatalogProvider;
@@ -154,6 +157,19 @@ final class TilttekCollectionsBundleTest extends TestCase
         $this->expectExceptionObject(InvalidCollection::because('"someday" is not a rule the almanac reads.'));
 
         $this->load(['daily' => ['computed' => [['rule' => 'someday', 'item' => 'a']]]]);
+    }
+
+    public function testAComputedDateLastsOneDayByDefault(): void
+    {
+        $extension = $this->extension();
+        self::assertInstanceOf(ConfigurationExtensionInterface::class, $extension);
+        $configuration = $extension->getConfiguration([], new ContainerBuilder());
+        self::assertInstanceOf(ConfigurationInterface::class, $configuration);
+
+        $daily = new Processor()->processConfiguration($configuration, [['daily' => ['computed' => [['rule' => 'easter', 'item' => 'ember-d6']]]]])['daily'];
+
+        self::assertIsArray($daily);
+        self::assertSame([['rule' => 'easter', 'item' => 'ember-d6', 'days' => 1]], $daily['computed']);
     }
 
     public function testComputedDatesNeedPhilAlmanac(): void

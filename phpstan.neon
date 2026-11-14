@@ -2,6 +2,8 @@
 # project needs goes below.
 includes:
     - vendor/phil/dev-tools/config/phpstan.neon
+    # phil/privacy-bundle: its integrations analysed when it is installed, left out with their expected errors when not.
+    - phpstan-privacy.php
 
 parameters:
     tmpDir: var/phpstan
@@ -14,11 +16,9 @@ parameters:
 
     excludePaths:
         analyse:
-            # The integrations of the bundles with phil/privacy-bundle, phil/open-badges-bundle and phil/almanac, three
-            # packages suggested rather than required and not published yet: the classes that implement them, and their
-            # tests, are left out until those packages can be installed here.
-            - packages/*/src/Infrastructure/Privacy/*
-            - packages/*/tests/Unit/Infrastructure/*PrivacyTest.php
+            # The integrations of the bundles with phil/open-badges-bundle and phil/almanac, two packages suggested rather
+            # than required and not installed here: the classes that implement them, and their tests, are left out until
+            # those packages can be installed here. Those with phil/privacy-bundle: phpstan-privacy.php.
             - packages/badges-bundle/src/Infrastructure/OpenBadges/*
             - packages/collections-bundle/src/Infrastructure/Almanac/*
             - packages/collections-bundle/tests/Unit/Infrastructure/AlmanacDateRuleTest.php
@@ -31,48 +31,30 @@ parameters:
 
     # The same integrations, where the bundle class registers them and the functional tests reach them: the code checks
     # that each package is installed before it touches it, but PHPStan reads every class name it names. Each exception
-    # goes once those packages can be installed here.
+    # goes once those packages can be installed here; those of phil/privacy-bundle are in phpstan-privacy.php.
     ignoreErrors:
-        -
-            identifier: argument.type
-            path: packages/activity-bundle/src/TilttekActivityBundle.php
-            count: 2
-        -
-            identifier: class.notFound
-            path: packages/activity-bundle/src/TilttekActivityBundle.php
-            count: 2
-        -
-            identifier: class.notFound
-            path: packages/activity-bundle/tests/Functional/ActivityBundleTest.php
-            count: 5
         -
             identifier: class.notFound
             path: packages/badges-bundle/src/Infrastructure/DependencyInjection/BadgesServices.php
             count: 2
         -
             identifier: argument.type
-            path: packages/badges-bundle/src/TilttekBadgesBundle.php
-            count: 2
-        -
-            identifier: class.notFound
-            path: packages/badges-bundle/src/TilttekBadgesBundle.php
-            count: 2
-        -
-            identifier: argument.type
             path: packages/badges-bundle/tests/Functional/BadgesBundleTest.php
             count: 1
         -
             identifier: class.notFound
+            message: '#Phil\\OpenBadges\\#'
             path: packages/badges-bundle/tests/Functional/BadgesBundleTest.php
-            count: 9
+            count: 4
         -
             identifier: method.nonObject
             path: packages/badges-bundle/tests/Functional/BadgesBundleTest.php
             count: 1
         -
             identifier: offsetAccess.nonOffsetAccessible
+            message: "#^Cannot access offset 'iss' on mixed\\.$#"
             path: packages/badges-bundle/tests/Functional/BadgesBundleTest.php
-            count: 3
+            count: 1
         -
             identifier: argument.type
             path: packages/badges-bundle/tests/Unit/TilttekBadgesBundleTest.php
@@ -81,67 +63,3 @@ parameters:
             identifier: class.notFound
             path: packages/badges-bundle/tests/Unit/TilttekBadgesBundleTest.php
             count: 3
-        -
-            identifier: argument.type
-            path: packages/collections-bundle/src/TilttekCollectionsBundle.php
-            count: 2
-        -
-            identifier: class.notFound
-            path: packages/collections-bundle/src/TilttekCollectionsBundle.php
-            count: 2
-        -
-            identifier: class.notFound
-            path: packages/collections-bundle/tests/Functional/CollectionsBundleTest.php
-            count: 5
-        -
-            identifier: offsetAccess.nonOffsetAccessible
-            path: packages/collections-bundle/tests/Functional/CollectionsBundleTest.php
-            count: 2
-        -
-            identifier: argument.type
-            path: packages/points-bundle/src/TilttekPointsBundle.php
-            count: 2
-        -
-            identifier: class.notFound
-            path: packages/points-bundle/src/TilttekPointsBundle.php
-            count: 2
-        -
-            identifier: class.notFound
-            path: packages/points-bundle/tests/Functional/PointsBundleTest.php
-            count: 5
-        -
-            identifier: offsetAccess.nonOffsetAccessible
-            path: packages/points-bundle/tests/Functional/PointsBundleTest.php
-            count: 2
-        -
-            identifier: argument.type
-            path: packages/progression-bundle/src/TilttekProgressionBundle.php
-            count: 2
-        -
-            identifier: class.notFound
-            path: packages/progression-bundle/src/TilttekProgressionBundle.php
-            count: 2
-        -
-            identifier: class.notFound
-            path: packages/progression-bundle/tests/Functional/ProgressionBundleTest.php
-            count: 5
-        -
-            identifier: offsetAccess.nonOffsetAccessible
-            path: packages/progression-bundle/tests/Functional/ProgressionBundleTest.php
-            count: 2
-        -
-            identifier: argument.type
-            path: packages/quests-bundle/src/TilttekQuestsBundle.php
-            count: 2
-        -
-            identifier: class.notFound
-            path: packages/quests-bundle/src/TilttekQuestsBundle.php
-            count: 2
-        -
-            identifier: class.notFound
-            path: packages/quests-bundle/tests/Functional/QuestsBundleTest.php
-            count: 5
-        -
-            identifier: offsetAccess.nonOffsetAccessible
-            path: packages/quests-bundle/tests/Functional/QuestsBundleTest.php
-            count: 2

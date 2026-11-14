@@ -6,7 +6,7 @@ namespace Tilttek\PointsBundle\Tests\Unit\Infrastructure;
 
 use DateTimeImmutable;
 use Override;
-use Phil\PrivacyBundle\Application\Port\PersonalDataEraser;
+use Phil\PrivacyBundle\Application\Contract\PersonalDataEraser;
 use Phil\PrivacyBundle\Domain\Retention\ErasureEffect;
 use Phil\PrivacyBundle\Domain\Subject\DataSubject;
 use PHPUnit\Framework\Attributes\CoversClass;
