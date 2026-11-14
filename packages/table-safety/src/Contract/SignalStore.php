@@ -22,13 +22,22 @@ interface SignalStore
     public function acknowledge(ResourceReference $table, string $id, DateTimeImmutable $at): ?Signal;
 
     /**
-     * The table's signals raised after a moment, or the last ones without it, in the order they were raised.
+     * The table's signals raised after a moment, or the last ones without it, in the order they were raised: at most
+     * `$limit`, for a screen.
      *
      * @param positive-int $limit
      *
      * @return list<Signal>
      */
     public function recent(ResourceReference $table, ?DateTimeImmutable $after = null, int $limit = 100): array;
+
+    /**
+     * The table's last check-in followed by every answer raised after it, in the order they were raised; empty when the
+     * table has no check-in. Nothing is left out, however many signals followed the check-in: the tally needs them all.
+     *
+     * @return list<Signal>
+     */
+    public function lastCheckIn(ResourceReference $table): array;
 
     /**
      * @return list<Signal> the named signals the participant raised, at every table

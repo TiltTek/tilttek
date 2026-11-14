@@ -27,12 +27,13 @@ return [
                 ],
             ],
             // Lists rebuilt by their consumer: the constructor of `StarsAndWishes` keeps its texts with `$kept[]`, that of
-            // `Template` indexes its questions by key, and `usort()` renumbers the signals.
+            // `Template` indexes its questions by key, and `usort()` and `array_slice()` renumber the signals.
             'UnwrapArrayValues' => [
                 'ignoreSourceCodeByRegex' => [
                     '.*\\$list = static fn \\(mixed \\$texts\\): array => .*',
                     '.*return new self\\(\\$this->key, array_values\\(.*',
                     '.*\\$signals = array_values\\(array_filter\\(.*',
+                    '.*\\$signals = array_values\\(\\$this->signals\\[.*',
                 ],
             ],
             // The options a choice question keeps: `isset()` is true for a value of false as for one of true.

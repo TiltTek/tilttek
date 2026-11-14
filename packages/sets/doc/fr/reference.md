@@ -1,9 +1,9 @@
-<!-- phil-dev source-sha256=ffedb62c8a6c7f266ebffbd55696edc9714c6b641b672f0a8b389c9854d6b044 -->
+<!-- phil-dev source-sha256=abf0f47556bce8290cd60963fe3882f14aa4ea7b9a3ff3a888fb68ee5dd3ef71 -->
 # Référence
 
 | Type | Rôle |
 |---|---|
-| `Sets` | Définit des versions, mesure la progression, enregistre les complétions et répartit leurs événements |
+| `Sets` | Définit des versions, mesure la progression, enregistre les complétions et répartit leurs événements jusqu'à leur remise |
 | `SetDefinition` | Une version d'un ensemble : membres, paliers et récompenses ; évalue des possessions ; lue depuis des tableaux et du JSON et écrite vers eux |
 | `Tier` | Une étape d'un ensemble : un nombre de membres à un niveau ou à un niveau supérieur, avec ses récompenses |
 | `Reward` | Une récompense opaque qu'un ensemble ou un palier déclare : genre, référence et quantité |

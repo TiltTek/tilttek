@@ -2,7 +2,7 @@
 
 | Type | Role |
 |---|---|
-| `Sets` | Defines versions, measures progress, records completions and dispatches their events |
+| `Sets` | Defines versions, measures progress, records completions and dispatches their events until they are delivered |
 | `SetDefinition` | A version of a set: members, tiers and rewards; evaluates holdings; read from and written to arrays and JSON |
 | `Tier` | A step of a set: a number of members at a level or higher, with its rewards |
 | `Reward` | An opaque reward a set or a tier declares: kind, reference and quantity |

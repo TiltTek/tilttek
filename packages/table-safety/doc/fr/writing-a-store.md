@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=ea8d48a1ca395f8af8d3c1f5c9ba0677f79e5756c47788ae165269b19e5ef2cd -->
+<!-- phil-dev source-sha256=a3d94c516a03ba09c7450d184eb6d83322c961fc364882c1e1d5f7e743f9baa6 -->
 # Écrire un stockage
 
 `TableSafety` garde ses données par quatre contrats, sous `Tilttek\TableSafety\Contract`. La bibliothèque fournit un
@@ -20,6 +20,9 @@ Ce que fait chaque implémentation :
   l'ordre des références des participants.
 - `SignalStore::recent()` liste les signaux dans l'ordre où ils ont été levés, les derniers dans la limite, ou ceux qui
   ont été levés strictement après un moment ; deux signaux de la même seconde gardent leur ordre.
+- `SignalStore::lastCheckIn()` donne le dernier point d'étape de la table suivi de chaque réponse levée après lui,
+  dans le même ordre, sans limite : le décompte d'un point d'étape a besoin de toutes, quel que soit le nombre de
+  signaux levés depuis. Il ne donne rien pour une table sans point d'étape.
 - `SignalStore::acknowledge()` marque un signal une seule fois et le retourne, ou retourne null.
 - `eraseParticipant()` et `forgetParticipant()` retournent le nombre d'enregistrements qu'elles ont changés, et ne
   changent rien la deuxième fois.

@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=d146a1cba023d26b85b5df1d8e248622830c37a396e914dc7084b974bff92f81 -->
+<!-- phil-dev source-sha256=94264bfaaf694b4ed977f4759cc010278b34e29047f738a67a4314fc8804c3ee -->
 # Pendant la partie
 
 ## Les signaux
@@ -62,4 +62,7 @@ $tally->allGood;           // 3
 $tally->needsAttention();  // true when someone is unsure or not okay
 ```
 
-Une réponse compte une fois par signal ; un point d'étape demandé de nouveau recommence le décompte.
+Une réponse compte une fois par signal ; un point d'étape demandé de nouveau recommence le décompte. Le décompte lit le
+dernier point d'étape et chaque réponse qui le suit par `SignalStore::lastCheckIn()`, quel que soit le nombre de signaux
+levés depuis ; seule la liste de `TableSafety::signals()` s'arrête aux `TableSafety::SIGNALS_LIMIT` derniers, 100, pour
+un écran.

@@ -37,5 +37,11 @@ sticker once.
 `Event\StickerRevoked` with the number removed. `Stickers::owned($holder)` lists what a holder owns, in the order it
 was given, leaving out a sticker that left the catalogue.
 
+A revocation removes the placements first and takes the sticker back last. When it fails halfway — the store gone in
+the middle of the removals —, the holder still owns the sticker, and calling `revoke()` again does it all over; it is
+safe to call as many times as needed. A call for a sticker the holder no longer owns returns false and tells nothing,
+but still removes the placements of it left behind. A placement made at the very moment of a revocation, by a holder
+who still owned the sticker when it was checked, may outlive it: calling `revoke()` again removes it.
+
 A holder is a `ResourceReference` with a stable identifier — `member:1042` —: an identifier with `@`, plain or
 percent-encoded, is refused, so that an e-mail address never becomes the key of what a member owns.

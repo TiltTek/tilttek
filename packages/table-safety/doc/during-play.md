@@ -61,4 +61,6 @@ $tally->allGood;           // 3
 $tally->needsAttention();  // true when someone is unsure or not okay
 ```
 
-An answer counts once per signal; a check-in asked again starts the count over.
+An answer counts once per signal; a check-in asked again starts the count over. The tally reads the last check-in and
+every answer after it through `SignalStore::lastCheckIn()`, however many signals followed; only the list of
+`TableSafety::signals()` stops at the last `TableSafety::SIGNALS_LIMIT`, 100, for a screen.

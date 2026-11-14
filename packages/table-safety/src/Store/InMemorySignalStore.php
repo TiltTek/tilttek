@@ -9,6 +9,7 @@ use Override;
 use Phil\Resource\ResourceReference;
 use Tilttek\TableSafety\Contract\SignalStore;
 use Tilttek\TableSafety\Signal\Signal;
+use Tilttek\TableSafety\Signal\SignalKind;
 
 /**
  * The signals in memory, for tests and for a process that keeps nothing.
@@ -37,13 +38,28 @@ final class InMemorySignalStore implements SignalStore
     }
 
     #[Override]
+    public function lastCheckIn(ResourceReference $table): array
+    {
+        $found = [];
+
+        foreach ($this->ordered($table) as $signal) {
+            if (SignalKind::CheckIn === $signal->kind) {
+                $found = [$signal];
+            } elseif ([] !== $found && $signal->kind->isAnswer()) {
+                $found[] = $signal;
+            }
+        }
+
+        return $found;
+    }
+
+    #[Override]
     public function recent(ResourceReference $table, ?DateTimeImmutable $after = null, int $limit = 100): array
     {
         $signals = array_values(array_filter(
-            $this->signals[$table->toString()] ?? [],
+            $this->ordered($table),
             static fn (Signal $signal): bool => !$after instanceof DateTimeImmutable || $signal->raisedAt > $after,
         ));
-        usort($signals, static fn (Signal $a, Signal $b): int => $a->raisedAt <=> $b->raisedAt);
 
         return \array_slice($signals, -$limit);
     }
@@ -89,5 +105,17 @@ final class InMemorySignalStore implements SignalStore
         }
 
         return $purged;
+    }
+
+    /**
+     * @return list<Signal> the table's signals in the order they were raised; two of the same moment keep the order
+     *                      they were added in
+     */
+    private function ordered(ResourceReference $table): array
+    {
+        $signals = array_values($this->signals[$table->toString()] ?? []);
+        usort($signals, static fn (Signal $a, Signal $b): int => $a->raisedAt <=> $b->raisedAt);
+
+        return $signals;
     }
 }

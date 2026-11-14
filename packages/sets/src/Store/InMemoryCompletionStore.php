@@ -17,6 +17,9 @@ final class InMemoryCompletionStore implements CompletionStore
     /** @var array<string, Completion> */
     private array $completions = [];
 
+    /** @var array<string, Completion> the completions not yet delivered, in the order they were added */
+    private array $undelivered = [];
+
     #[Override]
     public function add(Completion $completion): bool
     {
@@ -25,8 +28,24 @@ final class InMemoryCompletionStore implements CompletionStore
         }
 
         $this->completions[$completion->key()] = $completion;
+        $this->undelivered[$completion->key()] = $completion;
 
         return true;
+    }
+
+    #[Override]
+    public function undelivered(ResourceReference $holder): array
+    {
+        return array_values(array_filter(
+            $this->undelivered,
+            static fn (Completion $completion): bool => $completion->holder->equals($holder),
+        ));
+    }
+
+    #[Override]
+    public function markDelivered(Completion $completion): void
+    {
+        unset($this->undelivered[$completion->key()]);
     }
 
     #[Override]
@@ -55,6 +74,7 @@ final class InMemoryCompletionStore implements CompletionStore
             $this->completions,
             static fn (Completion $completion): bool => !$completion->holder->equals($holder),
         );
+        $this->undelivered = array_intersect_key($this->undelivered, $this->completions);
 
         return $before - \count($this->completions);
     }

@@ -32,7 +32,7 @@ use Tilttek\TableSafety\Signal\SignalKind;
  */
 final readonly class TableSafety
 {
-    /** How many signals a screen reads at most. */
+    /** How many signals a screen reads at most; a check-in's tally reads every answer. */
     public const int SIGNALS_LIMIT = 100;
 
     public function __construct(
@@ -43,7 +43,9 @@ final readonly class TableSafety
         private FeedbackStore $feedback,
         private ?SignalObserver $observer = null,
         private ?TableSettings $defaults = null,
+        private int $feedbackThreshold = FeedbackSummary::DEFAULT_THRESHOLD,
     ) {
+        FeedbackSummary::assertThreshold($feedbackThreshold);
     }
 
     /**
@@ -194,11 +196,11 @@ final readonly class TableSafety
     }
 
     /**
-     * The answers to the table's last check-in, counted.
+     * The answers to the table's last check-in, counted: every one of them, however many signals followed.
      */
     public function checkIn(ResourceReference $table): CheckInTally
     {
-        return CheckInTally::of($this->signals->recent($table, null, self::SIGNALS_LIMIT));
+        return CheckInTally::of($this->signals->lastCheckIn($table));
     }
 
     public function giveFeedback(ResourceReference $table, string $session, ResourceReference $participant, StarsAndWishes $starsAndWishes, DateTimeImmutable $at): Feedback
@@ -211,13 +213,17 @@ final readonly class TableSafety
     }
 
     /**
-     * The session's stars and wishes, without saying who gave which.
+     * The session's stars and wishes, without saying who gave which: those of the first participants who gave them, in
+     * whole groups of the feedback threshold given to the constructor, 3 by default.
      */
     public function feedback(ResourceReference $table, string $session): FeedbackSummary
     {
         Feedback::assertSession($session);
 
-        return FeedbackSummary::of(array_map(static fn (Feedback $feedback): StarsAndWishes => $feedback->starsAndWishes, $this->feedback->ofSession($table, $session)));
+        $given = $this->feedback->ofSession($table, $session);
+        usort($given, static fn (Feedback $a, Feedback $b): int => $a->givenAt <=> $b->givenAt);
+
+        return FeedbackSummary::of(array_map(static fn (Feedback $feedback): StarsAndWishes => $feedback->starsAndWishes, $given), $this->feedbackThreshold);
     }
 
     /**

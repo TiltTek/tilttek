@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=2da1bc521d02162a4df6ee5ab12f66ab6d09684f956283bfa8aa957c3244e17c -->
+<!-- phil-dev source-sha256=433aa3b70485c7a932033f579a7d36d187b7bd6057e23947a65c17bd28e6d637 -->
 # Le catalogue
 
 ## Autocollants
@@ -39,6 +39,13 @@ catalogue. Un détenteur possède chaque autocollant une seule fois.
 `Stickers::revoke($holder, $code)` le reprend, supprime tous les placements que le détenteur en a faits, et répartit
 `Event\StickerRevoked` avec le nombre supprimé. `Stickers::owned($holder)` liste ce qu'un détenteur possède, dans
 l'ordre où cela lui a été donné, sans les autocollants sortis du catalogue.
+
+Une révocation supprime d'abord les placements et reprend l'autocollant en dernier. Quand elle échoue en cours de
+route — le stockage disparu au milieu des suppressions —, le détenteur possède encore l'autocollant, et rappeler
+`revoke()` refait tout ; on peut l'appeler autant de fois qu'il le faut. Un appel pour un autocollant que le détenteur
+ne possède plus retourne faux et n'annonce rien, mais supprime quand même les placements qui en restent. Un placement
+fait au moment même d'une révocation, par un détenteur qui possédait encore l'autocollant quand on l'a vérifié, peut lui
+survivre : rappeler `revoke()` le supprime.
 
 Un détenteur est un `ResourceReference` à identifiant stable — `member:1042` — : un identifiant contenant `@`, brut ou
 encodé en pourcentage, est refusé, de sorte qu'une adresse courriel ne devienne jamais la clé de ce qu'un membre

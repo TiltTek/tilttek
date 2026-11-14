@@ -17,6 +17,9 @@ What every implementation does:
   of the participants' references.
 - `SignalStore::recent()` lists the signals in the order they were raised, the last ones within the limit, or those
   raised strictly after a moment; two signals of the same second keep their order.
+- `SignalStore::lastCheckIn()` gives the table's last check-in followed by every answer raised after it, in the same
+  order, with no limit: the tally of a check-in needs them all, however many signals followed. It gives nothing for a
+  table without a check-in.
 - `SignalStore::acknowledge()` marks a signal once and returns it, or null.
 - `eraseParticipant()` and `forgetParticipant()` return how many records they changed, and change nothing the second
   time.
