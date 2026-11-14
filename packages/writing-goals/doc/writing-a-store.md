@@ -23,7 +23,10 @@ a curve back from its shape and points.
 | `progress($goal)` | The goal's counts, as a `Progress` — `Progress::fromArray()` reads them by date |
 | `add($goal, $day, $delta)` | Adds to a day's count in one step, never below 0; the day's count after |
 | `set($goal, $day, $count)` | Replaces a day's count |
-| `forget($goal)` | Removes every count of the goal |
+| `markReached($goal, $day)` | Notes the goal reached on that day, its `GoalReached` due; reached again before, the latest day is due |
+| `undelivered($goal)` | The day of the goal's `GoalReached` still due, or null |
+| `markDelivered($goal, $day)` | Notes the notice of that day delivered; nothing when the notice due is of another day, or none is |
+| `forget($goal)` | Removes every count of the goal, and its notice due |
 
 `add()` must not lose a count when two requests add at once. In SQL, one row per goal and day, and an upsert that adds:
 
@@ -38,6 +41,9 @@ CREATE TABLE writing_log (
 INSERT INTO writing_log (goal, day, count) VALUES (?, ?, LEAST(1000000000, GREATEST(0, ?)))
 ON CONFLICT (goal, day) DO UPDATE SET count = LEAST(1000000000, GREATEST(0, writing_log.count + EXCLUDED.count)) RETURNING count;
 ```
+
+The notice due fits a nullable `reached_on DATE` column of the goal, or a table of its own keyed by the goal;
+`markDelivered()` clears it with an update conditional on the day, so that a goal reached again meanwhile stays due.
 
 The library's tests hold `GoalStoreTestCase` and `LogStoreTestCase`, the contracts every store passes; copy them into
 the application's tests and extend them with the stores to check.

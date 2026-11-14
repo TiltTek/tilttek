@@ -15,8 +15,12 @@ use Tilttek\WritingGoals\Exception\UnknownGoal;
 
 /**
  * Keeps an author's goals, logs what they write and answers the plan of a goal on the author's today. No streak is
- * counted: a day without writing only reshapes the quotas of the days after. The service keeps no state between two
- * calls.
+ * counted: a day without writing only reshapes the quotas of the days after.
+ *
+ * A goal reached is noted in the log store with its `GoalReached` due, and noted delivered once the event was
+ * dispatched without an exception. When a listener throws, the notice stays due: the next count logged or corrected
+ * toward the goal, or `deliver()`, dispatches it again. The listeners are therefore idempotent, by
+ * `GoalReached::idempotencyKey()`. The service keeps no state between two calls.
  */
 final readonly class WritingGoals
 {
@@ -99,6 +103,16 @@ final readonly class WritingGoals
     }
 
     /**
+     * Dispatches the goal's `GoalReached` when it is still due, after a listener failed; false when none is due.
+     *
+     * @throws UnknownGoal
+     */
+    public function deliver(string $id): bool
+    {
+        return $this->tell($this->goal($id));
+    }
+
+    /**
      * Removes every goal of the author and what was logged toward them.
      *
      * @return int how many goals were removed
@@ -137,9 +151,28 @@ final readonly class WritingGoals
         $progress = $this->logs->progress($goal->id);
 
         if ($before < $goal->target && $progress->total() >= $goal->target) {
-            $this->dispatcher->dispatch(new GoalReached($goal->id, $goal->author, $on));
+            $this->logs->markReached($goal->id, $on);
         }
 
+        $this->tell($goal);
+
         return $this->planner->plan($goal, $progress, $today);
+    }
+
+    /**
+     * Dispatches the goal's `GoalReached` still due, then notes it delivered; a listener that throws leaves it due.
+     */
+    private function tell(Goal $goal): bool
+    {
+        $day = $this->logs->undelivered($goal->id);
+
+        if (!$day instanceof Day) {
+            return false;
+        }
+
+        $this->dispatcher->dispatch(new GoalReached($goal->id, $goal->author, $day));
+        $this->logs->markDelivered($goal->id, $day);
+
+        return true;
     }
 }

@@ -4,6 +4,25 @@ All notable changes to `tilttek/writing-goals` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `Contract\LogStore` keeps the notice of a goal reached while it is due: `markReached($goal, $day)`,
+  `undelivered($goal)` and `markDelivered($goal, $day)`; `forget()` removes it with the counts. A store written for 0.1
+  implements the three methods.
+- `GoalReached` is dispatched at least once: noted due when the goal is reached, and delivered once dispatched without
+  an exception. A listener that throws leaves it due; the next count logged or corrected toward the goal dispatches it
+  again. Listeners must be idempotent, by `idempotencyKey()`.
+
+### Added
+
+- `WritingGoals::deliver()`: the goal's `GoalReached` still due dispatched again, to resume after a listener failed.
+
+### Fixed
+
+- A listener of `GoalReached` that failed no longer loses the event of a goal already reached.
+
 ## 0.1.0-alpha - 2026-11-12
 
 ### Added

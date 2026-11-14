@@ -21,8 +21,15 @@ library never reads a text.
 
 When a count brings the goal from under its target to its target or above, `WritingGoals` dispatches
 `Event\GoalReached` with the goal's identifier, its author and the day the count went to. A count logged after does not
-dispatch it again; a goal brought back under its target by a correction, then reached again, dispatches it again, and two counts logged at once can both dispatch it. A listener that
-grants something — a badge, points — keeps it once by the event's `idempotencyKey()`, one per goal.
+dispatch it again; a goal brought back under its target by a correction, then reached again, dispatches it again, and
+two counts logged at once can both dispatch it. A listener that grants something — a badge, points — keeps it once by
+the event's `idempotencyKey()`, one per goal.
+
+The goal reached is noted in the log store with its event due, and noted delivered once the event was dispatched
+without an exception. When a listener throws, the exception reaches the caller and the notice stays due: the next count
+logged or corrected toward the goal — `log($id, 0)` does — dispatches it again, with the day the goal was reached on,
+and `$goals->deliver($id)` resumes without logging anything, false when nothing was due. The event is thus dispatched
+at least once.
 
 ## Celebrating
 
