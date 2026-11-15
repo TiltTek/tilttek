@@ -49,8 +49,14 @@ most 100 themes. `TableSafety` refuses an answer about a theme its table does no
 
 ## What the table agreed
 
-`TableAgreement` gathers the answers of a table without saying who gave which: for each theme, the strictest boundary
-and the strictest level anyone gave — **the most restrictive answer wins** —, and how many participants answered.
+`TableAgreement` gathers the answers of a table without saying who gave which. It has two parts: what protects the
+table, from every answer, and the summary shown to people, in whole groups of a threshold of participants.
+
+### What protects the table
+
+For each theme, the strictest boundary and the strictest level anyone gave — **the most restrictive answer wins**.
+This part applies every answer, however few the participants: a line or a veil one person set protects the table as
+soon as it is given.
 
 ```php
 $agreement = $safety->agreement($table);
@@ -59,11 +65,47 @@ $agreement->lines();                      // the themes behind a line, in key or
 $agreement->veils();                      // behind a veil and no line
 $agreement->consent('gore');              // ConsentLevel::Red
 $agreement->themesAt(ConsentLevel::Yellow);
-$agreement->respondents;                  // 3
+$agreement->preferences();                // what the table's warned content becomes
 ```
 
 The order in which the participants answered does not change it. An answer changes at any moment, even during play,
 and the agreement follows.
+
+### The summary shown to people
+
+`shown()` returns an `AgreementSummary`: the same view — `lines()`, `veils()`, `boundary()`, `consent()`,
+`checklist()`, `themesAt()` — made only of the answers of whole groups of a **threshold** of participants, 3 by
+default, taken in the order of their last answer. `respondents` counts the answers it holds.
+
+- Under the threshold, it holds nothing: `hasEnoughAnswers()` is false, every list is empty and `respondents` is 0.
+- Past it, the answers of a group that is not full wait: with a threshold of 3, four or five participants who answered
+  give the summary of the first three, six give all six.
+
+```php
+// Ana set a line on spiders; Bo answered too. Two participants, under the threshold of 3:
+$agreement->lines();                      // ['spiders']: the line protects the table
+$agreement->shown()->lines();             // []: not enough answers to show
+$agreement->respondents;                  // 0
+$agreement->hasEnoughAnswers();           // false
+
+// Cy answers: three participants, a whole group.
+$agreement->shown()->lines();             // ['spiders']
+$agreement->respondents;                  // 3
+
+// Di answers: the fourth waits for two more before the summary changes.
+$agreement->respondents;                  // 3
+```
+
+One more answer thus never changes the summary by the answers of one person alone. A participation with no line, veil
+or level is not an answer and takes no place in a group. The application chooses the threshold, the same for the
+agreement and the [pact](session-zero.md#the-pact):
+
+```php
+$safety = new TableSafety($catalogue, $tables, $participations, $signals, $feedback, answersThreshold: 4);
+```
+
+A threshold of 1 shows every answer as soon as it is given. A screen shows `shown()` to people and gives
+`preferences()` to the content it filters; [Privacy](privacy.md#the-agreement-and-the-pact) says what each tells.
 
 ## As warning preferences
 

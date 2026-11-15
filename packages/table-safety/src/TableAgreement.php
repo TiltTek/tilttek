@@ -8,111 +8,120 @@ use Phil\ContentWarnings\Display;
 use Phil\ContentWarnings\WarningPreferences;
 
 /**
- * What a table agreed, gathered from its participants' answers without saying who gave which: for each theme, the
- * strictest boundary and the strictest consent level anyone gave — the most restrictive answer wins —, and how many
- * participants answered.
+ * What a table agreed, gathered from its participants' answers without saying who gave which, in two parts.
+ *
+ * What protects the table — `lines()`, `veils()`, `boundary()`, `consent()`, `checklist()`, `themesAt()` and
+ * `preferences()` — applies every answer, even under the threshold: for each theme, the strictest boundary and the
+ * strictest consent level anyone gave; the most restrictive answer wins. A line or a veil someone set always counts.
+ *
+ * What is shown to people as a summary — `shown()`, `respondents` and `hasEnoughAnswers()` — holds answers only in whole
+ * groups of `$threshold` participants, as `AgreementSummary` says.
  */
 final readonly class TableAgreement
 {
     /**
-     * @param array<string, Boundary>     $boundaries by theme key, in key order
-     * @param array<string, ConsentLevel> $consent    by theme key, in key order
+     * @param int          $respondents how many participants' answers the shown summary holds: 0, or a multiple of the threshold
+     * @param positive-int $threshold
      */
     private function __construct(
-        private array $boundaries,
-        private array $consent,
+        private AgreementSummary $everyAnswer,
+        private AgreementSummary $shown,
         public int $respondents,
+        public int $threshold,
     ) {
     }
 
     /**
-     * @param list<Participation> $participations
+     * @param list<Participation> $participations in the order they were given
+     *
+     * @throws Exception\InvalidAnswer when the threshold is under 1
      */
-    public static function of(array $participations): self
+    public static function of(array $participations, int $threshold = RespondentThreshold::DEFAULT): self
     {
-        $boundaries = [];
-        $consent = [];
-        $respondents = 0;
+        $shown = AgreementSummary::of($participations, $threshold);
 
-        foreach ($participations as $participation) {
-            if ($participation->linesAndVeils->isEmpty() && $participation->consent->isEmpty()) {
-                continue;
-            }
-
-            ++$respondents;
-
-            foreach ($participation->linesAndVeils->all() as $theme => $boundary) {
-                $kept = $boundaries[$theme] ?? null;
-                $boundaries[$theme] = null !== $kept && $kept->isStricterThan($boundary) ? $kept : $boundary;
-            }
-
-            foreach ($participation->consent->all() as $theme => $level) {
-                $consent[$theme] = ConsentLevel::strictest($level, ...(isset($consent[$theme]) ? [$consent[$theme]] : []));
-            }
-        }
-
-        ksort($boundaries, \SORT_STRING);
-        ksort($consent, \SORT_STRING);
-
-        return new self($boundaries, $consent, $respondents);
+        return new self(AgreementSummary::of($participations, 1), $shown, $shown->respondents, $shown->threshold);
     }
 
     /**
-     * @return list<string> the themes behind a line, in key order
+     * The agreement as it is shown to people: the answers of whole groups of the threshold only.
+     */
+    public function shown(): AgreementSummary
+    {
+        return $this->shown;
+    }
+
+    /**
+     * Whether the shown summary holds any answer; false means "not enough answers yet". The protective answers apply
+     * either way.
+     */
+    public function hasEnoughAnswers(): bool
+    {
+        return $this->shown->hasEnoughAnswers();
+    }
+
+    /**
+     * @return list<string> the themes behind a line, in key order, from every answer
      */
     public function lines(): array
     {
-        return array_keys(array_filter($this->boundaries, static fn (Boundary $boundary): bool => Boundary::Line === $boundary));
+        return $this->everyAnswer->lines();
     }
 
     /**
-     * @return list<string> the themes behind a veil and no line, in key order
+     * @return list<string> the themes behind a veil and no line, in key order, from every answer
      */
     public function veils(): array
     {
-        return array_keys(array_filter($this->boundaries, static fn (Boundary $boundary): bool => Boundary::Veil === $boundary));
-    }
-
-    public function boundary(string $theme): ?Boundary
-    {
-        return $this->boundaries[$theme] ?? null;
-    }
-
-    public function consent(string $theme): ?ConsentLevel
-    {
-        return $this->consent[$theme] ?? null;
+        return $this->everyAnswer->veils();
     }
 
     /**
-     * @return array<string, ConsentLevel> the strictest level of each theme answered, by key
+     * The strictest boundary of the theme, from every answer.
+     */
+    public function boundary(string $theme): ?Boundary
+    {
+        return $this->everyAnswer->boundary($theme);
+    }
+
+    /**
+     * The strictest consent level of the theme, from every answer.
+     */
+    public function consent(string $theme): ?ConsentLevel
+    {
+        return $this->everyAnswer->consent($theme);
+    }
+
+    /**
+     * @return array<string, ConsentLevel> the strictest level of each theme answered, by key, from every answer
      */
     public function checklist(): array
     {
-        return $this->consent;
+        return $this->everyAnswer->checklist();
     }
 
     /**
-     * @return list<string> the themes given the level, in key order
+     * @return list<string> the themes given the level, in key order, from every answer
      */
     public function themesAt(ConsentLevel $level): array
     {
-        return array_keys(array_filter($this->consent, static fn (ConsentLevel $each): bool => $each === $level));
+        return $this->everyAnswer->themesAt($level);
     }
 
     /**
-     * What the table's warned content becomes, as preferences of `phil/content-warnings`: for each theme, the strictest
-     * of its boundary and its consent level; the rest is shown.
+     * What the table's warned content becomes, as preferences of `phil/content-warnings`, from every answer: for each
+     * theme, the strictest of its boundary and its consent level; the rest is shown.
      */
     public function preferences(): WarningPreferences
     {
         $preferences = WarningPreferences::defaults(Display::Show);
         $displays = [];
 
-        foreach ($this->boundaries as $theme => $boundary) {
+        foreach ($this->everyAnswer->boundaries() as $theme => $boundary) {
             $displays[$theme] = $boundary->display();
         }
 
-        foreach ($this->consent as $theme => $level) {
+        foreach ($this->everyAnswer->checklist() as $theme => $level) {
             $displays[$theme] = Display::strictest($level->display(), ...(isset($displays[$theme]) ? [$displays[$theme]] : []));
         }
 

@@ -17,6 +17,7 @@ use Tilttek\TableSafety\Exception\ToolNotEnabled;
 use Tilttek\TableSafety\Feedback\Feedback;
 use Tilttek\TableSafety\Feedback\FeedbackSummary;
 use Tilttek\TableSafety\Feedback\StarsAndWishes;
+use Tilttek\TableSafety\SessionZero\Answers;
 use Tilttek\TableSafety\SessionZero\Pact;
 use Tilttek\TableSafety\Signal\Audience;
 use Tilttek\TableSafety\Signal\CheckInTally;
@@ -28,7 +29,10 @@ use Tilttek\TableSafety\Signal\SignalKind;
  * stars and wishes after, the anonymous summaries of each, and the export and erasure of a participant.
  *
  * The application says who the participant is and whether they are the table's game master; the library never stores
- * who raised an anonymous signal, and its summaries never say who gave which answer.
+ * who raised an anonymous signal, and its summaries never say who gave which answer. The summaries shown to people —
+ * the shown agreement, the pact, the stars and wishes — hold answers only in whole groups of a threshold of
+ * participants; what protects the table — the lines, veils and consent levels that filter content — applies every
+ * answer.
  */
 final readonly class TableSafety
 {
@@ -44,8 +48,10 @@ final readonly class TableSafety
         private ?SignalObserver $observer = null,
         private ?TableSettings $defaults = null,
         private int $feedbackThreshold = FeedbackSummary::DEFAULT_THRESHOLD,
+        private int $answersThreshold = RespondentThreshold::DEFAULT,
     ) {
         FeedbackSummary::assertThreshold($feedbackThreshold);
+        RespondentThreshold::assert($answersThreshold);
     }
 
     /**
@@ -121,26 +127,25 @@ final readonly class TableSafety
     }
 
     /**
-     * What the table agreed, the most restrictive answer of each theme, without saying who gave it.
+     * What the table agreed, without saying who gave it: the most restrictive answer of each theme, from every answer,
+     * for what protects the table; and the summary shown to people, in whole groups of the answers threshold given to
+     * the constructor, 3 by default, taken in the order of the participants' last answers.
      */
     public function agreement(ResourceReference $table): TableAgreement
     {
-        return TableAgreement::of($this->participations->ofTable($table));
+        return TableAgreement::of($this->participationsOf($table), $this->answersThreshold);
     }
 
     /**
-     * The table's pact: its answers to the session zero, without saying who gave which.
+     * The table's pact: its answers to the session zero, without saying who gave which, in whole groups of the answers
+     * threshold given to the constructor, 3 by default, taken in the order of the participants' last answers.
      */
     public function pact(ResourceReference $table): Pact
     {
         $template = $this->settings($table)->sessionZero;
-        $answers = [];
+        $answers = array_map(static fn (Participation $participation): Answers => $participation->sessionZero, $this->participationsOf($table));
 
-        foreach ($this->participations->ofTable($table) as $participation) {
-            $answers[] = $participation->sessionZero;
-        }
-
-        return Pact::of($template, $answers);
+        return Pact::of($template, $answers, $this->answersThreshold);
     }
 
     /**
@@ -261,6 +266,19 @@ final readonly class TableSafety
         $this->participations->eraseParticipant($participant);
         $this->feedback->eraseParticipant($participant);
         $this->signals->forgetParticipant($participant);
+    }
+
+    /**
+     * The table's participations, in the order of their last answer: a new answer joins the end and waits for its group.
+     *
+     * @return list<Participation>
+     */
+    private function participationsOf(ResourceReference $table): array
+    {
+        $participations = $this->participations->ofTable($table);
+        usort($participations, static fn (Participation $a, Participation $b): int => $a->updatedAt <=> $b->updatedAt);
+
+        return $participations;
     }
 
     private function assertUses(ResourceReference $table, SafetyTool $tool): void

@@ -95,7 +95,7 @@ final class EdgeCasesTest extends TestCase
             new Question('second', QuestionKind::Choice, options: ['x' => null, 'y' => null]),
             new Question('third', QuestionKind::Text),
         ]);
-        $pact = Pact::of($template, [new Answers(['second' => 'y', 'third' => 'Hello'])]);
+        $pact = Pact::of($template, [new Answers(['second' => 'y', 'third' => 'Hello'])], 1);
 
         self::assertSame(1, $pact->respondents);
         self::assertSame(['a' => 0, 'b' => 0], $pact->tally('first'));
@@ -109,7 +109,7 @@ final class EdgeCasesTest extends TestCase
             new Question('note', QuestionKind::Text),
             new Question('mood', QuestionKind::Choice, options: ['a' => null, 'b' => null]),
         ]);
-        $pact = Pact::of($template, [new Answers(['note' => 'Hello', 'mood' => 'b'])]);
+        $pact = Pact::of($template, [new Answers(['note' => 'Hello', 'mood' => 'b'])], 1);
 
         self::assertSame(['a' => 0, 'b' => 1], $pact->tally('mood'));
         self::assertSame(['Hello'], $pact->texts('note'));
@@ -177,7 +177,7 @@ final class EdgeCasesTest extends TestCase
         $agreement = TableAgreement::of([
             Participation::empty($table, ResourceReference::of('member', 'ana'), $at),
             new Participation($table, ResourceReference::of('member', 'bo'), LinesAndVeils::none()->with('gore', Boundary::Line), ConsentChecklist::none(), Answers::none(), $at),
-        ]);
+        ], 1);
 
         self::assertSame(1, $agreement->respondents);
         self::assertSame(['gore'], $agreement->lines());

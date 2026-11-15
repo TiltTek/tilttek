@@ -13,13 +13,15 @@ Every public type of the package, with its role.
 | `ConsentLevel` | Green, yellow or red. |
 | `ConsentChecklist` | A participant's levels by theme. |
 | `Participation` | A participant's answers at one table. |
-| `TableAgreement` | The strictest answer of each theme, anonymous, and its warning preferences. |
+| `TableAgreement` | The strictest answer of each theme from every answer, anonymous, its warning preferences, and the summary shown to people. |
+| `AgreementSummary` | The agreement shown to people, in whole groups of a threshold of participants. |
+| `RespondentThreshold` | The threshold of the summaries shown to people, 3 by default, and its check. |
 | `SessionZero\QuestionKind` | Text, one option, several options. |
 | `SessionZero\Question` | A question, translated or written by the game master. |
 | `SessionZero\Template` | The questions of a session zero. |
 | `SessionZero\Templates` | The built-in templates. |
 | `SessionZero\Answers` | A participant's answers to a session zero. |
-| `SessionZero\Pact` | The answers of a table, gathered without their authors. |
+| `SessionZero\Pact` | The answers of a table, gathered without their authors, in whole groups of a threshold of participants. |
 | `Signal\SignalKind` | The signals of play. |
 | `Signal\Audience` | The table, or the game master alone. |
 | `Signal\Signal` | A signal raised at a table. |

@@ -6,6 +6,7 @@ namespace Tilttek\TableSafety\Tests\Unit;
 
 use DateTimeImmutable;
 use Override;
+use Phil\ContentWarnings\Display;
 use Phil\Resource\ResourceReference;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -199,15 +200,78 @@ final class TableSafetyTest extends TestCase
         $this->safety->answerSessionZero(ResourceReference::of('table', '8'), $this->bo, ['tone' => 'light'], $this->now);
 
         $agreement = $this->safety->agreement($this->table);
-        self::assertSame(2, $agreement->respondents);
+        self::assertSame(0, $agreement->respondents);
+        self::assertFalse($agreement->hasEnoughAnswers());
+        self::assertSame([], $agreement->shown()->lines());
         self::assertSame(['gore'], $agreement->lines());
         self::assertSame(ConsentLevel::Red, $agreement->consent('spiders'));
+        self::assertSame(Display::Hide, $agreement->preferences()->theme('spiders')?->display);
 
         $pact = $this->safety->pact($this->table);
-        self::assertSame(2, $pact->respondents);
-        self::assertSame(['light' => 1, 'mixed' => 0, 'serious' => 0, 'dark' => 1], $pact->tally('tone'));
-        self::assertSame(['Breaks'], $pact->texts('comfort'));
+        self::assertSame(0, $pact->respondents);
+        self::assertSame(['light' => 0, 'mixed' => 0, 'serious' => 0, 'dark' => 0], $pact->tally('tone'));
+        self::assertSame([], $pact->texts('comfort'));
         self::assertSame(Templates::CAMPAIGN, $pact->template->key);
+
+        $cy = ResourceReference::of('member', 'cy');
+        $this->safety->answerLinesAndVeils($this->table, $cy, LinesAndVeils::none()->with('spiders', Boundary::Veil), $this->now);
+        $this->safety->answerSessionZero($this->table, $cy, ['tone' => 'dark'], $this->now);
+
+        $agreement = $this->safety->agreement($this->table);
+        self::assertSame(3, $agreement->respondents);
+        self::assertSame(['gore'], $agreement->shown()->lines());
+        self::assertSame(['spiders'], $agreement->shown()->veils());
+        self::assertSame(ConsentLevel::Red, $agreement->shown()->consent('spiders'));
+
+        $pact = $this->safety->pact($this->table);
+        self::assertSame(3, $pact->respondents);
+        self::assertSame(['light' => 1, 'mixed' => 0, 'serious' => 0, 'dark' => 2], $pact->tally('tone'));
+        self::assertSame(['Breaks'], $pact->texts('comfort'));
+    }
+
+    public function testANewAnswerWaitsForItsGroup(): void
+    {
+        $dee = ResourceReference::of('member', 'dee');
+        $cy = ResourceReference::of('member', 'cy');
+        // "aa" comes first in the store's order of references, but it answers last.
+        $aa = ResourceReference::of('member', 'aa');
+        $this->safety->answerLinesAndVeils($this->table, $dee, LinesAndVeils::none()->with('torture', Boundary::Veil), $this->now);
+        $this->safety->answerSessionZero($this->table, $dee, ['tone' => 'serious'], $this->now);
+        $this->safety->answerLinesAndVeils($this->table, $cy, LinesAndVeils::none()->with('torture', Boundary::Veil), $this->now->modify('+1 minute'));
+        $this->safety->answerSessionZero($this->table, $cy, ['tone' => 'serious'], $this->now->modify('+1 minute'));
+        $this->safety->answerLinesAndVeils($this->table, $this->bo, LinesAndVeils::none()->with('torture', Boundary::Veil), $this->now->modify('+2 minutes'));
+        $this->safety->answerSessionZero($this->table, $this->bo, ['tone' => 'serious'], $this->now->modify('+2 minutes'));
+        $this->safety->answerLinesAndVeils($this->table, $aa, LinesAndVeils::none()->with('torture', Boundary::Line), $this->now->modify('+3 minutes'));
+        $this->safety->answerSessionZero($this->table, $aa, ['tone' => 'dark'], $this->now->modify('+3 minutes'));
+
+        $agreement = $this->safety->agreement($this->table);
+        self::assertSame(3, $agreement->respondents);
+        self::assertSame(['torture'], $agreement->shown()->veils());
+        self::assertSame(['torture'], $agreement->lines());
+
+        $pact = $this->safety->pact($this->table);
+        self::assertSame(3, $pact->respondents);
+        self::assertSame(['light' => 0, 'mixed' => 0, 'serious' => 3, 'dark' => 0], $pact->tally('tone'));
+    }
+
+    public function testTheApplicationChoosesTheAnswersThreshold(): void
+    {
+        $safety = new TableSafety(Catalogues::small(), $this->tables, $this->participations, $this->signals, new InMemoryFeedbackStore(), answersThreshold: 1);
+        $safety->answerLinesAndVeils($this->table, $this->ana, LinesAndVeils::none()->with('gore', Boundary::Line), $this->now);
+        $safety->answerSessionZero($this->table, $this->ana, ['tone' => 'dark'], $this->now);
+
+        self::assertSame(1, $safety->agreement($this->table)->respondents);
+        self::assertSame(1, $safety->agreement($this->table)->threshold);
+        self::assertSame(['gore'], $safety->agreement($this->table)->shown()->lines());
+        self::assertSame(1, $safety->pact($this->table)->respondents);
+        self::assertSame(1, $safety->pact($this->table)->threshold);
+        self::assertSame(3, $this->safety->agreement($this->table)->threshold);
+        self::assertSame(3, $this->safety->pact($this->table)->threshold);
+
+        $this->expectException(InvalidAnswer::class);
+        $this->expectExceptionMessageIsOrContains('A summary waits for at least 1 answer, not 0.');
+
+        new TableSafety(Catalogues::small(), $this->tables, $this->participations, $this->signals, new InMemoryFeedbackStore(), answersThreshold: 0);
     }
 
     public function testASignalIsAnonymousByDefault(): void
@@ -389,6 +453,7 @@ final class TableSafetyTest extends TestCase
 
         self::assertSame(['participations' => [], 'signals' => [], 'feedback' => []], $this->safety->export($this->ana));
         self::assertEquals([$signal->anonymous()], $this->signals->recent($this->table));
-        self::assertSame(1, $this->safety->agreement($this->table)->respondents);
+        self::assertSame(0, $this->safety->agreement($this->table)->respondents);
+        self::assertSame(['gore'], $this->safety->agreement($this->table)->veils());
     }
 }

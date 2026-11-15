@@ -12,7 +12,10 @@ Script Change, or leaves through the open door, without explaining why; the game
 answers with a gesture. After play, each gives their stars and wishes for the session.
 
 The summaries never say who gave which answer: a table sees, for each theme, the most restrictive answer anyone gave,
-the tallies of its session zero, its stars and wishes in alphabetical order. A signal is anonymous unless the table
+the tallies of its session zero, its stars and wishes in alphabetical order — and the summaries shown to people hold
+answers only in whole groups of a threshold of participants, 3 by default, so that a small group or one more answer
+does not tell who answered what. A line or a veil still protects the table from the first answer: the warning
+preferences of the table apply every answer. A signal is anonymous unless the table
 chose named signals, and nothing — stored or pushed — keeps the author of an anonymous signal. The answers are
 sensitive, so they are kept for their table only, and a participant's are exported and erased with their account.
 
@@ -28,8 +31,9 @@ The tools come from their communities; the library describes them in its own wor
 | Part | State |
 |---|---|
 | `LinesAndVeils`, `ConsentChecklist` and the themes of a table, on `phil/content-warnings` | Implemented and tested |
-| `TableAgreement`: the strictest answer of each theme, and the warning preferences it stands for | Implemented and tested |
-| Session zero: `Question`, `Template`, the four built-in `Templates`, `Answers` and the `Pact` | Implemented and tested |
+| `TableAgreement`: the strictest answer of each theme, and the warning preferences it stands for, from every answer | Implemented and tested |
+| `AgreementSummary` and the threshold of the summaries shown to people | Implemented and tested |
+| Session zero: `Question`, `Template`, the four built-in `Templates`, `Answers` and the `Pact`, in whole groups of the threshold | Implemented and tested |
 | Signals: the X-card, Script Change, the open door and check-ins, anonymous by default, seen by the table or the game master alone | Implemented and tested |
 | `StarsAndWishes` and the `FeedbackSummary` of a session | Implemented and tested |
 | `TableSettings`, the four store contracts and their memory stores | Implemented and tested |
@@ -45,7 +49,7 @@ The tools come from their communities; the library describes them in its own wor
 | [During play](doc/during-play.md) | The signals, who sees them, named signals and check-ins. |
 | [After play](doc/after-play.md) | Stars and wishes, and the summary of a session. |
 | [Settings](doc/settings.md) | What a table chooses, and its defaults. |
-| [Privacy](doc/privacy.md) | What stays anonymous, what is kept, and a participant's export and erasure. |
+| [Privacy](doc/privacy.md) | What stays anonymous, the threshold of the summaries, what is kept, and a participant's export and erasure. |
 | [Writing a store](doc/writing-a-store.md) | The four contracts and what each implementation must do. |
 | [Credits](doc/credits.md) | The tools, the people and communities they come from, and their licences. |
 | [Extension points](doc/extension-points.md) | What an application replaces or adds. |
@@ -75,7 +79,8 @@ $table = ResourceReference::of('table', '7');
 $now = new DateTimeImmutable();
 
 $safety->answerLinesAndVeils($table, ResourceReference::of('member', '12'), LinesAndVeils::none()->with('spiders', Boundary::Line), $now);
-$safety->agreement($table)->lines();           // ['spiders'], without saying whose line it is
+$safety->agreement($table)->lines();           // ['spiders']: the line protects the table at once
+$safety->agreement($table)->shown()->lines();  // []: shown once 3 participants have answered
 
 $signal = $safety->raise($table, ResourceReference::of('member', '12'), SignalKind::XCard, false, $now);
 $signal->isAnonymous();                          // true

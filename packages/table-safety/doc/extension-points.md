@@ -11,3 +11,4 @@ change them, and its CHANGELOG says how.
 | Change what a table uses by default | Give `TableSafety` the `TableSettings` of a table that chose nothing |
 | Offer other templates | Build a `Template` of your questions and keep it in the table's settings |
 | Filter content by what a table agreed | Give `TableAgreement::preferences()` to the `WarningMatcher` of `phil/content-warnings` |
+| Show more or fewer answers at once | Give `TableSafety` an `answersThreshold` for the agreement and the pact, a `feedbackThreshold` for the stars and wishes |
