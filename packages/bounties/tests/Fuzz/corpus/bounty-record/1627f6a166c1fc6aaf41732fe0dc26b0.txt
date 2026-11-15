@@ -1,0 +1,1 @@
+{"id":"b2","sponsor":"member:ana","subject":"question:42","reason":"detail","prize":50,"unit":"pos","opened_at":"2026-11-14T01:00:00.000000Z","ends_at":"225","grace_ends_at":"252-5-22","claims":[],"awards":[],"state":"open","settled_at":null,"version":0}

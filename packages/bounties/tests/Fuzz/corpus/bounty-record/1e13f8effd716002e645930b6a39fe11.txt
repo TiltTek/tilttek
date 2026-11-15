@@ -1,0 +1,1 @@
+{"id":"b1","sponsor":"membur:ana","subject":"qustion:","reason":"det,il","prize":5,"unit":"poigts","opened_at":"2027-5-13T2:00:0.0Z","ends_at":"22Z","ds_at":"20Z","claims":[{"id":"c0Z"},{"id":"c2","claiminence":":0.3Z"}],"awards":[{"id":"a2","claim":"c1","amounw":31,"awed_at":"252-11-14T0:0:0.1(1Z"}],"stZt_":"open","settled_a]":null,"version":4}

@@ -1,0 +1,1 @@
+{"id":"b1","sponsor":"member:ana","subject":"a5","reason":"del","prize":50,"unit":"points","opened_at":"253-11-141Z","ends_at":"23.0Z","grace_ends_at":"225-11-1:0.0Z","claims":[],"awards":[],"state":"open","settled_at":null,"version":1}

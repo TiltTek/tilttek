@@ -51,6 +51,8 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/collections`](https://github.com/TiltTek/collections) | Collectible items and sets: copies and doubles, the item of the day, packs drawn with published odds. |
 | [`tilttek/collections-bundle`](https://github.com/TiltTek/collections-bundle) | Collections in a Symfony application: the catalog in configuration or the database, copies in Doctrine DBAL, an album and the item of the day in Twig. |
 | [`tilttek/exchange`](https://github.com/TiltTek/exchange) | Rewards bought with points in two steps, points given between members, and items traded by offers and counter-offers in one transaction. |
+| [`tilttek/bounties`](https://github.com/TiltTek/bounties) | Playful bounties prepaid in points and held in escrow, claimed and awarded within a bounded time; never money. |
+| [`tilttek/friend-challenges`](https://github.com/TiltTek/friend-challenges) | Challenges between friends or open to all, with a points prize held in escrow, proofs, judges and the site's moderation. |
 | [`tilttek/leaderboards`](https://github.com/TiltTek/leaderboards) | Leaderboards kept up to date from the activity journal: periods and sliding windows, tie-breaks, snapshots, weekly leagues, titles and teams. |
 | [`tilttek/rating`](https://github.com/TiltTek/rating) | Per-game ratings of players from their results: Elo or OpenSkill, duels, teams and draws, private by default, and a replay that gives the same values. |
 | [`tilttek/advent-calendar`](https://github.com/TiltTek/advent-calendar) | An advent calendar: one box per day in the calendar's timezone, an opening policy, each box opened once and told by an event. |
