@@ -73,6 +73,8 @@ abstract class StoresTestCase extends TestCase
         $store->save($second);
 
         self::assertEquals($second, $store->find($first->table, $first->participant));
+        self::assertEquals(new DateTimeImmutable('2026-11-12 17:30:00 UTC'), $store->find($first->table, $first->participant)?->firstAnsweredAt);
+        self::assertEquals(new DateTimeImmutable('2026-11-12 18:00:00 UTC'), $store->find($first->table, $first->participant)?->updatedAt);
         self::assertNull($store->find(ResourceReference::of('table', '8'), $first->participant));
         self::assertNull($store->find($first->table, ResourceReference::of('member', 'bo')));
 
@@ -268,6 +270,7 @@ abstract class StoresTestCase extends TestCase
             $consent ?? ConsentChecklist::none(),
             $answers ?? Answers::none(),
             new DateTimeImmutable('2026-11-12 18:00:00 UTC'),
+            new DateTimeImmutable('2026-11-12 17:30:00 UTC'),
         );
     }
 

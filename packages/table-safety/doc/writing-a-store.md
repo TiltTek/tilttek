@@ -13,6 +13,8 @@ store of each, for tests; `tilttek/table-safety-bundle` ships a Doctrine DBAL st
 What every implementation does:
 
 - `save()` replaces the record of the same table and participant — and session, for feedback.
+- A `ParticipationStore` keeps `Participation::$firstAnsweredAt` and `$updatedAt` as they were given and gives both
+  back: the summaries shown to people take the participations in the order of their first answer.
 - `ofTable()` and `ofSession()` list the records in an order that does not tell who answered first, such as the order
   of the participants' references.
 - `SignalStore::recent()` lists the signals in the order they were raised, the last ones within the limit, or those

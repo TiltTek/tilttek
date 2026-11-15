@@ -18,7 +18,7 @@ A table's agreement and its pact are shown to its participants and its game mast
 "dark" and "light" tells each who chose the other; when a fourth participant arrives, the change between two readings
 tells what they answered. The summaries shown to people therefore hold answers only in whole groups of a threshold of
 participants — 3 by default, chosen by the application through `TableSafety`'s `answersThreshold`, never by a table —,
-taken in the order of their last answer:
+taken in the order of their first answer:
 
 - `Pact`: its tallies and its texts;
 - `TableAgreement::shown()`, an `AgreementSummary`, and `TableAgreement::$respondents`.

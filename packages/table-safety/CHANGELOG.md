@@ -19,7 +19,9 @@ The next version is 0.3.0-alpha: what the pact and the agreement show to people 
   `checklist()`, `themesAt()` and `preferences()` still apply every answer, under the threshold too, so that a line or
   a veil protects the table from the first answer. `TableAgreement::of()` takes the threshold.
 - `TableSafety` takes the threshold of the agreement and the pact as `answersThreshold`, and gives them the table's
-  participations in the order of their last answer, so that a new answer waits for its group.
+  participations in the order of their first answer, so that a new participant waits for their group and a
+  participant who changes their answers keeps their place.
+- `TableSafety::export()` gives each participation's `first_answered_at`.
 - `FeedbackSummary::DEFAULT_THRESHOLD` and `FeedbackSummary::assertThreshold()` are those of `RespondentThreshold`.
 
 ### Added
@@ -28,6 +30,9 @@ The next version is 0.3.0-alpha: what the pact and the agreement show to people 
 - `TableAgreement::$threshold`, `TableAgreement::shown()` and `TableAgreement::hasEnoughAnswers()`.
 - `Pact::$threshold` and `Pact::hasEnoughAnswers()`.
 - `RespondentThreshold`: the default threshold of 3, its check and the count of whole groups.
+- `Participation::$firstAnsweredAt`: the moment of the participant's first answer at the table, kept when they change
+  their answers, and `Participation::inOrderOfFirstAnswer()`. The constructor takes it last; when it is not given, it
+  is that of `$updatedAt`. A `ParticipationStore` keeps it and gives it back.
 - The documentation of the threshold of the agreement and the pact, with what protects the table from every answer
   and what the threshold does not hide.
 

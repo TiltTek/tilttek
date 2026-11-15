@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=0f3b5b3f52683bc9cdfe6fe645c7dc7894b0d53e853629cee7eb0e70a79c4d93 -->
+<!-- phil-dev source-sha256=edf28498a4b8db023f90dbf8348e8186706883e5ce77de9c19a97d53b54159db -->
 # Avant la partie
 
 ## Lignes et voiles
@@ -79,7 +79,7 @@ partie, et l'entente suit.
 
 `shown()` donne un `AgreementSummary` : la même vue — `lines()`, `veils()`, `boundary()`, `consent()`, `checklist()`,
 `themesAt()` — faite seulement des réponses de groupes entiers d'un **seuil** de participants, 3 par défaut, pris dans
-l'ordre de leur dernière réponse. `respondents` compte les réponses qu'il contient.
+l'ordre de leur première réponse. `respondents` compte les réponses qu'il contient.
 
 - Sous le seuil, il ne contient rien : `hasEnoughAnswers()` est faux, chaque liste est vide et `respondents` est 0.
 - Au-delà, les réponses d'un groupe incomplet attendent : avec un seuil de 3, quatre ou cinq participants qui ont

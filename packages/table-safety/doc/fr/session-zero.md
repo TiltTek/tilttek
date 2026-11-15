@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=bf62623b520f5f12b081a2687ce86babd0c08498315afed12455b9cdb372eee1 -->
+<!-- phil-dev source-sha256=459830354fc5f634525e901fdd40a47d85f46bf4bd349f9a09dcf45e4a90c02c -->
 # Séance zéro
 
 Une séance zéro est le questionnaire auquel une table répond avant de jouer : le ton, les thèmes, les attentes,
@@ -79,7 +79,7 @@ Une réponse à une option ou à une question que le gabarit n'a plus est écart
 ### Le seuil
 
 Dans un petit groupe, un décompte d'une ou deux réponses dit qui a choisi quoi. Le pacte ne contient donc des réponses
-que par groupes entiers d'un **seuil** de participants, 3 par défaut, pris dans l'ordre de leur dernière réponse — le
+que par groupes entiers d'un **seuil** de participants, 3 par défaut, pris dans l'ordre de leur première réponse — le
 même seuil que celui de l'[entente montrée aux gens](before-play.md#le-sommaire-montré-aux-gens) :
 
 - sous le seuil, il ne contient rien : `hasEnoughAnswers()` est faux, chaque décompte est à 0, chaque liste de textes

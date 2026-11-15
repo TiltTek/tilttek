@@ -75,7 +75,7 @@ and the agreement follows.
 
 `shown()` returns an `AgreementSummary`: the same view — `lines()`, `veils()`, `boundary()`, `consent()`,
 `checklist()`, `themesAt()` — made only of the answers of whole groups of a **threshold** of participants, 3 by
-default, taken in the order of their last answer. `respondents` counts the answers it holds.
+default, taken in the order of their first answer. `respondents` counts the answers it holds.
 
 - Under the threshold, it holds nothing: `hasEnoughAnswers()` is false, every list is empty and `respondents` is 0.
 - Past it, the answers of a group that is not full wait: with a threshold of 3, four or five participants who answered
