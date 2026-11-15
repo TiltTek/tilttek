@@ -1,0 +1,1 @@
+{"kinds": [{"key": "insn", "name": "Inspiration", "cap": 1, "grants": "anyone"}, {"key": "fate", "name": "Fn", "cap": 1, "transferable": true}, {"key": "bennies", "name": "Ben", "cap": 1, "transferable": true}, {"key": "bennies", "name": "nniesnton", "refresh_to": 2}], "game_masters": ["membem"]}

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Tilttek\FriendChallenges\Store\InMemoryChallengeStore;
+
 /*
  * What phil/dev-tools reads of this package: its paths and its exceptions to the shared configurations.
  */
@@ -23,7 +25,7 @@ return [
         'mutators' => [
             // The members' records in `InMemory*Store::involving()`: once the limit is reached, nothing more is added, so
             // going on through the rest of the records gives the same list as stopping.
-            'Break_' => ['ignore' => ['Tilttek\\FriendChallenges\\Store\\InMemoryChallengeStore::involving']],
+            'Break_' => ['ignore' => [InMemoryChallengeStore::class.'::involving']],
             // The settlement recorded of a hold only ever meets another one of the same form, or `cancelled`: the `paid:` that
             // opens it tells nothing more, in whatever order the parts come.
             'Concat' => ['ignoreSourceCodeByRegex' => ['.*\\$this->settles\\(\\$hold, \'paid:\'.*']],

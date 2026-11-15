@@ -1,0 +1,1 @@
+{"kinds": [{"key": "inspiio", "name": "Bennes", "cap": 5, "scope":"player", "refresh": "each-session"}, {"to": 3}], "game_masters": ["m"]}

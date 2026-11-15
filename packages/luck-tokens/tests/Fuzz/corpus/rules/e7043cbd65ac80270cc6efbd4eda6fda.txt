@@ -1,0 +1,1 @@
+{"kinds": [{"key": "inspirn", "name": "Ition",  "cap": 1, "scope": "player", "refresh": "each-session", "refresh_to": 1, "carry_over": 0, "grants": "anyone"}], "game_masters": ["member:gm"]}

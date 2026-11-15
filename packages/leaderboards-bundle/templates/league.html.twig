@@ -1,0 +1,84 @@
+{#
+ # A member's league screen on a weekly board with a league: the board, the member's tier on the ladder of tiers, when
+ # the week ends, where they went last week, their division ranked among its members only — or, before they score this
+ # week, what makes them join one —, and how the members of their division see them. Nothing of it is public: the
+ # screen is the member's own.
+ #
+ # It is built of the recipes Card, Badge and Empty of the kit, installed in the application by the Symfony UX Toolkit,
+ # under the names `tilttek_leaderboards_kit()` gives. `names` maps `kind:identifier` to the name the application gives
+ # a member who chose to appear under it; `appearance_url`, when given, links to the form that changes the member's
+ # choice:
+ #
+ #     {{ include('@TilttekLeaderboards/league.html.twig', {league: tilttek_leaderboards_league('weekly-xp', 'member:44'), names: {}, appearance_url: path('profile_leaderboards')}) }}
+ #}
+{% set domain = tilttek_leaderboards_domain() %}
+{% set names = names|default({}) %}
+{% set appearance_url = appearance_url|default(null) %}
+{% set badge = tilttek_leaderboards_kit('Badge') %}
+{% set variants = {promoted: 'default', stayed: 'outline', relegated: 'destructive'} %}
+{% component (tilttek_leaderboards_kit('Card')) with {as: 'section', class: 'tilttek-leaderboards tilttek-leaderboards--league', 'data-board': league.board.name, 'data-tier': league.tier} %}
+    {% block content %}
+        {% component (tilttek_leaderboards_kit('Card:Header')) %}
+            {% block content %}
+                {% component (tilttek_leaderboards_kit('Card:Title')) with {level: 2} %}
+                    {% block content %}{{ ('boards.' ~ league.board.name)|trans({}, domain) }}{% endblock %}
+                {% endcomponent %}
+                {% component (tilttek_leaderboards_kit('Card:Description')) %}
+                    {% block content %}
+                        {{ 'league.tier'|trans({}, domain) }}
+                        {% component (badge) with {variant: 'secondary', class: 'tilttek-leaderboards__tier'} %}
+                            {% block content %}{{ ('tiers.' ~ league.tier)|trans({}, domain) }}{% endblock %}
+                        {% endcomponent %}
+                        {% if league.weekEndsAt is not null %}
+                            · <time class="tilttek-leaderboards__week-end" datetime="{{ league.weekEndsAt|date('c') }}">{{ 'league.week_ends'|trans({'%date%': league.weekEndsAt|date('Y-m-d H:i', league.board.schedule.timezone)}, domain) }}</time>
+                        {% endif %}
+                    {% endblock %}
+                {% endcomponent %}
+            {% endblock %}
+        {% endcomponent %}
+        {% component (tilttek_leaderboards_kit('Card:Content')) %}
+            {% block content %}
+                <ol class="tilttek-leaderboards__ladder" aria-label="{{ 'league.ladder'|trans({}, domain) }}">
+                    {% for tier in league.ladder %}
+                        <li class="tilttek-leaderboards__step{{ tier is same as(league.tier) ? ' isCurrent' }}"{% if tier is same as(league.tier) %} aria-current="step"{% endif %}>{{ ('tiers.' ~ tier)|trans({}, domain) }}</li>
+                    {% endfor %}
+                </ol>
+                {% if league.lastWeek is not null and league.lastWeek.movement is not null %}
+                    {% set movement = league.lastWeek.movement.value %}
+                    <p class="tilttek-leaderboards__last-week">
+                        {{ 'league.last_week'|trans({'%tier%': ('tiers.' ~ league.lastWeek.tier)|trans({}, domain)}, domain) }}
+                        {% component (badge) with {variant: variants[movement], 'data-movement': movement} %}
+                            {% block content %}{{ ('movement.' ~ movement)|trans({}, domain) }}{% endblock %}
+                        {% endcomponent %}
+                    </p>
+                {% endif %}
+                {% if league.division is not null %}
+                    {{ include('@TilttekLeaderboards/division.html.twig', {division: league.division, names: names}) }}
+                {% else %}
+                    {% component (tilttek_leaderboards_kit('Empty')) %}
+                        {% block content %}
+                            {% component (tilttek_leaderboards_kit('Empty:Header')) %}
+                                {% block content %}
+                                    {% component (tilttek_leaderboards_kit('Empty:Title')) %}
+                                        {% block content %}{{ 'league.not_yet'|trans({}, domain) }}{% endblock %}
+                                    {% endcomponent %}
+                                    {% component (tilttek_leaderboards_kit('Empty:Description')) %}
+                                        {% block content %}{{ 'league.not_yet_help'|trans({'%size%': league.board.league.divisionSize}, domain) }}{% endblock %}
+                                    {% endcomponent %}
+                                {% endblock %}
+                            {% endcomponent %}
+                        {% endblock %}
+                    {% endcomponent %}
+                {% endif %}
+            {% endblock %}
+        {% endcomponent %}
+        {% component (tilttek_leaderboards_kit('Card:Footer')) %}
+            {% block content %}
+                <p class="tilttek-leaderboards__privacy">
+                    {{ ('league.privacy.' ~ league.appearance.visibility.value)|trans({'%pseudonym%': league.appearance.pseudonym}, domain) }}
+                    {% if appearance_url is not null %}<a href="{{ appearance_url }}">{{ 'league.privacy.change'|trans({}, domain) }}</a>{% endif %}
+                </p>
+            {% endblock %}
+        {% endcomponent %}
+    {% endblock %}
+{% endcomponent %}

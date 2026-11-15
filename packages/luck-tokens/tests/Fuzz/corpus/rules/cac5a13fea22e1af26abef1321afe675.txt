@@ -1,0 +1,1 @@
+{"kinds": [{"key": "t","name": "s", "cap": 1}]}

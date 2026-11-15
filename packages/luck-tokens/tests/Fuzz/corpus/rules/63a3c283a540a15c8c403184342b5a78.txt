@@ -1,0 +1,1 @@
+{"kinds": [{"key": "i", "name": "s", "cap":3,"carry_over":-3}]}

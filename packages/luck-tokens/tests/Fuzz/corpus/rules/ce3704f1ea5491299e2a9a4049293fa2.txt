@@ -1,0 +1,1 @@
+{"kinds": [{"key": "i", "name": "Iion", "cap": 1, "transferable": true}, {"key": "bennies", "name": "Bennies", "cap": 5, "scope": "player", "refresh": "each-session", "refresh_to": 3, "carry_over": 0, "grants": "anyone"}, {"key": "fate", "name": "Fatepoints", "cap": 9, "refreesh_to": 1}], "game_masters": [":gm"]}

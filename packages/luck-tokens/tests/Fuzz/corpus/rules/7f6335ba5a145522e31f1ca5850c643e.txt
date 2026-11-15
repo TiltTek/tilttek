@@ -1,0 +1,1 @@
+{"kinds": [{"key": "ion", "name": "s", "cap": 4, "refresh": "each-session", "refresh_to": 3}], "game_masters": ["r:gm"]}
