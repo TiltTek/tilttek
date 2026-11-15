@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=583ea6dbf7207d2b554e467fd29b662543844210000e35d5ded35191159bb437 -->
+<!-- phil-dev source-sha256=8b2386f6192517d548fb5b4b1ae883e62704ce0c0d8f95e5cb629aea31edc35b -->
 # Progression et complétions
 
 ## Possessions
@@ -46,7 +46,20 @@ et marquée remise une fois son événement réparti sans exception :
   avec les récompenses de la version sous laquelle elle a été obtenue, même quand il n'enregistre rien de nouveau.
 - `Sets::deliver($holder)` annonce chaque complétion non remise du détenteur, dans tous les ensembles, et retourne
   combien ont été remises : l'application l'appelle pour reprendre sans attendre que les possessions changent, depuis
-  une nouvelle tentative, une tâche planifiée ou la prochaine visite du détenteur.
+  une nouvelle tentative ou la prochaine visite du détenteur.
+- `Sets::deliverPending($limit)` fait de même pour les détenteurs qui ont des complétions non remises, au plus `$limit`
+  d'entre eux, de 1 à 10 000, celui qui attend depuis le plus longtemps d'abord, et retourne combien de complétions ont
+  été remises : une commande ou une tâche planifiée l'appelle sans savoir quels détenteurs attendent. Le stockage de
+  complétions implémente aussi `Contract\PendingDeliveries`, qui liste ces détenteurs ; sinon l'appel lève
+  `UnsupportedStore`.
+
+`deliverPending()` ne laisse pas un détenteur retenir les autres : quand un gestionnaire lève une exception pour un
+détenteur, les détenteurs suivants sont informés quand même, et l'exécution se termine par une `DeliveryFailed` qui
+porte combien de complétions ont été remises, combien de détenteurs ont échoué sur combien ont été informés, et, comme
+exception précédente, la première exception qu'un gestionnaire a levée. Un détenteur dont le gestionnaire échoue sans
+cesse reste en tête de file : la limite d'une exécution se choisit donc au-dessus du nombre attendu de tels détenteurs.
+La commande `tilttek:sets:deliver` et le planificateur `tilttek_sets` l'appellent depuis Symfony ; voir
+[Reprendre les remises avec Symfony](installation.md#reprendre-les-remises-avec-symfony).
 
 Une complétion est donc annoncée **au moins une fois**, pas exactement une fois : un gestionnaire qui a accordé les
 récompenses puis a échoué, ou deux processus qui remettent la même complétion au même moment, l'annoncent deux fois.

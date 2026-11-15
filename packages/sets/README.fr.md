@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=438bf56dcdabddec0c3fdfcc3e56f7f53914c013107e39d017939fddcda67fd7 -->
+<!-- phil-dev source-sha256=ce285ec5fcc8074c72e81e6d1c54e5ab14dea6d4abff8c04c8d5b5c57a1fd57f -->
 # tilttek/sets
 
 **Des ensembles pour les badges, les collections et autres jeux de ludification : définitions versionnées, paliers,
@@ -31,13 +31,15 @@ PHP simple, avec des ports pour ses stockages et des adaptateurs en mémoire.
 | `Sets`, `Progress`, `Completion` : versions définies, progression, complétions enregistrées une seule fois et jamais reprises | Implémenté et testé |
 | `Event\SetCompleted`, `Event\TierReached` : annoncés une seule fois, avec les récompenses déclarées | Implémenté et testé |
 | `Contract\DefinitionStore`, `Contract\CompletionStore` et leurs adaptateurs en mémoire | Implémenté et testé |
+| `Sets::deliverPending()` et `Contract\PendingDeliveries` : les complétions non remises annoncées de nouveau pour les détenteurs qui attendent depuis le plus longtemps | Implémenté et testé |
+| `Symfony\` : la commande `tilttek:sets:deliver` et le planificateur `tilttek_sets`, sur des paquets suggérés | Implémenté et testé |
 | Un adaptateur de base de données | Non fourni : l'application implémente les deux stockages |
 
 ## Documentation
 
 | Document | Contenu |
 |---|---|
-| [Installation](doc/fr/installation.md) | Les prérequis, l'installation et le câblage. |
+| [Installation](doc/fr/installation.md) | Les prérequis, l'installation, le câblage, et la commande et le planificateur qui reprennent les remises avec Symfony. |
 | [Définir des ensembles](doc/fr/defining-sets.md) | Membres, paliers, récompenses, versions, et lecture d'une définition depuis la configuration ou du JSON. |
 | [Progression et complétions](doc/fr/progress-and-completions.md) | Possessions, évaluation, enregistrement, événements, versions et effacement. |
 | [Points d'extension](doc/fr/extension-points.md) | Ce qu'une application donne à la bibliothèque. |
@@ -68,7 +70,8 @@ $progress->recorded;                   // the tier "half", told by Event\TierRea
 
 ## Prérequis
 
-PHP 8.5 ou une version plus récente ; `phil/resource` 0.1, `psr/clock` et `psr/event-dispatcher`.
+PHP 8.5 ou une version plus récente ; `phil/resource` 0.1, `psr/clock` et `psr/event-dispatcher`. L'intégration
+Symfony utilise `symfony/console`, `symfony/messenger`, `symfony/scheduler` et `symfony/lock`, suggérés.
 
 ## Contribuer
 
