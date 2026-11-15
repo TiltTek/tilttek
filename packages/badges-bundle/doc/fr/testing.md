@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=cad5523de6e5a40dc751cf814918c9fdd30342dd122f88a79c2c051e25ebf12b -->
+<!-- phil-dev source-sha256=f10e1e2905581f128382e6a26d6f0dc3835abee65d029113015501c3b35bd8eb -->
 # Tests
 
 ## Les tests du bundle
@@ -12,6 +12,10 @@ FrameworkBundle, DoctrineBundle sur SQLite, TwigBundle, le bundle de vie privée
 ```sh
 vendor/bin/phpunit
 ```
+
+`tests/Benchmark/ProjectionBench.php` mesure la projection de `tilttek/badges` sur les stockages Doctrine, sur SQLite en
+mémoire : une activité enregistrée, puis `deliver()` seul — les deux requêtes qui lisent les attributions dont l'avis
+est dû —, sur une table de 1 000 puis de 10 000 attributions.
 
 `phil/open-badges-bundle` et `phil/privacy-bundle` sont des intégrations facultatives, non installées avec le bundle :
 leurs tests, et leurs bundles dans l'application de test, sont sautés avec leur raison quand ils manquent, et un test

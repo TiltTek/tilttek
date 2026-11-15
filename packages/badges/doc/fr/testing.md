@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=be7ca29adce882775ed5958c80dcdf62067fa4a31a140dc93a72a02e391ea39c -->
+<!-- phil-dev source-sha256=d6b7de6ad783321e682a40ea8ed72c5f85a74ea7de21c6203f5ff3bba5267537 -->
 # Tests
 
 ## Les tests de la bibliothèque
@@ -11,6 +11,11 @@ comme des cas de test abstraits que chaque implémentation étend.
 ```sh
 vendor/bin/phpunit
 ```
+
+`tests/Benchmark/ProjectionBench.php` mesure ce que coûte la projection pour une activité enregistrée, sur les
+stockages en mémoire — une activité que vingt badges comptés acceptent sans atteindre leur cible, et une qu'aucun badge
+ne compte — puis `deliver()` seul, les deux lectures des attributions dont l'avis est dû que `apply()` exécute en
+premier, sur des stockages de 1 000 puis de 10 000 attributions.
 
 Chaque mutant qu'Infection produit à partir du code de la bibliothèque est tué par un test : le seuil est de 100 % des
 mutants couverts.
