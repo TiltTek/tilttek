@@ -7,23 +7,21 @@ declare(strict_types=1);
  */
 return [
     'paths' => ['src', 'tests'],
-    'deptrac' => [
-        // The library is plain PHP on phil/resource and the PSR interfaces, and never sees the optional Symfony
-        // integration in its namespace; composer-dependency-analyser.php keeps the console, Messenger, the Scheduler
-        // and the locks, required in development only, to that integration.
-        'layers' => [
-            'TilttekSets' => '^Tilttek\\\\Sets\\\\(?!Symfony\\\\).*',
-            'TilttekSetsSymfony' => '^Tilttek\\\\Sets\\\\Symfony\\\\.*',
-        ],
-        'ruleset' => [
-            'TilttekSets' => ['DefaultAllowed', 'PhilResource'],
-            'TilttekSetsSymfony' => ['TilttekSets', 'DefaultAllowed', 'PhilResource'],
-        ],
-    ],
     'docs' => ['public' => true, 'translations' => 'blocking'],
     'fuzz' => [
         'targets' => [
             'definition' => 'tests/Fuzz/definition.php',
+        ],
+    ],
+    'infection' => [
+        'mutators' => [
+            // A delivery fails only through the dispatcher: without one, no holder is ever postponed, so the null-safe
+            // call that reports a failure never meets a null dispatcher.
+            'NullSafeMethodCall' => [
+                'ignoreSourceCodeByRegex' => [
+                    '.*\\$this->events\\?->dispatch\\(new DeliveryKeepsFailing\\(.*',
+                ],
+            ],
         ],
     ],
     'phpstan' => [

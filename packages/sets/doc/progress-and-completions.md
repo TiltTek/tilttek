@@ -51,10 +51,26 @@ marked delivered once its event was dispatched without an exception:
 
 `deliverPending()` does not let one holder hold the others back: when a handler throws for a holder, the next holders
 are told all the same, and the run ends with a `DeliveryFailed` that carries how many completions were delivered, how
-many holders failed out of how many were told, and, as its previous exception, the first exception a handler threw. A
-holder whose handler keeps failing stays first in line, so a run's limit is chosen above the number of such holders
-expected. The `tilttek:sets:deliver` command and the `tilttek_sets` schedule call it from Symfony; see
-[Resuming deliveries with Symfony](installation.md#resuming-deliveries-with-symfony).
+many holders failed out of how many were told, and, as its previous exception, the first exception a handler threw.
+
+A holder whose delivery failed is postponed by the `DeliveryBackoff` given to `Sets`: the next runs pass it by until
+its delay is over, and the holders behind it are told in its place. The delay is one minute after a first failure,
+doubled after each failure that follows, and never above one day; a delivery that succeeds forgets the failures. From
+the third failure in a row, each failure is also told by an `Event\DeliveryKeepsFailing` event, which carries the
+holder, the failures, the moment of the next attempt and what the handler threw, for the application to log or alert
+someone; a listener of that event that throws does not stop the run.
+
+```php
+use Tilttek\Sets\DeliveryBackoff;
+
+new Sets($definitions, $completions, $clock, $dispatcher, new DeliveryBackoff(
+    firstDelay: 30,       // seconds after a first failure
+    longestDelay: 3_600,  // never longer
+    reportAfter: 5,       // DeliveryKeepsFailing from the fifth failure in a row
+));
+```
+
+`record()` and `deliver()` tell a holder at once, postponed or not. See [Resuming deliveries](installation.md#resuming-deliveries).
 
 A completion is therefore told **at least once**, not exactly once: a handler that granted the rewards and failed
 afterwards, or two processes delivering the same completion at the same moment, tell it twice. **The handlers are

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tilttek\Sets;
 
+use DateTimeImmutable;
 use Phil\Resource\ResourceReference;
 use Psr\Clock\ClockInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -11,6 +12,7 @@ use Throwable;
 use Tilttek\Sets\Contract\CompletionStore;
 use Tilttek\Sets\Contract\DefinitionStore;
 use Tilttek\Sets\Contract\PendingDeliveries;
+use Tilttek\Sets\Event\DeliveryKeepsFailing;
 use Tilttek\Sets\Event\SetCompleted;
 use Tilttek\Sets\Event\TierReached;
 use Tilttek\Sets\Exception\DefinitionConflict;
@@ -36,13 +38,21 @@ final readonly class Sets
 
     private ClockInterface $clock;
 
+    private DeliveryBackoff $backoff;
+
+    /**
+     * @param ?DeliveryBackoff $backoff how long `deliverPending()` waits before telling again a holder whose delivery
+     *                                  failed; the defaults of {@see DeliveryBackoff} when null
+     */
     public function __construct(
         private DefinitionStore $definitions,
         private CompletionStore $completions,
         ?ClockInterface $clock = null,
         private ?EventDispatcherInterface $events = null,
+        ?DeliveryBackoff $backoff = null,
     ) {
         $this->clock = $clock ?? new UtcClock();
+        $this->backoff = $backoff ?? new DeliveryBackoff();
     }
 
     /**
@@ -157,8 +167,10 @@ final readonly class Sets
      * scheduled task calls it to resume after a handler failed, without knowing which holders are waiting.
      *
      * A holder whose handler throws does not hold the others back: they are told all the same, and the run ends by a
-     * `DeliveryFailed` that carries the counts and, as its previous exception, the first exception thrown. A holder
-     * whose handler keeps failing stays first in line: the limit is chosen above the number of such holders expected.
+     * `DeliveryFailed` that carries the counts and, as its previous exception, the first exception thrown. The holder
+     * is postponed by the `DeliveryBackoff`: the next runs pass it by until its delay is over, a delay that doubles at
+     * each failure in a row up to the longest; from its number of failures to report, each failure is also told by a
+     * `DeliveryKeepsFailing` event. A delivery that succeeds forgets the holder's failures.
      *
      * @throws InvalidSet       when the limit is below 1 or above {@see self::PENDING_LIMIT}
      * @throws UnsupportedStore when the completion store does not implement {@see PendingDeliveries}
@@ -174,7 +186,8 @@ final readonly class Sets
             throw UnsupportedStore::withoutPendingDeliveries($this->completions::class);
         }
 
-        $holders = \array_slice($this->completions->holdersWithUndelivered($limit), 0, $limit);
+        $now = $this->clock->now();
+        $holders = \array_slice($this->completions->holdersWithUndelivered($limit, $now), 0, $limit);
         $first = null;
         $delivered = 0;
         $failed = 0;
@@ -183,10 +196,15 @@ final readonly class Sets
             [$told, $failure] = $this->dispatch($this->completions->undelivered($holder));
             $delivered += $told;
 
-            if ($failure instanceof Throwable) {
-                $first ??= $failure;
-                ++$failed;
+            if (!$failure instanceof Throwable) {
+                $this->completions->forgetFailures($holder);
+
+                continue;
             }
+
+            $first ??= $failure;
+            ++$failed;
+            $this->postpone($this->completions, $holder, $failure, $now);
         }
 
         if ($first instanceof Throwable) {
@@ -202,6 +220,27 @@ final readonly class Sets
     public function eraseHolder(ResourceReference $holder): int
     {
         return $this->completions->eraseHolder($holder);
+    }
+
+    /**
+     * Postpones a holder whose delivery failed and reports the failure when it is one too many. A listener of the report
+     * that throws does not stop the run, which already ends by a `DeliveryFailed`.
+     */
+    private function postpone(PendingDeliveries $store, ResourceReference $holder, Throwable $failure, DateTimeImmutable $now): void
+    {
+        $failures = $store->failedDeliveries($holder) + 1;
+        $nextAttemptAt = $this->backoff->nextAttempt($failures, $now);
+        $store->postpone($holder, $failures, $nextAttemptAt);
+
+        if (!$this->backoff->reports($failures)) {
+            return;
+        }
+
+        try {
+            $this->events?->dispatch(new DeliveryKeepsFailing($holder, $failures, $nextAttemptAt, $failure));
+        } catch (Throwable) {
+            // The failure of the delivery itself is thrown at the end of the run.
+        }
     }
 
     /**
