@@ -18,6 +18,9 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
   projection is handed the entry again, before the member's next activity, or through `BadgeProjection::deliver()`.
   Listeners must be idempotent.
 - The bundle requires `tilttek/badges` `^0.2@dev`, whose notices of `AwardStore` `DbalAwardStore` implements.
+- `BadgeCredentials::issue()` returns the `Phil\OpenBadgesBundle\Application\SecuredCredential` of
+  `phil/open-badges-bundle`: its content, a compact JSON Web Token or the JSON of the document with its proof, its
+  media type and its file name. `BadgeCredentials::mediaType()` is removed: the media type is the credential's.
 
 ### Fixed
 

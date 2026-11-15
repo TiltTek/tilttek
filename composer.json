@@ -21,8 +21,11 @@
         "doctrine/doctrine-bundle": "^3.3",
         "doctrine/orm": "^3.7",
         "ergebnis/phpunit-slow-test-detector": "^2.27",
+        "phil/almanac": "^0.1@dev",
         "phil/content-warnings": "^0.1@dev",
         "phil/dev-tools": "^0.1@alpha",
+        "phil/open-badges-bundle": "^0.1@dev",
+        "phil/privacy-bundle": "^0.1@dev",
         "phil/recurrence": "^0.1@dev",
         "phil/resource": "^0.1@dev",
         "phil/svg-sanitizer": "^0.1@dev",
@@ -80,6 +83,27 @@
         {
             "type": "path",
             "url": "packages/*",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "../../Phil/phil/packages/almanac",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "../../Phil/phil/packages/open-badges-bundle",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "../../Phil/phil/packages/privacy-bundle",
             "options": {
                 "symlink": true
             }

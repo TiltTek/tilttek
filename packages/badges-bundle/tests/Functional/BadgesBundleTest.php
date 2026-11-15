@@ -111,9 +111,9 @@ final class BadgesBundleTest extends KernelTestCase
         $tester = new CommandTester(new Application(self::$kernel ?? throw new LogicException())->find('tilttek:badges:award'));
         self::assertSame(0, $tester->execute(['member' => 'member:1', 'badge' => 'organiser']));
 
-        $token = $this->service(BadgeCredentials::class, BadgeCredentials::class)->issue($member, 'organiser', Recipient::did('did:example:ada'));
-        self::assertIsString($token);
-        $claims = new JwtVerifier(Ed25519Signer::fromSeed(str_repeat("\1", 32))->verificationKey())->verify($token);
+        $credential = $this->service(BadgeCredentials::class, BadgeCredentials::class)->issue($member, 'organiser', Recipient::did('did:example:ada'));
+        self::assertTrue($credential->isToken());
+        $claims = new JwtVerifier(Ed25519Signer::fromSeed(str_repeat("\1", 32))->verificationKey())->verify($credential->content);
         self::assertSame('https://example.org/issuer', $claims['iss'] ?? null);
     }
 

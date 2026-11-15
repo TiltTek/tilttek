@@ -43,16 +43,19 @@ use Phil\OpenBadges\Recipient;
 use Tilttek\BadgesBundle\Infrastructure\OpenBadges\BadgeCredentials;
 
 $credential = $credentials->issue($member, 'commenter.gold', Recipient::email($emailTheMemberGave, bin2hex(random_bytes(8))), locale: 'fr');
-$mediaType = $credentials->mediaType(); // application/vc+jwt, or application/vc
+$credential->content;   // the compact token, or the JSON of the document
+$credential->mediaType; // application/vc+jwt, or application/vc
+$credential->filename(); // credential.jwt, or credential.json
 ```
 
 `BadgeCredentials::issue()` takes the latest award of the badge — `NotEarned` when the member has none —, translates the
 badge's name and description in the member's language when the Translation component is installed, uses the
 description as the narrative of the criteria (the name when there is none), the badge's image when it is an absolute
 URL, a new `urn:uuid:` as identifier, and the award's moment as the start of validity. It returns the credential
-secured as `phil_open_badges.securing` says: a compact JSON Web Token, or the document with its `eddsa-rdfc-2022`
-proof. `mediaType()` names what it returns, for a download. The member asks for the credential; the application gives
-it to them, and may bake it into the badge's image with `phil/open-badges`.
+secured as `phil_open_badges.securing` says, as a `Phil\OpenBadgesBundle\Application\SecuredCredential`: a compact
+JSON Web Token, or the JSON of the document with its `eddsa-rdfc-2022` proof, with its media type and a file name, for
+a download. The member asks for the credential; the application gives it to them, and may bake it into the badge's
+image with `phil/open-badges`.
 
 `Phil\OpenBadges\CredentialIssuer` and `Phil\OpenBadgesBundle\Application\Securing`, registered by
 `phil/open-badges-bundle`, serve an application that builds its own achievements.

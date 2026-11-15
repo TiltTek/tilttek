@@ -265,6 +265,7 @@ final class PointsTest extends TestCase
         $this->clock->set('2026-01-01 00:00:00 UTC');
         $this->points->grant($this->member(1), 100, 'a', currency: 'stars');
         $this->points->revoke($this->member(1), 100, 'b', currency: 'stars');
+
         $this->clock->set('2026-01-01 12:00:00 UTC');
         $this->points->grant($this->member(1), 10, 'c', currency: 'stars');
         $this->clock->set('2026-01-02 00:00:00 UTC');

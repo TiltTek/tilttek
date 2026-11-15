@@ -279,7 +279,7 @@ final class TraceryImporterTest extends TestCase
     {
         $imported = new TraceryImporter()->import('{"origin": "#a#", "a": ["x#b#", "y"], "b": ["z#a#"]}');
 
-        self::assertSame(['x{{ generate(\'b\') }}', 'y'], Documents::templates($imported, 'a'));
+        self::assertSame(["x{{ generate('b') }}", 'y'], Documents::templates($imported, 'a'));
     }
 
     public function testTheVariablesAreGivenByName(): void
