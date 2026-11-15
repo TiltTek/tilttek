@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=8e8eda7259adcc06f43acf5123e3afbec656f01e1737b148e8d8d7f1dd4d33e3 -->
+<!-- phil-dev source-sha256=a5e9205d0f97adb021dd659acdb01156068657ff8af2d57ad4893f9f73ba47b1 -->
 # Vie privée
 
 Les réponses des outils de sécurité disent ce qui blesse une personne. La bibliothèque en garde le minimum, pour leur
@@ -20,7 +20,7 @@ L'entente d'une table et son pacte sont montrés à ses participants et à son m
 décompte de « sombre » et de « léger » dit à chacun ce que l'autre a choisi ; quand un quatrième participant arrive, le
 changement entre deux lectures dit ce qu'il a répondu. Les sommaires montrés aux gens ne contiennent donc des réponses
 que par groupes entiers d'un seuil de participants — 3 par défaut, choisi par l'application par l'`answersThreshold` de
-`TableSafety`, jamais par une table —, pris dans l'ordre de leur dernière réponse :
+`TableSafety`, jamais par une table —, pris dans l'ordre de leur première réponse :
 
 - `Pact` : ses décomptes et ses textes ;
 - `TableAgreement::shown()`, un `AgreementSummary`, et `TableAgreement::$respondents`.

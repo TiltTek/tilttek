@@ -95,6 +95,13 @@ final class TableAgreementTest extends TestCase
         self::assertNull($preferences->theme('fire'));
     }
 
+    public function testAParticipationWithoutAFirstAnswerStartsAtItsLastChange(): void
+    {
+        $participation = $this->participation('ana', LinesAndVeils::none(), ConsentChecklist::none());
+
+        self::assertSame($participation->updatedAt, $participation->firstAnsweredAt);
+    }
+
     public function testAParticipationChangesAnswerByAnswer(): void
     {
         $table = ResourceReference::of('table', '7');
@@ -105,22 +112,27 @@ final class TableAgreementTest extends TestCase
 
         self::assertTrue($empty->isEmpty());
         self::assertSame($then, $empty->updatedAt);
+        self::assertSame($then, $empty->firstAnsweredAt);
         self::assertSame($table, $empty->table);
         self::assertSame($participant, $empty->participant);
 
         $lines = $empty->withLinesAndVeils(LinesAndVeils::none()->with('gore', Boundary::Line), $later);
         self::assertFalse($lines->isEmpty());
         self::assertSame($later, $lines->updatedAt);
+        self::assertSame($then, $lines->firstAnsweredAt);
         self::assertSame(['gore'], $lines->linesAndVeils->lines());
         self::assertTrue($lines->consent->isEmpty());
 
         $consent = $empty->withConsent(ConsentChecklist::none()->with('war', ConsentLevel::Red), $later);
         self::assertFalse($consent->isEmpty());
         self::assertSame($later, $consent->updatedAt);
+        self::assertSame($then, $consent->firstAnsweredAt);
         self::assertTrue($consent->linesAndVeils->isEmpty());
 
         $zero = $lines->withSessionZero(new Answers(['tone' => 'dark']), $later)->withConsent(ConsentChecklist::none()->with('war', ConsentLevel::Red), $later);
         self::assertSame('dark', $zero->sessionZero->of('tone'));
+        self::assertSame($then, $zero->firstAnsweredAt);
+        self::assertSame($then, $lines->withSessionZero(new Answers(['tone' => 'dark']), $later)->firstAnsweredAt);
         self::assertSame(['gore'], $zero->linesAndVeils->lines());
         self::assertSame(ConsentLevel::Red, $zero->consent->level('war'));
         self::assertFalse($empty->withSessionZero(new Answers(['tone' => 'dark']), $later)->isEmpty());

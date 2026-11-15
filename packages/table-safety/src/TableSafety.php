@@ -129,7 +129,7 @@ final readonly class TableSafety
     /**
      * What the table agreed, without saying who gave it: the most restrictive answer of each theme, from every answer,
      * for what protects the table; and the summary shown to people, in whole groups of the answers threshold given to
-     * the constructor, 3 by default, taken in the order of the participants' last answers.
+     * the constructor, 3 by default, taken in the order of the participants' first answers.
      */
     public function agreement(ResourceReference $table): TableAgreement
     {
@@ -138,7 +138,7 @@ final readonly class TableSafety
 
     /**
      * The table's pact: its answers to the session zero, without saying who gave which, in whole groups of the answers
-     * threshold given to the constructor, 3 by default, taken in the order of the participants' last answers.
+     * threshold given to the constructor, 3 by default, taken in the order of the participants' first answers.
      */
     public function pact(ResourceReference $table): Pact
     {
@@ -235,7 +235,7 @@ final readonly class TableSafety
      * Everything kept about the participant: their answers at each table, the named signals they raised and their
      * stars and wishes.
      *
-     * @return array{participations: list<array{table: string, lines_and_veils: array<string, string>, consent: array<string, string>, session_zero: array<string, string|list<string>>, updated_at: string}>, signals: list<array{id: string, table: string, kind: string, audience: string, raised_at: string, raised_by: ?string, acknowledged_at: ?string}>, feedback: list<array{table: string, session: string, stars: list<string>, wishes: list<string>, given_at: string}>}
+     * @return array{participations: list<array{table: string, lines_and_veils: array<string, string>, consent: array<string, string>, session_zero: array<string, string|list<string>>, first_answered_at: string, updated_at: string}>, signals: list<array{id: string, table: string, kind: string, audience: string, raised_at: string, raised_by: ?string, acknowledged_at: ?string}>, feedback: list<array{table: string, session: string, stars: list<string>, wishes: list<string>, given_at: string}>}
      */
     public function export(ResourceReference $participant): array
     {
@@ -245,6 +245,7 @@ final readonly class TableSafety
                 'lines_and_veils' => $participation->linesAndVeils->toArray(),
                 'consent' => $participation->consent->toArray(),
                 'session_zero' => $participation->sessionZero->toArray(),
+                'first_answered_at' => $participation->firstAnsweredAt->format(\DATE_ATOM),
                 'updated_at' => $participation->updatedAt->format(\DATE_ATOM),
             ], $this->participations->ofParticipant($participant)),
             'signals' => array_map(static fn (Signal $signal): array => $signal->toArray(), $this->signals->ofParticipant($participant)),
@@ -269,14 +270,15 @@ final readonly class TableSafety
     }
 
     /**
-     * The table's participations, in the order of their last answer: a new answer joins the end and waits for its group.
+     * The table's participations, in the order of their first answer: a new participant joins the end and waits for
+     * their group, and a participant who changes their answers keeps their place.
      *
      * @return list<Participation>
      */
     private function participationsOf(ResourceReference $table): array
     {
         $participations = $this->participations->ofTable($table);
-        usort($participations, static fn (Participation $a, Participation $b): int => $a->updatedAt <=> $b->updatedAt);
+        usort($participations, Participation::inOrderOfFirstAnswer(...));
 
         return $participations;
     }

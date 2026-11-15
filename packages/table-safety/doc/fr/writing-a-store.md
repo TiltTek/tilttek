@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=a3d94c516a03ba09c7450d184eb6d83322c961fc364882c1e1d5f7e743f9baa6 -->
+<!-- phil-dev source-sha256=6f923440878d09dab1b41501feeef0414380f42c24b5cb9a29d23d9fab837d14 -->
 # Écrire un stockage
 
 `TableSafety` garde ses données par quatre contrats, sous `Tilttek\TableSafety\Contract`. La bibliothèque fournit un
@@ -16,6 +16,8 @@ Ce que fait chaque implémentation :
 
 - `save()` remplace l'enregistrement de la même table et du même participant — et de la même séance, pour les étoiles et
   les souhaits.
+- Un `ParticipationStore` garde `Participation::$firstAnsweredAt` et `$updatedAt` tels qu'on les lui donne et les rend
+  tous deux : les sommaires montrés aux gens prennent les participations dans l'ordre de leur première réponse.
 - `ofTable()` et `ofSession()` listent les enregistrements dans un ordre qui ne dit pas qui a répondu en premier, comme
   l'ordre des références des participants.
 - `SignalStore::recent()` liste les signaux dans l'ordre où ils ont été levés, les derniers dans la limite, ou ceux qui

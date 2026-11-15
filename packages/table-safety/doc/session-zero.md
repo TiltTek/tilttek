@@ -77,7 +77,7 @@ An answer to an option or a question the template no longer has is left out.
 ### The threshold
 
 In a small group, a tally of one or two answers says who chose what. The pact therefore holds answers only in whole
-groups of a **threshold** of participants, 3 by default, taken in the order of their last answer — the same threshold
+groups of a **threshold** of participants, 3 by default, taken in the order of their first answer — the same threshold
 as the [agreement shown to people](before-play.md#the-summary-shown-to-people):
 
 - under the threshold, it holds nothing: `hasEnoughAnswers()` is false, every tally is at 0, every list of texts is

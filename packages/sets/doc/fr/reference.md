@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=c86869f0d64d5dedc46e99892fa38e89b3315e6a34c5799c559de1453b321da3 -->
+<!-- phil-dev source-sha256=8915334a43d9d2dbf903a72f4bc2621a7c79eb5e841d9e024f6060455d7c598e -->
 # Référence
 
 | Type | Rôle |
@@ -13,24 +13,15 @@
 | `Completion` | Un ensemble ou un palier complété une fois par un détenteur, avec la version et le moment en UTC |
 | `Identifiers` | Les formes des codes, des membres et des détenteurs, que d'autres paquets réutilisent |
 | `UtcClock` | L'horloge du système en UTC, l'horloge par défaut |
+| `DeliveryBackoff` | Combien de temps `Sets::deliverPending()` attend avant d'informer de nouveau un détenteur dont la remise a échoué, et à partir de combien d'échecs de suite chacun est signalé |
 | `Contract\DefinitionStore` | Où les versions des ensembles sont gardées |
 | `Contract\CompletionStore` | Où les complétions sont gardées |
-| `Contract\PendingDeliveries` | Ce qu'un stockage de complétions ajoute pour `Sets::deliverPending()` : les détenteurs qui ont des complétions non remises |
+| `Contract\PendingDeliveries` | Ce qu'un stockage de complétions ajoute pour `Sets::deliverPending()` : les détenteurs qui ont des complétions non remises et les échecs de leur remise |
 | `Store\InMemoryDefinitionStore`, `Store\InMemoryCompletionStore` | Les stockages en mémoire ; le stockage de complétions implémente aussi `PendingDeliveries` |
 | `Event\SetCompleted` | Réparti une seule fois, quand un détenteur complète un ensemble, avec ses récompenses |
 | `Event\TierReached` | Réparti une seule fois, quand un détenteur atteint un palier, avec ses récompenses |
+| `Event\DeliveryKeepsFailing` | Réparti quand la remise des complétions d'un détenteur a échoué de nouveau, à partir du nombre d'échecs que le recul signale |
 | `Exception\SetsException` | L'interface de toutes les exceptions de la bibliothèque |
 | `Exception\InvalidSet`, `UnknownSet`, `DefinitionConflict`, `DeliveryFailed`, `UnsupportedStore` | Voir [Exceptions](exceptions.md) |
-
-## Intégration Symfony
-
-Facultative, sur des paquets suggérés ; voir [Reprendre les remises avec Symfony](installation.md#reprendre-les-remises-avec-symfony).
-
-| Type | Rôle |
-|---|---|
-| `Symfony\DeliverCommand` | La commande `tilttek:sets:deliver` : `Sets::deliverPending()`, ou `Sets::deliver()` avec `--holder` |
-| `Symfony\DeliverPendingCompletions` | Le message qui demande une remise en attente ; il porte seulement la limite, 100 par défaut |
-| `Symfony\DeliverPendingCompletionsHandler` | Son *handler*, qui appelle `Sets::deliverPending()` |
-| `Symfony\DeliverySchedule` | Le planificateur `tilttek_sets` : le message à intervalles, cinq minutes par défaut, avec un verrou facultatif |
 
 `ArrayInput` est interne.

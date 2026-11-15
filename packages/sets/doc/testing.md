@@ -12,7 +12,8 @@ holders referenced by an e-mail address refused, every bound of a definition, ti
 and read back with everything else refused, evaluations at several levels, versions defined again, rewritten or older,
 completions recorded and told once, kept when a new version grows the set, per holder, erased, the pending
 deliveries — the holders waiting the longest first, the limit, a failing holder that holds no one back, a store that
-cannot list the holders —, the stores, and the Symfony command, message, handler and schedule. In the
+cannot list the holders, a holder postponed by a delay that doubles up to the longest, repeated failures reported,
+a listener of the report that throws —, the backoff and its bounds, and the stores. In the
 monorepo, Infection holds the library at 100 % of covered mutants.
 
 `tests/Fuzz/definition.php` is the fuzz target of a definition: any text reads as a definition that writes back to

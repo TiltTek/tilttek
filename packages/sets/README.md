@@ -28,14 +28,14 @@ e-mail address; moments are in UTC. It is a plain PHP library, with ports for it
 | `Event\SetCompleted`, `Event\TierReached`: told once, with the rewards declared | Implemented and tested |
 | `Contract\DefinitionStore`, `Contract\CompletionStore` and their in-memory adapters | Implemented and tested |
 | `Sets::deliverPending()` and `Contract\PendingDeliveries`: the undelivered completions told again for the holders waiting the longest | Implemented and tested |
-| `Symfony\`: the `tilttek:sets:deliver` command and the `tilttek_sets` schedule, on suggested packages | Implemented and tested |
+| `DeliveryBackoff` and `Event\DeliveryKeepsFailing`: a holder whose delivery failed waits longer at each failure, and repeated failures are reported | Implemented and tested |
 | A database adapter | Not provided: an application implements the two stores |
 
 ## Documentation
 
 | Document | What it covers |
 |---|---|
-| [Installation](doc/installation.md) | Requirements, installing, wiring, and the command and schedule that resume deliveries in Symfony. |
+| [Installation](doc/installation.md) | Requirements, installing, wiring, and resuming deliveries. |
 | [Defining sets](doc/defining-sets.md) | Members, tiers, rewards, versions, and reading a definition from configuration or JSON. |
 | [Progress and completions](doc/progress-and-completions.md) | Holdings, the evaluation, recording, the events, versions and erasure. |
 | [Extension points](doc/extension-points.md) | What an application gives the library. |
@@ -66,8 +66,8 @@ $progress->recorded;                   // the tier "half", told by Event\TierRea
 
 ## Requirements
 
-PHP 8.5 or later; `phil/resource` 0.1, `psr/clock` and `psr/event-dispatcher`. The Symfony integration uses
-`symfony/console`, `symfony/messenger`, `symfony/scheduler` and `symfony/lock`, suggested.
+PHP 8.5 or later; `phil/resource` 0.1, `psr/clock` and `psr/event-dispatcher`. The library has no Symfony
+dependency: `tilttek/sets-bundle` brings its command, message and schedule to a Symfony application.
 
 ## Contributing
 

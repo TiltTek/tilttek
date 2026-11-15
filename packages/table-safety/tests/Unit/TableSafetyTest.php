@@ -254,6 +254,38 @@ final class TableSafetyTest extends TestCase
         self::assertSame(['light' => 0, 'mixed' => 0, 'serious' => 3, 'dark' => 0], $pact->tally('tone'));
     }
 
+    public function testChangingOnesAnswersKeepsOnesPlaceInTheGroups(): void
+    {
+        $cy = ResourceReference::of('member', 'cy');
+        $dee = ResourceReference::of('member', 'dee');
+        $this->safety->answerSessionZero($this->table, $this->ana, ['tone' => 'serious'], $this->now);
+        $this->safety->answerSessionZero($this->table, $this->bo, ['tone' => 'serious'], $this->now->modify('+1 minute'));
+        $this->safety->answerSessionZero($this->table, $cy, ['tone' => 'serious'], $this->now->modify('+2 minutes'));
+        $this->safety->answerSessionZero($this->table, $dee, ['tone' => 'dark'], $this->now->modify('+3 minutes'));
+
+        self::assertSame(['light' => 0, 'mixed' => 0, 'serious' => 3, 'dark' => 0], $this->safety->pact($this->table)->tally('tone'));
+
+        // Ana changes her answer after the others: she keeps her place in the first group, and the answer of Dee still
+        // waits for its own.
+        $this->safety->answerSessionZero($this->table, $this->ana, ['tone' => 'light'], $this->now->modify('+4 minutes'));
+
+        self::assertSame(['light' => 1, 'mixed' => 0, 'serious' => 2, 'dark' => 0], $this->safety->pact($this->table)->tally('tone'));
+        self::assertSame($this->now, $this->safety->participation($this->table, $this->ana, $this->now)->firstAnsweredAt);
+        self::assertEquals($this->now->modify('+4 minutes'), $this->safety->participation($this->table, $this->ana, $this->now)->updatedAt);
+    }
+
+    public function testParticipantsWhoAnsweredAtTheSameMomentAreTakenInTheOrderOfTheirReferences(): void
+    {
+        $cy = ResourceReference::of('member', 'cy');
+        $dee = ResourceReference::of('member', 'dee');
+        $this->safety->answerSessionZero($this->table, $dee, ['tone' => 'dark'], $this->now);
+        $this->safety->answerSessionZero($this->table, $cy, ['tone' => 'serious'], $this->now);
+        $this->safety->answerSessionZero($this->table, $this->bo, ['tone' => 'serious'], $this->now);
+        $this->safety->answerSessionZero($this->table, $this->ana, ['tone' => 'serious'], $this->now);
+
+        self::assertSame(['light' => 0, 'mixed' => 0, 'serious' => 3, 'dark' => 0], $this->safety->pact($this->table)->tally('tone'));
+    }
+
     public function testTheApplicationChoosesTheAnswersThreshold(): void
     {
         $safety = new TableSafety(Catalogues::small(), $this->tables, $this->participations, $this->signals, new InMemoryFeedbackStore(), answersThreshold: 1);
@@ -442,6 +474,7 @@ final class TableSafetyTest extends TestCase
                 'lines_and_veils' => ['gore' => 'line'],
                 'consent' => ['spiders' => 'red'],
                 'session_zero' => ['tone' => 'dark'],
+                'first_answered_at' => '2026-11-12T20:00:00+00:00',
                 'updated_at' => '2026-11-12T20:00:00+00:00',
             ]],
             'signals' => [$signal->toArray()],
