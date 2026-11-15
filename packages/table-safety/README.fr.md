@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=2fb85c050eeaca7c096772780f769769430c6b7cffddf54df60023ec94ff7ff6 -->
+<!-- phil-dev source-sha256=857bee0342633a99b64feac9810d70545fecd99630633164c29fbbacfde8434d -->
 # tilttek/table-safety
 
 **Les outils de sécurité d'une table de jeu de rôle : ce que la table convient avant la partie, les signaux qui arrêtent ou changent une scène pendant la partie, et ce qu'elle a aimé après — anonymes par défaut.**
@@ -13,9 +13,12 @@ porte ouverte, sans expliquer pourquoi ; le meneur de jeu demande un point d'ét
 la partie, chacun donne ses étoiles et ses souhaits pour la séance.
 
 Les sommaires ne disent jamais qui a donné quelle réponse : une table voit, pour chaque thème, la réponse la plus
-restrictive que quiconque a donnée, les décomptes de sa séance zéro, ses étoiles et ses souhaits en ordre alphabétique.
-Un signal est anonyme à moins que la table n'ait choisi des signaux nominatifs, et rien — stocké ou diffusé — ne garde
-l'auteur d'un signal anonyme. Les réponses sont sensibles : elles ne sont gardées que pour leur table, et celles d'un
+restrictive que quiconque a donnée, les décomptes de sa séance zéro, ses étoiles et ses souhaits en ordre alphabétique
+— et les sommaires montrés aux gens ne contiennent des réponses que par groupes entiers d'un seuil de participants, 3
+par défaut, pour qu'un petit groupe ou une réponse de plus ne dise pas qui a répondu quoi. Une ligne ou un voile
+protège tout de même la table dès la première réponse : les préférences d'avertissement de la table appliquent chaque
+réponse. Un signal est anonyme à moins que la table n'ait choisi des signaux nominatifs, et rien — stocké ou diffusé —
+ne garde l'auteur d'un signal anonyme. Les réponses sont sensibles : elles ne sont gardées que pour leur table, et celles d'un
 participant sont exportées et effacées avec son compte.
 
 C'est une bibliothèque PHP simple, pour toute application qui fait tourner des tables : un club, un congrès, un site de
@@ -31,8 +34,9 @@ dans [Crédits](doc/fr/credits.md).
 | Partie | État |
 |---|---|
 | `LinesAndVeils`, `ConsentChecklist` et les thèmes d'une table, sur `phil/content-warnings` | Implémenté et testé |
-| `TableAgreement` : la réponse la plus stricte de chaque thème, et les préférences d'avertissement qu'elle représente | Implémenté et testé |
-| Séance zéro : `Question`, `Template`, les quatre `Templates` intégrés, `Answers` et le `Pact` | Implémenté et testé |
+| `TableAgreement` : la réponse la plus stricte de chaque thème, et les préférences d'avertissement qu'elle représente, à partir de chaque réponse | Implémenté et testé |
+| `AgreementSummary` et le seuil des sommaires montrés aux gens | Implémenté et testé |
+| Séance zéro : `Question`, `Template`, les quatre `Templates` intégrés, `Answers` et le `Pact`, par groupes entiers du seuil | Implémenté et testé |
 | Signaux : la carte X, Script Change, la porte ouverte et les points d'étape, anonymes par défaut, vus par la table ou par le meneur de jeu seul | Implémenté et testé |
 | `StarsAndWishes` et le `FeedbackSummary` d'une séance | Implémenté et testé |
 | `TableSettings`, les quatre contrats de stockage et leurs stockages en mémoire | Implémenté et testé |
@@ -48,7 +52,7 @@ dans [Crédits](doc/fr/credits.md).
 | [Pendant la partie](doc/fr/during-play.md) | Les signaux, qui les voit, signaux nominatifs et points d'étape. |
 | [Après la partie](doc/fr/after-play.md) | Étoiles et souhaits, et le sommaire d'une séance. |
 | [Réglages](doc/fr/settings.md) | Ce qu'une table choisit, et ses valeurs par défaut. |
-| [Vie privée](doc/fr/privacy.md) | Ce qui reste anonyme, ce qui est gardé, et l'export et l'effacement des données d'un participant. |
+| [Vie privée](doc/fr/privacy.md) | Ce qui reste anonyme, le seuil des sommaires, ce qui est gardé, et l'export et l'effacement des données d'un participant. |
 | [Écrire un stockage](doc/fr/writing-a-store.md) | Les quatre contrats et ce que chaque implémentation doit faire. |
 | [Crédits](doc/fr/credits.md) | Les outils, les personnes et les communautés dont ils viennent, et leurs licences. |
 | [Points d'extension](doc/fr/extension-points.md) | Ce qu'une application remplace ou ajoute. |
@@ -78,7 +82,8 @@ $table = ResourceReference::of('table', '7');
 $now = new DateTimeImmutable();
 
 $safety->answerLinesAndVeils($table, ResourceReference::of('member', '12'), LinesAndVeils::none()->with('spiders', Boundary::Line), $now);
-$safety->agreement($table)->lines();           // ['spiders'], without saying whose line it is
+$safety->agreement($table)->lines();           // ['spiders']: the line protects the table at once
+$safety->agreement($table)->shown()->lines();  // []: shown once 3 participants have answered
 
 $signal = $safety->raise($table, ResourceReference::of('member', '12'), SignalKind::XCard, false, $now);
 $signal->isAnonymous();                          // true

@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=776c45542512166475355aca9a0040d5c7382d386ea592764682afce98a41efc -->
+<!-- phil-dev source-sha256=3b074b2f4a864b87d1251bf99b6315ff926adc128f7ce078478eeb8f0dff024d -->
 # Référence
 
 Chaque type public du paquet, avec son rôle.
@@ -14,13 +14,15 @@ Chaque type public du paquet, avec son rôle.
 | `ConsentLevel` | Vert, jaune ou rouge. |
 | `ConsentChecklist` | Les niveaux d'un participant, par thème. |
 | `Participation` | Les réponses d'un participant à une table. |
-| `TableAgreement` | La réponse la plus stricte de chaque thème, anonyme, et ses préférences d'avertissement. |
+| `TableAgreement` | La réponse la plus stricte de chaque thème à partir de chaque réponse, anonyme, ses préférences d'avertissement, et le sommaire montré aux gens. |
+| `AgreementSummary` | L'entente montrée aux gens, par groupes entiers d'un seuil de participants. |
+| `RespondentThreshold` | Le seuil des sommaires montrés aux gens, 3 par défaut, et sa vérification. |
 | `SessionZero\QuestionKind` | Texte, une option, plusieurs options. |
 | `SessionZero\Question` | Une question, traduite ou écrite par le meneur de jeu. |
 | `SessionZero\Template` | Les questions d'une séance zéro. |
 | `SessionZero\Templates` | Les gabarits intégrés. |
 | `SessionZero\Answers` | Les réponses d'un participant à une séance zéro. |
-| `SessionZero\Pact` | Les réponses d'une table, rassemblées sans leurs auteurs. |
+| `SessionZero\Pact` | Les réponses d'une table, rassemblées sans leurs auteurs, par groupes entiers d'un seuil de participants. |
 | `Signal\SignalKind` | Les signaux de la partie. |
 | `Signal\Audience` | La table, ou le meneur de jeu seul. |
 | `Signal\Signal` | Un signal levé à une table. |
