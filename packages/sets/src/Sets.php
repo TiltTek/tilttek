@@ -10,11 +10,14 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Throwable;
 use Tilttek\Sets\Contract\CompletionStore;
 use Tilttek\Sets\Contract\DefinitionStore;
+use Tilttek\Sets\Contract\PendingDeliveries;
 use Tilttek\Sets\Event\SetCompleted;
 use Tilttek\Sets\Event\TierReached;
 use Tilttek\Sets\Exception\DefinitionConflict;
+use Tilttek\Sets\Exception\DeliveryFailed;
 use Tilttek\Sets\Exception\InvalidSet;
 use Tilttek\Sets\Exception\UnknownSet;
+use Tilttek\Sets\Exception\UnsupportedStore;
 
 /**
  * The sets of an application: their versions defined, a holder's progress measured against the latest version, and
@@ -26,6 +29,11 @@ use Tilttek\Sets\Exception\UnknownSet;
  */
 final readonly class Sets
 {
+    /**
+     * The most holders one call to `deliverPending()` tells.
+     */
+    public const int PENDING_LIMIT = 10_000;
+
     private ClockInterface $clock;
 
     public function __construct(
@@ -144,6 +152,51 @@ final readonly class Sets
     }
 
     /**
+     * Tells the undelivered completions of the holders that have some, at most `$limit` holders, the one waiting the
+     * longest first, as `deliver()` does for each; returns how many completions were delivered. A command or a
+     * scheduled task calls it to resume after a handler failed, without knowing which holders are waiting.
+     *
+     * A holder whose handler throws does not hold the others back: they are told all the same, and the run ends by a
+     * `DeliveryFailed` that carries the counts and, as its previous exception, the first exception thrown. A holder
+     * whose handler keeps failing stays first in line: the limit is chosen above the number of such holders expected.
+     *
+     * @throws InvalidSet       when the limit is below 1 or above {@see self::PENDING_LIMIT}
+     * @throws UnsupportedStore when the completion store does not implement {@see PendingDeliveries}
+     * @throws DeliveryFailed   when a handler threw for one holder or more
+     */
+    public function deliverPending(int $limit): int
+    {
+        if ($limit < 1 || $limit > self::PENDING_LIMIT) {
+            throw InvalidSet::because(\sprintf('A pending delivery tells 1 to %d holders; %d is not.', self::PENDING_LIMIT, $limit));
+        }
+
+        if (!$this->completions instanceof PendingDeliveries) {
+            throw UnsupportedStore::withoutPendingDeliveries($this->completions::class);
+        }
+
+        $holders = \array_slice($this->completions->holdersWithUndelivered($limit), 0, $limit);
+        $first = null;
+        $delivered = 0;
+        $failed = 0;
+
+        foreach ($holders as $holder) {
+            [$told, $failure] = $this->dispatch($this->completions->undelivered($holder));
+            $delivered += $told;
+
+            if ($failure instanceof Throwable) {
+                $first ??= $failure;
+                ++$failed;
+            }
+        }
+
+        if ($first instanceof Throwable) {
+            throw new DeliveryFailed($delivered, $failed, \count($holders), $first);
+        }
+
+        return $delivered;
+    }
+
+    /**
      * Removes every completion of a holder, for the erasure of a member; returns how many.
      */
     public function eraseHolder(ResourceReference $holder): int
@@ -161,6 +214,25 @@ final readonly class Sets
      */
     private function tell(array $completions): int
     {
+        [$delivered, $failure] = $this->dispatch($completions);
+
+        if ($failure instanceof Throwable) {
+            throw $failure;
+        }
+
+        return $delivered;
+    }
+
+    /**
+     * Dispatches the event of each completion and marks it delivered; a completion whose handler throws stays
+     * undelivered, and the next ones are told all the same.
+     *
+     * @param array<Completion> $completions
+     *
+     * @return array{int, ?Throwable} how many were delivered, and the first exception a handler threw
+     */
+    private function dispatch(array $completions): array
+    {
         $failure = null;
         $delivered = 0;
 
@@ -177,11 +249,7 @@ final readonly class Sets
             ++$delivered;
         }
 
-        if ($failure instanceof Throwable) {
-            throw $failure;
-        }
-
-        return $delivered;
+        return [$delivered, $failure];
     }
 
     /**

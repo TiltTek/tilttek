@@ -19,7 +19,17 @@
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^13.4"
+        "phpunit/phpunit": "^13.4",
+        "symfony/console": "^8.2",
+        "symfony/lock": "^8.2",
+        "symfony/messenger": "^8.2",
+        "symfony/scheduler": "^8.2"
+    },
+    "suggest": {
+        "symfony/console": "For the tilttek:sets:deliver command, which tells again the completions whose event was not delivered",
+        "symfony/lock": "To keep two workers consuming the delivery schedule from both sending its message",
+        "symfony/messenger": "For the handler of the message that tells again the completions whose event was not delivered",
+        "symfony/scheduler": "For the schedule that sends that message at an interval"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

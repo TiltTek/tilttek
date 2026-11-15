@@ -7,6 +7,7 @@ change them, and its CHANGELOG says how.
 |---|---|---|
 | `Contract\DefinitionStore` | The versions of the sets, never rewritten; `Store\InMemoryDefinitionStore` keeps them in memory | [Defining sets](defining-sets.md#versions) |
 | `Contract\CompletionStore` | The completions, one per set, tier and holder; `Store\InMemoryCompletionStore` keeps them in memory | [Progress and completions](progress-and-completions.md#concurrency) |
+| `Contract\PendingDeliveries` | Optional, beside the completion store: the holders with undelivered completions, for `Sets::deliverPending()` | [Progress and completions](progress-and-completions.md#delivery) |
 | `Psr\EventDispatcher\EventDispatcherInterface` | Who hears of each completion, through `Event\SetCompleted` and `Event\TierReached`, in idempotent handlers | [Progress and completions](progress-and-completions.md#delivery) |
 | `Psr\Clock\ClockInterface` | The time of the completions, kept in UTC | [Installation](installation.md#wiring-the-library) |
 
@@ -21,4 +22,10 @@ Every point is passed to a constructor; `Sets` keeps no state between two calls.
 - A completion is added undelivered. `CompletionStore::undelivered()` lists a holder's undelivered completions in every
   set, in the order of adding; `markDelivered()` marks one delivered, and does nothing for a completion the store does
   not hold. A database store keeps a column of its own for it, such as a nullable moment of delivery.
+- A completion store that also implements `Contract\PendingDeliveries` lets `Sets::deliverPending()` and the Symfony
+  integration find the holders waiting. `holdersWithUndelivered($limit)` gives each holder with an undelivered
+  completion once, at most `$limit` of them, in the order their oldest undelivered completion was added, and none
+  when `$limit` is below 1. A database store answers it with one query, such as the holders of the undelivered rows
+  grouped by holder and ordered by their smallest row number, with an index on the column of delivery. A store that
+  does not implement it keeps working with everything else.
 - `Completion::toArray()` gives the values of a row, with the moment in UTC to the microsecond.

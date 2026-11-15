@@ -42,8 +42,19 @@ marked delivered once its event was dispatched without an exception:
 - The next `record()` for that holder and set tells every completion of the set still undelivered, with the rewards of
   the version it was earned under, even when it records nothing new.
 - `Sets::deliver($holder)` tells every undelivered completion of the holder, in every set, and returns how many were
-  delivered: the application calls it to resume without waiting for the holdings to change, from a retry, a scheduled
-  task or the holder's next visit.
+  delivered: the application calls it to resume without waiting for the holdings to change, from a retry or the
+  holder's next visit.
+- `Sets::deliverPending($limit)` does the same for the holders that have undelivered completions, at most `$limit` of
+  1 to 10 000, the holder waiting the longest first, and returns how many completions were delivered: a command or a
+  scheduled task calls it without knowing which holders are waiting. The completion store also implements
+  `Contract\PendingDeliveries`, which lists those holders; otherwise the call throws `UnsupportedStore`.
+
+`deliverPending()` does not let one holder hold the others back: when a handler throws for a holder, the next holders
+are told all the same, and the run ends with a `DeliveryFailed` that carries how many completions were delivered, how
+many holders failed out of how many were told, and, as its previous exception, the first exception a handler threw. A
+holder whose handler keeps failing stays first in line, so a run's limit is chosen above the number of such holders
+expected. The `tilttek:sets:deliver` command and the `tilttek_sets` schedule call it from Symfony; see
+[Resuming deliveries with Symfony](installation.md#resuming-deliveries-with-symfony).
 
 A completion is therefore told **at least once**, not exactly once: a handler that granted the rewards and failed
 afterwards, or two processes delivering the same completion at the same moment, tell it twice. **The handlers are

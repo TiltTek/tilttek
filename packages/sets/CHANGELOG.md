@@ -4,6 +4,24 @@ All notable changes to `tilttek/sets` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+The next version is 0.2.1-alpha: additions only, `Contract\CompletionStore` unchanged.
+
+### Added
+
+- `Sets::deliverPending($limit)`: the undelivered completions told again for the holders waiting the longest, at most
+  1 to 10 000 holders, without knowing which holders are waiting; a holder whose handler throws holds no one back, and
+  the run ends with `Exception\DeliveryFailed`, which carries the counts and the first exception thrown.
+- `Contract\PendingDeliveries`, optional beside `Contract\CompletionStore`: the holders with undelivered completions,
+  the one waiting the longest first; `Store\InMemoryCompletionStore` implements it. `Exception\UnsupportedStore` says
+  that a completion store does not.
+- An optional Symfony integration under `Tilttek\Sets\Symfony`, on suggested packages and without a bundle: the
+  `tilttek:sets:deliver` command, with `--limit` and `--holder`, the `DeliverPendingCompletions` message, which carries
+  a limit only, and its handler, and the `tilttek_sets` schedule, which sends it every five minutes by default, with an
+  interval, a limit and a lock of the application's.
+- Resuming deliveries with Symfony documented: registering the services, the command, the schedule and its worker.
+
 ## 0.2.0-alpha - 2026-11-14
 
 ### Changed

@@ -8,11 +8,13 @@ use Override;
 use Phil\Resource\ResourceReference;
 use Tilttek\Sets\Completion;
 use Tilttek\Sets\Contract\CompletionStore;
+use Tilttek\Sets\Contract\PendingDeliveries;
 
 /**
- * The completions in memory, for tests and for an application that keeps them for one process.
+ * The completions in memory, for tests and for an application that keeps them for one process, with the holders whose
+ * completions wait to be delivered.
  */
-final class InMemoryCompletionStore implements CompletionStore
+final class InMemoryCompletionStore implements CompletionStore, PendingDeliveries
 {
     /** @var array<string, Completion> */
     private array $completions = [];
@@ -40,6 +42,26 @@ final class InMemoryCompletionStore implements CompletionStore
             $this->undelivered,
             static fn (Completion $completion): bool => $completion->holder->equals($holder),
         ));
+    }
+
+    #[Override]
+    public function holdersWithUndelivered(int $limit): array
+    {
+        if ($limit < 1) {
+            return [];
+        }
+
+        $holders = [];
+
+        foreach ($this->undelivered as $completion) {
+            $holders[$completion->holder->toString()] ??= $completion->holder;
+
+            if (\count($holders) >= $limit) {
+                break;
+            }
+        }
+
+        return array_values($holders);
     }
 
     #[Override]
