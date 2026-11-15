@@ -1,0 +1,1 @@
+{"id":"c1","creator":"er:ana","title":"Paint","description":"","visibility":"friends","validation":"@ote","votes_needed":3,"prize":50,"unit":"points","created_at":"22T:0.1Z","ends_at":"20:0.-1Z","review_ends_at":"-1Z","invitees":["mey"],"declined":[],"participants":[],"proofs":[],"state":"ope","winner":null,"winning_proof":null,"settled_at":null,"version":1}

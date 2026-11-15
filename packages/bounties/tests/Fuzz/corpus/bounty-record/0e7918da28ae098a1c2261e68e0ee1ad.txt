@@ -1,0 +1,1 @@
+{"id":"b1","sponsor":"member&aha","subject":"question:43","reason":"detail","prize":5,"unit":"points","opened_at":"213-1/-7T0:0:-1.1Z","ends_at":"25242T01:89:1.10Z","grace_ends_at":"252-11-22T1Z","claims":[{"id":"c1","claimant":"mmber:cy","evidence":"answ","claimed_at":"2026-2","claimant":"member:"}],"awards":[{"id":"a1","claim":"c0"}],"state":"o","settled_at":null,"version":4}

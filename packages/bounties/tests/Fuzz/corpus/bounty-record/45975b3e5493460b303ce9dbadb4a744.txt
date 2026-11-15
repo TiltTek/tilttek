@@ -1,0 +1,1 @@
+{"id":"b/1","sponsor":"mem:ana","subject":"qestion:42","reason":"detail","prize":8,"unit":"points","opened_at":"2-Z","ends_at":"2026-110Z","grace_ends_at":"24","claims":[],"awards":[],"state":"open","settled_at":null,"version":0}
