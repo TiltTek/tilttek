@@ -27,7 +27,7 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
     public function testTheKeysStartWithThePrefixAsAHashTag(): void
     {
         $connection = new ScriptedConnection(['EVAL' => 1]);
-        $store = new ValkeyScoreStore($connection, self::boards(), 'tests');
+        $store = new ValkeyScoreStore($connection, $this->boards(), 'tests');
 
         self::assertTrue($store->add(new Contribution('games@abc', '2026-11', ResourceReference::fromString('member:1'), 'partie/é', 4, new DateTimeImmutable('2026-11-03 10:00:00.000002 UTC'), [3])));
 
@@ -51,7 +51,7 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
 
     public function testAContributionIsAddedOnlyWhenTheScriptSaysSo(): void
     {
-        $store = new ValkeyScoreStore(new ScriptedConnection(['EVAL' => 0]), self::boards(), 'tests');
+        $store = new ValkeyScoreStore(new ScriptedConnection(['EVAL' => 0]), $this->boards(), 'tests');
 
         self::assertFalse($store->add(new Contribution('games', '2026-11', ResourceReference::fromString('member:1'), 'k1', 1, new DateTimeImmutable('2026-11-03 10:00 UTC'))));
     }
@@ -72,7 +72,7 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
     #[DataProvider('corruptContributions')]
     public function testAContributionTheStoreDidNotWriteIsRefused(string $held): void
     {
-        $store = new ValkeyScoreStore(new ScriptedConnection(['ZRANGE' => ['["games","k1"]'], 'HMGET' => [$held]]), self::boards(), 'tests');
+        $store = new ValkeyScoreStore(new ScriptedConnection(['ZRANGE' => ['["games","k1"]'], 'HMGET' => [$held]]), $this->boards(), 'tests');
 
         $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessageIsOrContains('The contribution "["games","k1"]" is not one the leaderboards wrote.');
@@ -94,7 +94,7 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
     #[DataProvider('corruptScores')]
     public function testAScoreTheStoreDidNotWriteIsRefused(string $held): void
     {
-        $store = new ValkeyScoreStore(new ScriptedConnection(['HGET' => $held]), self::boards(), 'tests');
+        $store = new ValkeyScoreStore(new ScriptedConnection(['HGET' => $held]), $this->boards(), 'tests');
 
         $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessageIsOrContains('The score of "member:1" on "games" in "2026-11" is not one the leaderboards wrote.');
@@ -104,7 +104,7 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
 
     public function testAHeldValueThatIsNotJsonIsRefused(): void
     {
-        $store = new ValkeyScoreStore(new ScriptedConnection(['HGET' => '[7,0,[]']), self::boards(), 'tests');
+        $store = new ValkeyScoreStore(new ScriptedConnection(['HGET' => '[7,0,[]']), $this->boards(), 'tests');
 
         $this->expectException(JsonException::class);
 
@@ -113,11 +113,11 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
 
     public function testAHeldValueNestsThreeArraysAtMost(): void
     {
-        $threeArrays = new ValkeyScoreStore(new ScriptedConnection(['HGET' => '[7,0,[[3]],"key"]']), self::boards(), 'tests');
+        $threeArrays = new ValkeyScoreStore(new ScriptedConnection(['HGET' => '[7,0,[[3]],"key"]']), $this->boards(), 'tests');
 
         self::assertSame([], $threeArrays->score('games', '2026-11', ResourceReference::fromString('member:1'))?->tieBreaks);
 
-        $fourArrays = new ValkeyScoreStore(new ScriptedConnection(['HGET' => '[7,0,[[[3]]],"key"]']), self::boards(), 'tests');
+        $fourArrays = new ValkeyScoreStore(new ScriptedConnection(['HGET' => '[7,0,[[[3]]],"key"]']), $this->boards(), 'tests');
 
         $this->expectException(JsonException::class);
         $this->expectExceptionMessageIsOrContains('Maximum stack depth exceeded');
@@ -127,7 +127,7 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
 
     public function testOnlyTheIntegersOfHeldTieBreaksAreRead(): void
     {
-        $store = new ValkeyScoreStore(new ScriptedConnection(['HGET' => '[7,1000002,["3",4],"key"]']), self::boards(), 'tests');
+        $store = new ValkeyScoreStore(new ScriptedConnection(['HGET' => '[7,1000002,["3",4],"key"]']), $this->boards(), 'tests');
 
         $score = $store->score('games', '2026-11', ResourceReference::fromString('member:1'));
 
@@ -139,7 +139,7 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
 
     public function testOnlyTheStringsOfAHeldFieldAreRead(): void
     {
-        $store = new ValkeyScoreStore(new ScriptedConnection(['SMEMBERS' => ['[1,"games","2026-11"]'], 'HMGET' => ['[7,0,[],"key"]']]), self::boards(), 'tests');
+        $store = new ValkeyScoreStore(new ScriptedConnection(['SMEMBERS' => ['[1,"games","2026-11"]'], 'HMGET' => ['[7,0,[],"key"]']]), $this->boards(), 'tests');
 
         $scores = $store->of(ResourceReference::fromString('member:1'));
 
@@ -153,7 +153,7 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
             'ZRANGE' => [7, '["games","k1"]', null],
             'HMGET' => ['["2026-11","member:1",1,0,[]]'],
         ]);
-        $store = new ValkeyScoreStore($connection, self::boards(), 'tests');
+        $store = new ValkeyScoreStore($connection, $this->boards(), 'tests');
 
         $contributions = $store->contributions('games', '2026-11', ResourceReference::fromString('member:1'));
 
@@ -164,15 +164,15 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
 
     public function testAnIntegerReplyIsReadFromAStringAndNothingIsZero(): void
     {
-        self::assertSame(3, new ValkeyScoreStore(new ScriptedConnection(['ZCARD' => '3']), self::boards(), 'tests')->participants('games', '2026-11'));
-        self::assertSame(3, new ValkeyScoreStore(new ScriptedConnection(['ZCARD' => 3]), self::boards(), 'tests')->participants('games', '2026-11'));
-        self::assertSame(0, new ValkeyScoreStore(new ScriptedConnection(), self::boards(), 'tests')->participants('games', '2026-11'));
-        self::assertSame(0, new ValkeyScoreStore(new ScriptedConnection(['ZCARD' => ['3']]), self::boards(), 'tests')->participants('games', '2026-11'));
+        self::assertSame(3, new ValkeyScoreStore(new ScriptedConnection(['ZCARD' => '3']), $this->boards(), 'tests')->participants('games', '2026-11'));
+        self::assertSame(3, new ValkeyScoreStore(new ScriptedConnection(['ZCARD' => 3]), $this->boards(), 'tests')->participants('games', '2026-11'));
+        self::assertSame(0, new ValkeyScoreStore(new ScriptedConnection(), $this->boards(), 'tests')->participants('games', '2026-11'));
+        self::assertSame(0, new ValkeyScoreStore(new ScriptedConnection(['ZCARD' => ['3']]), $this->boards(), 'tests')->participants('games', '2026-11'));
     }
 
     public function testAListReplyOfAnotherShapeIsNothing(): void
     {
-        $store = new ValkeyScoreStore(new ScriptedConnection(['ZRANGE' => 'OK']), self::boards(), 'tests');
+        $store = new ValkeyScoreStore(new ScriptedConnection(['ZRANGE' => 'OK']), $this->boards(), 'tests');
 
         self::assertSame([], $store->contributions('games', '2026-11', ResourceReference::fromString('member:1')));
     }
@@ -181,15 +181,15 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
     {
         $this->expectNotToPerformAssertions();
 
-        new ValkeyScoreStore(new ScriptedConnection(), self::boards(), 'tests', 1);
-        new ValkeyScoreStore(new ScriptedConnection(), self::boards(), 'tests', 10_000);
+        new ValkeyScoreStore(new ScriptedConnection(), $this->boards(), 'tests', 1);
+        new ValkeyScoreStore(new ScriptedConnection(), $this->boards(), 'tests', 10_000);
     }
 
     public function testAScoreIsLookedUpByItsBoardPeriodAndMember(): void
     {
         $connection = new ScriptedConnection();
 
-        self::assertNotInstanceOf(Score::class, new ValkeyScoreStore($connection, self::boards(), 'tests')->score('games', '2026-11', ResourceReference::fromString('member:1')));
+        self::assertNotInstanceOf(Score::class, new ValkeyScoreStore($connection, $this->boards(), 'tests')->score('games', '2026-11', ResourceReference::fromString('member:1')));
         self::assertSame([['HGET', '{tests}:score', '["games","2026-11","member:1"]']], $connection->sent);
     }
 
@@ -218,7 +218,7 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
             $helds[] = \sprintf('[%d,1793700000000002,[],"key"]', $index);
         }
 
-        $store = new ValkeyScoreStore(new ScriptedConnection(['SMEMBERS' => $fields, 'HMGET' => $helds]), self::boards(), 'tests');
+        $store = new ValkeyScoreStore(new ScriptedConnection(['SMEMBERS' => $fields, 'HMGET' => $helds]), $this->boards(), 'tests');
 
         self::assertSame(
             [['arcade', '2026-11', 0], ['arcade', '2026-12', 1], ['games', '2026-11', 2], ['games', '2026-12', 3]],
@@ -231,7 +231,7 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
         $store = new ValkeyScoreStore(new ScriptedConnection([
             'SMEMBERS' => ['["arcade","2026-11"]', '["games","2026-11"]'],
             'HMGET' => [null, '[3,0,[],"key"]', '[9,0,[],"key"]'],
-        ]), self::boards(), 'tests');
+        ]), $this->boards(), 'tests');
 
         self::assertSame(
             [['games', '2026-11', 3]],
@@ -243,7 +243,7 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
     {
         $connection = new ScriptedConnection(['SMEMBERS' => []]);
 
-        self::assertSame([], new ValkeyScoreStore($connection, self::boards(), 'tests')->of(ResourceReference::fromString('member:1')));
+        self::assertSame([], new ValkeyScoreStore($connection, $this->boards(), 'tests')->of(ResourceReference::fromString('member:1')));
         self::assertSame([['SMEMBERS', '{tests}:member-score:["member:1"]']], $connection->sent);
     }
 
@@ -252,7 +252,7 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
         $store = new ValkeyScoreStore(new ScriptedConnection([
             'ZRANGE' => ['["games","k1"]', '["games","k2"]'],
             'HMGET' => ['["2026-11","member:1",4,1793700000000002,[3]]', '["2026-12","member:2",9,1796000000000007,[]]'],
-        ]), self::boards(), 'tests');
+        ]), $this->boards(), 'tests');
 
         $read = array_map(
             static fn (Contribution $contribution): array => [
@@ -273,7 +273,7 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
         ], $read);
     }
 
-    private static function boards(): Boards
+    private function boards(): Boards
     {
         return Boards::fromArray([
             'games' => ['measure' => 'total', 'verbs' => ['game.played'], 'tie_breaks' => [['measure' => 'lowest', 'order' => 'asc'], ['measure' => 'highest']]],

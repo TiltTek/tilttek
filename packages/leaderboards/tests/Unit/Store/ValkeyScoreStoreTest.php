@@ -84,6 +84,7 @@ final class ValkeyScoreStoreTest extends ScoreStoreTestCase
         $store->save(new Score('games', '2026-11', ResourceReference::fromString('member:1'), 7, new DateTimeImmutable('2026-11-01 UTC'), [2, 10]));
         $store->save(new Score('games', '2026-11', ResourceReference::fromString('member:2'), 7, new DateTimeImmutable('2026-11-02 UTC'), [3, 10]));
         $store->save(new Score('games', '2026-11', ResourceReference::fromString('member:3'), 5, new DateTimeImmutable('2026-11-03 UTC'), [9, 9]));
+
         $members = static fn (array $scores): array => array_map(static fn (Score $score): string => $score->member->toString(), $scores);
 
         self::assertSame(['member:1', 'member:2', 'member:3'], $members($store->top('games', '2026-11', 3, new Ranking([Direction::Ascending, Direction::Descending]))));
