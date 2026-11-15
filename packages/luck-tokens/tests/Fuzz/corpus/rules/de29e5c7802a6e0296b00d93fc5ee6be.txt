@@ -1,0 +1,1 @@
+{"kinds": [{"key": "in", "name":"I","cap": 1, "transferable": true}, {"key": "bes", "name": "Bpgints", "cap":  3}], "game_masters": ["membr:gm"]}

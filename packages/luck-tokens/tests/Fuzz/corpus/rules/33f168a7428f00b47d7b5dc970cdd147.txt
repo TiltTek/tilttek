@@ -1,0 +1,1 @@
+{"kinds": [{"key": "inspion", "name": "In",  "cap": 2, "carry_over": 0}], "game_masters":["er:gm"]}

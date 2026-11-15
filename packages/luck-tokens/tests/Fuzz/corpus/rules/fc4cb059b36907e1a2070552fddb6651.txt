@@ -1,0 +1,1 @@
+{"kinds": [{"key": "inspir", "name": "Inspiration", "cap": 1, "transferable": true}, {"key":"benn", "name": "es","cap": 5, "scope": "player", "refresh": "each-session", "refresh_to": 3}], "game_masters": ["member:gm"]}

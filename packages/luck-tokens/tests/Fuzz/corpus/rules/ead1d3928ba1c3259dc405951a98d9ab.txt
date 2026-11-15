@@ -1,0 +1,1 @@
+{"kinds": [{"key": "inn", "name": "Ins", "cap": 8, "refresh": "each-session", "refresh_to": 3}]}

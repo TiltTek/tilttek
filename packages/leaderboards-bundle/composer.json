@@ -1,0 +1,84 @@
+{
+    "name": "tilttek/leaderboards-bundle",
+    "description": "Leaderboards for Symfony on tilttek/leaderboards: boards, periods, sliding windows, snapshots and weekly leagues in configuration, scores in Doctrine DBAL or Valkey kept up to date from members' activity, events for snapshots, leagues and the top, Twig standings drawn with a UX Toolkit kit, scheduled commands, and member export and erasure",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": [
+        "leaderboards",
+        "ranking",
+        "gamification",
+        "leagues",
+        "symfony-bundle",
+        "valkey"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "doctrine/dbal": "^4.5",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "psr/event-dispatcher": "^1.0",
+        "symfony/config": "^8.2",
+        "symfony/dependency-injection": "^8.2",
+        "tilttek/leaderboards": "^0.2@dev"
+    },
+    "require-dev": {
+        "doctrine/doctrine-bundle": "^3.3",
+        "doctrine/orm": "^3.7",
+        "phil/privacy-bundle": "^0.1@dev",
+        "phil/ux-kit": ">=0.5.0-alpha <1.0",
+        "phpunit/phpunit": "^13.4",
+        "symfony/cache": "^8.2",
+        "symfony/clock": "^8.2",
+        "symfony/console": "^8.2",
+        "symfony/event-dispatcher": "^8.2",
+        "symfony/framework-bundle": "^8.2",
+        "symfony/http-kernel": "^8.2",
+        "symfony/messenger": "^8.2",
+        "symfony/scheduler": "^8.2",
+        "symfony/translation": "^8.2",
+        "symfony/twig-bundle": "^8.2",
+        "symfony/ux-twig-component": "^3.7",
+        "symfony/yaml": "^8.2",
+        "tilttek/activity": "^0.1@dev",
+        "tilttek/activity-bundle": "^0.1@dev || ^0.2@dev",
+        "twig/twig": "^3.21"
+    },
+    "suggest": {
+        "doctrine/orm": "To add the leaderboards' tables to the schema the ORM generates, and so to the migrations",
+        "phil/privacy-bundle": "To export and erase a member's scores, placings, choice of appearance, tiers and divisions with the rest of their account",
+        "phil/ux-kit": "For the recipes Card, Badge and Empty of the league screen and the ranking of teams, and Celebration for a member who reached the top, through the Symfony UX Toolkit",
+        "symfony/cache": "To keep the scores in the sorted sets of Valkey, connected from a DSN with the redis extension, Relay or Predis",
+        "symfony/console": "For the commands that take the snapshots due and show a board",
+        "symfony/scheduler": "To take the snapshots and settle the weeks of the leagues due from Symfony Scheduler",
+        "symfony/translation": "To translate the templates' texts and the names of the boards",
+        "symfony/twig-bundle": "For the Twig functions and the templates of a standing and a snapshot",
+        "symfony/ux-twig-component": "For the league screen and the ranking of teams, built of the recipes of a kit of the Symfony UX Toolkit",
+        "tilttek/activity-bundle": "To keep the journal of activity the boards read, and catch the leaderboards projection up live or by a command"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\LeaderboardsBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\LeaderboardsBundle\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

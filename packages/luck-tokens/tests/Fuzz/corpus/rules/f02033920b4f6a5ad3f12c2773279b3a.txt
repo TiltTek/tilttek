@@ -1,0 +1,1 @@
+{"kinds": [{"key":"insmir", "name": "Inspiron", "cap": 1, "transferable": true}, {"key": "bper", "name": "Ipiration", "cap": 1}], "game_masters": ["megm"]}

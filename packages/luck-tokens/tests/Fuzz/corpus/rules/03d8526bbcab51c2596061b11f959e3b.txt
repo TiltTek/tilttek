@@ -1,0 +1,1 @@
+{"kinds": [{"key": "inspires", "name": "Bennies", "cap": 9, "grants": "anyone"}, {"key": "fate", "name": "Fate o", "cap": 5}], "game_masters": ["member:gm"]}

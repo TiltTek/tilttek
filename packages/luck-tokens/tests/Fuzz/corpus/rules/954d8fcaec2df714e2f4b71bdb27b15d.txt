@@ -1,0 +1,1 @@
+{"kinds": [{"key": "tion", "name": "InCCCCCon", "cap": -1, "transferable": true}, {"ke": 3}],"game_masters": ["memgm"]}

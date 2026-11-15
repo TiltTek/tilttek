@@ -1,0 +1,1 @@
+{"kinds": [{"key": "is", "name": "I", "cap": 9, "scope": "player", "refresh": "each-session", "refresh_to": 3, "carry_over": 0, "refresh_to": 2}], "game_masters": ["mr:gm"]}

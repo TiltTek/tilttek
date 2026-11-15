@@ -1,0 +1,46 @@
+{#
+ # A member's division on a board with a league: its tier and number, its lines ranked among its members only, each
+ # marked by where it goes if the week ended now — up, down or nowhere —, and the viewer's own line. Members are shown
+ # as in a standing: `names` maps `kind:identifier` to the name the application gives a member who chose to appear
+ # under it. The tier's name is a translation key, `tiers.<name>`:
+ #
+ #     {% set division = tilttek_leaderboards_division('weekly-xp', 'member:44') %}
+ #     {% if division %}{{ include('@TilttekLeaderboards/division.html.twig', {division: division, names: {'member:3': 'Alice'}}) }}{% endif %}
+ #}
+{% set domain = tilttek_leaderboards_domain() %}
+{% set names = names|default({}) %}
+{% set standing = division.standing %}
+<section class="tilttek-leaderboards tilttek-leaderboards--division" data-board="{{ standing.board.name }}" data-period="{{ standing.period.code }}" data-tier="{{ division.membership.tier }}">
+    <h2 class="tilttek-leaderboards__title">{{ ('boards.' ~ standing.board.name)|trans({}, domain) }}</h2>
+    <p class="tilttek-leaderboards__period">
+        {{ 'division'|trans({'%tier%': ('tiers.' ~ division.membership.tier)|trans({}, domain), '%number%': division.membership.division}, domain) }}
+        · {{ 'period'|trans({'%period%': standing.period.code}, domain) }}
+        · {{ 'promotion'|trans({'%count%': division.promoted}, domain) }}
+        · {{ 'relegation'|trans({'%count%': division.relegated}, domain) }}
+    </p>
+    {% if standing.rows is empty %}
+        <p class="tilttek-leaderboards__empty">{{ 'empty'|trans({}, domain) }}</p>
+    {% else %}
+        <ol class="tilttek-leaderboards__rows">
+            {% for row in standing.rows %}
+                {% set movement = division.movementAt(row.rank).value %}
+                <li class="tilttek-leaderboards__row tilttek-leaderboards__row--{{ movement }}{{ row.self ? ' tilttek-leaderboards__row--self' }}" value="{{ row.rank }}" data-movement="{{ movement }}">
+                    <span class="tilttek-leaderboards__rank">{{ row.rank }}</span>
+                    <span class="tilttek-leaderboards__member">
+                        {%- if row.self -%}
+                            {{ 'you'|trans({}, domain) }}
+                        {%- elseif row.member is not null and names[row.member.toString()] is defined -%}
+                            {{ names[row.member.toString()] }}
+                        {%- elseif row.pseudonym is not null -%}
+                            {{ row.pseudonym }}
+                        {%- else -%}
+                            {{ 'a_member'|trans({}, domain) }}
+                        {%- endif -%}
+                    </span>
+                    <span class="tilttek-leaderboards__score">{{ row.value }}</span>
+                    <span class="tilttek-leaderboards__movement">{{ ('movement.' ~ movement)|trans({}, domain) }}</span>
+                </li>
+            {% endfor %}
+        </ol>
+    {% endif %}
+</section>

@@ -1,0 +1,1 @@
+{"kinds": [{"key": "inspration", "name": "Inspiration", "cap": 1, "transferable":true}, {"key": "es", "name": "Bennies", "cap": 5, "scope": "player", "refresh":  3}], "game_masters": ["gm"]}

@@ -1,0 +1,1 @@
+{"kinds": [{"key": "insiraion", "name": "Inspiatio n", "cap": 1, "transferable": true}, {"key": "bennies", "name": "nies", "cap": 5, "scope": "player", "refresh": "each-session", "refresh_to": 6, "carry_over": 0, "grants": "anyone"}, {"keyp": 9, "": 3}], "game_masters": ["mumbem:gm"]}

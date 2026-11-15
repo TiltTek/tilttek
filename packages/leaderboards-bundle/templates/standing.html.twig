@@ -1,0 +1,44 @@
+{#
+ # A board as one viewer sees it — or a snapshot of it —: its lines, and the viewer's own line below them when it is
+ # not among them. A member who chose to appear under their name is named by `names`, a map from `kind:identifier` to
+ # the name the application gives them; a pseudonym is shown as chosen; every other member is "A member". The board's
+ # name is a translation key, `boards.<name>`:
+ #
+ #     {{ include('@TilttekLeaderboards/standing.html.twig', {standing: tilttek_leaderboards_standing('games-month', 'member:44'), names: {'member:3': 'Alice'}}) }}
+ #}
+{% set domain = tilttek_leaderboards_domain() %}
+{% set names = names|default({}) %}
+{% macro line(row, names, domain) %}
+    <li class="tilttek-leaderboards__row{{ row.self ? ' tilttek-leaderboards__row--self' }}" value="{{ row.rank }}">
+        <span class="tilttek-leaderboards__rank">{{ row.rank }}</span>
+        <span class="tilttek-leaderboards__member">
+            {%- if row.self -%}
+                {{ 'you'|trans({}, domain) }}
+            {%- elseif row.member is not null and names[row.member.toString()] is defined -%}
+                {{ names[row.member.toString()] }}
+            {%- elseif row.pseudonym is not null -%}
+                {{ row.pseudonym }}
+            {%- else -%}
+                {{ 'a_member'|trans({}, domain) }}
+            {%- endif -%}
+        </span>
+        <span class="tilttek-leaderboards__score">{{ row.value }}</span>
+    </li>
+{% endmacro %}
+<section class="tilttek-leaderboards" data-board="{{ standing.board.name }}" data-period="{{ standing.period.code }}">
+    <h2 class="tilttek-leaderboards__title">{{ ('boards.' ~ standing.board.name)|trans({}, domain) }}</h2>
+    <p class="tilttek-leaderboards__period">
+        {{ 'period'|trans({'%period%': standing.period.code}, domain) }} · {{ 'participants'|trans({'%count%': standing.participants}, domain) }}
+        {% if standing.frozenAt %} · {{ 'frozen'|trans({}, domain) }}{% endif %}
+    </p>
+    {% if standing.rows is empty %}
+        <p class="tilttek-leaderboards__empty">{{ 'empty'|trans({}, domain) }}</p>
+    {% else %}
+        <ol class="tilttek-leaderboards__rows">
+            {% for row in standing.rows %}{{ _self.line(row, names, domain) }}{% endfor %}
+        </ol>
+    {% endif %}
+    {% if standing.own and not standing.ownIsListed %}
+        <ol class="tilttek-leaderboards__own">{{ _self.line(standing.own, names, domain) }}</ol>
+    {% endif %}
+</section>

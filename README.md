@@ -54,6 +54,8 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/bounties`](https://github.com/TiltTek/bounties) | Playful bounties prepaid in points and held in escrow, claimed and awarded within a bounded time; never money. |
 | [`tilttek/friend-challenges`](https://github.com/TiltTek/friend-challenges) | Challenges between friends or open to all, with a points prize held in escrow, proofs, judges and the site's moderation. |
 | [`tilttek/leaderboards`](https://github.com/TiltTek/leaderboards) | Leaderboards kept up to date from the activity journal: periods and sliding windows, tie-breaks, snapshots, weekly leagues, titles and teams. |
+| [`tilttek/leaderboards-bundle`](https://github.com/TiltTek/leaderboards-bundle) | Leaderboards in Symfony: boards, periods and weekly leagues in configuration, scores in Doctrine DBAL or Valkey kept up to date from members' activity, and standings drawn with a UX Toolkit kit. |
+| [`tilttek/luck-tokens`](https://github.com/TiltTek/luck-tokens) | Luck, inspiration or fate tokens a table hands out and spends, every move in an append-only ledger. |
 | [`tilttek/rating`](https://github.com/TiltTek/rating) | Per-game ratings of players from their results: Elo or OpenSkill, duels, teams and draws, private by default, and a replay that gives the same values. |
 | [`tilttek/advent-calendar`](https://github.com/TiltTek/advent-calendar) | An advent calendar: one box per day in the calendar's timezone, an opening policy, each box opened once and told by an event. |
 | [`tilttek/writing-goals`](https://github.com/TiltTek/writing-goals) | An author's writing goals: a target in words or pages, a plan on a curve, a daily quota recomputed from what remains, no streak counted. |

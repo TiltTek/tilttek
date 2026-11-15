@@ -1,0 +1,1 @@
+{"kinds": [{"key": "","name": "s", "cap": -2, "ese_t": 3}], "game_masters": [""]}

@@ -1,0 +1,1 @@
+{"kinds": [{"key": "i", "name": "I ", "cap": 3}],"game_masters":["meb;:gm"]}

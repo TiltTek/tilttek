@@ -1,0 +1,26 @@
+{#
+ # A member's celebration, on the screen they open after reaching the top — the board's page, the page a notification
+ # of `TopReached` links to —, once the period closed or, when the site celebrates on a score change, while they lead
+ # the period under way: the Celebration recipe of the PHIL UX kit, installed in the application by the Symfony UX
+ # Toolkit under the name `tilttek_leaderboards_kit()` gives. Its message is said in a polite live region and stays shown;
+ # confetti or fireworks are drawn only where motion is not reduced; there is no sound. Nothing is rendered when the
+ # member did not reach the top, or when the configuration disables the celebration. `autoplay`, true by default, plays
+ # it as the page shows; false leaves it to a `celebrate` event or a button of the page:
+ #
+ #     {{ include('@TilttekLeaderboards/celebration.html.twig', {celebration: tilttek_leaderboards_celebration('weekly-xp', 'member:44')}) }}
+ #
+ # A template of the application that draws it elsewhere uses the block alone:
+ #
+ #     {% use '@TilttekLeaderboards/celebration.html.twig' %}
+ #     {{ block('tilttek_leaderboards_celebration') }}
+ #}
+{% block tilttek_leaderboards_celebration %}
+    {%- if celebration|default(null) is not null -%}
+        {%- set domain = tilttek_leaderboards_domain() -%}
+        {%- set board_name = ('boards.' ~ celebration.board.name)|trans({}, domain) -%}
+        {%- set message = celebration.tier is not null
+            ? ('celebration.' ~ celebration.summit.value)|trans({'%board%': board_name, '%tier%': ('tiers.' ~ celebration.tier)|trans({}, domain)}, domain)
+            : ('celebration.' ~ celebration.summit.value)|trans({'%board%': board_name}, domain) -%}
+        {{ component(tilttek_leaderboards_kit('Celebration'), {message: message, effect: celebration.effect, autoplay: autoplay ?? true|default(true), class: 'tilttek-leaderboards__celebration', 'data-board': celebration.board.name, 'data-period': celebration.period, 'data-summit': celebration.summit.value}) }}
+    {%- endif -%}
+{% endblock %}

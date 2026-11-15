@@ -1,0 +1,48 @@
+{#
+ # The teams ranked on a board: each team's rank, name, how many of its members score, their scores added up, the roll
+ # of luck when the board enables it, and the total. It is built of the recipe Card of the kit, under the name
+ # `tilttek_leaderboards_kit()` gives; a team's name is a translation key, `team_names.<name>`:
+ #
+ #     {{ include('@TilttekLeaderboards/teams.html.twig', {board: 'house-cup', rows: tilttek_leaderboards_teams('house-cup', {red: ['member:1'], blue: ['member:2']})}) }}
+ #}
+{% set domain = tilttek_leaderboards_domain() %}
+{% set luck = rows|filter(row => row.luck > 0)|length > 0 %}
+{% component (tilttek_leaderboards_kit('Card')) with {as: 'section', class: 'tilttek-leaderboards tilttek-leaderboards--teams', 'data-board': board} %}
+    {% block content %}
+        {% component (tilttek_leaderboards_kit('Card:Header')) %}
+            {% block content %}
+                {% component (tilttek_leaderboards_kit('Card:Title')) with {level: 2} %}
+                    {% block content %}{{ ('boards.' ~ board)|trans({}, domain) }}{% endblock %}
+                {% endcomponent %}
+            {% endblock %}
+        {% endcomponent %}
+        {% component (tilttek_leaderboards_kit('Card:Content')) %}
+            {% block content %}
+                <table class="tilttek-leaderboards__teams">
+                    <thead>
+                        <tr>
+                            <th scope="col">{{ 'teams.rank'|trans({}, domain) }}</th>
+                            <th scope="col">{{ 'teams.team'|trans({}, domain) }}</th>
+                            <th scope="col">{{ 'teams.scoring'|trans({}, domain) }}</th>
+                            <th scope="col">{{ 'teams.score'|trans({}, domain) }}</th>
+                            {% if luck %}<th scope="col">{{ 'teams.luck'|trans({}, domain) }}</th>{% endif %}
+                            <th scope="col">{{ 'teams.total'|trans({}, domain) }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
+                            <tr data-team="{{ row.team }}">
+                                <td>{{ row.rank }}</td>
+                                <th scope="row">{{ ('team_names.' ~ row.team)|trans({}, domain) }}</th>
+                                <td>{{ row.scoring }}</td>
+                                <td>{{ row.score }}</td>
+                                {% if luck %}<td>{{ row.luck }}</td>{% endif %}
+                                <td>{{ row.total }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endblock %}
+        {% endcomponent %}
+    {% endblock %}
+{% endcomponent %}

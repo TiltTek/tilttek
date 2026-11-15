@@ -1,0 +1,1 @@
+{"kinds": [{"key": "ion", "name": "ion", "cap": 6, "transferable": true}, {"key": "bennies", "refresh_to": 3}], "game_masters": ["mem(gm"]}

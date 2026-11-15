@@ -1,0 +1,1 @@
+{"kinds": [{"key": "n", "name": "Ipoints", "cap": 3, "refresh": "each-session", "refresh_to": 3}], "game_masters":["memer:m"]}
