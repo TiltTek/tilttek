@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=f426e3dae4a3c6383eee6da52237ceda8139d1296956722d04e13db42dace42c -->
+<!-- phil-dev source-sha256=5d23bfc4f818a8fde9bf266e5520bdb61cb38bc3afe481e8b3bd22304043723f -->
 # Open Badges
 
 Le badge d'un membre est délivré comme une attestation Open Badges 3.0 par `phil/open-badges-bundle` : ce bundle tient
@@ -44,15 +44,18 @@ use Phil\OpenBadges\Recipient;
 use Tilttek\BadgesBundle\Infrastructure\OpenBadges\BadgeCredentials;
 
 $credential = $credentials->issue($member, 'commenter.gold', Recipient::email($emailTheMemberGave, bin2hex(random_bytes(8))), locale: 'fr');
-$mediaType = $credentials->mediaType(); // application/vc+jwt, or application/vc
+$credential->content;   // the compact token, or the JSON of the document
+$credential->mediaType; // application/vc+jwt, or application/vc
+$credential->filename(); // credential.jwt, or credential.json
 ```
 
 `BadgeCredentials::issue()` prend la dernière attribution du badge — `NotEarned` quand le membre n'en a aucune. Il
 traduit le nom et la description du badge dans la langue du membre quand le composant Translation est installé. Il
 utilise la description comme récit des critères (le nom quand il n'y en a pas), l'image du badge quand c'est une URL
 absolue, un nouvel `urn:uuid:` comme identifiant, et le moment de l'attribution comme début de validité. Il renvoie
-l'attestation sécurisée comme l'indique `phil_open_badges.securing` : un JSON Web Token compact, ou le document avec sa
-preuve `eddsa-rdfc-2022`. `mediaType()` nomme ce qu'il renvoie, pour un téléchargement. Le membre demande
+l'attestation sécurisée comme l'indique `phil_open_badges.securing`, sous la forme d'un
+`Phil\OpenBadgesBundle\Application\SecuredCredential` : un JSON Web Token compact, ou le JSON du document avec sa
+preuve `eddsa-rdfc-2022`, avec son type de média et un nom de fichier, pour un téléchargement. Le membre demande
 l'attestation ; l'application la lui remet, et peut l'intégrer à l'image du badge avec `phil/open-badges`.
 
 `Phil\OpenBadges\CredentialIssuer` et `Phil\OpenBadgesBundle\Application\Securing`, enregistrés par
