@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tilttek\TableSafety\Feedback;
 
 use Tilttek\TableSafety\Exception\InvalidAnswer;
+use Tilttek\TableSafety\RespondentThreshold;
 
 /**
  * The stars and wishes of one session, gathered without saying who gave which: every star and every wish in
@@ -18,7 +19,7 @@ use Tilttek\TableSafety\Exception\InvalidAnswer;
 final readonly class FeedbackSummary
 {
     /** How many participants' answers a summary waits for, unless the application chooses otherwise. */
-    public const int DEFAULT_THRESHOLD = 3;
+    public const int DEFAULT_THRESHOLD = RespondentThreshold::DEFAULT;
 
     /**
      * @param list<string> $stars
@@ -44,7 +45,7 @@ final readonly class FeedbackSummary
         self::assertThreshold($threshold);
 
         $answered = array_filter($feedback, static fn (StarsAndWishes $one): bool => !$one->isEmpty());
-        $respondents = intdiv(\count($answered), $threshold) * $threshold;
+        $respondents = RespondentThreshold::counted(\count($answered), $threshold);
         $stars = [];
         $wishes = [];
 
@@ -60,15 +61,15 @@ final readonly class FeedbackSummary
     }
 
     /**
+     * The same check as `RespondentThreshold::assert()`.
+     *
      * @phpstan-assert positive-int $threshold
      *
      * @throws InvalidAnswer when the threshold is under 1
      */
     public static function assertThreshold(int $threshold): void
     {
-        if ($threshold < 1) {
-            throw InvalidAnswer::because(\sprintf('A summary waits for at least 1 answer, not %d.', $threshold));
-        }
+        RespondentThreshold::assert($threshold);
     }
 
     /**

@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=358321f0adec034077e169eb8a32868bfa1724fd4e21ce4bd38d56bcae5b671e -->
+<!-- phil-dev source-sha256=bf62623b520f5f12b081a2687ce86babd0c08498315afed12455b9cdb372eee1 -->
 # Séance zéro
 
 Une séance zéro est le questionnaire auquel une table répond avant de jouer : le ton, les thèmes, les attentes,
@@ -68,9 +68,40 @@ elles ont été données.
 ```php
 $pact = $safety->pact($table);
 
-$pact->tally('tone');      // ['light' => 0, 'mixed' => 1, 'serious' => 0, 'dark' => 3]
+$pact->hasEnoughAnswers(); // true
+$pact->tally('tone');      // ['light' => 0, 'mixed' => 1, 'serious' => 0, 'dark' => 2]
 $pact->texts('comfort');   // ['Breaks every hour', 'Captions']
-$pact->respondents;        // 4
+$pact->respondents;        // 3
 ```
 
 Une réponse à une option ou à une question que le gabarit n'a plus est écartée.
+
+### Le seuil
+
+Dans un petit groupe, un décompte d'une ou deux réponses dit qui a choisi quoi. Le pacte ne contient donc des réponses
+que par groupes entiers d'un **seuil** de participants, 3 par défaut, pris dans l'ordre de leur dernière réponse — le
+même seuil que celui de l'[entente montrée aux gens](before-play.md#le-sommaire-montré-aux-gens) :
+
+- sous le seuil, il ne contient rien : `hasEnoughAnswers()` est faux, chaque décompte est à 0, chaque liste de textes
+  est vide et `respondents` est 0 ;
+- au-delà, les réponses d'un groupe incomplet attendent : avec un seuil de 3, quatre ou cinq participants qui ont
+  répondu donnent le pacte des trois premiers, six donnent les six.
+
+```php
+// Two participants answered "dark" and "light":
+$pact->tally('tone');      // ['light' => 0, 'mixed' => 0, 'serious' => 0, 'dark' => 0]
+$pact->respondents;        // 0
+
+// A third answers "dark":
+$pact->tally('tone');      // ['light' => 1, 'mixed' => 0, 'serious' => 0, 'dark' => 2]
+
+// A fourth answers "serious": the tally waits for two more.
+$pact->tally('tone');      // ['light' => 1, 'mixed' => 0, 'serious' => 0, 'dark' => 2]
+```
+
+Une réponse de plus ne change donc jamais le pacte par les seules réponses d'une personne. Des réponses à aucune des
+questions du gabarit ne sont pas une réponse et ne prennent aucune place dans un groupe. L'application choisit le seuil,
+par l'`answersThreshold` de `TableSafety` ; `Pact::of()` le prend aussi.
+
+Le pacte ne filtre jamais le contenu : ce qui doit garder un thème hors du jeu relève des
+[lignes et voiles et de la liste de consentement](before-play.md), qui appliquent chaque réponse.

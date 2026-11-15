@@ -66,9 +66,40 @@ chose each option; for a text question, the answers in alphabetical order rather
 ```php
 $pact = $safety->pact($table);
 
-$pact->tally('tone');      // ['light' => 0, 'mixed' => 1, 'serious' => 0, 'dark' => 3]
+$pact->hasEnoughAnswers(); // true
+$pact->tally('tone');      // ['light' => 0, 'mixed' => 1, 'serious' => 0, 'dark' => 2]
 $pact->texts('comfort');   // ['Breaks every hour', 'Captions']
-$pact->respondents;        // 4
+$pact->respondents;        // 3
 ```
 
 An answer to an option or a question the template no longer has is left out.
+
+### The threshold
+
+In a small group, a tally of one or two answers says who chose what. The pact therefore holds answers only in whole
+groups of a **threshold** of participants, 3 by default, taken in the order of their last answer — the same threshold
+as the [agreement shown to people](before-play.md#the-summary-shown-to-people):
+
+- under the threshold, it holds nothing: `hasEnoughAnswers()` is false, every tally is at 0, every list of texts is
+  empty and `respondents` is 0;
+- past it, the answers of a group that is not full wait: with a threshold of 3, four or five participants who answered
+  give the pact of the first three, six give all six.
+
+```php
+// Two participants answered "dark" and "light":
+$pact->tally('tone');      // ['light' => 0, 'mixed' => 0, 'serious' => 0, 'dark' => 0]
+$pact->respondents;        // 0
+
+// A third answers "dark":
+$pact->tally('tone');      // ['light' => 1, 'mixed' => 0, 'serious' => 0, 'dark' => 2]
+
+// A fourth answers "serious": the tally waits for two more.
+$pact->tally('tone');      // ['light' => 1, 'mixed' => 0, 'serious' => 0, 'dark' => 2]
+```
+
+One more answer thus never changes the pact by the answers of one person alone. Answers to none of the template's
+questions are not an answer and take no place in a group. The application chooses the threshold, as
+`TableSafety`'s `answersThreshold`; `Pact::of()` takes it too.
+
+The pact never filters content: what must keep a theme out of the game belongs in the
+[lines and veils and the consent checklist](before-play.md), which apply every answer.

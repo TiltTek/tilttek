@@ -9,15 +9,20 @@ use Phil\ContentWarnings\Display;
 use Phil\Resource\ResourceReference;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Tilttek\TableSafety\AgreementSummary;
 use Tilttek\TableSafety\Boundary;
 use Tilttek\TableSafety\ConsentChecklist;
 use Tilttek\TableSafety\ConsentLevel;
+use Tilttek\TableSafety\Exception\InvalidAnswer;
 use Tilttek\TableSafety\LinesAndVeils;
 use Tilttek\TableSafety\Participation;
+use Tilttek\TableSafety\RespondentThreshold;
 use Tilttek\TableSafety\SessionZero\Answers;
 use Tilttek\TableSafety\TableAgreement;
 
 #[CoversClass(TableAgreement::class)]
+#[CoversClass(AgreementSummary::class)]
+#[CoversClass(RespondentThreshold::class)]
 #[CoversClass(Participation::class)]
 final class TableAgreementTest extends TestCase
 {
@@ -58,7 +63,7 @@ final class TableAgreementTest extends TestCase
         $agreement = TableAgreement::of([
             $this->participation('ana', LinesAndVeils::none(), ConsentChecklist::none()->with('war', ConsentLevel::Green)),
             $this->participation('bo', LinesAndVeils::none()->with('war', Boundary::Veil), ConsentChecklist::none()),
-        ]);
+        ], 2);
 
         self::assertSame(2, $agreement->respondents);
         self::assertSame(0, TableAgreement::of([])->respondents);
@@ -121,6 +126,89 @@ final class TableAgreementTest extends TestCase
         self::assertFalse($empty->withSessionZero(new Answers(['tone' => 'dark']), $later)->isEmpty());
         self::assertSame(['gore'], $lines->withSessionZero(Answers::none(), $later)->linesAndVeils->lines());
         self::assertSame(ConsentLevel::Red, $consent->withLinesAndVeils(LinesAndVeils::none(), $later)->consent->level('war'));
+    }
+
+    public function testUnderTheThresholdNothingIsShownAndEveryAnswerStillProtects(): void
+    {
+        $agreement = TableAgreement::of([
+            $this->participation('ana', LinesAndVeils::none()->with('gore', Boundary::Line), ConsentChecklist::none()->with('war', ConsentLevel::Yellow)),
+            $this->participation('bo', LinesAndVeils::none()->with('spiders', Boundary::Veil), ConsentChecklist::none()->with('torture', ConsentLevel::Red)),
+        ]);
+
+        self::assertSame(0, $agreement->respondents);
+        self::assertSame(3, $agreement->threshold);
+        self::assertFalse($agreement->hasEnoughAnswers());
+        self::assertFalse($agreement->shown()->hasEnoughAnswers());
+        self::assertSame([], $agreement->shown()->lines());
+        self::assertSame([], $agreement->shown()->veils());
+        self::assertSame([], $agreement->shown()->checklist());
+        self::assertSame([], $agreement->shown()->boundaries());
+
+        self::assertSame(['gore'], $agreement->lines());
+        self::assertSame(['spiders'], $agreement->veils());
+        self::assertSame(Boundary::Line, $agreement->boundary('gore'));
+        self::assertSame(ConsentLevel::Red, $agreement->consent('torture'));
+        self::assertSame(['torture' => ConsentLevel::Red, 'war' => ConsentLevel::Yellow], $agreement->checklist());
+        self::assertSame(['war'], $agreement->themesAt(ConsentLevel::Yellow));
+        self::assertSame(Display::Hide, $agreement->preferences()->theme('gore')?->display);
+        self::assertSame(Display::Fold, $agreement->preferences()->theme('spiders')?->display);
+        self::assertSame(Display::Hide, $agreement->preferences()->theme('torture')?->display);
+    }
+
+    public function testASingleAnswerProtectsTheTable(): void
+    {
+        $agreement = TableAgreement::of([$this->participation('ana', LinesAndVeils::none()->with('gore', Boundary::Veil), ConsentChecklist::none())]);
+
+        self::assertSame(['gore'], $agreement->veils());
+        self::assertSame(Display::Fold, $agreement->preferences()->theme('gore')?->display);
+        self::assertSame([], $agreement->shown()->veils());
+    }
+
+    public function testOneMoreAnswerPastTheThresholdChangesNothingShown(): void
+    {
+        $given = [
+            $this->participation('ana', LinesAndVeils::none()->with('gore', Boundary::Veil), ConsentChecklist::none()),
+            $this->participation('bo', LinesAndVeils::none(), ConsentChecklist::none()->with('war', ConsentLevel::Green)),
+            $this->participation('empty', LinesAndVeils::none(), ConsentChecklist::none()),
+            $this->participation('cy', LinesAndVeils::none()->with('gore', Boundary::Veil), ConsentChecklist::none()),
+            $this->participation('di', LinesAndVeils::none()->with('gore', Boundary::Line), ConsentChecklist::none()->with('war', ConsentLevel::Red)),
+            $this->participation('ed', LinesAndVeils::none(), ConsentChecklist::none()->with('war', ConsentLevel::Green)),
+            $this->participation('fa', LinesAndVeils::none()->with('spiders', Boundary::Veil), ConsentChecklist::none()),
+        ];
+        $agreements = [];
+
+        for ($answers = 1; $answers <= \count($given); ++$answers) {
+            $agreements[$answers] = TableAgreement::of(\array_slice($given, 0, $answers));
+        }
+
+        self::assertFalse($agreements[3]->hasEnoughAnswers());
+        self::assertSame(3, $agreements[4]->respondents);
+        self::assertSame(['gore'], $agreements[4]->shown()->veils());
+        self::assertSame(['war' => ConsentLevel::Green], $agreements[4]->shown()->checklist());
+        self::assertEquals($agreements[4]->shown(), $agreements[5]->shown());
+        self::assertEquals($agreements[4]->shown(), $agreements[6]->shown());
+        self::assertSame(6, $agreements[7]->respondents);
+        self::assertSame(['gore'], $agreements[7]->shown()->lines());
+        self::assertSame(['spiders'], $agreements[7]->shown()->veils());
+        self::assertSame(ConsentLevel::Red, $agreements[7]->shown()->consent('war'));
+
+        self::assertSame(['gore'], $agreements[5]->lines());
+        self::assertSame(ConsentLevel::Red, $agreements[5]->consent('war'));
+    }
+
+    public function testTheThresholdIsChosen(): void
+    {
+        $alone = TableAgreement::of([$this->participation('ana', LinesAndVeils::none()->with('gore', Boundary::Line), ConsentChecklist::none())], 1);
+
+        self::assertSame(1, $alone->respondents);
+        self::assertSame(1, $alone->threshold);
+        self::assertSame(1, $alone->shown()->threshold);
+        self::assertSame(['gore'], $alone->shown()->lines());
+
+        $this->expectException(InvalidAnswer::class);
+        $this->expectExceptionMessageIsOrContains('A summary waits for at least 1 answer, not 0.');
+
+        TableAgreement::of([], 0);
     }
 
     private function participation(string $who, LinesAndVeils $linesAndVeils, ConsentChecklist $consent): Participation

@@ -7,8 +7,45 @@ nothing it summarises tell who gave which answer.
 
 - The agreement of a table, its pact, its check-in tally and the summary of its stars and wishes count and sort the
   answers; none carries a participant's reference.
+- The summaries shown to people — the pact, the agreement's `shown()`, the stars and wishes — hold answers only in
+  whole groups of a threshold of participants.
 - An anonymous signal has no author anywhere: neither in the store nor in what the observer pushes.
 - A named signal exists only at a table that chose named signals; an answer to a check-in is always anonymous.
+
+## The agreement and the pact
+
+A table's agreement and its pact are shown to its participants and its game master. At a table of two, a tally of
+"dark" and "light" tells each who chose the other; when a fourth participant arrives, the change between two readings
+tells what they answered. The summaries shown to people therefore hold answers only in whole groups of a threshold of
+participants — 3 by default, chosen by the application through `TableSafety`'s `answersThreshold`, never by a table —,
+taken in the order of their last answer:
+
+- `Pact`: its tallies and its texts;
+- `TableAgreement::shown()`, an `AgreementSummary`, and `TableAgreement::$respondents`.
+
+Under the threshold they hold nothing and say only that there are not enough answers; past it, the answers of a group
+that is not full wait for the group to fill, so that one more answer never adds the answers of one person alone.
+
+### What protects the table applies every answer
+
+A line or a veil someone set must protect the table even when few have answered. `TableAgreement::lines()`, `veils()`,
+`boundary()`, `consent()`, `checklist()`, `themesAt()` and `preferences()` therefore apply every answer, whatever the
+threshold. Safety comes first, and it has a cost:
+
+- At a small table, or when one more participant answers, these tell the strictest answers of the few who answered: a
+  game master who sees a new line on spiders after Ana answered knows the line is hers.
+- An application keeps them where they protect: the content it filters with `preferences()`, and the game master who
+  must steer play around a line. What it shows to every participant as the table's summary comes from `shown()`.
+
+### What the threshold does not hide
+
+- A participant who answered knows their own answers and can set them aside: with a threshold of 3, each of the first
+  three learns the answers of the other two together, not which of them gave what.
+- Answering again moves the participant to the end of the order. Past the threshold, when the last group is not full,
+  a change can swap one participant's answers for another's between two readings; so can leaving the table or an
+  erasure. A change by a participant counted in a whole group changes the summary by their change alone.
+- A text of the pact can name its author or be recognised by its style, whatever the number of answers.
+- The number of answers waiting is not shown, but an application that shows who answered tells it.
 
 ## The summary of stars and wishes
 

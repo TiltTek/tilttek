@@ -4,6 +4,33 @@ All notable changes to `tilttek/table-safety` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+The next version is 0.3.0-alpha: what the pact and the agreement show to people changes.
+
+### Changed
+
+- `SessionZero\Pact` holds answers only in whole groups of a threshold of participants, 3 by default, taken in the
+  order they were given: under the threshold every tally is at 0, every list of texts is empty, `respondents` is 0 and
+  `hasEnoughAnswers()` is false; past it, the answers of a group that is not full wait for the group to fill.
+  `Pact::of()` takes the threshold; a threshold under 1 is an `InvalidAnswer`.
+- `TableAgreement::$respondents` counts the answers of the summary shown to people, in whole groups of the same
+  threshold, rather than every participant who answered. `lines()`, `veils()`, `boundary()`, `consent()`,
+  `checklist()`, `themesAt()` and `preferences()` still apply every answer, under the threshold too, so that a line or
+  a veil protects the table from the first answer. `TableAgreement::of()` takes the threshold.
+- `TableSafety` takes the threshold of the agreement and the pact as `answersThreshold`, and gives them the table's
+  participations in the order of their last answer, so that a new answer waits for its group.
+- `FeedbackSummary::DEFAULT_THRESHOLD` and `FeedbackSummary::assertThreshold()` are those of `RespondentThreshold`.
+
+### Added
+
+- `AgreementSummary`: the agreement shown to people, from `TableAgreement::shown()`.
+- `TableAgreement::$threshold`, `TableAgreement::shown()` and `TableAgreement::hasEnoughAnswers()`.
+- `Pact::$threshold` and `Pact::hasEnoughAnswers()`.
+- `RespondentThreshold`: the default threshold of 3, its check and the count of whole groups.
+- The documentation of the threshold of the agreement and the pact, with what protects the table from every answer
+  and what the threshold does not hide.
+
 ## 0.2.0-alpha - 2026-11-14
 
 ### Changed
