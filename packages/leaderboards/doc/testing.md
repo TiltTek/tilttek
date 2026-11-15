@@ -17,16 +17,35 @@ settled late, a division as its members see it, divisions formed by volume; the 
 days, the rankings by object, the titles and the teams with their luck.
 
 `ValkeyScoreStoreTest` runs the score contract against a real Valkey whose URL `PHIL_TEST_VALKEY_URL` gives, and is
-skipped without it; it empties the database it is given:
+skipped without it; it empties the database it is given. Beyond the contract, it checks what the scripts leave in
+Valkey — every key under the prefix's hash tag, none left once the contributions and the scores are gone —, the
+comparisons of `keep()` on the sort keys at their bounds — an equal score, a moment one microsecond earlier, a better
+tie-break —, the bounds of `expire()` and `forget()` to the microsecond, the batches of 1 and 10 000, and the rankings
+asked in other directions than the board's. `ValkeyScoreStoreRepliesTest` needs no server: it checks the commands the
+store sends and how it reads values it did not write and replies of another shape than a server gives.
+
+Any Valkey 9 does; database 15 is the tests' own:
 
 ```sh
-docker run --rm -d -p 127.0.0.1:16379:6379 valkey/valkey:8-alpine
+docker run --rm -d -p 127.0.0.1:16379:6379 valkey/valkey:9-alpine
 PHIL_TEST_VALKEY_URL=redis://127.0.0.1:16379/15 vendor/bin/phpunit --no-configuration tests
 ```
 
+When the `phil/dev-tools` installed in the monorepo lists Valkey among its services, it starts the same server and
+sets the variable:
+
+```sh
+vendor/bin/phil-dev services up
+eval "$(vendor/bin/phil-dev services env)"
+composer test
+```
+
+Every test empties database 15: run the suites that use it one at a time, and Infection on one thread.
+
 `tests/Benchmark/RankingBench.php` measures the reads a page makes — the first ten lines, a member's rank, how many are
 ranked, a division of thirty — on boards of 1 000 and 10 000 members, in memory and, with `PHIL_TEST_VALKEY_URL`, in
-Valkey. In the monorepo, Infection holds the library at 100 % of covered mutants.
+Valkey. In the monorepo, Infection holds the library at 100 % of covered mutants, `ValkeyScoreStore` included when
+`PHIL_TEST_VALKEY_URL` is set.
 
 ## Testing code that reads the boards
 

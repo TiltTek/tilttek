@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=d8538bd07ddb93c5b5fe1fe609f496f04889a320b25552a9882b44e400e480bf -->
+<!-- phil-dev source-sha256=77569725eb357dad0bc1286a57bbd2a06a38afdb720818f01733dbaae48a75d9 -->
 # Tests
 
 ## Les tests de la bibliothèque
@@ -19,16 +19,36 @@ retard, une division telle que ses membres la voient, les divisions formées par
 fenêtres glissantes et les jours, les classements par objet, les titres et les équipes avec leur chance.
 
 `ValkeyScoreStoreTest` exécute le contrat des scores contre un vrai Valkey dont `PHIL_TEST_VALKEY_URL` donne l'URL ; il
-est ignoré sans elle, et il vide la base de données qu'on lui donne :
+est ignoré sans elle, et il vide la base de données qu'on lui donne. Au-delà du contrat, il vérifie ce que les scripts
+laissent dans Valkey (toutes les clés sous l'étiquette de hachage du préfixe, aucune une fois les contributions et les
+scores disparus), les comparaisons de `keep()` sur les clés de tri à leurs bornes (un score égal, un moment antérieur
+d'une microseconde, un meilleur départage), les bornes de `expire()` et de `forget()` à la microseconde, les lots de 1
+et de 10 000, et les classements demandés dans d'autres sens que celui du classement. `ValkeyScoreStoreRepliesTest` n'a
+pas besoin de serveur : il vérifie les commandes que le stockage envoie et la façon dont il lit des valeurs qu'il n'a
+pas écrites et des réponses d'une autre forme que celle qu'un serveur donne.
+
+N'importe quel Valkey 9 convient ; la base de données 15 est celle des tests :
 
 ```sh
-docker run --rm -d -p 127.0.0.1:16379:6379 valkey/valkey:8-alpine
+docker run --rm -d -p 127.0.0.1:16379:6379 valkey/valkey:9-alpine
 PHIL_TEST_VALKEY_URL=redis://127.0.0.1:16379/15 vendor/bin/phpunit --no-configuration tests
 ```
 
+Quand le `phil/dev-tools` installé dans le monodépôt compte Valkey parmi ses services, il démarre le même serveur et
+définit la variable :
+
+```sh
+vendor/bin/phil-dev services up
+eval "$(vendor/bin/phil-dev services env)"
+composer test
+```
+
+Chaque test vide la base de données 15 : lancez une à une les suites qui l'utilisent, et Infection sur un seul fil.
+
 `tests/Benchmark/RankingBench.php` mesure les lectures que fait une page (les dix premières lignes, le rang d'un membre,
 combien sont classés, une division de trente) sur des classements de 1 000 et de 10 000 membres, en mémoire et, avec
-`PHIL_TEST_VALKEY_URL`, dans Valkey. Dans le monodépôt, Infection tient la bibliothèque à 100 % de mutants couverts.
+`PHIL_TEST_VALKEY_URL`, dans Valkey. Dans le monodépôt, Infection tient la bibliothèque à 100 % de mutants couverts, `ValkeyScoreStore` compris quand
+`PHIL_TEST_VALKEY_URL` est définie.
 
 ## Tester du code qui lit les classements
 
