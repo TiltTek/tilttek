@@ -177,6 +177,102 @@ final class ValkeyScoreStoreRepliesTest extends TestCase
         self::assertSame([], $store->contributions('games', '2026-11', ResourceReference::fromString('member:1')));
     }
 
+    public function testTheBatchBoundsAreBatches(): void
+    {
+        $this->expectNotToPerformAssertions();
+
+        new ValkeyScoreStore(new ScriptedConnection(), self::boards(), 'tests', 1);
+        new ValkeyScoreStore(new ScriptedConnection(), self::boards(), 'tests', 10_000);
+    }
+
+    public function testAScoreIsLookedUpByItsBoardPeriodAndMember(): void
+    {
+        $connection = new ScriptedConnection();
+
+        self::assertNotInstanceOf(Score::class, new ValkeyScoreStore($connection, self::boards(), 'tests')->score('games', '2026-11', ResourceReference::fromString('member:1')));
+        self::assertSame([['HGET', '{tests}:score', '["games","2026-11","member:1"]']], $connection->sent);
+    }
+
+    /**
+     * @return iterable<string, array{list<int>}>
+     */
+    public static function orders(): iterable
+    {
+        foreach ([[0, 1, 2, 3], [3, 2, 1, 0], [1, 0, 3, 2], [2, 0, 3, 1], [1, 3, 0, 2], [2, 3, 1, 0], [0, 2, 1, 3], [3, 0, 2, 1]] as $order) {
+            yield implode('', $order) => [$order];
+        }
+    }
+
+    /**
+     * @param list<int> $order
+     */
+    #[DataProvider('orders')]
+    public function testTheScoresOfAMemberAreSortedByBoardThenPeriod(array $order): void
+    {
+        $scores = [['arcade', '2026-11'], ['arcade', '2026-12'], ['games', '2026-11'], ['games', '2026-12']];
+        $fields = [];
+        $helds = [];
+
+        foreach ($order as $index) {
+            $fields[] = json_encode($scores[$index], \JSON_THROW_ON_ERROR);
+            $helds[] = \sprintf('[%d,1793700000000002,[],"key"]', $index);
+        }
+
+        $store = new ValkeyScoreStore(new ScriptedConnection(['SMEMBERS' => $fields, 'HMGET' => $helds]), self::boards(), 'tests');
+
+        self::assertSame(
+            [['arcade', '2026-11', 0], ['arcade', '2026-12', 1], ['games', '2026-11', 2], ['games', '2026-12', 3]],
+            array_map(static fn (Score $score): array => [$score->board, $score->period, $score->value], $store->of(ResourceReference::fromString('member:1'))),
+        );
+    }
+
+    public function testAFieldWithoutItsValueAndAValueWithoutItsFieldAreLeftOut(): void
+    {
+        $store = new ValkeyScoreStore(new ScriptedConnection([
+            'SMEMBERS' => ['["arcade","2026-11"]', '["games","2026-11"]'],
+            'HMGET' => [null, '[3,0,[],"key"]', '[9,0,[],"key"]'],
+        ]), self::boards(), 'tests');
+
+        self::assertSame(
+            [['games', '2026-11', 3]],
+            array_map(static fn (Score $score): array => [$score->board, $score->period, $score->value], $store->of(ResourceReference::fromString('member:1'))),
+        );
+    }
+
+    public function testNothingIsAskedForWithoutFields(): void
+    {
+        $connection = new ScriptedConnection(['SMEMBERS' => []]);
+
+        self::assertSame([], new ValkeyScoreStore($connection, self::boards(), 'tests')->of(ResourceReference::fromString('member:1')));
+        self::assertSame([['SMEMBERS', '{tests}:member-score:["member:1"]']], $connection->sent);
+    }
+
+    public function testEveryContributionIsReadWithItsOwnValues(): void
+    {
+        $store = new ValkeyScoreStore(new ScriptedConnection([
+            'ZRANGE' => ['["games","k1"]', '["games","k2"]'],
+            'HMGET' => ['["2026-11","member:1",4,1793700000000002,[3]]', '["2026-12","member:2",9,1796000000000007,[]]'],
+        ]), self::boards(), 'tests');
+
+        $read = array_map(
+            static fn (Contribution $contribution): array => [
+                $contribution->board,
+                $contribution->period,
+                $contribution->member->toString(),
+                $contribution->activity,
+                $contribution->amount,
+                $contribution->occurredAt->format('U.u'),
+                $contribution->tieBreaks,
+            ],
+            $store->contributions('games', '2026-11', ResourceReference::fromString('member:1')),
+        );
+
+        self::assertSame([
+            ['games', '2026-11', 'member:1', 'k1', 4, '1793700000.000002', [3]],
+            ['games', '2026-12', 'member:2', 'k2', 9, '1796000000.000007', []],
+        ], $read);
+    }
+
     private static function boards(): Boards
     {
         return Boards::fromArray([
