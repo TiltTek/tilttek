@@ -7,13 +7,15 @@ namespace Tilttek\BadgesBundle\Tests\Unit\Fixture;
 use Tilttek\Badges\Badges;
 use Tilttek\Badges\Catalog;
 use Tilttek\Badges\Evaluator;
+use Tilttek\Badges\Store\AwardStore;
 use Tilttek\Badges\Store\InMemoryAwardStore;
 use Tilttek\Badges\Store\InMemoryGrantStore;
 use Tilttek\Badges\Store\InMemoryProfileStore;
 use Tilttek\Badges\Store\InMemoryProgressStore;
 
 /**
- * `Badges` in memory over a small catalog: a counted badge, a hidden one, one awarded by hand, a repeatable one.
+ * `Badges` in memory, or on the award store given, over a small catalog: a counted badge, a hidden one, one awarded by
+ * hand, a repeatable one.
  */
 final class Kit
 {
@@ -21,7 +23,7 @@ final class Kit
     {
     }
 
-    public static function badges(Clock $clock = new Clock()): Badges
+    public static function badges(Clock $clock = new Clock(), AwardStore $awards = new InMemoryAwardStore()): Badges
     {
         $progress = new InMemoryProgressStore();
         $catalog = Catalog::fromArray([
@@ -31,6 +33,6 @@ final class Kit
             'games' => ['name' => 'Games', 'repeatable' => true, 'criterion' => ['manual' => true]],
         ]);
 
-        return new Badges(new Evaluator($catalog, $progress), $progress, new InMemoryAwardStore(), new InMemoryProfileStore(), new InMemoryGrantStore(), $clock);
+        return new Badges(new Evaluator($catalog, $progress), $progress, $awards, new InMemoryProfileStore(), new InMemoryGrantStore(), $clock);
     }
 }

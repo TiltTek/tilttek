@@ -56,6 +56,7 @@ final class TestKernel extends Kernel
                 'commenter' => ['name' => 'Commenter', 'revocable' => true, 'criterion' => ['count' => ['verbs' => ['news.commented'], 'times' => 2]]],
                 'regular' => ['name' => 'Regular', 'criterion' => ['streak' => ['verbs' => ['site.visited'], 'days' => 2]]],
                 'organiser' => ['name' => 'Organiser', 'image' => 'https://example.org/organiser.png', 'criterion' => ['manual' => true]],
+                'games' => ['name' => 'Games', 'repeatable' => true, 'criterion' => ['manual' => true]],
             ],
             ...(class_exists(PhilOpenBadgesBundle::class) ? ['open_badges' => ['achievement_url' => 'https://example.org/badges/{code}']] : []),
         ]);

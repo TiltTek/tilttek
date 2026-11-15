@@ -24,5 +24,5 @@ return [
             ]],
         ],
     ],
-    'docs' => ['public' => true],
+    'docs' => ['public' => true, 'words' => ['Fediverse']],
 ];

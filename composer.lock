@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "733b811699f438b9c5ea84fde003e33d",
+    "content-hash": "ceabb2c419f2828f02aad067a16ec5a1",
     "packages": [],
     "packages-dev": [
         {
@@ -156,6 +156,67 @@
                 }
             ],
             "time": "2026-10-29T13:58:46+00:00"
+        },
+        {
+            "name": "brick/math",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/brick/math.git",
+                "reference": "2effe05d2177c451b86c6a073196a4034c02f211"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/brick/math/zipball/2effe05d2177c451b86c6a073196a4034c02f211",
+                "reference": "2effe05d2177c451b86c6a073196a4034c02f211",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "2.2.13",
+                "phpstan/phpstan-phpunit": "2.0.18",
+                "phpunit/phpunit": "^11.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Brick\\Math\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Arbitrary-precision arithmetic library",
+            "keywords": [
+                "Arbitrary-precision",
+                "BigInteger",
+                "BigRational",
+                "arithmetic",
+                "bigdecimal",
+                "bignum",
+                "bignumber",
+                "brick",
+                "decimal",
+                "integer",
+                "math",
+                "mathematics",
+                "rational"
+            ],
+            "support": {
+                "issues": "https://github.com/brick/math/issues",
+                "source": "https://github.com/brick/math/tree/1.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/BenMorel",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-09-12T10:28:18+00:00",
+            "published-time": "2026-09-12T12:23:30+00:00"
         },
         {
             "name": "composer/semver",
@@ -2104,16 +2165,10 @@
         {
             "name": "phil/open-badges",
             "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/parler-haut-interagir-librement/open-badges.git",
-                "reference": "980486330d8e7270ca806167c6d0096ca6ed86c9"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/parler-haut-interagir-librement/open-badges/zipball/980486330d8e7270ca806167c6d0096ca6ed86c9",
-                "reference": "980486330d8e7270ca806167c6d0096ca6ed86c9",
-                "shasum": ""
+                "type": "path",
+                "url": "../../Phil/phil/packages/open-badges",
+                "reference": "847900c3642c3d47c9f5598a04f57615bb03983e"
             },
             "require": {
                 "ext-dom": "*",
@@ -2123,16 +2178,21 @@
                 "ext-openssl": "*",
                 "ext-sodium": "*",
                 "ext-zlib": "*",
-                "php": ">=8.5"
+                "phil/safe-http": "^0.1@dev || ^0.2@dev",
+                "phil/url": "^0.1@dev",
+                "php": ">=8.5",
+                "symfony/service-contracts": "^3.6",
+                "web-token/jwt-library": "^4.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^13.4"
+                "phpunit/phpunit": "^13.4",
+                "symfony/http-client": "^8.2",
+                "symfony/http-client-contracts": "^3.6"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "0.1.x-dev"
+                    "dev-main": "0.2.x-dev"
                 }
             },
             "autoload": {
@@ -2140,7 +2200,11 @@
                     "Phil\\OpenBadges\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Phil\\OpenBadges\\Tests\\": "tests/"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -2162,12 +2226,10 @@
                 "open-badges",
                 "verifiable-credentials"
             ],
-            "support": {
-                "issues": "https://github.com/parler-haut-interagir-librement/open-badges/issues",
-                "source": "https://github.com/parler-haut-interagir-librement/open-badges/tree/0.1.0-alpha"
-            },
-            "time": "2026-11-11T06:11:30+00:00",
-            "published-time": "2026-11-11T13:32:01+00:00"
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "phil/open-badges-bundle",
@@ -2175,10 +2237,10 @@
             "dist": {
                 "type": "path",
                 "url": "../../Phil/phil/packages/open-badges-bundle",
-                "reference": "8f1066f1115c18c80bf60932486575b9877890a5"
+                "reference": "10d4bed105abf96013d65fc6e30d1c9c72c876d9"
             },
             "require": {
-                "phil/open-badges": "^0.1.1@dev",
+                "phil/open-badges": "^0.2@dev",
                 "phil/safe-http": "^0.1@dev || ^0.2@dev",
                 "phil/url": "^0.1@dev",
                 "php": ">=8.5",
@@ -2476,16 +2538,16 @@
         },
         {
             "name": "phil/safe-http",
-            "version": "0.1.0-alpha",
+            "version": "0.2.0-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/parler-haut-interagir-librement/safe-http.git",
-                "reference": "de2e3212ccd9298490891eefc736cc2d6a8b60c8"
+                "reference": "1f52c2f6f35d3d448632fb9bc17f5701e83c7680"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/parler-haut-interagir-librement/safe-http/zipball/de2e3212ccd9298490891eefc736cc2d6a8b60c8",
-                "reference": "de2e3212ccd9298490891eefc736cc2d6a8b60c8",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/safe-http/zipball/1f52c2f6f35d3d448632fb9bc17f5701e83c7680",
+                "reference": "1f52c2f6f35d3d448632fb9bc17f5701e83c7680",
                 "shasum": ""
             },
             "require": {
@@ -2505,7 +2567,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "0.1.x-dev"
+                    "dev-main": "0.2.x-dev"
                 }
             },
             "autoload": {
@@ -2535,10 +2597,10 @@
             ],
             "support": {
                 "issues": "https://github.com/parler-haut-interagir-librement/safe-http/issues",
-                "source": "https://github.com/parler-haut-interagir-librement/safe-http/tree/0.1.0-alpha"
+                "source": "https://github.com/parler-haut-interagir-librement/safe-http/tree/0.2.0-alpha"
             },
-            "time": "2026-11-12T18:01:36+00:00",
-            "published-time": "2026-11-12T23:52:07+00:00"
+            "time": "2026-11-14T22:00:00+00:00",
+            "published-time": "2026-11-15T03:20:46+00:00"
         },
         {
             "name": "phil/svg-sanitizer",
@@ -4696,6 +4758,117 @@
                 "source": "https://github.com/shipmonk-rnd/composer-dependency-analyser/tree/1.8.4"
             },
             "time": "2025-11-25T14:38:16+00:00"
+        },
+        {
+            "name": "spomky-labs/pki-framework",
+            "version": "1.6.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Spomky-Labs/pki-framework.git",
+                "reference": "792e909d4e387adffe3c4f404451c7d57a3d2022"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Spomky-Labs/pki-framework/zipball/792e909d4e387adffe3c4f404451c7d57a3d2022",
+                "reference": "792e909d4e387adffe3c4f404451c7d57a3d2022",
+                "shasum": ""
+            },
+            "require": {
+                "brick/math": "^0.10|^0.11|^0.12|^0.13|^0.14|^0.15|^0.16|^0.17|^0.18|^0.19|^0.20|^1.0",
+                "ext-mbstring": "*",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "ekino/phpstan-banned-code": "^1.0|^2.0|^3.0",
+                "ext-gmp": "*",
+                "ext-openssl": "*",
+                "infection/infection": "^0.28|^0.29|^0.31",
+                "php-parallel-lint/php-parallel-lint": "^1.3",
+                "phpstan/extension-installer": "^1.3|^2.0",
+                "phpstan/phpstan": "^1.8|^2.0",
+                "phpstan/phpstan-deprecation-rules": "^1.0|^2.0",
+                "phpstan/phpstan-phpunit": "^1.1|^2.0",
+                "phpstan/phpstan-strict-rules": "^1.3|^2.0",
+                "phpunit/phpunit": "^10.1|^11.0|^12.0",
+                "rector/rector": "^1.0|^2.0",
+                "roave/security-advisories": "dev-latest",
+                "symfony/string": "^6.4|^7.0|^8.0",
+                "symfony/var-dumper": "^6.4|^7.0|^8.0",
+                "symplify/easy-coding-standard": "^12.0 || ^13.0"
+            },
+            "suggest": {
+                "ext-bcmath": "For better performance (or GMP)",
+                "ext-gmp": "For better performance (or BCMath)",
+                "ext-openssl": "For OpenSSL based cyphering",
+                "ext-sodium": "To verify Ed25519 signatures where the OpenSSL extension has no EdDSA"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SpomkyLabs\\Pki\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joni Eskelinen",
+                    "email": "jonieske@gmail.com",
+                    "role": "Original developer"
+                },
+                {
+                    "name": "Florent Morselli",
+                    "email": "florent.morselli@spomky-labs.com",
+                    "role": "Spomky-Labs PKI Framework developer"
+                }
+            ],
+            "description": "A PHP framework for managing Public Key Infrastructures. It comprises X.509 public key certificates, attribute certificates, certification requests and certification path validation.",
+            "homepage": "https://github.com/spomky-labs/pki-framework",
+            "keywords": [
+                "DER",
+                "Private Key",
+                "ac",
+                "algorithm identifier",
+                "asn.1",
+                "asn1",
+                "attribute certificate",
+                "certificate",
+                "certification request",
+                "cryptography",
+                "csr",
+                "decrypt",
+                "ec",
+                "encrypt",
+                "pem",
+                "pkcs",
+                "public key",
+                "rsa",
+                "sign",
+                "signature",
+                "verify",
+                "x.509",
+                "x.690",
+                "x509",
+                "x690"
+            ],
+            "support": {
+                "issues": "https://github.com/Spomky-Labs/pki-framework/issues",
+                "source": "https://github.com/Spomky-Labs/pki-framework/tree/1.6.3"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Spomky",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/FlorentMorselli",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2026-09-12T19:02:49+00:00",
+            "published-time": "2026-09-12T19:03:18+00:00"
         },
         {
             "name": "staabm/side-effects-detector",
@@ -10006,6 +10179,96 @@
             ],
             "time": "2026-09-25T13:20:01+00:00",
             "published-time": "2026-09-25T13:20:14+00:00"
+        },
+        {
+            "name": "web-token/jwt-library",
+            "version": "4.2.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/web-token/jwt-library.git",
+                "reference": "62643a2f31274c546a7d158ceab6dd5c052db911"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/web-token/jwt-library/zipball/62643a2f31274c546a7d158ceab6dd5c052db911",
+                "reference": "62643a2f31274c546a7d158ceab6dd5c052db911",
+                "shasum": ""
+            },
+            "require": {
+                "brick/math": "^0.12|^0.13|^0.14|^0.15|^0.16|^0.17|^0.18|^0.19|^0.20|^1.0",
+                "php": ">=8.2",
+                "psr/clock": "^1.0",
+                "spomky-labs/pki-framework": "^1.2.1",
+                "symfony/deprecation-contracts": "^2.5|^3.0"
+            },
+            "conflict": {
+                "spomky-labs/jose": "*"
+            },
+            "suggest": {
+                "ext-bcmath": "GMP or BCMath is highly recommended to improve the library performance",
+                "ext-gmp": "GMP or BCMath is highly recommended to improve the library performance",
+                "ext-openssl": "For key management (creation, optimization, etc.) and some algorithms (AES, RSA, ECDSA, etc.)",
+                "ext-sodium": "Sodium is required for OKP key creation, EdDSA signature algorithm and ECDH-ES key encryption with OKP keys",
+                "paragonie/sodium_compat": "Sodium is required for OKP key creation, EdDSA signature algorithm and ECDH-ES key encryption with OKP keys",
+                "spomky-labs/aes-key-wrap": "For all Key Wrapping algorithms (AxxxKW, AxxxGCMKW, PBES2-HSxxx+AyyyKW...)",
+                "symfony/console": "Needed to use console commands",
+                "symfony/http-client": "To enable JKU/X5U support."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Jose\\Component\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Florent Morselli",
+                    "homepage": "https://github.com/Spomky"
+                },
+                {
+                    "name": "All contributors",
+                    "homepage": "https://github.com/web-token/jwt-framework/contributors"
+                }
+            ],
+            "description": "JWT library",
+            "homepage": "https://github.com/web-token",
+            "keywords": [
+                "JOSE",
+                "JWE",
+                "JWK",
+                "JWKSet",
+                "JWS",
+                "Jot",
+                "RFC7515",
+                "RFC7516",
+                "RFC7517",
+                "RFC7518",
+                "RFC7519",
+                "RFC7520",
+                "bundle",
+                "jwa",
+                "jwt",
+                "symfony"
+            ],
+            "support": {
+                "source": "https://github.com/web-token/jwt-library/tree/4.2.7"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Spomky",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/FlorentMorselli",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2026-11-08T14:44:36+00:00",
+            "published-time": "2026-11-08T15:13:57+00:00"
         }
     ],
     "aliases": [],

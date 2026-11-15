@@ -29,6 +29,7 @@ use Tilttek\Activity\Journal;
 use Tilttek\Badges\Award;
 use Tilttek\Badges\Badges;
 use Tilttek\BadgesBundle\Infrastructure\Doctrine\BadgesTables;
+use Tilttek\BadgesBundle\Infrastructure\Doctrine\DbalAwardStore;
 use Tilttek\BadgesBundle\Infrastructure\OpenBadges\BadgeCredentials;
 use Tilttek\BadgesBundle\Tests\Functional\App\Recorder;
 use Tilttek\BadgesBundle\Tests\Functional\App\TestKernel;
@@ -38,8 +39,9 @@ use Twig\Environment;
 /**
  * The bundle in an application: the tables in the schema the ORM generates, the badges awarded live by the journal's
  * projections and announced as events, a revocable badge withdrawn, a badge awarded by its command, the showcase
- * rendered by its template, a credential issued and verified when phil/open-badges-bundle is installed, and a member
- * exported and erased through the privacy bundle when it is installed.
+ * rendered by its template, a credential issued and verified when phil/open-badges-bundle is installed — of the award
+ * with the highest number for a repeatable badge —, and a member exported and erased through the privacy bundle when
+ * it is installed.
  */
 #[CoversClass(TilttekBadgesBundle::class)]
 final class BadgesBundleTest extends KernelTestCase
@@ -115,6 +117,22 @@ final class BadgesBundleTest extends KernelTestCase
         self::assertTrue($credential->isToken());
         $claims = new JwtVerifier(Ed25519Signer::fromSeed(str_repeat("\1", 32))->verificationKey())->verify($credential->content);
         self::assertSame('https://example.org/issuer', $claims['iss'] ?? null);
+    }
+
+    public function testTheCredentialOfARepeatableBadgeIsItsAwardWithTheHighestNumber(): void
+    {
+        if (!class_exists(PhilOpenBadgesBundle::class)) {
+            self::markTestSkipped('phil/open-badges-bundle is not installed: the Open Badges credentials are an optional integration.');
+        }
+
+        $member = ResourceReference::of('member', '1');
+        $store = new DbalAwardStore($this->service('doctrine.dbal.default_connection', Connection::class));
+        self::assertTrue($store->add(new Award('games', $member, 1, new DateTimeImmutable('2026-11-09 12:00:00 UTC'), 'reason', true)));
+        self::assertTrue($store->add(new Award('games', $member, 2, new DateTimeImmutable('2026-11-08 12:00:00 UTC'), 'reason', true)));
+
+        $credential = $this->service(BadgeCredentials::class, BadgeCredentials::class)->issue($member, 'games', Recipient::did('did:example:ada'));
+        $claims = new JwtVerifier(Ed25519Signer::fromSeed(str_repeat("\1", 32))->verificationKey())->verify($credential->content);
+        self::assertSame(new DateTimeImmutable('2026-11-08 12:00:00 UTC')->getTimestamp(), $claims['nbf'] ?? null);
     }
 
     public function testAMemberIsExportedAndErasedWithTheirAccount(): void

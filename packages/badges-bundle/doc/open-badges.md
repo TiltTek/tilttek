@@ -48,8 +48,10 @@ $credential->mediaType; // application/vc+jwt, or application/vc
 $credential->filename(); // credential.jwt, or credential.json
 ```
 
-`BadgeCredentials::issue()` takes the latest award of the badge — `NotEarned` when the member has none —, translates the
-badge's name and description in the member's language when the Translation component is installed, uses the
+`BadgeCredentials::issue()` takes the badge's award with the highest number — `NotEarned` when the member has none.
+For a repeatable badge that is the latest award the member earned, whatever the moments of the awards say: two awards
+can share a moment, and a badge awarded by hand can bear an earlier moment than an award of the activity. It translates
+the badge's name and description in the member's language when the Translation component is installed, uses the
 description as the narrative of the criteria (the name when there is none), the badge's image when it is an absolute
 URL, a new `urn:uuid:` as identifier, and the award's moment as the start of validity. It returns the credential
 secured as `phil_open_badges.securing` says, as a `Phil\OpenBadgesBundle\Application\SecuredCredential`: a compact

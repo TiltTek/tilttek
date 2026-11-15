@@ -4,11 +4,17 @@
 
 The tests under `tests/Unit` cover every class: the values and their limits, each criterion and the reader, the
 catalog, the projection over a real journal of `tilttek/activity` in memory — awards, repeats, withdrawals, manual
-awards, measures, rebuilds —, `Badges`, and the contracts of the four stores, written as abstract test cases that every implementation extends.
+awards, measures, rebuilds —, `Badges`, and the contracts of the four stores, written as abstract test cases that
+every implementation extends.
 
 ```sh
 vendor/bin/phpunit
 ```
+
+`tests/Benchmark/ProjectionBench.php` measures what the projection costs one recorded activity over the stores in
+memory — an activity that twenty counted badges accept without reaching their target, and one no badge counts — and
+`deliver()` alone, the two reads of the awards whose notice is due that `apply()` runs first, on stores of 1 000 and
+10 000 awards.
 
 Every mutant Infection makes of the library's code is killed by a test: the bar is 100 % of covered mutants.
 

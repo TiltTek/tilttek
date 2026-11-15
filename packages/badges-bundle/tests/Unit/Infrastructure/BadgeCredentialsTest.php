@@ -16,11 +16,16 @@ use Phil\OpenBadgesBundle\Application\SecuredCredential;
 use Phil\OpenBadgesBundle\Application\Securing;
 use Phil\Resource\ResourceReference;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Translator;
+use Tilttek\Badges\Award;
 use Tilttek\Badges\Exception\NotEarned;
 use Tilttek\Badges\Exception\UnknownBadge;
+use Tilttek\Badges\Store\AwardStore;
+use Tilttek\Badges\Store\InMemoryAwardStore;
+use Tilttek\BadgesBundle\Infrastructure\Doctrine\DbalAwardStore;
 use Tilttek\BadgesBundle\Infrastructure\OpenBadges\BadgeCredentials;
 use Tilttek\BadgesBundle\Tests\Unit\Fixture\Clock;
 use Tilttek\BadgesBundle\Tests\Unit\Fixture\Kit;
@@ -98,6 +103,41 @@ final class BadgeCredentialsTest extends TestCase
         self::assertIsArray($document);
         self::assertSame('https://example.org/badges/organiser', $this->achievement($document)['id'] ?? null);
         self::assertSame(['type' => 'DataIntegrityProof', 'cryptosuite' => 'eddsa-rdfc-2022'], array_intersect_key(\is_array($document['proof'] ?? null) ? $document['proof'] : [], ['type' => true, 'cryptosuite' => true]));
+    }
+
+    /**
+     * @return iterable<string, array{AwardStore, list<array{int, string}>, string}>
+     */
+    public static function awardsOfARepeatableBadge(): iterable
+    {
+        foreach (['memory' => static fn (): AwardStore => new InMemoryAwardStore(), 'dbal' => static fn (): AwardStore => new DbalAwardStore(Database::connection())] as $name => $store) {
+            yield $name.', one moment' => [$store(), [[1, '2026-11-08 12:00:00 UTC'], [2, '2026-11-08 12:00:00 UTC']], '2026-11-08 12:00:00 UTC'];
+            yield $name.', moments reversed' => [$store(), [[1, '2026-11-09 12:00:00 UTC'], [2, '2026-11-08 12:00:00 UTC']], '2026-11-08 12:00:00 UTC'];
+            yield $name.', highest number in the middle' => [$store(), [[1, '2026-11-10 12:00:00 UTC'], [2, '2026-11-08 12:00:00 UTC'], [3, '2026-11-09 12:00:00 UTC']], '2026-11-09 12:00:00 UTC'];
+        }
+    }
+
+    /**
+     * @param list<array{int, string}> $awards the number and the moment of each award of the repeatable badge
+     */
+    #[DataProvider('awardsOfARepeatableBadge')]
+    public function testTheCredentialIsTheAwardWithTheHighestNumber(AwardStore $store, array $awards, string $validFrom): void
+    {
+        $clock = new Clock();
+        $member = ResourceReference::of('member', '1');
+        $signer = Ed25519Signer::fromSeed(str_repeat("\1", 32));
+        $credentials = new BadgeCredentials(Kit::badges($clock, $store), new CredentialIssuer(new Issuer('https://example.org/issuer', 'Example'), $signer), new Securing($signer, 'https://example.org/issuer#key-1', Securing::JWT, $clock), 'https://example.org/badges/{code}', 'badges');
+
+        foreach ($awards as [$number, $moment]) {
+            self::assertTrue($store->add(new Award('games', $member, $number, new DateTimeImmutable($moment), 'reason', true)));
+        }
+
+        // Another badge earned later, and another member's later award of the same badge, are not the one issued.
+        self::assertTrue($store->add(new Award('organiser', $member, 1, new DateTimeImmutable('2026-11-11 12:00:00 UTC'), 'reason', true)));
+        self::assertTrue($store->add(new Award('games', ResourceReference::of('member', '2'), 9, new DateTimeImmutable('2026-11-12 12:00:00 UTC'), 'reason', true)));
+
+        $claims = new JwtVerifier($signer->verificationKey())->verify($this->token($credentials->issue($member, 'games', Recipient::did('did:example:ada'))));
+        self::assertSame(new DateTimeImmutable($validFrom)->getTimestamp(), $claims['nbf'] ?? null);
     }
 
     public function testACredentialIsIssuedOnlyForAnEarnedBadge(): void

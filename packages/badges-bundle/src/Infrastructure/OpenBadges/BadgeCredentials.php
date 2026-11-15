@@ -22,8 +22,8 @@ use Tilttek\Badges\Exception\UnknownBadge;
  * Issues a member's badge as an Open Badges 3.0 credential of `phil/open-badges`, at the member's request: the
  * achievement's identifier is the configured URL with the badge's code, its name and description are translated in the
  * member's language, its criteria are told by its description, its image is the badge's when that is an absolute URL,
- * the credential is valid from the moment the badge was earned, and it is secured as `phil/open-badges-bundle` is
- * configured to secure the issuer's credentials.
+ * the credential is valid from the moment the award with the highest number was earned, and it is secured as
+ * `phil/open-badges-bundle` is configured to secure the issuer's credentials.
  */
 final readonly class BadgeCredentials
 {
@@ -38,8 +38,9 @@ final readonly class BadgeCredentials
     }
 
     /**
-     * The credential of the latest award of the badge, secured: a compact JSON Web Token, or the JSON of the document
-     * with its Data Integrity proof, with the media type and the file name of that content, for a download.
+     * The credential of the badge's award with the highest number, secured: a compact JSON Web Token, or the JSON of
+     * the document with its Data Integrity proof, with the media type and the file name of that content, for a
+     * download.
      *
      * @throws UnknownBadge
      * @throws NotEarned
@@ -47,8 +48,7 @@ final readonly class BadgeCredentials
     public function issue(ResourceReference $member, string $code, Recipient $recipient, ?DateTimeImmutable $validUntil = null, ?string $locale = null): SecuredCredential
     {
         $badge = $this->badges->catalog()->get($code);
-        $awards = array_values(array_filter($this->badges->awards($member), static fn (Award $award): bool => $award->badge === $code));
-        $award = $awards[\count($awards) - 1] ?? throw NotEarned::badge($code, $member->toString());
+        $award = $this->latest($member, $code) ?? throw NotEarned::badge($code, $member->toString());
         $name = $this->translate($badge->name, $locale);
         $description = '' === $badge->description ? '' : $this->translate($badge->description, $locale);
         $image = str_contains($badge->image ?? '', '://') ? $badge->image : null;
@@ -60,6 +60,23 @@ final readonly class BadgeCredentials
             $award->awardedAt,
             $validUntil,
         ));
+    }
+
+    /**
+     * The award of the badge with the highest number: the latest the member earned, whatever the moments of the awards
+     * say, since two awards can share a moment and a manual award can bear an earlier one than the activity's.
+     */
+    private function latest(ResourceReference $member, string $code): ?Award
+    {
+        $latest = null;
+
+        foreach ($this->badges->awards($member) as $award) {
+            if ($award->badge === $code && (null === $latest || $award->number > $latest->number)) {
+                $latest = $award;
+            }
+        }
+
+        return $latest;
     }
 
     private function translate(string $text, ?string $locale): string

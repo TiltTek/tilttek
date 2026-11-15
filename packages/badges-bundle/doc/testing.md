@@ -5,12 +5,16 @@
 `tests/Unit` checks the configuration and the services, the tables and the schema listener, the four DBAL stores on
 SQLite in memory against the same contracts as the library's stores, the events, the Twig functions, the credentials,
 the privacy module and the commands. `tests/Functional` boots an application — FrameworkBundle, DoctrineBundle on
-SQLite, TwigBundle, the privacy bundle, the journal of activity, `phil/open-badges-bundle` — that earns, withdraws, shows, renders, issues,
-exports and erases.
+SQLite, TwigBundle, the privacy bundle, the journal of activity, `phil/open-badges-bundle` — that earns, withdraws,
+shows, renders, issues, exports and erases.
 
 ```sh
 vendor/bin/phpunit
 ```
+
+`tests/Benchmark/ProjectionBench.php` measures the projection of `tilttek/badges` on the Doctrine stores over SQLite in
+memory: one recorded activity, and `deliver()` alone — the two statements that read the awards whose notice is due —, on
+a table of 1 000 and 10 000 awards.
 
 `phil/open-badges-bundle` and `phil/privacy-bundle` are optional integrations, not installed with the bundle: their
 tests, and their bundles in the test application, are skipped with their reason when they are missing, and a test checks
