@@ -1,9 +1,9 @@
-<!-- phil-dev source-sha256=abf0f47556bce8290cd60963fe3882f14aa4ea7b9a3ff3a888fb68ee5dd3ef71 -->
+<!-- phil-dev source-sha256=c86869f0d64d5dedc46e99892fa38e89b3315e6a34c5799c559de1453b321da3 -->
 # Référence
 
 | Type | Rôle |
 |---|---|
-| `Sets` | Définit des versions, mesure la progression, enregistre les complétions et répartit leurs événements jusqu'à leur remise |
+| `Sets` | Définit des versions, mesure la progression, enregistre les complétions et répartit leurs événements jusqu'à leur remise, pour un détenteur ou pour les détenteurs qui attendent depuis le plus longtemps |
 | `SetDefinition` | Une version d'un ensemble : membres, paliers et récompenses ; évalue des possessions ; lue depuis des tableaux et du JSON et écrite vers eux |
 | `Tier` | Une étape d'un ensemble : un nombre de membres à un niveau ou à un niveau supérieur, avec ses récompenses |
 | `Reward` | Une récompense opaque qu'un ensemble ou un palier déclare : genre, référence et quantité |
@@ -15,10 +15,22 @@
 | `UtcClock` | L'horloge du système en UTC, l'horloge par défaut |
 | `Contract\DefinitionStore` | Où les versions des ensembles sont gardées |
 | `Contract\CompletionStore` | Où les complétions sont gardées |
-| `Store\InMemoryDefinitionStore`, `Store\InMemoryCompletionStore` | Les stockages en mémoire |
+| `Contract\PendingDeliveries` | Ce qu'un stockage de complétions ajoute pour `Sets::deliverPending()` : les détenteurs qui ont des complétions non remises |
+| `Store\InMemoryDefinitionStore`, `Store\InMemoryCompletionStore` | Les stockages en mémoire ; le stockage de complétions implémente aussi `PendingDeliveries` |
 | `Event\SetCompleted` | Réparti une seule fois, quand un détenteur complète un ensemble, avec ses récompenses |
 | `Event\TierReached` | Réparti une seule fois, quand un détenteur atteint un palier, avec ses récompenses |
 | `Exception\SetsException` | L'interface de toutes les exceptions de la bibliothèque |
-| `Exception\InvalidSet`, `UnknownSet`, `DefinitionConflict` | Voir [Exceptions](exceptions.md) |
+| `Exception\InvalidSet`, `UnknownSet`, `DefinitionConflict`, `DeliveryFailed`, `UnsupportedStore` | Voir [Exceptions](exceptions.md) |
+
+## Intégration Symfony
+
+Facultative, sur des paquets suggérés ; voir [Reprendre les remises avec Symfony](installation.md#reprendre-les-remises-avec-symfony).
+
+| Type | Rôle |
+|---|---|
+| `Symfony\DeliverCommand` | La commande `tilttek:sets:deliver` : `Sets::deliverPending()`, ou `Sets::deliver()` avec `--holder` |
+| `Symfony\DeliverPendingCompletions` | Le message qui demande une remise en attente ; il porte seulement la limite, 100 par défaut |
+| `Symfony\DeliverPendingCompletionsHandler` | Son *handler*, qui appelle `Sets::deliverPending()` |
+| `Symfony\DeliverySchedule` | Le planificateur `tilttek_sets` : le message à intervalles, cinq minutes par défaut, avec un verrou facultatif |
 
 `ArrayInput` est interne.
