@@ -12,6 +12,7 @@ use Phil\OpenBadges\Issuer;
 use Phil\OpenBadges\Jwt\JwtVerifier;
 use Phil\OpenBadges\Key\Ed25519Signer;
 use Phil\OpenBadges\Recipient;
+use Phil\OpenBadgesBundle\Application\SecuredCredential;
 use Phil\OpenBadgesBundle\Application\Securing;
 use Phil\Resource\ResourceReference;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -49,14 +50,16 @@ final class BadgeCredentialsTest extends TestCase
 
         $credentials = new BadgeCredentials($badges, $issuer, $securing, 'https://example.org/badges/{code}', 'trophies', $translator);
         $verifier = new JwtVerifier($signer->verificationKey());
-        self::assertSame('application/vc+jwt', $credentials->mediaType());
 
         $badges->award($member, 'games');
         $clock->set('2026-11-08 12:00:00 UTC');
         $second = $badges->award($member, 'games');
         $clock->set('2026-11-09 12:00:00 UTC');
         $badges->award($member, 'organiser');
-        $games = $verifier->verify($this->token($credentials->issue($member, 'games', Recipient::did('did:example:ada'), new DateTimeImmutable('2027-01-01 00:00:00 UTC'))));
+        $secured = $credentials->issue($member, 'games', Recipient::did('did:example:ada'), new DateTimeImmutable('2027-01-01 00:00:00 UTC'));
+        self::assertSame('application/vc+jwt', $secured->mediaType);
+        self::assertSame('credential.jwt', $secured->filename());
+        $games = $verifier->verify($this->token($secured));
         self::assertSame($second->awardedAt->getTimestamp(), $games['nbf'] ?? null);
         self::assertSame(new DateTimeImmutable('2027-01-01 00:00:00 UTC')->getTimestamp(), $games['exp'] ?? null);
         self::assertMatchesRegularExpression('/^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/D', \is_string($games['jti'] ?? null) ? $games['jti'] : '');
@@ -88,11 +91,13 @@ final class BadgeCredentialsTest extends TestCase
         $credentials = new BadgeCredentials($badges, new CredentialIssuer(new Issuer('https://example.org/issuer', 'Example'), $signer), $securing, 'https://example.org/badges/{code}', 'badges');
         $badges->award($member, 'organiser');
 
-        $document = $credentials->issue($member, 'organiser', Recipient::did('did:example:ada'));
+        $secured = $credentials->issue($member, 'organiser', Recipient::did('did:example:ada'));
+        self::assertSame('application/vc', $secured->mediaType);
+        self::assertSame('credential.json', $secured->filename());
+        $document = json_decode($secured->content, true, flags: \JSON_THROW_ON_ERROR);
         self::assertIsArray($document);
         self::assertSame('https://example.org/badges/organiser', $this->achievement($document)['id'] ?? null);
         self::assertSame(['type' => 'DataIntegrityProof', 'cryptosuite' => 'eddsa-rdfc-2022'], array_intersect_key(\is_array($document['proof'] ?? null) ? $document['proof'] : [], ['type' => true, 'cryptosuite' => true]));
-        self::assertSame('application/vc', $credentials->mediaType());
     }
 
     public function testACredentialIsIssuedOnlyForAnEarnedBadge(): void
@@ -107,11 +112,11 @@ final class BadgeCredentialsTest extends TestCase
         $this->credentials()->issue(ResourceReference::of('member', '1'), 'gold', Recipient::did('did:example:ada'));
     }
 
-    private function token(mixed $credential): string
+    private function token(SecuredCredential $credential): string
     {
-        self::assertIsString($credential);
+        self::assertTrue($credential->isToken());
 
-        return $credential;
+        return $credential->content;
     }
 
     private function credentials(): BadgeCredentials

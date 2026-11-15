@@ -2,8 +2,6 @@
 # project needs goes below.
 includes:
     - vendor/phil/dev-tools/config/phpstan.neon
-    # phil/privacy-bundle: its integrations analysed when it is installed, left out with their expected errors when not.
-    - phpstan-privacy.php
 
 parameters:
     tmpDir: var/phpstan
@@ -16,50 +14,6 @@ parameters:
 
     excludePaths:
         analyse:
-            # The integrations of the bundles with phil/open-badges-bundle and phil/almanac, two packages suggested rather
-            # than required and not installed here: the classes that implement them, and their tests, are left out until
-            # those packages can be installed here. Those with phil/privacy-bundle: phpstan-privacy.php.
-            - packages/badges-bundle/src/Infrastructure/OpenBadges/*
-            - packages/collections-bundle/src/Infrastructure/Almanac/*
-            - packages/collections-bundle/tests/Unit/Infrastructure/AlmanacDateRuleTest.php
-            - packages/badges-bundle/tests/Unit/Infrastructure/BadgeCredentialsTest.php
-            - packages/quests-bundle/src/Infrastructure/Almanac/*
-            - packages/quests-bundle/tests/Unit/Infrastructure/AlmanacScheduleTest.php
             # The phil-dev.php of each package, read by phil/dev-tools, names Rector rules that live in vendor-bin: the
             # full run never analyses it, the pre-commit hook would when it is staged.
             - packages/*/phil-dev.php
-
-    # The same integrations, where the bundle class registers them and the functional tests reach them: the code checks
-    # that each package is installed before it touches it, but PHPStan reads every class name it names. Each exception
-    # goes once those packages can be installed here; those of phil/privacy-bundle are in phpstan-privacy.php.
-    ignoreErrors:
-        -
-            identifier: class.notFound
-            path: packages/badges-bundle/src/Infrastructure/DependencyInjection/BadgesServices.php
-            count: 2
-        -
-            identifier: argument.type
-            path: packages/badges-bundle/tests/Functional/BadgesBundleTest.php
-            count: 1
-        -
-            identifier: class.notFound
-            message: '#Phil\\OpenBadges\\#'
-            path: packages/badges-bundle/tests/Functional/BadgesBundleTest.php
-            count: 4
-        -
-            identifier: method.nonObject
-            path: packages/badges-bundle/tests/Functional/BadgesBundleTest.php
-            count: 1
-        -
-            identifier: offsetAccess.nonOffsetAccessible
-            message: "#^Cannot access offset 'iss' on mixed\\.$#"
-            path: packages/badges-bundle/tests/Functional/BadgesBundleTest.php
-            count: 1
-        -
-            identifier: argument.type
-            path: packages/badges-bundle/tests/Unit/TilttekBadgesBundleTest.php
-            count: 1
-        -
-            identifier: class.notFound
-            path: packages/badges-bundle/tests/Unit/TilttekBadgesBundleTest.php
-            count: 3

@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Phil\OpenBadges\Achievement;
 use Phil\OpenBadges\CredentialIssuer;
 use Phil\OpenBadges\Recipient;
+use Phil\OpenBadgesBundle\Application\SecuredCredential;
 use Phil\OpenBadgesBundle\Application\Securing;
 use Phil\Resource\ResourceReference;
 use Symfony\Component\Uid\Uuid;
@@ -37,15 +38,13 @@ final readonly class BadgeCredentials
     }
 
     /**
-     * The credential of the latest award of the badge, secured: a compact JSON Web Token, or the document with its
-     * Data Integrity proof.
-     *
-     * @return array<string, mixed>|string
+     * The credential of the latest award of the badge, secured: a compact JSON Web Token, or the JSON of the document
+     * with its Data Integrity proof, with the media type and the file name of that content, for a download.
      *
      * @throws UnknownBadge
      * @throws NotEarned
      */
-    public function issue(ResourceReference $member, string $code, Recipient $recipient, ?DateTimeImmutable $validUntil = null, ?string $locale = null): array|string
+    public function issue(ResourceReference $member, string $code, Recipient $recipient, ?DateTimeImmutable $validUntil = null, ?string $locale = null): SecuredCredential
     {
         $badge = $this->badges->catalog()->get($code);
         $awards = array_values(array_filter($this->badges->awards($member), static fn (Award $award): bool => $award->badge === $code));
@@ -61,14 +60,6 @@ final readonly class BadgeCredentials
             $award->awardedAt,
             $validUntil,
         ));
-    }
-
-    /**
-     * The media type of what `issue()` returns, for a download.
-     */
-    public function mediaType(): string
-    {
-        return $this->securing->mediaType();
     }
 
     private function translate(string $text, ?string $locale): string
