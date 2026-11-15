@@ -35,7 +35,7 @@ The design follows the other bundles of the monorepo: an `AbstractBundle` with i
 | The projection tagged for `tilttek/activity-bundle`, and the events `BadgeAwarded` and `BadgeRevoked` | Implemented and tested |
 | Twig functions `tilttek_badges_showcase`, `tilttek_badges_overview`, `tilttek_badges_domain`, templates `showcase` and `overview` | Implemented and tested |
 | Commands `tilttek:badges:award`, `tilttek:badges:revoke`, `tilttek:badges:list` | Implemented and tested |
-| `BadgeCredentials`: a member's badge issued as an Open Badges 3.0 credential of `phil/open-badges`, secured as `phil/open-badges-bundle` is configured | Implemented and tested |
+| `BadgeCredentials`: a member's badge issued as an Open Badges 3.0 credential of `phil/open-badges`, from its award with the highest number, secured as `phil/open-badges-bundle` is configured | Implemented and tested |
 | Export and erasure of a member for `phil/privacy-bundle` | Implemented and tested |
 
 ## Documentation

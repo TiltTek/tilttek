@@ -6,11 +6,19 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
+The next version is 0.3.0-alpha: the return of `BadgeCredentials::issue()` changes.
+
 ### Changed
 
 - `BadgeCredentials::issue()` returns the `Phil\OpenBadgesBundle\Application\SecuredCredential` of
   `phil/open-badges-bundle`: its content, a compact JSON Web Token or the JSON of the document with its proof, its
   media type and its file name. `BadgeCredentials::mediaType()` is removed: the media type is the credential's.
+
+### Fixed
+
+- `BadgeCredentials::issue()` issues the badge's award with the highest number, rather than the last award by moment:
+  two awards of a repeatable badge sharing a moment, or a badge awarded by hand with an earlier moment than an award of
+  the activity, now give the credential of the latest award the member earned.
 
 ## 0.2.0-alpha - 2026-11-14
 
@@ -50,8 +58,9 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
   the media type of what it returns.
 - `TilttekBadgesBundle` and its configuration `tilttek_badges`: the store, Doctrine or memory, the connection, the
   timezone of streaks and periods, the badges and their criteria — checked when the container is compiled —, the name of
-  the projection, the size of a showcase, the bound of awards one activity brings, the translation domain of the badges' texts, the achievement URL of the Open
-  Badges credentials — refused when `phil/open-badges-bundle` is not registered —, and the kind of member a data subject stands for. The stores in memory are tagged `kernel.reset`. The projection
+  the projection, the size of a showcase, the bound of awards one activity brings, the translation domain of the badges'
+  texts, the achievement URL of the Open Badges credentials — refused when `phil/open-badges-bundle` is not registered
+  —, and the kind of member a data subject stands for. The stores in memory are tagged `kernel.reset`. The projection
   forgets its replay when the kernel resets.
 - `BadgesServices`: the stores, the catalog, the evaluator with the application's `Measures` when it defines them,
   `Badges`, and the projection tagged `tilttek_activity.projection`.

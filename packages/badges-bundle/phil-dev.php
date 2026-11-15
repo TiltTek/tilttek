@@ -59,6 +59,14 @@ return [
             ],
         ],
     ],
+    // The mutants no test can tell from the original, each with its reason.
+    'infection' => [
+        'mutators' => [
+            // The award with the highest number in `BadgeCredentials::latest()`: the stores refuse a second award bearing
+            // the same number for a badge and a member, so no two awards compared there share a number and `>=` is worth `>`.
+            'GreaterThan' => ['ignoreSourceCodeByRegex' => ['.*\\$award->number > \\$latest->number.*']],
+        ],
+    ],
     'phpstan' => [
         'ignoreErrors' => [
             // à corriger : new Schema() est interne à DBAL, les tests de schéma doivent passer par un SchemaManager ou une SchemaConfig.

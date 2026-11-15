@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=fec04f2486cf4a3aec894b9dd7778f97abc9bdb569832ba01c67dcb8ad9f34a1 -->
+<!-- phil-dev source-sha256=61f15b58e171970974fcd249be4998d335b03e3a11d6cc736efcd1d48630d174 -->
 # tilttek/badges-bundle
 
 **Les badges des membres d'une application Symfony, gagnés par leur activité, montrés à leur choix et délivrés comme
@@ -38,7 +38,7 @@ déclarés par `BadgesServices`, des stockages DBAL et des stockages en mémoire
 | La projection étiquetée pour `tilttek/activity-bundle`, et les événements `BadgeAwarded` et `BadgeRevoked` | Implémenté et testé |
 | Fonctions Twig `tilttek_badges_showcase`, `tilttek_badges_overview`, `tilttek_badges_domain`, gabarits `showcase` et `overview` | Implémenté et testé |
 | Commandes `tilttek:badges:award`, `tilttek:badges:revoke`, `tilttek:badges:list` | Implémenté et testé |
-| `BadgeCredentials` : le badge d'un membre délivré comme une attestation Open Badges 3.0 de `phil/open-badges`, sécurisée selon la configuration de `phil/open-badges-bundle` | Implémenté et testé |
+| `BadgeCredentials` : le badge d'un membre délivré comme une attestation Open Badges 3.0 de `phil/open-badges`, à partir de son attribution au numéro le plus élevé, sécurisée selon la configuration de `phil/open-badges-bundle` | Implémenté et testé |
 | Export et effacement d'un membre pour `phil/privacy-bundle` | Implémenté et testé |
 
 ## Documentation

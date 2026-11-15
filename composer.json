@@ -96,6 +96,13 @@
         },
         {
             "type": "path",
+            "url": "../../Phil/phil/packages/open-badges",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
             "url": "../../Phil/phil/packages/open-badges-bundle",
             "options": {
                 "symlink": true
