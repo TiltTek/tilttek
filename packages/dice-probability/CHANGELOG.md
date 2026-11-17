@@ -4,6 +4,14 @@ All notable changes to `tilttek/dice-probability` will be documented in this fil
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+Next version: 0.1.3-alpha.
+
+### Changed
+
+- `tilttek/dice` 0.3 accepted as well as 0.1 and 0.2.
+
 ## 0.1.2-alpha - 2026-11-14
 
 ### Changed

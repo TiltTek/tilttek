@@ -30,7 +30,7 @@
         "phpunit/phpunit": "^13.4",
         "symfony/clock": "^8.2",
         "tilttek/collections": "^0.1@dev || ^0.2@dev",
-        "tilttek/quests": "^0.1@dev || ^0.2@dev"
+        "tilttek/quests": "^0.1@dev || ^0.2@dev || ^0.3@dev"
     },
     "suggest": {
         "tilttek/collections": "To list the items of a collections catalog the seasons bring, with Bridge\\Collections\\SeasonalItems",

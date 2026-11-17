@@ -6,11 +6,14 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
+Next version: 0.3.0-alpha, for the proofs under the commitments of `tilttek/dice` 0.3.
+
 ### Changed
 
 - `PendingDraw::commitment()` is the commitment of `tilttek/dice` to the seed and the nonce of the draw, so that it holds
   for that draw only, and `LootDrawer::verify()` checks the nonce of a proof against it. With `tilttek/dice` 0.3, a
   proof published with a commitment to the seed alone no longer verifies; reserve each nonce of a seed once.
+- It requires `tilttek/dice` 0.3.
 
 ## 0.2.0-alpha - 2026-11-14
 

@@ -4,7 +4,7 @@ All notable changes to `tilttek/table-safety` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
-## Unreleased
+## 0.3.0-alpha - 2026-11-15
 
 The next version is 0.3.0-alpha: what the pact and the agreement show to people changes.
 

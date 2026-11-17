@@ -6,6 +6,8 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
+Next version: 0.1.2-alpha.
+
 ### Changed
 
 - `tilttek/sets` 0.3 accepted as well as 0.1 and 0.2.
