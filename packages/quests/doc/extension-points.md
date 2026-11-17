@@ -5,6 +5,7 @@
 | `Catalog`, `WritableCatalog` | The quests, from a configuration or a catalog the site edits | [Installation](installation.md) |
 | `Store\ContributionStore`, `Store\CompletionStore`, `Store\EnrolmentStore`, `Store\DuelStore` | The storage of contributions, completions, enrolments and duels, in place of the stores in memory | [Writing a store](writing-a-store.md) |
 | `Schedule\Schedule`, `Schedule\ScheduleReader` | When a quest is open beyond the built-in schedules, read from the keys of its definition | [Schedules and chains](schedules-and-chains.md#when-a-quest-is-open) |
+| `Contract\TeamMembership` | Whether a member belongs to the team they join a team quest under; without it, no member belongs to any team | [Following](following.md#team-membership) |
 | `QuestObserver` | What is done when a quest is accomplished, a duel won or a duel expired | [The projection](projection.md) |
 | `Psr\Clock\ClockInterface` | The clock the services read: the system's in production, a fixed one in tests | [Testing](testing.md) |
 

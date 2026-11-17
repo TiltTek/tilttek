@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=0dc11ea9ea0be0aa1085076b660872cff9d91812bad8c58c37594869c1b94cf6 -->
+<!-- phil-dev source-sha256=7cd8213b812c9f0e5d03831185a9258a133b2a77e87e5ebad007d7df4b8fe3dc -->
 # Suivre une quête
 
 ## Admission
@@ -8,10 +8,11 @@
 - **`OnAcceptance`** : seule l'activité après l'acceptation de la quête par le membre compte, et seule l'activité des
   membres qui l'ont acceptée est gardée.
 
-Une quête d'équipe et un duel se rejoignent toujours par acceptation : la première sous une équipe, le second quand un
-membre accepte un défi.
+Une quête d'équipe et un duel se rejoignent toujours par acceptation : la première sous une équipe dont le membre fait partie, le
+second quand un membre accepte un défi.
 
 ```php
+$quests = new Quests($evaluator, $clock, $teamMembership);
 $quests->accept($member, 'winter-reading');
 $quests->accept($member, 'raid', ResourceReference::of('team', 'red'));
 $quests->abandon($member, 'winter-reading');
@@ -20,6 +21,33 @@ $quests->abandon($member, 'winter-reading');
 L'acceptation est refusée quand la quête est un duel, fermée, verrouillée derrière la quête qu'elle suit, déjà accomplie
 dans son occurrence, une quête d'équipe sans équipe ou une autre quête avec une équipe. Accepter une quête déjà suivie
 retourne l'inscription telle quelle ; un membre d'équipe qui veut une autre équipe abandonne d'abord la quête.
+
+### Appartenance à l'équipe
+
+Avant qu'un membre rejoigne une quête d'équipe sous une équipe — et chaque fois qu'il l'accepte de nouveau —, `Quests`
+demande au `TeamMembership` qu'on lui a donné si le membre fait partie de cette équipe, et refuse la quête avec
+`QuestRefused` quand ce n'est pas le cas. L'application l'implémente sur ses propres dossiers d'équipes, côté serveur :
+l'équipe qu'une requête nomme n'est jamais prise pour une preuve. Sans lui, `Quests` emploie `NoTeamMembership`, sous
+lequel aucun membre ne fait partie d'aucune équipe, si bien qu'une quête d'équipe n'est jamais rejointe par défaut.
+
+```php
+use Phil\Resource\ResourceReference;
+use Tilttek\Quests\Contract\TeamMembership;
+
+final readonly class GuildMembership implements TeamMembership
+{
+    public function __construct(private GuildRepository $guilds)
+    {
+    }
+
+    public function isMember(ResourceReference $member, ResourceReference $team): bool
+    {
+        return 'guild' === $team->key && $this->guilds->hasMember($team->id, $member->toString());
+    }
+}
+```
+
+Un membre qui quitte l'équipe garde l'inscription qu'il avait ; l'application l'abandonne pour lui quand il part.
 
 ## Abandon
 

@@ -14,7 +14,8 @@ member advances. It is accomplished once per occurrence, by the subject `communi
 
 ## Team
 
-Members join it under a team the application names — `team:red`, `guild:44` —, and their activity adds up towards a
+Members join it under a team the application names — `team:red`, `guild:44` — and the `TeamMembership` of the
+application says they belong to, and their activity adds up towards a
 goal they share. The team is the subject; the rewards go to **the members of the team who still follow it** when it is
 accomplished. A member is in one team per quest at a time, and their activity counts from their own acceptance until
 their own abandonment.

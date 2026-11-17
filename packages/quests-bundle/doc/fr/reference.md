@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=c7e84c6da20cf01fe96b6ac9e3315960b5d87e6f7d806a1703f6be55783be35a -->
+<!-- phil-dev source-sha256=930378fd4f53b917ab3979e4cabf95451755fca64dbf90e073e4ca7b74894e6b -->
 # Référence
 
 | Classe | Rôle | Service |
@@ -20,6 +20,9 @@
 | `Infrastructure\Twig\QuestsExtension` | Les fonctions Twig | runtime Twig |
 | `Infrastructure\Console\ListCommand`, `ShowCommand`, `ExpireCommand` | Les trois commandes | commandes de console |
 | `Infrastructure\Privacy\QuestsPrivacy` | Exportation et effacement pour `phil/privacy-bundle` | exportateur et effaceur |
+
+Le `Tilttek\Quests\NoTeamMembership` de la bibliothèque est enregistré comme le `Tilttek\Quests\Contract\TeamMembership`
+que le bundle donne à `Quests`, jusqu'à ce que l'application fasse de cette interface un alias de son propre service.
 
 Les classes `Tilttek\Quests\Quests`, `Tilttek\Quests\Duel\Duels`, `Tilttek\Quests\QuestProjection` et
 `Tilttek\Quests\Catalog` de la bibliothèque sont des services publics.

@@ -6,20 +6,21 @@ A draw is verifiable when the result could not have been chosen. The library fol
 `tilttek/dice`:
 
 1. **Commit.** `PendingDraw::open($secure, $nonce)` draws a secret seed from a secure source. Its `commitment()`, the
-   SHA-256 of the seed, is shown at once — before the payment, on the order. The nonce numbers the draws made from one
-   seed. The seed is kept secret; `PendingDraw::restore()` rebuilds the draw from the stored seed.
-2. **Client seed.** The buyer, having seen the commitment, gives a client seed of 1 to 256 bytes of UTF-8 text: words they type, or
-   bytes their own device draws.
+   commitment of `tilttek/dice` to the seed and the nonce, is shown at once — before the payment, on the order. The
+   nonce numbers the draws made from one seed, and the commitment holds for that draw only: reserve each nonce of a
+   seed once. The seed is kept secret; `PendingDraw::restore()` rebuilds the draw from the stored seed.
+2. **Client seed.** The buyer, having seen the commitment, gives a client seed of 1 to 256 bytes of UTF-8 text: words
+   they type, or bytes their own device draws.
 3. **Reveal.** `LootDrawer::reveal($box, $pending, $clientSeed)` rolls the dice of the box from the seed and the client
    seed, one die per table, and returns a `RevealedDraw`: its `LootResult` and the verifiable roll of `tilttek/dice`.
    The same seed, client seed and nonce always give the same faces.
 4. **Publish.** `RevealedDraw::proof()` is what is published once the draw is revealed: the box, the faces, the
    commitment, the seed, the client seed, the nonce, the expression, the rounding and the roll.
-5. **Verify.** `LootDrawer::verify($box, $proof)` is true when the seed matches the commitment, the expression is the
-   box's, rolling the dice again gives the published roll, and the faces are those of the roll. A proof that does not
-   read — a field missing, of another type, a seed that is not hexadecimal — is false, never an exception. So is a
-   proof whose client seed a reveal refuses — empty, longer than 256 bytes or not UTF-8 text —: it is checked before
-   the dice are rolled again, so that a proof sent in a public request costs no more than a reveal.
+5. **Verify.** `LootDrawer::verify($box, $proof)` is true when the seed and the nonce match the commitment, the
+   expression is the box's, rolling the dice again gives the published roll, and the faces are those of the roll. A
+   proof that does not read — a field missing, of another type, a seed that is not hexadecimal — is false, never an
+   exception. So is a proof whose client seed a reveal refuses — empty, longer than 256 bytes or not UTF-8 text —: it
+   is checked before the dice are rolled again, so that a proof sent in a public request costs no more than a reveal.
 
 The draw is made once: whoever draws keeps the result and gives it again when asked, rather than revealing a second
 time.

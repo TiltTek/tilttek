@@ -11,9 +11,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Tilttek\Quests\Catalog;
+use Tilttek\Quests\Contract\TeamMembership;
 use Tilttek\Quests\Duel\Duels;
 use Tilttek\Quests\Evaluator;
 use Tilttek\Quests\InMemoryCatalog;
+use Tilttek\Quests\NoTeamMembership;
 use Tilttek\Quests\QuestProjection;
 use Tilttek\Quests\QuestReader;
 use Tilttek\Quests\Quests;
@@ -43,7 +45,8 @@ use Twig\Attribute\AsTwigFunction;
 /**
  * The bundle's services: the four stores on Doctrine DBAL or in memory, the reader of the quests — with the dates
  * `phil/almanac` computes when it is installed —, the catalog from the configuration — checked when the container is
- * compiled — or from the database, `Quests` and `Duels`, the projection tagged for `tilttek/activity-bundle` and
+ * compiled — or from the database, the membership of the teams — none until the application aliases `TeamMembership`
+ * to its own service —, `Quests` and `Duels`, the projection tagged for `tilttek/activity-bundle` and
  * telling the event dispatcher, and — when their components are installed — the schema listener, the commands and
  * the Twig functions.
  */
@@ -125,8 +128,10 @@ final class QuestsServices
             ->setArguments([new Reference(EventDispatcherInterface::class)]);
         $container->register(Evaluator::class, Evaluator::class)
             ->setArguments([new Reference(Catalog::class), new Reference(ContributionStore::class), new Reference(EnrolmentStore::class), new Reference(CompletionStore::class), new Reference(DuelStore::class)]);
+        $container->register(NoTeamMembership::class, NoTeamMembership::class);
+        $container->setAlias(TeamMembership::class, NoTeamMembership::class);
         $container->register(Quests::class, Quests::class)
-            ->setArguments([new Reference(Evaluator::class), new Reference('clock')])
+            ->setArguments([new Reference(Evaluator::class), new Reference('clock'), new Reference(TeamMembership::class)])
             ->setPublic(true);
         $container->register(Duels::class, Duels::class)
             ->setArguments([new Reference(Evaluator::class), new Reference('clock'), new Reference(DispatchingObserver::class), $config['duels']['offer_lifetime']])

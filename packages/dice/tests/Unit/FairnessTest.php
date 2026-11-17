@@ -47,15 +47,36 @@ final class FairnessTest extends TestCase
         }
     }
 
-    public function testTheCommitmentIsTheSha256OfTheSeed(): void
+    public function testTheCommitmentBindsTheSeedAndTheNonceInItsVersionedFormat(): void
     {
         $seed = Seed::fromHex(self::SEED);
         $commitment = $seed->commitment();
 
-        self::assertSame(hash('sha256', sodium_hex2bin(self::SEED)), $commitment->hex);
+        self::assertSame('tilttek/dice commitment v2', Commitment::FORMAT);
+        self::assertSame('dc3f2c443dcbc5f1aef5f7c2f1b854110296650bc69659002cf66c9627220bc4', $commitment->hex);
+        self::assertSame($commitment->hex, $seed->commitment(0)->hex);
+        self::assertSame('15d153b1c8c2bbb2c7cdad9c1acc90c56ca83a0f9acd6db1a1895f4440a9fb47', $seed->commitment(7)->hex);
+        self::assertSame('66a2f1742735772fc4d1f296e5681496931dfcaee10257cfb1b435a97a276fd0', $seed->commitment(-1)->hex);
+        self::assertSame(hash('sha256', "tilttek/dice commitment v2\0".sodium_hex2bin(self::SEED).pack('J', \PHP_INT_MAX)), $seed->commitment(\PHP_INT_MAX)->hex);
         self::assertTrue($commitment->matches($seed));
+        self::assertTrue($commitment->matches($seed, 0));
+        self::assertTrue($seed->commitment(7)->matches($seed, 7));
+        self::assertFalse($seed->commitment(7)->matches($seed));
+        self::assertFalse($commitment->matches($seed, 1));
         self::assertFalse($commitment->matches(Seed::fromHex(str_repeat('0', 64))));
         self::assertSame($commitment->hex, Commitment::fromHex($commitment->hex)->hex);
+    }
+
+    public function testACommitmentToTheSeedAloneMatchesNoRoll(): void
+    {
+        $seed = Seed::fromHex(self::SEED);
+        $seedAlone = Commitment::fromHex('630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd');
+        $pool = new DiceParser()->parse('1d20');
+        $fair = new FairRoller();
+
+        self::assertSame(hash('sha256', sodium_hex2bin(self::SEED)), $seedAlone->hex);
+        self::assertFalse($seedAlone->matches($seed));
+        self::assertFalse($fair->verify($seedAlone, $seed, '', 0, $pool, $fair->roll($pool, $seed)->result->toArray()));
     }
 
     public function testACommitmentIsSixtyFourHexadecimalDigits(): void
@@ -102,13 +123,16 @@ final class FairnessTest extends TestCase
         $roll = $fair->roll($pool, $seed, 'player', 7);
         $published = $roll->toArray();
 
-        self::assertSame([$seed->commitment()->hex, self::SEED, 'player', 7, '4d6kh3, 1d20'], [$published['commitment'], $published['seed'], $published['client_seed'], $published['nonce'], $published['expression']]);
+        self::assertSame(['15d153b1c8c2bbb2c7cdad9c1acc90c56ca83a0f9acd6db1a1895f4440a9fb47', self::SEED, 'player', 7, '4d6kh3, 1d20'], [$published['commitment'], $published['seed'], $published['client_seed'], $published['nonce'], $published['expression']]);
         self::assertSame($roll->result->toArray(), $published['result']);
         self::assertSame([$seed, 'player', 7], [$roll->seed, $roll->clientSeed, $roll->nonce]);
         self::assertTrue($fair->verify(Commitment::fromHex($published['commitment']), Seed::fromHex($published['seed']), 'player', 7, $pool, $published['result']));
+        self::assertSame($seed->commitment(7)->hex, $roll->commitment->hex);
         self::assertFalse($fair->verify($roll->commitment, $seed, 'player', 8, $pool, $published['result']));
+        self::assertFalse($fair->verify($seed->commitment(8), $seed, 'player', 7, $pool, $published['result']));
+        self::assertFalse($fair->verify($seed->commitment(), $seed, 'player', 7, $pool, $published['result']));
         self::assertFalse($fair->verify($roll->commitment, $seed, 'another', 7, $pool, $published['result']));
-        self::assertFalse($fair->verify(Seed::fromHex(str_repeat('0', 64))->commitment(), $seed, 'player', 7, $pool, $published['result']));
+        self::assertFalse($fair->verify(Seed::fromHex(str_repeat('0', 64))->commitment(7), $seed, 'player', 7, $pool, $published['result']));
         self::assertFalse($fair->verify($roll->commitment, Seed::fromHex(str_repeat('0', 64)), 'player', 7, $pool, $published['result']));
         self::assertTrue($roll->result->equals($fair->roll($pool, $seed, 'player', 7)->result));
         self::assertSame($fair->roll($pool, $seed)->result->toArray(), $fair->roll($pool, $seed, '', 0)->result->toArray());

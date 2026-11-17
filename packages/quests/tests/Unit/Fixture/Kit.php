@@ -14,6 +14,7 @@ use Tilttek\Activity\Projection\LiveProjections;
 use Tilttek\Activity\Projection\Projections;
 use Tilttek\Activity\Projection\Projector;
 use Tilttek\Quests\Catalog;
+use Tilttek\Quests\Contract\TeamMembership;
 use Tilttek\Quests\Duel\Duels;
 use Tilttek\Quests\Evaluator;
 use Tilttek\Quests\InMemoryCatalog;
@@ -28,7 +29,7 @@ use Tilttek\Quests\Store\InMemoryEnrolmentStore;
 
 /**
  * Everything a test of the quests needs, wired together in memory: the journal keeps the projection up to date as
- * activities are recorded, at the moment the clock says.
+ * activities are recorded, at the moment the clock says. Every member belongs to every team unless the teams are given.
  */
 final readonly class Kit
 {
@@ -60,6 +61,7 @@ final readonly class Kit
         public Catalog $catalog,
         string $now = '2026-11-07 12:00:00 UTC',
         public DuelStore $duels = new InMemoryDuelStore(),
+        TeamMembership $teams = new Teams(),
     ) {
         $this->clock = new Clock($now);
         $this->recorder = new Recorder();
@@ -68,7 +70,7 @@ final readonly class Kit
         $this->completions = new InMemoryCompletionStore();
         $this->evaluator = new Evaluator($catalog, $this->contributions, $this->enrolments, $this->completions, $this->duels);
         $this->projection = new QuestProjection($this->evaluator, $this->recorder);
-        $this->quests = new Quests($this->evaluator, $this->clock);
+        $this->quests = new Quests($this->evaluator, $this->clock, $teams);
         $this->duelService = new Duels($this->evaluator, $this->clock, $this->recorder);
         $this->log = new InMemoryActivityLog();
         $this->projector = new Projector($this->log, new InMemoryCheckpoints());
@@ -80,9 +82,9 @@ final readonly class Kit
      *
      * @param array<string, array<string, mixed>> $definitions
      */
-    public static function of(array $definitions, string $now = '2026-11-07 12:00:00 UTC', DuelStore $duels = new InMemoryDuelStore()): self
+    public static function of(array $definitions, string $now = '2026-11-07 12:00:00 UTC', DuelStore $duels = new InMemoryDuelStore(), TeamMembership $teams = new Teams()): self
     {
-        return new self(InMemoryCatalog::fromArray($definitions, new QuestReader('UTC')), $now, $duels);
+        return new self(InMemoryCatalog::fromArray($definitions, new QuestReader('UTC')), $now, $duels, $teams);
     }
 
     /**

@@ -98,7 +98,7 @@ final class DiceRollsTest extends TestCase
         $seed = $dice->newSeed();
         $roll = $dice->rollVerifiable('repeat(1d6/4, 4)', $seed, 'player', 1, null, RoundingMode::PositiveInfinity);
         self::assertSame(RoundingMode::PositiveInfinity, $roll->result->rounding);
-        self::assertTrue($dice->verify($seed->commitment(), $seed, 'player', 1, 'repeat(1d6/4, 4)', $roll->result->toArray(), RoundingMode::PositiveInfinity));
+        self::assertTrue($dice->verify($seed->commitment(1), $seed, 'player', 1, 'repeat(1d6/4, 4)', $roll->result->toArray(), RoundingMode::PositiveInfinity));
         self::assertSame(['1d6/2 is written rounded down; the roll rounds it PositiveInfinity.'], $dice->translate($dice->parse('1d6/2'), 'roll20', RoundingMode::PositiveInfinity)->notices);
         self::assertSame([], $dice->translate($dice->parse('1d6/2'), 'roll20')->notices);
     }
@@ -139,11 +139,11 @@ final class DiceRollsTest extends TestCase
 
         $roll = $dice->rollVerifiable('2n20', $seed, 'player', 4, 'fi');
         self::assertSame(['2d20', 'player', 4], [$roll->result->pool->canonical(), $roll->clientSeed, $roll->nonce]);
-        self::assertTrue($dice->verify($seed->commitment(), $seed, 'player', 4, '2d20', $roll->result->toArray()));
-        self::assertFalse($dice->verify($seed->commitment(), $seed, 'player', 5, '2d20', $roll->result->toArray()));
+        self::assertTrue($dice->verify($seed->commitment(4), $seed, 'player', 4, '2d20', $roll->result->toArray()));
+        self::assertFalse($dice->verify($seed->commitment(4), $seed, 'player', 5, '2d20', $roll->result->toArray()));
         self::assertTrue($dice->rollVerifiable('2d20', $seed)->result->equals($dice->rollVerifiable('2d20', $seed, '', 0)->result));
         self::assertTrue($dice->rollVerifiable(new DiceParser()->parse('2d20'), $seed, 'player', 4)->result->equals($roll->result));
-        self::assertTrue($dice->verify(Seed::fromHex($seed->hex())->commitment(), $seed, 'player', 4, new DiceParser()->parse('2d20'), $roll->result->toArray()));
+        self::assertTrue($dice->verify(Seed::fromHex($seed->hex())->commitment(4), $seed, 'player', 4, new DiceParser()->parse('2d20'), $roll->result->toArray()));
     }
 
     public function testAMembersDiceAreDressedByTheExtensionPoint(): void

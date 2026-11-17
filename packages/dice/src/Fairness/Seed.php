@@ -12,7 +12,9 @@ use Tilttek\Dice\Exception\InvalidDefinition;
  * The 32 bytes a verifiable or replayable roll draws its dice from, written as 64 hexadecimal digits.
  *
  * The dice come from `Xoshiro256**` seeded with an HMAC-SHA256 of the client's seed and the nonce under this seed: the
- * same seed, client seed and nonce always give the same dice, and none of them can be guessed from the others.
+ * same seed, client seed and nonce always give the same dice, and none of them can be guessed from the others. The
+ * commitment published before a roll binds both the seed and the nonce of that roll, in the format `Commitment::FORMAT`
+ * names.
  */
 final readonly class Seed
 {
@@ -49,11 +51,14 @@ final readonly class Seed
     }
 
     /**
-     * The SHA-256 of the seed, published before the roll.
+     * The commitment to this seed for one roll, published before the roll: the SHA-256 of `Commitment::FORMAT`, a zero
+     * byte, the 32 bytes of the seed and the nonce as 8 big-endian bytes. It holds for that nonce only.
+     *
+     * @param int $nonce the number of the roll under this seed, the one `randomizer()` is given
      */
-    public function commitment(): Commitment
+    public function commitment(int $nonce = 0): Commitment
     {
-        return Commitment::fromHex(hash('sha256', $this->bytes));
+        return Commitment::fromHex(hash('sha256', Commitment::FORMAT."\0".$this->bytes.pack('J', $nonce)));
     }
 
     /**

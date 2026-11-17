@@ -83,7 +83,7 @@ final class LootDrawerTest extends TestCase
 
         self::assertSame('box', $proof['box']);
         self::assertSame([9, 7], $proof['faces']);
-        self::assertSame(hash('sha256', (string) hex2bin(self::SEED)), $proof['commitment']);
+        self::assertSame('212a7346387a3ee005f2de8ebcdae06fde52ffda33b6fe6f1b285b15795053bd', $proof['commitment']);
         self::assertSame(self::SEED, $proof['seed']);
         self::assertSame('buyer', $proof['client_seed']);
         self::assertSame(4, $proof['nonce']);

@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=8007d9ce46eff1dde6f43972469ebbc6318cea56acda75b5f74a673f3bfab13e -->
+<!-- phil-dev source-sha256=4e5b8a28ae1a2c241316dc21631f1442e690b3ed2bb3e03ac8fb1d80a74cd5b0 -->
 # Lancer les dés
 
 `DiceRolls` est le service que l'application appelle. Une expression est un `Pool` ou une chaîne, lue dans la notation
@@ -64,7 +64,8 @@ des lancers d'une table, un fil, le rejeu d'une partie lu par tranches.
 
 ```php
 $seed = $dice->newSeed();
-$commitment = $seed->commitment()->hex;          // publish it, keep the seed secret
+$nonce = $reservedNonce;                         // reserved once, atomically, by the application
+$commitment = $seed->commitment($nonce);         // publish it, keep the seed secret
 $roll = $dice->rollVerifiable('1d20', $seed, $clientSeed, $nonce);
 // … once the rolls of this seed are done, publish $roll->toArray(), which reveals the seed
 $dice->verify($commitment, $seed, $clientSeed, $nonce, '1d20', $claimed);
@@ -74,8 +75,10 @@ Un lancer vérifiable fait avec un autre arrondi se vérifie avec le même, que 
 `rollVerifiable()` et à `verify()`. Chaque construction de la notation (instructions, branches, listes de textes,
 phrases) est rejouée et vérifiée de la même façon.
 
-L'endroit où le germe est gardé entre l'engagement et la révélation est le choix de l'application : une session, une
-ligne d'une table.
+Un engagement couvre le germe et le *nonce* d'un lancer, comme `tilttek/dice` le décrit dans son protocole : publiez-le
+avant que le joueur envoie le germe du client, réservez chaque *nonce* d'un germe une seule fois — une clé unique sur le
+germe et le *nonce*, par exemple — et ne révélez le germe que lorsque ses lancers sont terminés. L'endroit où le germe
+est gardé entre l'engagement et la révélation est le choix de l'application : une session, une ligne d'une table.
 
 ## Effacer les lancers d'un membre
 

@@ -69,7 +69,7 @@ final readonly class Kit
         $this->duels = new InMemoryDuelStore();
         $this->evaluator = new Evaluator($catalog, $this->contributions, $this->enrolments, $this->completions, $this->duels);
         $this->projection = new QuestProjection($this->evaluator, $this->recorder);
-        $this->quests = new Quests($this->evaluator, $this->clock);
+        $this->quests = new Quests($this->evaluator, $this->clock, new Teams());
         $this->duelService = new Duels($this->evaluator, $this->clock, $this->recorder);
         $this->log = new InMemoryActivityLog();
         $this->projector = new Projector($this->log, new InMemoryCheckpoints());

@@ -4,6 +4,19 @@ All notable changes to `tilttek/quests` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+Next version: 0.3.0-alpha, for a change of the API of `Quests`.
+
+### Changed
+
+- `Contract\TeamMembership`, and `NoTeamMembership` under which no member belongs to any team: `Quests` takes one
+  as its third argument and asks it, before a member joins a team quest under a team — or accepts it again —, whether
+  the member belongs to that team; a member who does not is refused with `QuestRefused`, and no enrolment is written.
+  Without one, `Quests` uses `NoTeamMembership`, so a team quest is refused rather than accepted by default. To move an
+  application: implement `TeamMembership` over its records of the teams, answering on the server, and pass it to
+  `Quests`; personal, community and duel quests are unchanged.
+
 ## 0.2.0-alpha - 2026-11-14
 
 ### Changed

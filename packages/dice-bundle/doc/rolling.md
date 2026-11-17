@@ -62,7 +62,8 @@ table's rolls, a feed, a replay of a game read in slices.
 
 ```php
 $seed = $dice->newSeed();
-$commitment = $seed->commitment()->hex;          // publish it, keep the seed secret
+$nonce = $reservedNonce;                         // reserved once, atomically, by the application
+$commitment = $seed->commitment($nonce);         // publish it, keep the seed secret
 $roll = $dice->rollVerifiable('1d20', $seed, $clientSeed, $nonce);
 // … once the rolls of this seed are done, publish $roll->toArray(), which reveals the seed
 $dice->verify($commitment, $seed, $clientSeed, $nonce, '1d20', $claimed);
@@ -72,7 +73,10 @@ A verifiable roll made with another rounding is verified with the same one, whic
 `rollVerifiable()` and to `verify()`. Every construct of the notation — instructions, branches, text lists, sentences
 — is replayed and verified alike.
 
-Where the seed is kept between the commitment and the reveal is the application's choice: a session, a table's row.
+A commitment covers the seed and the nonce of one roll, as `tilttek/dice` describes in its protocol: publish it before
+the player sends the client seed, reserve each nonce of a seed once — a unique key on the seed and the nonce, say — and
+reveal the seed only when its rolls are done. Where the seed is kept between the commitment and the reveal is the
+application's choice: a session, a table's row.
 
 ## Erasing a member's rolls
 

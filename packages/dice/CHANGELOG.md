@@ -4,6 +4,26 @@ All notable changes to `tilttek/dice` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+Next version: 0.3.0-alpha, for a change of the commitment format.
+
+### Changed
+
+- A commitment binds the nonce of one roll as well as the seed: `Seed::commitment($nonce)` is the SHA-256 of
+  `Commitment::FORMAT` — `tilttek/dice commitment v2` —, a zero byte, the 32 bytes of the seed and the nonce as 8
+  big-endian bytes. A commitment shown for one roll no longer vouches for a roll made under another nonce of the same
+  seed. `FairRoller::roll()` gives the commitment of its nonce, and `FairRoller::verify()` and
+  `Commitment::matches($seed, $nonce)` check the seed and the nonce together. The format, the protocol — commitment
+  published before the client seed, nonce reserved once by the host, seed revealed after — and fixed test vectors are
+  in the documentation of verifiable rolls.
+- The nonce of `Seed::commitment()` and `Commitment::matches()` is 0 when it is not given, as for `Seed::randomizer()`:
+  calls written for 0.2 stay valid and give the commitment of the roll numbered 0.
+- A commitment of the 0.2 format, the SHA-256 of the seed alone, is refused: it matches no seed and `verify()` returns
+  false for it. It does not bind the nonce, so reading it would keep the weakness this version removes. To move a
+  host: pass the nonce of each roll to `commitment()` before publishing it; rolls published under 0.2 are checked with
+  0.2, or by recomputing the SHA-256 of their revealed seed.
+
 ## 0.2.0-alpha - 2026-11-14
 
 ### Fixed
