@@ -1,9 +1,10 @@
-<!-- phil-dev source-sha256=bf14d4fc970f5c2a6826a70dddbf5c7442e071db05b02814fdf1fa16a0e4ed7a -->
+<!-- phil-dev source-sha256=a4ec175b7aa0ec93f0770b875ef9d0a4cd7a675c404e3279836c52faa9003a63 -->
 # Référence
 
 | Type | Rôle |
 |---|---|
 | `Quests` | Acceptation, abandon, état, tableau, journal des quêtes accomplies, exportation, effacement |
+| `Contract\TeamMembership`, `NoTeamMembership` | Si un membre fait partie d'une équipe ; le défaut, sous lequel personne n'en fait partie |
 | `QuestProjection` | L'activité transformée en progression, quêtes accomplies, enchaînements, duels départagés, annulations, reconstructions |
 | `QuestObserver`, `QuestCompleted` | Averti des quêtes accomplies avec leurs récompenses, des duels gagnés et expirés |
 | `Evaluator` | Le catalogue, les magasins, et comment la progression d'un sujet est lue |

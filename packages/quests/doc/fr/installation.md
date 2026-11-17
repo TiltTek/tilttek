@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=8f18dc852d6ab43cd189f668eb79a09d317b20ef01842cf1b796b786c930b2f2 -->
+<!-- phil-dev source-sha256=0e334df6e55be295829b3fd837434f83b8e4a893d43691c4106e745d28930413 -->
 # Installation
 
 ```sh
@@ -16,7 +16,8 @@ Pour l'utiliser, une application :
 2. implémente les quatre magasins d'[Écrire un magasin](writing-a-store.md), ou prend ceux en mémoire pour les tests et
    les scripts ;
 3. construit un `Evaluator` sur le catalogue et les magasins, puis `Quests`, `Duels` et une `QuestProjection`, en
-   donnant aux deux derniers un `QuestObserver` qui donne les récompenses ;
+   donnant à `Quests` le `TeamMembership` qui dit qui fait partie de quelle équipe — sans lui, toute quête d'équipe est
+   refusée —, et aux deux derniers un `QuestObserver` qui donne les récompenses ;
 4. enregistre la projection auprès du `Projector` de `tilttek/activity`, en direct par `LiveProjections` ou par une
    tâche qui la rattrape.
 

@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=7d206833486e9f860349348631731ae87a7cde9e80fe3a6a18f0210d6eef92f9 -->
+<!-- phil-dev source-sha256=fa104c613181fc3bedc4bc9a4d5ebc642f9f7c7229043712993310db96d26051 -->
 # Tirer
 
 ## Un tirage vérifiable
@@ -7,17 +7,18 @@ Un tirage est vérifiable quand le résultat n'a pas pu être choisi. La bibliot
 `tilttek/dice` :
 
 1. **Engager.** `PendingDraw::open($secure, $nonce)` tire un germe secret d'une source sûre. Son `commitment()`,
-   l'empreinte SHA-256 du germe, est montré tout de suite : avant le paiement, sur la commande. Le *nonce* numérote les
-   tirages faits à partir d'un même germe. Le germe reste secret ; `PendingDraw::restore()` reconstruit le tirage à
-   partir du germe stocké.
-2. **Germe du client.** L'acheteur, après avoir vu l'engagement, donne un germe du client de 1 à 256 octets de texte UTF-8 : des mots
-   qu'il tape, ou des octets que son propre appareil tire.
+   l'engagement de `tilttek/dice` au germe et au *nonce*, est montré tout de suite : avant le paiement, sur la
+   commande. Le *nonce* numérote les tirages faits à partir d'un même germe, et l'engagement vaut pour ce tirage
+   seulement : réservez chaque *nonce* d'un germe une seule fois. Le germe reste secret ; `PendingDraw::restore()`
+   reconstruit le tirage à partir du germe stocké.
+2. **Germe du client.** L'acheteur, après avoir vu l'engagement, donne un germe du client de 1 à 256 octets de texte
+   UTF-8 : des mots qu'il tape, ou des octets que son propre appareil tire.
 3. **Révéler.** `LootDrawer::reveal($box, $pending, $clientSeed)` lance les dés de la boîte à partir du germe et du
    germe du client, un dé par table, et retourne un `RevealedDraw` : son `LootResult` et le jet vérifiable de
    `tilttek/dice`. Les mêmes germe, germe du client et *nonce* donnent toujours les mêmes faces.
 4. **Publier.** `RevealedDraw::proof()` est ce qui est publié une fois le tirage révélé : la boîte, les faces,
    l'engagement, le germe, le germe du client, le *nonce*, l'expression, l'arrondi et le jet.
-5. **Vérifier.** `LootDrawer::verify($box, $proof)` est vrai quand le germe correspond à l'engagement, que l'expression
+5. **Vérifier.** `LootDrawer::verify($box, $proof)` est vrai quand le germe et le *nonce* correspondent à l'engagement, que l'expression
    est celle de la boîte, que relancer les dés donne le jet publié et que les faces sont celles du jet. Une preuve
    illisible (un champ manquant ou d'un autre type, un germe qui n'est pas hexadécimal) donne faux, jamais une
    exception. De même pour une preuve dont la graine client serait refusée à la révélation (vide, de plus de 256 octets

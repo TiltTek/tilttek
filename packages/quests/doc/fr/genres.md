@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=3300b08d1004c09aec450c8d63ffcb3090fa43aca38f9e93bce82221320803f8 -->
+<!-- phil-dev source-sha256=dec7d95e7a0bf9655d13eefc32977bb7128e5c8d473fe02a6f24819a70978c01 -->
 # Genres
 
 Le `QuestKind` d'une quête dit quelle activité la fait avancer et qui l'accomplit.
@@ -15,8 +15,8 @@ chaque membre. Il est accompli une fois par occurrence, par le sujet `community:
 
 ## Équipe
 
-Les membres la rejoignent sous une équipe que nomme l'application (`team:red`, `guild:44`), et leur activité
-s'additionne vers un objectif qu'ils partagent. L'équipe est le sujet ; les récompenses vont **aux membres de l'équipe
+Les membres la rejoignent sous une équipe que nomme l'application (`team:red`, `guild:44`) et dont le `TeamMembership`
+de l'application dit qu'ils font partie, et leur activité s'additionne vers un objectif qu'ils partagent. L'équipe est le sujet ; les récompenses vont **aux membres de l'équipe
 qui la suivent encore** quand elle est accomplie. Un membre fait partie d'une seule équipe par quête à la fois, et son
 activité compte de sa propre acceptation jusqu'à son propre abandon.
 

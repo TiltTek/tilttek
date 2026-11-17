@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=9be77f704e1f0958ade3750a3c5cbf85d592f0ea2c1b0d4645f16fe958b310b9 -->
+<!-- phil-dev source-sha256=271cc19108230116a891750dc4dd33f777a2a1e7d7340b93b884406895bd6735 -->
 # Référence
 
 | Type | Rôle |
@@ -38,7 +38,7 @@
 | `Result\TextResult`, `ListResult`, `BranchResult`, `ReferenceResult` | Un texte, une liste, une branche, une référence |
 | `Result\Outputs`, `Notice` | Les sorties écrites ou aplaties ; ce qu'un lancer n'a pas pu faire exactement |
 | `Result\RolledDie`, `DieOrigin`, `Mark` | Un dé tel qu'il est tombé, et ce qu'il est devenu |
-| `Fairness\Seed`, `Commitment` | Un germe et son SHA-256 |
+| `Fairness\Seed`, `Commitment` | Un germe et son engagement pour le *nonce* d'un lancer |
 | `Fairness\FairRoller`, `VerifiableRoll` | Les lancers vérifiables et leur vérification |
 | `Replay\Replayer`, `ReplayableRoll` | Les lancers rejoués dé pour dé |
 | `Dialect\Dialect`, `Dialects` | La notation d'une table virtuelle, et le registre |
