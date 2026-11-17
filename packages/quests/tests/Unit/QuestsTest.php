@@ -20,6 +20,7 @@ use Tilttek\Quests\Exception\QuestRefused;
 use Tilttek\Quests\Exception\UnknownQuest;
 use Tilttek\Quests\InMemoryCatalog;
 use Tilttek\Quests\Names;
+use Tilttek\Quests\NoTeamMembership;
 use Tilttek\Quests\Progress\Finish;
 use Tilttek\Quests\Progress\ProgressCalculator;
 use Tilttek\Quests\Progress\QuestProgress;
@@ -43,6 +44,7 @@ use Tilttek\Quests\Store\InMemoryContributionStore;
 use Tilttek\Quests\Store\InMemoryDuelStore;
 use Tilttek\Quests\Store\InMemoryEnrolmentStore;
 use Tilttek\Quests\Tests\Unit\Fixture\Kit;
+use Tilttek\Quests\Tests\Unit\Fixture\Teams;
 use Tilttek\Quests\Tests\Unit\Fixture\Yearly;
 use Tilttek\Quests\Window;
 
@@ -79,6 +81,7 @@ use Tilttek\Quests\Window;
 #[CoversClass(Quests::class)]
 #[CoversClass(QuestProjection::class)]
 #[CoversClass(Erasure::class)]
+#[CoversClass(NoTeamMembership::class)]
 final class QuestsTest extends TestCase
 {
     public function testAMemberAcceptsAQuestOnceAndAbandonsIt(): void
@@ -194,6 +197,61 @@ final class QuestsTest extends TestCase
         }
 
         self::assertEquals(Kit::ref('team:red'), $kit->quests->accept(Kit::ref('member:2'), 'raid', Kit::ref('team:red'))->team);
+    }
+
+    public function testATeamQuestIsJoinedOnlyUnderATeamOfTheMembers(): void
+    {
+        $definitions = ['raid' => ['kind' => 'team', 'steps' => [['verbs' => ['game.played']]]]];
+        $kit = Kit::of($definitions, teams: new Teams(['team:red' => ['member:1']]));
+        $member = Kit::ref('member:1');
+
+        self::assertEquals(Kit::ref('team:red'), $kit->quests->accept($member, 'raid', Kit::ref('team:red'))->team);
+
+        foreach ([['member:1', 'team:blue'], ['member:2', 'team:red']] as [$who, $team]) {
+            try {
+                $kit->quests->accept(Kit::ref($who), 'raid', Kit::ref($team));
+                self::fail(\sprintf('%s joined under %s.', $who, $team));
+            } catch (QuestRefused $questRefused) {
+                self::assertSame(\sprintf('The member does not belong to the team "%s"; a team quest is joined under a team of the member\'s.', $team), $questRefused->getMessage());
+            }
+        }
+
+        self::assertNull($kit->enrolments->find('raid', Kit::ref('member:2')));
+        self::assertEquals(Kit::ref('team:red'), $kit->enrolments->find('raid', $member)?->team);
+    }
+
+    public function testAMemberWhoLeftTheTeamCannotAcceptItsQuestAgain(): void
+    {
+        $definitions = ['raid' => ['kind' => 'team', 'steps' => [['verbs' => ['game.played']]]]];
+        $kit = Kit::of($definitions);
+        $kit->quests->accept(Kit::ref('member:1'), 'raid', Kit::ref('team:red'));
+
+        $outside = new Quests($kit->evaluator, $kit->clock, new Teams([]));
+
+        $this->expectExceptionObject(QuestRefused::because('The member does not belong to the team "team:red"; a team quest is joined under a team of the member\'s.'));
+        $outside->accept(Kit::ref('member:1'), 'raid', Kit::ref('team:red'));
+    }
+
+    public function testWithoutAMembershipEveryTeamQuestIsRefused(): void
+    {
+        $kit = Kit::of([
+            'raid' => ['kind' => 'team', 'steps' => [['verbs' => ['game.played']]]],
+            'club' => ['steps' => [['verbs' => ['club.joined']]]],
+        ]);
+        $quests = new Quests($kit->evaluator, $kit->clock);
+        $member = Kit::ref('member:1');
+
+        self::assertFalse(new NoTeamMembership()->isMember($member, Kit::ref('team:red')));
+        self::assertSame('club', $quests->accept($member, 'club')->quest);
+
+        try {
+            $quests->accept($member, 'raid', Kit::ref('team:red'));
+            self::fail('A team quest was joined without a membership.');
+        } catch (QuestRefused $questRefused) {
+            self::assertSame('The member does not belong to the team "team:red"; a team quest is joined under a team of the member\'s.', $questRefused->getMessage());
+        }
+
+        self::assertNull($kit->enrolments->find('raid', $member));
     }
 
     public function testTheStatusOfAQuestFollowsTheMember(): void

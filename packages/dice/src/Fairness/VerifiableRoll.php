@@ -7,8 +7,8 @@ namespace Tilttek\Dice\Fairness;
 use Tilttek\Dice\Result\PoolResult;
 
 /**
- * A roll anyone can check: the commitment published before it, the seed revealed after, the seed the player chose,
- * the number of the roll, and the result with the rounding of its divisions.
+ * A roll anyone can check: the commitment to its seed and nonce published before it, the seed revealed after, the seed
+ * the player chose, the number of the roll, and the result with the rounding of its divisions.
  */
 final readonly class VerifiableRoll
 {

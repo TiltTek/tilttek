@@ -6,6 +6,7 @@ namespace Tilttek\Quests;
 
 use Phil\Resource\ResourceReference;
 use Psr\Clock\ClockInterface;
+use Tilttek\Quests\Contract\TeamMembership;
 use Tilttek\Quests\Duel\Duel;
 use Tilttek\Quests\Exception\QuestRefused;
 use Tilttek\Quests\Exception\UnknownQuest;
@@ -13,8 +14,8 @@ use Tilttek\Quests\Progress\QuestProgress;
 use Tilttek\Quests\Schedule\Occurrence;
 
 /**
- * The quests as the members see and decide them: a member accepts a quest — under a team, for a team quest — or
- * abandons it; reads where each quest stands for them and the quests they accomplished; and an account's data is
+ * The quests as the members see and decide them: a member accepts a quest — under a team they belong to, for a team
+ * quest, as the `TeamMembership` the application gives tells — or abandons it; reads where each quest stands for them and the quests they accomplished; and an account's data is
  * exported and erased.
  *
  * ```php
@@ -22,13 +23,15 @@ use Tilttek\Quests\Schedule\Occurrence;
  * $quests->status($member, 'winter-reading')->progress->done(); // 2
  * ```
  *
- * Duels are sent and answered through `Duels`.
+ * Duels are sent and answered through `Duels`. Without a `TeamMembership`, no member belongs to any team and every
+ * team quest is refused.
  */
 final readonly class Quests
 {
     public function __construct(
         private Evaluator $evaluator,
         private ClockInterface $clock,
+        private TeamMembership $teams = new NoTeamMembership(),
     ) {
     }
 
@@ -43,7 +46,9 @@ final readonly class Quests
      *
      * @throws UnknownQuest
      * @throws QuestRefused when the quest is a duel, closed, locked, accomplished already in this occurrence, a team
-     *                      quest without a team — or with another team than the member's —, or another quest with one
+     *                      quest without a team, under a team the member does not belong to — as `TeamMembership`
+     *                      tells — or under another team than the one the member follows it with, or another quest
+     *                      with a team
      */
     public function accept(ResourceReference $member, string $code, ?ResourceReference $team = null): Enrolment
     {
@@ -51,6 +56,7 @@ final readonly class Quests
         $this->refuseDuel($quest);
 
         $subject = $this->subject($quest, $member, $team);
+        $this->refuseOutsider($member, $team);
         $occurrence = $this->open($quest);
         $this->refuseCompleted($quest, $occurrence, $subject);
 
@@ -222,6 +228,13 @@ final readonly class Quests
         }
 
         return $team ?? (QuestKind::Community === $quest->kind ? Completion::community($quest->code) : $member);
+    }
+
+    private function refuseOutsider(ResourceReference $member, ?ResourceReference $team): void
+    {
+        if ($team instanceof ResourceReference && !$this->teams->isMember($member, $team)) {
+            throw QuestRefused::because(\sprintf('The member does not belong to the team "%s"; a team quest is joined under a team of the member\'s.', $team->toString()));
+        }
     }
 
     private function refuseDuel(Quest $quest): void

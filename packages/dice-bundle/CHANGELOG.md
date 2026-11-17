@@ -4,6 +4,13 @@ All notable changes to `tilttek/dice-bundle` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `DiceRolls::verify()` follows the commitments of `tilttek/dice` 0.3, which bind the nonce of one roll: publish
+  `$seed->commitment($nonce)` before the player sends the client seed, as the documentation of verifiable rolls shows.
+
 ## 0.2.0-alpha - 2026-11-14
 
 ### Added

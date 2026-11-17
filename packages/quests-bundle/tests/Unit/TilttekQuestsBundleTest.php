@@ -15,10 +15,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Tilttek\Quests\Catalog;
+use Tilttek\Quests\Contract\TeamMembership;
 use Tilttek\Quests\Duel\Duels;
 use Tilttek\Quests\Evaluator;
 use Tilttek\Quests\Exception\InvalidQuest;
 use Tilttek\Quests\InMemoryCatalog;
+use Tilttek\Quests\NoTeamMembership;
 use Tilttek\Quests\QuestProjection;
 use Tilttek\Quests\QuestReader;
 use Tilttek\Quests\Quests;
@@ -59,7 +61,7 @@ final class TilttekQuestsBundleTest extends TestCase
         self::assertSame('tilttek_quests', $this->extension()->getAlias());
         self::assertSame([
             'service_container', DbalContributionStore::class, DbalEnrolmentStore::class, DbalCompletionStore::class, DbalDuelStore::class, QuestsSchemaListener::class,
-            QuestReader::class, ...$this->almanac(), Catalog::class, DispatchingObserver::class, Evaluator::class, Quests::class, Duels::class, QuestProjection::class,
+            QuestReader::class, ...$this->almanac(), Catalog::class, DispatchingObserver::class, Evaluator::class, NoTeamMembership::class, Quests::class, Duels::class, QuestProjection::class,
             ListCommand::class, ShowCommand::class, ExpireCommand::class, QuestsExtension::class, ...$this->privacy(),
         ], array_keys($container->getDefinitions()));
 
@@ -78,7 +80,8 @@ final class TilttekQuestsBundleTest extends TestCase
         self::assertTrue($container->getDefinition(Catalog::class)->isPublic());
         self::assertEquals([new Reference(EventDispatcherInterface::class)], $container->getDefinition(DispatchingObserver::class)->getArguments());
         self::assertEquals([new Reference(Catalog::class), new Reference(ContributionStore::class), new Reference(EnrolmentStore::class), new Reference(CompletionStore::class), new Reference(DuelStore::class)], $container->getDefinition(Evaluator::class)->getArguments());
-        self::assertEquals([new Reference(Evaluator::class), new Reference('clock')], $container->getDefinition(Quests::class)->getArguments());
+        self::assertEquals([new Reference(Evaluator::class), new Reference('clock'), new Reference(TeamMembership::class)], $container->getDefinition(Quests::class)->getArguments());
+        self::assertSame(NoTeamMembership::class, (string) $container->getAlias(TeamMembership::class));
         self::assertTrue($container->getDefinition(Quests::class)->isPublic());
         self::assertEquals([new Reference(Evaluator::class), new Reference('clock'), new Reference(DispatchingObserver::class), 'P7D'], $container->getDefinition(Duels::class)->getArguments());
         self::assertTrue($container->getDefinition(Duels::class)->isPublic());
@@ -151,7 +154,7 @@ final class TilttekQuestsBundleTest extends TestCase
 
         self::assertSame([
             'service_container', InMemoryContributionStore::class, InMemoryEnrolmentStore::class, InMemoryCompletionStore::class, InMemoryDuelStore::class,
-            QuestReader::class, ...$this->almanac(), Catalog::class, DispatchingObserver::class, Evaluator::class, Quests::class, Duels::class, QuestProjection::class,
+            QuestReader::class, ...$this->almanac(), Catalog::class, DispatchingObserver::class, Evaluator::class, NoTeamMembership::class, Quests::class, Duels::class, QuestProjection::class,
             ListCommand::class, ShowCommand::class, ExpireCommand::class, QuestsExtension::class, ...$this->privacy(),
         ], array_keys($container->getDefinitions()));
         self::assertSame([], $container->getDefinition(InMemoryDuelStore::class)->getArguments());

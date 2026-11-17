@@ -20,5 +20,8 @@
 | `Infrastructure\Console\ListCommand`, `ShowCommand`, `ExpireCommand` | The three commands | console commands |
 | `Infrastructure\Privacy\QuestsPrivacy` | Export and erasure for `phil/privacy-bundle` | exporter and eraser |
 
+The library's `Tilttek\Quests\NoTeamMembership` is registered as the `Tilttek\Quests\Contract\TeamMembership` the
+bundle gives `Quests`, until the application aliases that interface to its own service.
+
 The library's `Tilttek\Quests\Quests`, `Tilttek\Quests\Duel\Duels`, `Tilttek\Quests\QuestProjection` and
 `Tilttek\Quests\Catalog` are public services.

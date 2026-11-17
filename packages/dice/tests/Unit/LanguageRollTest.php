@@ -420,8 +420,8 @@ final class LanguageRollTest extends TestCase
         $seed = Seed::fromHex(str_repeat('ab', 32));
         $roll = $dice->rollVerifiable($pool, $seed, 'player', 3, RoundingMode::HalfEven);
 
-        self::assertTrue($dice->fairRoller()->verify($seed->commitment(), $seed, 'player', 3, $dice->parse($roll->toArray()['expression']), $roll->result->toArray(), RoundingMode::HalfEven));
-        self::assertFalse($dice->fairRoller()->verify($seed->commitment(), $seed, 'other', 3, $pool, $roll->result->toArray(), RoundingMode::HalfEven));
+        self::assertTrue($dice->fairRoller()->verify($seed->commitment(3), $seed, 'player', 3, $dice->parse($roll->toArray()['expression']), $roll->result->toArray(), RoundingMode::HalfEven));
+        self::assertFalse($dice->fairRoller()->verify($seed->commitment(3), $seed, 'other', 3, $pool, $roll->result->toArray(), RoundingMode::HalfEven));
 
         $replayable = $dice->rollReplayable($pool, new Randomizer(new Xoshiro256StarStar(5)));
         $replayed = $dice->replay($replayable->id, $dice->parse($replayable->expression()), $replayable->seed);

@@ -68,11 +68,12 @@ final readonly class PendingDraw
     }
 
     /**
-     * The SHA-256 of the seed: published before the draw.
+     * The commitment to the seed and the nonce of the draw, `Seed::commitment()`: published before the draw, it holds
+     * for this draw only.
      */
     public function commitment(): Commitment
     {
-        return $this->seed->commitment();
+        return $this->seed->commitment($this->nonce);
     }
 
     private static function checked(Seed $seed, int $nonce): self

@@ -23,7 +23,8 @@ final class PendingDrawTest extends TestCase
         $other = PendingDraw::open(new Randomizer(new Xoshiro256StarStar(8)));
 
         self::assertSame(3, $pending->nonce);
-        self::assertSame($pending->seed->commitment()->hex, $pending->commitment()->hex);
+        self::assertSame($pending->seed->commitment(3)->hex, $pending->commitment()->hex);
+        self::assertNotSame($pending->seed->commitment()->hex, $pending->commitment()->hex);
         self::assertNotSame($pending->seed->hex(), $other->seed->hex());
         self::assertSame(0, $other->nonce);
     }
@@ -33,7 +34,7 @@ final class PendingDrawTest extends TestCase
         $pending = PendingDraw::restore(self::SEED, 2);
 
         self::assertSame(self::SEED, $pending->seed->hex());
-        self::assertSame(hash('sha256', (string) hex2bin(self::SEED)), $pending->commitment()->hex);
+        self::assertSame('90fdb6ddab5915541d7fa08cf17d619acbd9dce7ec1bcbc098deaf6684ad9add', $pending->commitment()->hex);
         self::assertSame(2, $pending->nonce);
         self::assertSame(0, PendingDraw::restore(self::SEED)->nonce);
     }

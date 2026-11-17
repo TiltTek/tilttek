@@ -3,6 +3,7 @@
 | Type | Role |
 |---|---|
 | `Quests` | Acceptance, abandonment, status, board, journal of accomplished quests, export, erasure |
+| `Contract\TeamMembership`, `NoTeamMembership` | Whether a member belongs to a team; the default under which no one does |
 | `QuestProjection` | The activity turned into progress, quests accomplished, chains, duels decided, cancellations, rebuilds |
 | `QuestObserver`, `QuestCompleted` | Told of the quests accomplished with their rewards, the duels won and expired |
 | `Evaluator` | The catalog, the stores, and how a subject's progress is read |

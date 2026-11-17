@@ -4,6 +4,14 @@ All notable changes to `tilttek/loot-tables` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+### Changed
+
+- `PendingDraw::commitment()` is the commitment of `tilttek/dice` to the seed and the nonce of the draw, so that it holds
+  for that draw only, and `LootDrawer::verify()` checks the nonce of a proof against it. With `tilttek/dice` 0.3, a
+  proof published with a commitment to the seed alone no longer verifies; reserve each nonce of a seed once.
+
 ## 0.2.0-alpha - 2026-11-14
 
 ### Changed

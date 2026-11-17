@@ -37,7 +37,7 @@
 | `Result\TextResult`, `ListResult`, `BranchResult`, `ReferenceResult` | A text, a list, a branch, a reference |
 | `Result\Outputs`, `Notice` | Outputs written or flattened; what a roll could not do exactly |
 | `Result\RolledDie`, `DieOrigin`, `Mark` | One die as it fell, and what became of it |
-| `Fairness\Seed`, `Commitment` | A seed and its SHA-256 |
+| `Fairness\Seed`, `Commitment` | A seed and its commitment for the nonce of one roll |
 | `Fairness\FairRoller`, `VerifiableRoll` | Verifiable rolls and their verification |
 | `Replay\Replayer`, `ReplayableRoll` | Rolls replayed die for die |
 | `Dialect\Dialect`, `Dialects` | The notation of a virtual tabletop, and the registry |
