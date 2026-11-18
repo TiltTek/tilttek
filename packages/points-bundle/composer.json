@@ -1,6 +1,6 @@
 {
     "name": "tilttek/points-bundle",
-    "description": "Points for Symfony on tilttek/points: the ledger in Doctrine DBAL, currencies and earning rules in configuration, the projection that turns members' activity into points through tilttek/activity-bundle, balances and histories, commands to expire credits and show a history, and member export and erasure",
+    "description": "tilttek/points in Symfony: the ledger in the database, earning rules in configuration, points earned from members' activity, and member export and erasure.",
     "license": "MIT",
     "type": "symfony-bundle",
     "keywords": [

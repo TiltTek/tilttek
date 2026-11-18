@@ -1,6 +1,6 @@
 {
     "name": "tilttek/sets",
-    "description": "Sets for badges, collections and other gamification: versioned definitions, tiers, completion from what a holder owns, declared rewards and events, without granting anything.",
+    "description": "Sets for badges, collections and other gamification: versioned definitions, tiers and completion from what a holder owns, without granting anything itself.",
     "license": "MIT",
     "type": "library",
     "authors": [

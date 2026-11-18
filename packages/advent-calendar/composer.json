@@ -1,6 +1,6 @@
 {
     "name": "tilttek/advent-calendar",
-    "description": "An advent calendar for gamification: one box per day in the calendar's timezone, one surprise per box as a reference to points, a badge, content or a code the application grants, an opening policy per calendar, openings recorded once and told by an event, unopened surprises never revealed, and the erasure of a member",
+    "description": "An advent calendar for members: one box per day in the calendar's timezone, one surprise per box, unopened surprises kept secret and missed days not lost.",
     "license": "MIT",
     "type": "library",
     "keywords": [

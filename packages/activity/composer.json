@@ -1,6 +1,6 @@
 {
     "name": "tilttek/activity",
-    "description": "A journal of members' activity for gamification: each gesture recorded once by its idempotency key, cancellations as entries of their own, totals by member, verb, object and period, projections that keep their own state and replay the journal when a rule changes, and the erasure of a member",
+    "description": "Record what members do, once each, for rewards to read: a journal with cancellations, totals by period, and projections replayed when rules change.",
     "license": "MIT",
     "type": "library",
     "keywords": [

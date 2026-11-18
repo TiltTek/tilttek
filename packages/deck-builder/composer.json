@@ -1,6 +1,6 @@
 {
     "name": "tilttek/deck-builder",
-    "description": "Card decks built to a format's declared rules — sizes, copies, banned and restricted cards, dated taboo lists —, validated with every violation readable, versioned with their differences, copied with a link to the original and limited to the cards a collection owns, with no publisher's catalogue bundled.",
+    "description": "Build card decks that follow a format's rules: sizes, copies, bans and taboo lists checked with readable errors, versions compared, owned cards respected.",
     "license": "MIT",
     "type": "library",
     "authors": [

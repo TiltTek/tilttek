@@ -1,6 +1,6 @@
 {
     "name": "tilttek/writing-goals",
-    "description": "An author's writing goals: a target in words or pages up to a deadline, plans with a linear, front-loaded, back-loaded or drawn curve over chosen writing days, the daily quota recomputed from what remains, no streak counted, counts logged and corrected, the goal reached told by an event, two store ports, and the erasure of an author",
+    "description": "Writing goals for authors: a target in words or pages by a deadline, a daily quota that adapts to the days they actually write, and no streak to break.",
     "license": "MIT",
     "type": "library",
     "keywords": [

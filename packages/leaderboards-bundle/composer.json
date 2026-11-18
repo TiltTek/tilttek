@@ -1,6 +1,6 @@
 {
     "name": "tilttek/leaderboards-bundle",
-    "description": "Leaderboards for Symfony on tilttek/leaderboards: boards, periods, sliding windows, snapshots and weekly leagues in configuration, scores in Doctrine DBAL or Valkey kept up to date from members' activity, events for snapshots, leagues and the top, Twig standings drawn with a UX Toolkit kit, scheduled commands, and member export and erasure",
+    "description": "tilttek/leaderboards in Symfony: boards, periods and weekly leagues in configuration, scores kept up to date from members' activity, and standings in Twig.",
     "license": "MIT",
     "type": "symfony-bundle",
     "keywords": [

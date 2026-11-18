@@ -1,6 +1,6 @@
 {
     "name": "tilttek/badges-bundle",
-    "description": "Badges for Symfony on tilttek/badges: badges and criteria in configuration, awards and consents in Doctrine DBAL, the projection that awards them through tilttek/activity-bundle, events, Twig showcase and progress, commands, Open Badges 3.0 credentials through phil/open-badges-bundle, and member export and erasure",
+    "description": "tilttek/badges in Symfony: badges in configuration, awarded from members' activity, shown in Twig, issued as Open Badges 3.0, with member export and erasure.",
     "license": "MIT",
     "type": "symfony-bundle",
     "keywords": [

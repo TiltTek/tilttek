@@ -1,6 +1,6 @@
 {
     "name": "tilttek/seasonal-events",
-    "description": "Seasons and their events for gamification: a season once or each year by an RFC 5545 rule in its timezone, the quests, items and decorations it brings while it lasts, multipliers of gains only on events announced ahead, a port to read what is on, and bridges to tilttek/quests and tilttek/collections",
+    "description": "Seasons and their events for a site: the quests, items and decorations of a period, in the site's timezone, once or coming back each year.",
     "license": "MIT",
     "type": "library",
     "keywords": [

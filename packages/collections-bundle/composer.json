@@ -1,6 +1,6 @@
 {
     "name": "tilttek/collections-bundle",
-    "description": "Collectibles for Symfony on tilttek/collections: the catalog in configuration or the database; copies, sets, packs, chosen dice and the item of the day in Doctrine DBAL; its activity projection; the inventory tilttek/exchange trades through; dice appearance for tilttek/dice-bundle; events, Twig templates, commands, a member's export and erasure",
+    "description": "tilttek/collections in Symfony: the catalog, members' copies, sets, packs, the item of the day and chosen dice in the database, with member export and erasure.",
     "license": "MIT",
     "type": "symfony-bundle",
     "keywords": [

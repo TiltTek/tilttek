@@ -1,6 +1,6 @@
 {
     "name": "tilttek/exchange",
-    "description": "Exchanges for gamification: rewards bought with points in two steps, a reservation that spends the points and holds the stock then a confirmation or a cancellation; points given between members; items traded by offers, counter-offers and acceptance in one transaction; guards against self-exchange, new accounts and excess; the erasure of a member",
+    "description": "Let members buy rewards with points, give points to each other and trade items, safely and only once, with guards against abuse.",
     "license": "MIT",
     "type": "library",
     "keywords": [

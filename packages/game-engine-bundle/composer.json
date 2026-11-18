@@ -1,6 +1,6 @@
 {
     "name": "tilttek/game-engine-bundle",
-    "description": "Online tables for Symfony on tilttek/game-engine: logs kept by Doctrine DBAL, states cached in a PSR-6 pool, a lock per table, changes published on Mercure with identifiers only, the view of a seat and the log of a finished table, commands to create tables and verify logs, and a Stimulus controller",
+    "description": "tilttek/game-engine in Symfony: online tables stored in the database, a lock per table, every change pushed live by Mercure, and each seat's own view.",
     "license": "MIT",
     "type": "symfony-bundle",
     "keywords": [

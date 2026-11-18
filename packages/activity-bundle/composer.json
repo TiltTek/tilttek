@@ -1,6 +1,6 @@
 {
     "name": "tilttek/activity-bundle",
-    "description": "The journal of members' activity for Symfony on tilttek/activity: the journal and checkpoints in Doctrine DBAL, declared verbs, projections and observers kept up to date live, through Messenger or by a command, the rebuild of a projection after a rule changed, and the export and erasure of a member for phil/privacy-bundle",
+    "description": "tilttek/activity in Symfony: members' activity recorded once in the database, projections kept up to date live or by command, and member export and erasure.",
     "license": "MIT",
     "type": "symfony-bundle",
     "keywords": [

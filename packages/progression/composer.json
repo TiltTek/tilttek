@@ -1,6 +1,6 @@
 {
     "name": "tilttek/progression",
-    "description": "Levels and streaks for gamification: experience earned by rules on members' activity, levels on a linear, quadratic, exponential or tabled curve, several tracks, seasons, milestones worth a reward, streaks of days or weeks in the member's timezone with grace and freezes, rebuilds, and the erasure of a member",
+    "description": "Levels and streaks for members: experience earned from their activity, level curves, seasons, milestones with rewards, and streaks in each member's day.",
     "license": "MIT",
     "type": "library",
     "keywords": [

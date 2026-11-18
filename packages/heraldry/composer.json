@@ -1,6 +1,6 @@
 {
     "name": "tilttek/heraldry",
-    "description": "Coats of arms as a model first: tinctures and their rule, partitions, ordinaries, charges and marks of difference; seeded and reproducible generation; blazon written in English and French; SVG drawn with the package's own shapes.",
+    "description": "Coats of arms as a model: generated from a seed, blazoned in English and French, and drawn as SVG.",
     "license": "MIT",
     "type": "library",
     "keywords": [

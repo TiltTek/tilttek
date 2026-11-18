@@ -1,6 +1,6 @@
 {
     "name": "tilttek/rating",
-    "description": "Per-game ratings of players from their results: Elo with a decreasing K, OpenSkill with Plackett-Luce or Thurstone-Mosteller and a conservative ranking, duels, games of several players and teams, draws, an unrated friendly mode, ratings private by default, a replay that gives the same values, and the events of a celebration.",
+    "description": "Rate players' skill per game from their results, with Elo or OpenSkill, for duels, multiplayer games and teams, private by default and public with consent.",
     "license": "MIT",
     "type": "library",
     "keywords": [

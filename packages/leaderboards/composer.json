@@ -1,6 +1,6 @@
 {
     "name": "tilttek/leaderboards",
-    "description": "Leaderboards for gamification: members ranked on counts, totals, best gestures, days or reported values, over days, weeks, months, seasons or sliding windows, kept up to date from the activity journal, tie-breaks, snapshots, weekly leagues with promotion, titles, teams, stores in memory or Valkey, opt-in display and the erasure of a member",
+    "description": "Rank members on what they do, by day, week, season or sliding window, with ties, weekly leagues and teams, and nobody shown to others without choosing it.",
     "license": "MIT",
     "type": "library",
     "keywords": [

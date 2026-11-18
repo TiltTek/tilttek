@@ -1,6 +1,6 @@
 {
     "name": "tilttek/collections",
-    "description": "Collectible items for gamification: items with a rarity, sets worth a reward once complete, copies and doubles per member, the item of the day on a computed calendar, packs drawn by rarity with published odds and verifiable seeds, moves between members for trades, and the export and erasure of a member",
+    "description": "Items for members to collect, such as cards, dice or figurines: rarities, sets worth a reward, the item of the day, and packs whose odds are published.",
     "license": "MIT",
     "type": "library",
     "keywords": [

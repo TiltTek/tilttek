@@ -1,6 +1,6 @@
 {
     "name": "tilttek/quiz",
-    "description": "Quiz games: questions of six kinds, a timer on an injected clock, scoring with a speed bonus, self-paced plays for members and live sessions with pseudonymous guests and teams, standings, a pseudonym filter, live updates through Mercure, and the events and Stimulus hook of a celebration.",
+    "description": "Quiz games for members at their own pace or live with guests and teams: six question kinds, timers, speed bonuses, standings and live updates.",
     "license": "MIT",
     "type": "library",
     "keywords": [

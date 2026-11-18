@@ -1,6 +1,6 @@
 {
     "name": "tilttek/badges",
-    "description": "Badges and achievements for gamification: criteria read from members' activity — counts, totals, first times, streaks, periods, combinations, manual awards —, tiers, progress, repeatable and hidden badges, withdrawal when the activity is cancelled, titles and showcases the member chooses, and sharing only with the member's consent",
+    "description": "Badges members earn by what they do and show when they choose: criteria read from their activity, tiers, progress, hidden badges, and sharing only with consent.",
     "license": "MIT",
     "type": "library",
     "keywords": [

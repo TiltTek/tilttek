@@ -1,6 +1,6 @@
 {
     "name": "tilttek/wargame-army",
-    "description": "Army lists for miniatures games on a generic engine apart from the catalogues the application provides: units, options, model counts, points, detachment slots and declared constraints, validated one rule at a time with clear messages and exported as text or escaped HTML, with no publisher's catalogue bundled.",
+    "description": "Build and check army lists for miniatures games: units, options, points and constraints validated rule by rule, from catalogues you provide, none bundled.",
     "license": "MIT",
     "type": "library",
     "authors": [

@@ -1,6 +1,6 @@
 {
     "name": "tilttek/points",
-    "description": "A double-entry ledger of points for gamification: balances that are sums of movements, named currencies, earning rules on members' activity with caps per period, first-in first-out expiry, cancellations as reverse movements, spending and transfers that never go negative, rebuilds, and the erasure of a member",
+    "description": "Points members earn, spend and give, kept in a double-entry ledger where every point comes from somewhere: earning rules, caps, expiry and no negative balance.",
     "license": "MIT",
     "type": "library",
     "keywords": [

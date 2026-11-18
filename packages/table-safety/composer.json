@@ -1,6 +1,6 @@
 {
     "name": "tilttek/table-safety",
-    "description": "Table safety tools for tabletop and live-action role-playing games: lines and veils, a consent checklist with a table's anonymous agreement, session zero and its pact, the X-card, Script Change and the open door as anonymous signals, check-ins, stars and wishes, and a participant's export and erasure",
+    "description": "Safety tools for role-playing tables: lines and veils, session zero, the X-card and other signals that stop or change a scene, anonymous by default.",
     "license": "MIT",
     "type": "library",
     "keywords": [

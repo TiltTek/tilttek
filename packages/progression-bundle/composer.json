@@ -1,6 +1,6 @@
 {
     "name": "tilttek/progression-bundle",
-    "description": "Levels and streaks for Symfony on tilttek/progression: tracks, curves, seasons, milestones and streaks in configuration, stored in Doctrine DBAL, the projection fed by tilttek/activity-bundle, events on levels, milestones and broken streaks, Twig progress bar and streak, commands, and member export and erasure",
+    "description": "tilttek/progression in Symfony: levels, seasons and streaks in configuration, fed by activity, shown as Twig progress bars, with member export and erasure.",
     "license": "MIT",
     "type": "symfony-bundle",
     "keywords": [
