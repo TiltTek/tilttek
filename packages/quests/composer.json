@@ -1,6 +1,6 @@
 {
     "name": "tilttek/quests",
-    "description": "Quests and challenges for gamification: steps read on members' activity, in order or not, quests open always, between dates or on recurring dates, chains, declared rewards, acceptance and abandonment, community challenges, team quests, duels between members, rebuilds when a rule changes, and the erasure of a member",
+    "description": "Quests and challenges built from what members do: steps, dates, chains and rewards, for one member, a team, the whole community, or two members racing.",
     "license": "MIT",
     "type": "library",
     "keywords": [

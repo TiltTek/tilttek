@@ -1,6 +1,6 @@
 {
     "name": "tilttek/stickers",
-    "description": "Virtual stickers a member places on their profile or messages: a catalogue with text alternatives and credits, owned stickers, bounded placements, site limits, moderation, and sheets completed as sets.",
+    "description": "Virtual stickers members place on their profile or messages: a catalogue with text alternatives and credits, collections to complete, limits and moderation.",
     "license": "MIT",
     "type": "library",
     "authors": [

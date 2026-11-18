@@ -1,6 +1,6 @@
 {
     "name": "tilttek/quests-bundle",
-    "description": "Quests and challenges for Symfony on tilttek/quests: quests in configuration or the database, seasonal dates by phil/almanac, progress and duels in Doctrine DBAL, the projection fed by tilttek/activity-bundle, events on accomplished quests and duels, Twig list and detail, commands, and member export and erasure",
+    "description": "tilttek/quests in Symfony: quests and challenges in configuration or the database, progress stored, events when one is done, and lists to show in Twig.",
     "license": "MIT",
     "type": "symfony-bundle",
     "keywords": [

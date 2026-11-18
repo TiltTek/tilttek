@@ -1,6 +1,6 @@
 {
     "name": "tilttek/dice-probability",
-    "description": "Exact probabilities of tilttek/dice expressions: distributions as exact fractions, at least and at most, mean and standard deviation, events on the faces of a set of dice, two expressions compared, explosions followed to a depth, and seeded estimates past a size",
+    "description": "The exact odds of a dice expression: every total as a fraction, at least and at most, the mean, and two expressions compared.",
     "license": "MIT",
     "type": "library",
     "keywords": [

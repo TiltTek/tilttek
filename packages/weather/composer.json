@@ -1,6 +1,6 @@
 {
     "name": "tilttek/weather",
-    "description": "Weather in the game world as a table with a memory of tilttek/generator: declared seasons and climate zones, conditions that follow the day before through their neighbours and persist by zone, temperatures moved by a roll of tilttek/dice, labels in English and French, reproducible from a seed",
+    "description": "Weather for a game world, day after day, each day following from the one before, by season and climate zone, reproducible from a seed.",
     "license": "MIT",
     "type": "library",
     "keywords": [

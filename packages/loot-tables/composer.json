@@ -1,6 +1,6 @@
 {
     "name": "tilttek/loot-tables",
-    "description": "Loot tables rolled with any die: tables of entries with a name, an image and a slot, boxes that declare the tables a product rolls, draws committed before and revealed after through tilttek/dice and verifiable by anyone, physical dice entered as they fell, texts drawn from a list, and one-character-per-die shop codes",
+    "description": "Loot tables rolled with any die: the draw is committed before and revealed after, so anyone can check it was fair, with physical dice welcome too.",
     "license": "MIT",
     "type": "library",
     "keywords": [

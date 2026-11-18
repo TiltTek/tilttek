@@ -1,6 +1,6 @@
 {
     "name": "tilttek/accessible-dice",
-    "description": "An accessible dice interface for Symfony on tilttek/dice-bundle: large targets, the faces of custom dice spoken and described by label, shape and value, results announced to screen readers in a polite live region, rolls of a dice tower on the same page announced too, reduced motion respected and nothing read aloud unless asked",
+    "description": "Dice anyone can roll in a Symfony site: large targets, faces spoken and described, and results announced to screen readers, with reduced motion respected.",
     "license": "MIT",
     "type": "symfony-bundle",
     "keywords": [

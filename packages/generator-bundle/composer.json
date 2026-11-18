@@ -1,6 +1,6 @@
 {
     "name": "tilttek/generator-bundle",
-    "description": "Random generators for Symfony on tilttek/generator: lists read from YAML and JSON files and cached, the library's random tables, the states of tables with a memory in a cache pool or the application's store, commands, a Twig function, a Stimulus controller that draws again, and a rate-limited draw API off by default",
+    "description": "tilttek/generator in Symfony: your lists and templates read from YAML or JSON, drawn in pages, in the terminal or through an optional API.",
     "license": "MIT",
     "type": "symfony-bundle",
     "keywords": [
