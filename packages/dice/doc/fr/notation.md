@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=2ba5da17d4548d2d94b21f390cacdcb1a42af4ed645e116d0a3d36d8ed807f51 -->
+<!-- phil-dev source-sha256=ebf2b2841b4b329ec5796496388b7c729123fb9117ef0c707b359f22b0a0d1a9 -->
 # Notation
 
 Une expression est analysée, vérifiée et normalisée avant d'être lancée. Les lettres s'écrivent en minuscules ou en
@@ -64,7 +64,7 @@ Entre crochets, un validateur indique quelles valeurs correspondent :
 | Une comparaison | `[>=6]`, `[!=1]` | Les valeurs pour lesquelles la comparaison est vraie, `!=` compris |
 | Un intervalle | `[8..10]`, `[-1..1]` | Les valeurs d'une borne à l'autre, les deux comprises |
 | Un reste | `[%2=0]`, `[%3!=0]` | Les valeurs dont le reste par le diviseur vérifie la comparaison ; le reste a le signe du diviseur |
-| Composites | `[>2&<6]`, `[1|6]`, `[%2=0^>4]` | Les deux (`&`), l'un ou l'autre (`|`), exactement un (`^`) ; `&` lie plus fort, les parenthèses regroupent |
+| Composites | `[>2&<6]`, `[1\|6]`, `[%2=0^>4]` | Les deux (`&`), l'un ou l'autre (`\|`), exactement un (`^`) ; `&` lie plus fort, les parenthèses regroupent |
 
 Une condition — les réussites `c[…]`, le filtre `f[…]` et les transformations `t[…]` — peut écrire sa portée avant le
 validateur, suivie d'un deux-points :

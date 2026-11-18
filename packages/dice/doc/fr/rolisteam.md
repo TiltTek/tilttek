@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=e978ccc453781ef95e6a387b8afdc1708d261bf400587444623e28a333e4d0ed -->
+<!-- phil-dev source-sha256=4e3642090427ddeb6d47838e5d6fcde3b3f2b4dbc05700f526973a90ae04be6f -->
 # Le DiceParser de Rolisteam
 
 `RolisteamReader` lit une commande écrite dans la notation du DiceParser de Rolisteam — collée telle qu'elle a été
@@ -31,7 +31,7 @@ qu'elle a été écrite : `Unexpected "x" at position 5 of "2d6r[x]".` La comman
 | Relancer et ajouter | `3d10a[10]` | `3d10a10` |
 | Compter | `6d10c[>=7]`, `6d10c>7`, `6d10c10` | `6d10>=7`, `6d10>7`, `6d10=10` |
 | Trier, décroissant et croissant | `10d6s`, `10d6sl` | `10d6sd`, `10d6sa` |
-| Transformation, la valeur de tous les autres dés en dernier | `5d10T[>5]{15}[<2]{1}{0}` | `5d10t[>5:15,<2:1,<1|>0:0]` |
+| Transformation, la valeur de tous les autres dés en dernier | `5d10T[>5]{15}[<2]{1}{0}` | `5d10t[>5:15,<2:1,<1\|>0:0]` |
 | Peindre | `8d10p[2:blue]` | `8d10look[2:blue]` |
 | Occurrences d'une largeur et d'une hauteur | `10d10o2,7` | `10d10o2[>=7]` |
 | Portée d'un validateur | `[*>2]`, `[.6]`, `[:>=30]`, `[?>5]` | `[all:>2]`, `[any:6]`, `[total:>=30]`, `[>5]` |

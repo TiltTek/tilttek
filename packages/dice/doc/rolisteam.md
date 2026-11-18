@@ -29,7 +29,7 @@ within the length of the [limits](limits.md), and so is the pool it gives, rolle
 | Reroll and add | `3d10a[10]` | `3d10a10` |
 | Count | `6d10c[>=7]`, `6d10c>7`, `6d10c10` | `6d10>=7`, `6d10>7`, `6d10=10` |
 | Sort, descending and ascending | `10d6s`, `10d6sl` | `10d6sd`, `10d6sa` |
-| Transformation, the value of every other die last | `5d10T[>5]{15}[<2]{1}{0}` | `5d10t[>5:15,<2:1,<1|>0:0]` |
+| Transformation, the value of every other die last | `5d10T[>5]{15}[<2]{1}{0}` | `5d10t[>5:15,<2:1,<1\|>0:0]` |
 | Paint | `8d10p[2:blue]` | `8d10look[2:blue]` |
 | Occurrences of a width and a height | `10d10o2,7` | `10d10o2[>=7]` |
 | Scope of a validator | `[*>2]`, `[.6]`, `[:>=30]`, `[?>5]` | `[all:>2]`, `[any:6]`, `[total:>=30]`, `[>5]` |

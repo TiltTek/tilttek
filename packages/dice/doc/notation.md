@@ -61,7 +61,7 @@ Between brackets, a validator says which values match:
 | A comparison | `[>=6]`, `[!=1]` | The values the comparison holds for, `!=` included |
 | A range | `[8..10]`, `[-1..1]` | The values from one bound to the other, both included |
 | A remainder | `[%2=0]`, `[%3!=0]` | The values whose remainder by the divisor holds the comparison; the remainder has the sign of the divisor |
-| Composites | `[>2&<6]`, `[1|6]`, `[%2=0^>4]` | Both (`&`), either (`|`), exactly one (`^`); `&` binds tighter, parentheses group |
+| Composites | `[>2&<6]`, `[1\|6]`, `[%2=0^>4]` | Both (`&`), either (`\|`), exactly one (`^`); `&` binds tighter, parentheses group |
 
 A condition — the successes `c[…]`, the filter `f[…]` and the transformations `t[…]` — may write its scope before the
 validator, with a colon:

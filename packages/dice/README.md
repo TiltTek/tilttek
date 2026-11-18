@@ -31,7 +31,7 @@ back, `FairRoller` and `Replayer` make verifiable and replayable rolls, and `Dic
 |---|---|
 | Notation: dice, `d%`, Fudge dice weighted or not, dice on a range, custom dice, counts and sides rolled first, lists of values, the dice before, pools | Implemented and tested |
 | Modifiers: rerolls repeated or once, unique dice, explosions spread, compound, penetrating or limited, dice all the same, floors and ceilings, transformations, filters, keep and drop, advantage, successes and failures, occurrences, groups, critical marks, look tokens, sorting | Implemented and tested |
-| Validators: values, ranges, comparisons, remainders, `&`, `|` and `^`, and their scope | Implemented and tested |
+| Validators: values, ranges, comparisons, remainders, `&`, `\|` and `^`, and their scope | Implemented and tested |
 | Integer arithmetic with the rounding the caller gives; `floor`, `ceil`, `round`, `abs`, `min`, `max`, `repeat`, remainder and power | Implemented and tested |
 | Errors with their position; limits on dice, sides, explosions, rerolls, repetitions, instructions, length and texts | Implemented and tested |
 | Canonical form and the notations of other languages (German, Danish, Norwegian, Swedish built in) | Implemented and tested |

@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=c0c99bc8bc13f5bf83a556e633f88c4d5fa76d129efc0bc756406057d341a6d2 -->
+<!-- phil-dev source-sha256=82fa24ecdc21f1899881a465cb9bb563e685434ccb7a49878726054e55002b8a -->
 # tilttek/dice
 
 **La notation des dés analysée, vérifiée, normalisée et lancée — et chaque dé gardé pour montrer d'où vient le
@@ -35,7 +35,7 @@ réunit en un seul objet.
 |---|---|
 | Notation : dés, `d%`, dés Fudge pondérés ou non, dés sur un intervalle, dés personnalisés, nombres et faces lancés d'abord, listes de valeurs, les dés précédents, lots | Implémenté et testé |
 | Modificateurs : relances répétées ou uniques, dés uniques, explosions étalées, composées, pénétrantes ou limitées, dés tous identiques, planchers et plafonds, transformations, filtres, garder et écarter, avantage, réussites et échecs, occurrences, groupes, marques critiques, jetons de regard, tri | Implémenté et testé |
-| Validateurs : valeurs, intervalles, comparaisons, restes, `&`, `|` et `^`, et leur portée | Implémenté et testé |
+| Validateurs : valeurs, intervalles, comparaisons, restes, `&`, `\|` et `^`, et leur portée | Implémenté et testé |
 | Arithmétique entière avec l'arrondi que donne l'appelant ; `floor`, `ceil`, `round`, `abs`, `min`, `max`, `repeat`, reste et puissance | Implémenté et testé |
 | Erreurs avec leur position ; limites sur les dés, les faces, les explosions, les relances, les répétitions, les instructions, la longueur et les textes | Implémenté et testé |
 | Forme canonique et notations d'autres langues (allemand, danois, norvégien, suédois intégrés) | Implémenté et testé |
