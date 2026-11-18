@@ -4,7 +4,7 @@ All notable changes to `tilttek/loot-tables` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
-## Unreleased
+## 0.3.0-alpha - 2026-11-17
 
 Next version: 0.3.0-alpha, for the proofs under the commitments of `tilttek/dice` 0.3.
 
