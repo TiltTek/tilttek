@@ -13,12 +13,15 @@ use InvalidArgumentException;
  * what remains. An exact computation does at most `workLimit` operations on its weights; past that, and for the
  * constructs it does not follow, `samples` rolls drawn from `seed` give an estimate — the same seed gives the same
  * estimate. An estimate rolls at most `rollLimit` dice over all its samples, explosions and rerolls included; past
- * that, no probability is given. The work of an expression is bounded either way.
+ * that, no probability is given. The search of the groups a set forms, `10d10g10`, takes at most `groupWorkLimit`
+ * steps over all the samples: about `n × 2ⁿ` for a set of `n` dice up to 12, `n²` beyond; past that, no probability is
+ * given either. The work of an expression is bounded either way.
  */
 final readonly class Settings
 {
     /**
-     * @throws InvalidArgumentException when the depth, the work limit, the number of samples or the roll limit is below 1
+     * @throws InvalidArgumentException when the depth, the work limit, the number of samples, the roll limit or the
+     *                                  group work limit is below 1
      */
     public function __construct(
         public int $explosionDepth = 10,
@@ -26,8 +29,9 @@ final readonly class Settings
         public int $samples = 20_000,
         public int $seed = 0,
         public int $rollLimit = 200_000,
+        public int $groupWorkLimit = 20_000_000,
     ) {
-        foreach (['explosion depth' => $explosionDepth, 'work limit' => $workLimit, 'number of samples' => $samples, 'roll limit' => $rollLimit] as $name => $value) {
+        foreach (['explosion depth' => $explosionDepth, 'work limit' => $workLimit, 'number of samples' => $samples, 'roll limit' => $rollLimit, 'group work limit' => $groupWorkLimit] as $name => $value) {
             if ($value < 1) {
                 throw new InvalidArgumentException(\sprintf('The %s is at least 1; %d is not.', $name, $value));
             }

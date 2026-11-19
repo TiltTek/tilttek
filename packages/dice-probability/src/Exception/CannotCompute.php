@@ -9,7 +9,8 @@ use Tilttek\Dice\Exception\CannotRoll;
 
 /**
  * No distribution can be given: an outcome cannot be rolled, the faces carry no value, the input is not one
- * expression, or not one set of dice, or its estimate would roll more dice than the settings allow.
+ * expression, or not one set of dice, or its estimate would roll more dice, or search its groups longer, than the
+ * settings allow.
  */
 final class CannotCompute extends RuntimeException implements ProbabilityException
 {
@@ -31,6 +32,11 @@ final class CannotCompute extends RuntimeException implements ProbabilityExcepti
     public static function tooManyRolls(int $limit, int $samples): self
     {
         return new self(\sprintf('The estimate would roll more than %d dice over its %d samples: lower the samples, or raise the roll limit.', $limit, $samples));
+    }
+
+    public static function tooMuchGroupWork(int $limit, int $samples): self
+    {
+        return new self(\sprintf('The estimate would take more than %d steps to search the groups of its %d samples: lower the samples, or raise the group work limit.', $limit, $samples));
     }
 
     public static function notASet(): self

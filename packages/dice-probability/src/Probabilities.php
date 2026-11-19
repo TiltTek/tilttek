@@ -51,7 +51,7 @@ final readonly class Probabilities
         private Settings $settings = new Settings(),
     ) {
         $this->calculator = new Calculator($customDice, $limits, $settings->explosionDepth);
-        $this->sampler = new Sampler(new Roller($limits, $customDice), $settings->samples, $settings->seed, $settings->rollLimit);
+        $this->sampler = new Sampler(new Roller($limits, $customDice), $settings->samples, $settings->seed, $settings->rollLimit, $settings->groupWorkLimit);
     }
 
     /**
@@ -60,7 +60,8 @@ final readonly class Probabilities
      * @param RoundingMode $rounding how a division rounds, unless `floor()`, `ceil()` or `round()` say otherwise
      *
      * @throws CannotCompute when the pool holds several expressions, a die's faces carry no value, an outcome
-     *                       cannot be rolled, or the estimate would roll more dice than the roll limit
+     *                       cannot be rolled, or the estimate would roll more dice than the roll limit or search its
+     *                       groups longer than the group work limit
      * @throws LimitExceeded when the expression goes past a limit
      */
     public function distribution(Node|Pool $expression, RoundingMode $rounding = RoundingMode::NegativeInfinity): Distribution
@@ -98,7 +99,8 @@ final readonly class Probabilities
      * that count —, exact over their sorted multisets, or estimated when the dice take other modifiers or are too many.
      *
      * @throws CannotCompute when the expression is not one set of dice, its faces carry no value, or the estimate
-     *                       would roll more dice than the roll limit
+     *                       would roll more dice than the roll limit or search its groups longer than the group work
+     *                       limit
      * @throws LimitExceeded when the dice go past a limit
      */
     public function chance(Event $event, Node|Pool $dice): Chance
