@@ -31,11 +31,22 @@ final readonly class Multiplier
     }
 
     /**
-     * An amount multiplied, rounded down: a gain never grows by a fraction of a point.
+     * An amount multiplied, rounded down: a gain never grows by a fraction of a point. The hundreds and the rest are
+     * multiplied apart, so that only a result an integer cannot hold is refused.
+     *
+     * @throws InvalidSeason when the amount multiplied is more than an integer holds
      */
     public function apply(int $amount): int
     {
-        return intdiv($amount * $this->percent, 100);
+        $hundreds = intdiv($amount, 100);
+        $rest = intdiv($amount % 100 * $this->percent, 100);
+
+        // The rest has the sign of the amount: past these bounds, the hundreds multiplied and the rest would not fit.
+        if ($hundreds > intdiv(\PHP_INT_MAX - $rest, $this->percent) || $hundreds < intdiv(\PHP_INT_MIN - $rest, $this->percent)) {
+            throw InvalidSeason::because(\sprintf('%d multiplied by %d percent is more than an integer holds.', $amount, $this->percent));
+        }
+
+        return $hundreds * $this->percent + $rest;
     }
 
     /**
