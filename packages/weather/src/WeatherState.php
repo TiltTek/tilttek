@@ -46,7 +46,7 @@ final readonly class WeatherState
             throw InvalidState::of('names its zone and its season, and its condition as a text');
         }
 
-        if (null !== $temperature && (!\is_scalar($temperature) || 1 !== preg_match('/^-?\d{1,3}$/D', (string) $temperature))) {
+        if (null !== $temperature && (!\is_int($temperature) && !\is_string($temperature) || 1 !== preg_match('/^-?\d{1,3}$/D', (string) $temperature))) {
             throw InvalidState::of('holds its temperature as a whole number of degrees');
         }
 

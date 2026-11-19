@@ -198,7 +198,7 @@ final class WeatherTest extends TestCase
     {
         $states = [
             'names its zone and its season, and its condition as a text' => [['season' => 'b'], ['zone' => 'a'], ['zone' => 1, 'season' => 'b'], ['zone' => 'a', 'season' => 'b', 'condition' => 3]],
-            'holds its temperature as a whole number of degrees' => [['zone' => 'a', 'season' => 'b', 'temperature' => '1.5'], ['zone' => 'a', 'season' => 'b', 'temperature' => 'warm'], ['zone' => 'a', 'season' => 'b', 'temperature' => '1000'], ['zone' => 'a', 'season' => 'b', 'temperature' => ['1']], ['zone' => 'a', 'season' => 'b', 'temperature' => "1\n"], ['zone' => 'a', 'season' => 'b', 'temperature' => 'x1']],
+            'holds its temperature as a whole number of degrees' => [['zone' => 'a', 'season' => 'b', 'temperature' => '1.5'], ['zone' => 'a', 'season' => 'b', 'temperature' => 'warm'], ['zone' => 'a', 'season' => 'b', 'temperature' => '1000'], ['zone' => 'a', 'season' => 'b', 'temperature' => ['1']], ['zone' => 'a', 'season' => 'b', 'temperature' => "1\n"], ['zone' => 'a', 'season' => 'b', 'temperature' => 'x1'], ['zone' => 'a', 'season' => 'b', 'temperature' => true], ['zone' => 'a', 'season' => 'b', 'temperature' => false], ['zone' => 'a', 'season' => 'b', 'temperature' => 1.0]],
         ];
 
         foreach ($states as $problem => $arrays) {
