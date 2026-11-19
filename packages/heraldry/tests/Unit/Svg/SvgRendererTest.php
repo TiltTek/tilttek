@@ -80,6 +80,12 @@ final class SvgRendererTest extends TestCase
         self::assertStringContainsString('aria-labelledby="'.$id.'-title', $renderer->render($coat, language: Language::French));
         self::assertNotSame($renderer->render($coat), $renderer->render($coat, ShieldShape::French));
         self::assertStringNotContainsString($id, $renderer->render($coat, ShieldShape::French));
+
+        $ann = 'arms-'.substr(hash('xxh3', "heater Gules\0en\0Arms of Ann"), 0, 12);
+        self::assertStringContainsString('<title id="'.$ann.'-title">Arms of Ann</title>', $renderer->render($coat, title: 'Arms of Ann'));
+        self::assertStringNotContainsString($ann, $renderer->render($coat, title: 'Arms of Bob'));
+        self::assertStringNotContainsString($ann, $renderer->render($coat, language: Language::French, title: 'Arms of Ann'));
+        self::assertSame($renderer->render($coat, title: 'Arms of Ann'), $renderer->render($coat, title: 'Arms of Ann'));
     }
 
     public function testAnIdPrefixIsALetterThenLettersDigitsDashesOrUnderscores(): void

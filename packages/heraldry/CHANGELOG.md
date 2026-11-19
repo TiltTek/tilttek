@@ -4,6 +4,16 @@ All notable changes to `tilttek/heraldry` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+Next version: 0.1.1-alpha.
+
+### Fixed
+
+- The prefix of the ids an image derives when none is given takes the title and its language as well as the arms and
+  the shape: the same arms drawn on one page for two owners, under their own titles, no longer share their ids and the
+  titles their `aria-labelledby` points to. An image drawn without a title keeps the prefix it had.
+
 ## 0.1.0-alpha - 2026-11-13
 
 ### Added

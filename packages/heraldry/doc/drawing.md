@@ -26,8 +26,9 @@ and control characters other than tab and line breaks are left out.
 ## Ids
 
 Every `id` starts with the prefix given — a letter, then up to 47 letters, digits, `-` or `_` —, or with `arms-` and
-12 hexadecimal digits derived from the arms and the shape. Several images share a page without clashing; give each
-its own prefix when the same arms appear twice. Any other prefix throws `Exception\InvalidDrawing`.
+12 hexadecimal digits derived from the arms, the shape and, when one is given, the title and its language: the same
+arms drawn for two owners under their own titles do not clash, and the same call always draws the same image. Give
+each image its own prefix when the same arms appear twice under the same title. Any other prefix throws `Exception\InvalidDrawing`.
 
 ## Palette
 

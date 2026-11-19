@@ -21,8 +21,8 @@ use Tilttek\Heraldry\Tincture;
  * its title and description, no script, no style sheet, no reference outside the image.
  *
  * The image is accessible: `role="img"`, its `<title>` names it and its `<desc>` holds the blazon, both referred to by
- * `aria-labelledby`. Every `id` starts with the prefix given, or with one derived from the arms, so that several images
- * share a page without clashing.
+ * `aria-labelledby`. Every `id` starts with the prefix given, or with one derived from the arms, the shape and the
+ * title given, so that several images share a page without clashing.
  */
 final readonly class SvgRenderer
 {
@@ -35,14 +35,15 @@ final readonly class SvgRenderer
     /**
      * @param ?string $title the image's accessible name; "Coat of arms" or « Armoiries » when null
      * @param ?string $id    the prefix of every `id` of the image, a letter then up to 47 letters, digits, `-` or `_`;
-     *                       derived from the arms and the shape when null
+     *                       derived from the arms, the shape and the title given when null
      *
      * @throws InvalidDrawing when the prefix is not such a text
      */
     public function render(Coat $coat, ShieldShape $shape = ShieldShape::Heater, Language $language = Language::English, ?string $title = null, ?string $id = null): string
     {
         $description = $this->blazonry->write($coat, $language);
-        $id ??= 'arms-'.substr(hash('xxh3', $shape->value.' '.$this->blazonry->write($coat)), 0, 12);
+        // The title and the language take part: the same arms drawn for two owners, or in two languages, differ.
+        $id ??= 'arms-'.substr(hash('xxh3', $shape->value.' '.$this->blazonry->write($coat).(null === $title ? '' : "\0".$language->value."\0".$title)), 0, 12);
 
         if (1 !== preg_match('/\A[A-Za-z][A-Za-z0-9_-]{0,47}\z/', $id)) {
             throw InvalidDrawing::id();
