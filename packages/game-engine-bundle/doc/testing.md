@@ -23,8 +23,8 @@ covered mutants.
 
 `tests/Functional` boots an application with FrameworkBundle, DoctrineBundle on SQLite, TwigBundle, Twig components, an
 in-memory lock and a Mercure hub that records: the tables are created by the command, a table is played and published,
-read from the endpoints, its template rendered with the recipes of the kit when one is found, its log verified, and
-no move taken back once its game is over.
+read from the endpoints, its template rendered with the recipes Card and Badge of `phil/ux-kit`, a development
+requirement read from `vendor/`, its log verified, and no move taken back once its game is over.
 
 `tests/Benchmark/StorageBench.php` measures a move appended to the log and a log of 100 moves read back, on SQLite in
 memory, and a state put in an array pool and read back: about 22 µs, 0.34 ms, 9 µs and 13 µs on PHP 8.5 without its
