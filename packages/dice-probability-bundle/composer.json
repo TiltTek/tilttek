@@ -31,6 +31,7 @@
     "require-dev": {
         "phil/ux-kit": ">=0.1.0-alpha <1.0",
         "phpunit/phpunit": "^13.4",
+        "symfony/cache": "^8.2",
         "symfony/event-dispatcher": "^8.2",
         "symfony/framework-bundle": "^8.2",
         "symfony/http-foundation": "^8.2",
