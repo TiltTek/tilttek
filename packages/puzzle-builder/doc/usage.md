@@ -125,7 +125,10 @@ A puzzle requires 50 others at most, each once, and never itself. When the scena
 The library stores nothing. `Progress::toArray()` gives plain values — the puzzles solved with their time and whether
 they were skipped, those the host opened, the hints revealed and the guesses of each puzzle —, every time in UTC to the
 microsecond; `Progress::fromArray()` reads them back, checked against the scenario: a puzzle the scenario does not
-hold, a hint out of its order, a count out of bounds is refused with `InvalidProgress`.
+hold, a hint out of its order, a count out of bounds is refused with `InvalidProgress`. So are moves that could not
+have been played: puzzles solved out of the order of their times, a puzzle solved, a hint revealed or a puzzle guessed
+while it was locked — before the host opened it, or before the puzzles that open it were solved. A progress kept
+where the players can change it is checked this far only: keep it on the server, or sign it.
 
 ```php
 $progress = Progress::fromArray($scenario, $row['progress']);
