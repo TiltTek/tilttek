@@ -116,6 +116,7 @@ final class SeasonTest extends TestCase
                 self::assertSame(\sprintf('%d multiplied by %d percent is more than an integer holds.', $amount, $percent), $invalid->getMessage());
             }
         }
+
         self::assertSame(['ledger' => 'points', 'percent' => 150], $multiplier->toArray());
         self::assertSame(101, new Multiplier('xp', 101)->percent);
         self::assertSame(500, new Multiplier('xp', 500)->percent);

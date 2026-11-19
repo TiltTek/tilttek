@@ -8,6 +8,7 @@ use LogicException;
 use Phil\RateLimit\RateLimitGuard;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
@@ -148,7 +149,7 @@ final class TilttekDiceProbabilityBundleTest extends TestCase
     {
         $container = $this->load([]);
         $container->setParameter('kernel.environment', 'prod');
-        $container->register('cache.app', 'Symfony\\Component\\Cache\\Adapter\\FilesystemAdapter');
+        $container->register('cache.app', FilesystemAdapter::class);
 
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessageIsOrContains('tilttek_dice_probability.rate_limit.cache_pool: the store "cache.app" is local to each server');

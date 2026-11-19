@@ -250,7 +250,7 @@ final readonly class Progress
     {
         $opened = $this->opened[$puzzle] ?? null;
 
-        if ($opened instanceof DateTimeImmutable && (null === $at || $opened <= $at)) {
+        if ($opened instanceof DateTimeImmutable && (!$at instanceof DateTimeImmutable || $opened <= $at)) {
             return true;
         }
 
