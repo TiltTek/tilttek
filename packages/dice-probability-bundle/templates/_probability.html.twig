@@ -1,0 +1,4 @@
+{#- A probability: its percentage, then its fraction in lowest terms when it is short enough to read. -#}
+{%- set fraction = probability|tilttek_dice_fraction -%}
+<span class="tilttek-dice-probability">{{ (probability.toFloat * 100)|number_format(2) }} %</span>
+{%- if fraction is not null %} <span class="tilttek-dice-probability__fraction">({{ fraction }})</span>{% endif -%}

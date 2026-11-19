@@ -1,0 +1,57 @@
+{#
+ # The draws of an order, each a card of the UX kit: the line, the option and the unit it draws, its commitment, and a
+ # badge saying where it stands; once revealed, the seed it published, the entries drawn, the shop code and whether it
+ # checks out against the commitment. Nothing here needs JavaScript, and nothing is asked of the buyer.
+ #}
+{%- set domain = 'tilttek_loot_tables' -%}
+{%- set draws = this.draws -%}
+{%- set kit = {card: this.kit('Card'), header: this.kit('Card:Header'), title: this.kit('Card:Title'), content: this.kit('Card:Content'), badge: this.kit('Badge')} -%}
+{%- set id = attributes.all.id ?? 'tilttek-loot-commitments' -%}
+<section id="{{ id }}"{{ attributes.without('id').defaults({class: 'tilttek-loot-commitments', 'aria-labelledby': id ~ '-title'}) }}>
+    <h2 id="{{ id }}-title">{{ 'commitments.title'|trans({}, domain) }}</h2>
+    {%- if draws is empty %}
+    <p class="tilttek-loot-commitments__empty">{{ 'commitments.empty'|trans({}, domain) }}</p>
+    {%- else %}
+    <p class="tilttek-loot-commitments__intro">{{ 'commitments.intro'|trans({}, domain) }}</p>
+    <ol class="tilttek-loot-commitments__draws">
+        {%- for draw in draws %}
+        {%- set name = this.name(draw) %}
+        {%- set result = this.result(draw) %}
+        {%- set code = this.shopCode(draw) %}
+        {%- set state = result is null ? 'sealed' : (draw.commitment is null ? 'physical' : (this.verified(draw) ? 'verified' : 'not_verified')) %}
+        {% component (kit.card) with {as: 'li', size: 'sm', class: 'tilttek-loot-commitments__draw', 'data-draw': draw.id} %}{% block content %}
+            {% component (kit.header) %}{% block content %}
+                {% component (kit.title) with {level: 3} %}{% block content %}{{ 'commitments.draw'|trans({'%line%': name.line, '%option%': name.option, '%unit%': draw.unit}, domain) }}{% endblock %}{% endcomponent %}
+                {% component (kit.badge) with {variant: {verified: 'default', not_verified: 'destructive', physical: 'outline', sealed: 'secondary'}[state], class: 'tilttek-loot-commitments__state'} %}{% block content %}{{ ('commitments.' ~ state)|trans({}, domain) }}{% endblock %}{% endcomponent %}
+            {% endblock %}{% endcomponent %}
+            {% component (kit.content) %}{% block content %}
+                <dl>
+                    {%- if draw.commitment is not null %}
+                    <dt>{{ 'commitments.commitment'|trans({}, domain) }}</dt>
+                    <dd><code class="tilttek-loot-commitments__commitment">{{ draw.commitment }}</code></dd>
+                    {%- endif %}
+                    {%- if draw.revealedSeed is not null %}
+                    <dt>{{ 'commitments.seed'|trans({}, domain) }}</dt>
+                    <dd><code class="tilttek-loot-commitments__seed">{{ draw.revealedSeed }}</code></dd>
+                    {%- endif %}
+                    {%- if result is not null %}
+                    <dt>{{ 'commitments.entries'|trans({}, domain) }}</dt>
+                    <dd>
+                        <ul class="tilttek-loot-commitments__entries">
+                            {%- for pick in result.picks %}
+                            <li>{{ 'commitments.entry'|trans({'%table%': pick.table.name, '%face%': pick.face, '%entry%': pick.entry.name}, domain) }}</li>
+                            {%- endfor %}
+                        </ul>
+                    </dd>
+                    {%- if code is not null %}
+                    <dt>{{ 'commitments.shop_code'|trans({}, domain) }}</dt>
+                    <dd><code>{{ code }}</code></dd>
+                    {%- endif %}
+                    {%- endif %}
+                </dl>
+            {% endblock %}{% endcomponent %}
+        {% endblock %}{% endcomponent %}
+        {%- endfor %}
+    </ol>
+    {%- endif %}
+</section>

@@ -1,0 +1,67 @@
+{
+    "name": "tilttek/luck-tokens-bundle",
+    "description": "tilttek/luck-tokens in Symfony: inspiration and fate tokens per table, every move stored in the database, with events, access rules and member erasure.",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": [
+        "luck-tokens",
+        "inspiration",
+        "tabletop",
+        "rpg",
+        "symfony-bundle"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "doctrine/dbal": "^4.5",
+        "phil/resource": "^0.1@dev",
+        "psr/event-dispatcher": "^1.0",
+        "symfony/config": "^8.2",
+        "symfony/dependency-injection": "^8.2",
+        "tilttek/luck-tokens": "^0.1@dev"
+    },
+    "require-dev": {
+        "doctrine/doctrine-bundle": "^3.3",
+        "doctrine/orm": "^3.7",
+        "phil/privacy-bundle": "^0.1@dev",
+        "phpunit/phpunit": "^13.4",
+        "symfony/clock": "^8.2",
+        "symfony/event-dispatcher": "^8.2",
+        "symfony/framework-bundle": "^8.2",
+        "symfony/http-kernel": "^8.2",
+        "symfony/lock": "^8.2",
+        "symfony/process": "^8.2",
+        "symfony/security-core": "^8.2"
+    },
+    "suggest": {
+        "doctrine/orm": "To add the tokens' tables to the schema the ORM generates, and so to the migrations",
+        "phil/privacy-bundle": "To erase a member's tokens with the rest of their account",
+        "symfony/lock": "To run the operations of a holder, or of a table, one after the other",
+        "symfony/security-bundle": "To decide through the security voters who spends and passes the tokens of whom"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\LuckTokensBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\LuckTokensBundle\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

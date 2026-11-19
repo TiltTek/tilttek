@@ -1,0 +1,59 @@
+calendar:
+    visitor: 'Sign in to open the boxes: each one holds a surprise.'
+    refused:
+        title: 'Box {day} cannot be opened now'
+        locked: 'It opens on {opens, date, long}.'
+        missed: 'It could be opened until {last, date, long}.'
+        openable: 'Try again.'
+        opened: 'It is already open.'
+policy:
+    until_closing: 'Until the calendar closes'
+    same_day: 'On its day only'
+    catch_up: 'On its day and a few days after'
+    explained:
+        until_closing: 'A box opens on its day and stays openable until {closing, date, long}: a missed day is not lost.'
+        same_day: 'A box opens on its day only.'
+        catch_up: '{days, plural, one {A box opens on its day and stays openable one more day.} other {A box opens on its day and stays openable # more days.}}'
+box:
+    title: 'Day {day}'
+    date: '{date, date, long}'
+    open: 'Open box {day}'
+    openable: 'Ready to open.'
+    state:
+        locked: Locked
+        missed: Missed
+    until:
+        locked: 'Opens on {opens, date, long}.'
+        missed: 'Could be opened until {last, date, long}.'
+    announce:
+        opened: 'Box opened.'
+        failed: 'The box could not be opened; reload the page.'
+surprise:
+    kind:
+        points: Points
+        badge: Badge
+        content: Content
+        code: Code
+    granted:
+        points: '{quantity, plural, one {# point} other {# points}}'
+        badge: 'A badge: {reference}'
+        content: 'Something to discover: {reference}'
+        code: 'A code from {reference}'
+celebration:
+    message: 'Box opened!'
+    box: 'Box {day} opened!'
+form:
+    calendar:
+        id: Identifier
+        title: Title
+        timezone: Timezone
+        first_date: 'Date of box 1'
+        closing_date: 'Closing date'
+        policy: 'How long a box stays openable'
+        catch_up_days: 'Days of catch-up'
+        published: Published
+        surprises: 'Surprises, one per box'
+    surprise:
+        kind: Kind
+        reference: Reference
+        quantity: Quantity

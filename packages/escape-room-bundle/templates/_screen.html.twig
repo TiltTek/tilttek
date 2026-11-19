@@ -1,0 +1,38 @@
+{#
+ # The state of a hint screen, without the layout: the countdown, what the host shows — a hint with its penalty, or a
+ # message —, the outcome, and the celebration of an escape. The screen's Stimulus controller reads it again when the
+ # game moves and replaces the page's copy when its version changed; the celebration then plays once, where motion is
+ # not reduced; a page that includes it with `celebrate: false` draws none. The countdown is text in a `<time>` element; a pause and the last minutes are said in words.
+ #}
+{%- set domain = tilttek_escape_room_domain() -%}
+<div class="tilttek-escape-room__state" data-version="{{ game.version }}" data-remaining="{{ game.remaining }}" data-paused="{{ game.paused ? 'true' : 'false' }}" data-outcome="{{ game.outcome ?? '' }}">
+    <p class="tilttek-escape-room__countdown">
+        <span>{{ 'screen.left'|trans({}, domain) }}</span>
+        <time datetime="PT{{ game.remaining }}S" class="tilttek-escape-room__clock">{{ tilttek_escape_room_clock(game.remaining) }}</time>
+    </p>
+    {%- if game.outcome is not null %}
+        <p class="tilttek-escape-room__outcome">{{ ('outcome.' ~ game.outcome)|trans({'{time}': tilttek_escape_room_clock(game.final), '{hints}': game.hints}, domain) }}</p>
+    {%- elseif game.paused %}
+        <p class="tilttek-escape-room__paused">{{ 'screen.paused'|trans({}, domain) }}</p>
+    {%- endif %}
+    {%- if game.screen.kind == 'hint' and game.screen.text is not null %}
+        {% component (tilttek_escape_room_kit('Card')) with {as: 'section', class: 'tilttek-escape-room__hint', 'aria-labelledby': 'tilttek-escape-room-hint-' ~ game.id} %}{% block content %}
+            {% component (tilttek_escape_room_kit('Card:Header')) %}{% block content %}
+                {% component (tilttek_escape_room_kit('Card:Title')) with {id: 'tilttek-escape-room-hint-' ~ game.id} %}{% block content %}{{ 'screen.hint_for'|trans({'{puzzle}': game.screen.title}, domain) }}{% endblock %}{% endcomponent %}
+            {% endblock %}{% endcomponent %}
+            {% component (tilttek_escape_room_kit('Card:Content')) %}{% block content %}
+                <p class="tilttek-escape-room__hint-text">{{ game.screen.text }}</p>
+                {%- if game.screen.penalty > 0 %}
+                    {% component (tilttek_escape_room_kit('Badge')) with {variant: 'secondary'} %}{% block content %}{{ 'screen.penalty'|trans({'{time}': tilttek_escape_room_clock(game.screen.penalty)}, domain) }}{% endblock %}{% endcomponent %}
+                {%- endif %}
+            {% endblock %}{% endcomponent %}
+        {% endblock %}{% endcomponent %}
+    {%- elseif game.screen.kind == 'message' and game.screen.text is not null %}
+        {% component (tilttek_escape_room_kit('Card')) with {as: 'section', class: 'tilttek-escape-room__message', 'aria-label': 'screen.message'|trans({}, domain)} %}{% block content %}
+            {% component (tilttek_escape_room_kit('Card:Content')) %}{% block content %}<p class="tilttek-escape-room__message-text">{{ game.screen.text }}</p>{% endblock %}{% endcomponent %}
+        {% endblock %}{% endcomponent %}
+    {%- endif %}
+    {%- if game.celebration is not null and celebrate|default(true) %}
+        {{ component(tilttek_escape_room_kit('Celebration'), {message: 'outcome.celebration'|trans({'{time}': tilttek_escape_room_clock(game.final)}, domain), effect: game.celebration, autoplay: true, class: 'tilttek-escape-room__celebration'}) }}
+    {%- endif %}
+</div>

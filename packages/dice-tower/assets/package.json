@@ -1,0 +1,23 @@
+{
+    "name": "@tilttek/dice-tower",
+    "description": "The dice tower's Stimulus controller: adds each new roll of a table from the Mercure hub and reads the missed ones from the log",
+    "version": "0.1.0",
+    "license": "MIT",
+    "type": "module",
+    "symfony": {
+        "controllers": {
+            "tower": {
+                "main": "src/tower_controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0"
+    }
+}

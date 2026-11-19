@@ -1,0 +1,70 @@
+{#
+ # The game master's screen: every signal, the last check-in, what the table agreed, its pact, the stars and wishes of
+ # a session, and the table's settings.
+ #}
+{% extends layout %}
+{%- set domain = 'tilttek_table_safety' -%}
+{% block body %}
+<main class="tilttek-table-safety">
+    <h1>{{ 'game_master.title'|trans({}, domain) }}</h1>
+    {{ include('@TilttekTableSafety/_nav.html.twig', {game_master: true}) }}
+    {%- if saved %}{{ include('@TilttekTableSafety/_saved.html.twig') }}{% endif %}
+    {{ include('@TilttekTableSafety/_signal_buttons.html.twig', {kinds: signal_kinds, return: 'game-master'}) }}
+    {{ include('@TilttekTableSafety/_signals.html.twig', {game_master: true}) }}
+    <section aria-labelledby="tilttek-table-safety-check-in">
+        <h2 id="tilttek-table-safety-check-in">{{ 'check_in.title'|trans({}, domain) }}</h2>
+        {%- if check_in.askedAt is null %}
+        <p>{{ 'check_in.none'|trans({}, domain) }}</p>
+        {%- else %}
+        <p>{{ 'check_in.asked'|trans({time: check_in.askedAt|date('H:i')}, domain) }}</p>
+        <ul role="list">
+            <li>{{ 'count'|trans({label: ('signals.kinds.all-good'|trans({}, domain)), count: check_in.allGood}, domain) }}</li>
+            <li>{{ 'count'|trans({label: ('signals.kinds.unsure'|trans({}, domain)), count: check_in.unsure}, domain) }}</li>
+            <li>{{ 'count'|trans({label: ('signals.kinds.not-okay'|trans({}, domain)), count: check_in.notOkay}, domain) }}</li>
+        </ul>
+        {%- if check_in.needsAttention %}{% component (table_safety_kit('Alert')) with {variant: 'destructive'} %}{% block content %}{{ 'check_in.attention'|trans({}, domain) }}{% endblock %}{% endcomponent %}{% endif %}
+        {%- endif %}
+    </section>
+    {{ include('@TilttekTableSafety/_agreement.html.twig') }}
+    <section aria-labelledby="tilttek-table-safety-pact">
+        <h2 id="tilttek-table-safety-pact">{{ 'pact.title'|trans({}, domain) }}</h2>
+        <p>{{ 'agreement.respondents'|trans({count: pact.respondents}, domain) }}</p>
+        <dl>
+            {%- for question in pact.questions %}
+            <dt>{{ question.prompt ?? ('session_zero.questions.' ~ question.key)|trans({}, domain) }}</dt>
+            <dd>
+                {%- if question.kind == 'text' %}
+                {%- if question.texts is empty %}{{ 'agreement.none'|trans({}, domain) }}{% else %}<ul>{% for text in question.texts %}<li>{{ text }}</li>{% endfor %}</ul>{% endif %}
+                {%- else %}
+                <ul>{% for option in question.options %}<li>{{ 'count'|trans({label: option.label ?? ('session_zero.options.' ~ question.key ~ '.' ~ option.key)|trans({}, domain), count: option.count}, domain) }}</li>{% endfor %}</ul>
+                {%- endif %}
+            </dd>
+            {%- endfor %}
+        </dl>
+    </section>
+    <section aria-labelledby="tilttek-table-safety-feedback">
+        <h2 id="tilttek-table-safety-feedback">{{ 'feedback.summary'|trans({}, domain) }}</h2>
+        <form method="get">
+            <label for="tilttek-table-safety-session">{{ 'feedback.session'|trans({}, domain) }}</label>
+            <input id="tilttek-table-safety-session" name="session" value="{{ session }}" pattern="[a-z0-9]+(-[a-z0-9]+)*" maxlength="64">
+            {% component (table_safety_kit('Button')) with {type: 'submit', variant: 'outline'} %}{% block content %}{{ 'feedback.show'|trans({}, domain) }}{% endblock %}{% endcomponent %}
+        </form>
+        {%- if feedback is not null and not feedback.hasEnoughAnswers %}
+        <p>{{ 'feedback.not_enough'|trans({count: feedback.threshold}, domain) }}</p>
+        {%- elseif feedback is not null %}
+        <p>{{ 'agreement.respondents'|trans({count: feedback.respondents}, domain) }}</p>
+        <h3>{{ 'feedback.stars'|trans({}, domain) }}</h3>
+        <ul>{% for star in feedback.stars %}<li>{{ star }}</li>{% else %}<li>{{ 'agreement.none'|trans({}, domain) }}</li>{% endfor %}</ul>
+        <h3>{{ 'feedback.wishes'|trans({}, domain) }}</h3>
+        <ul>{% for wish in feedback.wishes %}<li>{{ wish }}</li>{% else %}<li>{{ 'agreement.none'|trans({}, domain) }}</li>{% endfor %}</ul>
+        {%- endif %}
+    </section>
+    <section aria-labelledby="tilttek-table-safety-settings">
+        <h2 id="tilttek-table-safety-settings">{{ 'settings.title'|trans({}, domain) }}</h2>
+        {{ form_start(settings_form) }}
+            {{ form_widget(settings_form) }}
+            {% component (table_safety_kit('Button')) with {type: 'submit'} %}{% block content %}{{ 'answers.save'|trans({}, domain) }}{% endblock %}{% endcomponent %}
+        {{ form_end(settings_form) }}
+    </section>
+</main>
+{% endblock %}

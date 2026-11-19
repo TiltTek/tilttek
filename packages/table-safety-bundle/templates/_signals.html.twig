@@ -1,0 +1,45 @@
+{#
+ # The signals a viewer sees, newest last, and the live region that announces each new one to screen readers. With a
+ # hub, the Stimulus controller adds each new signal as it is raised and reads the missed ones from the feed; without
+ # one, the list is what the page loaded. A signal says its kind in words and never who raised it, unless the table
+ # chose named signals.
+ #
+ # table: the table's reference
+ # signals: the Signal to show
+ # live: the view of Views::live()
+ # game_master: whether the viewer runs the table, who marks a signal as seen
+ #}
+{%- set domain = 'tilttek_table_safety' -%}
+{%- set controller = 'tilttek--table-safety--signals' -%}
+{%- set kinds = {} -%}
+{%- for kind in enum_cases('Tilttek\\TableSafety\\Signal\\SignalKind') %}{% set kinds = kinds|merge({(kind.value): ('signals.kinds.' ~ kind.value)|trans({}, domain)}) %}{% endfor -%}
+<section class="tilttek-table-safety__signals" aria-labelledby="tilttek-table-safety-signals-title"
+    data-controller="{{ controller }}"
+    data-{{ controller }}-hub-value="{{ live.hub ?? '' }}"
+    data-{{ controller }}-feed-url-value="{{ live.feed }}"
+    data-{{ controller }}-last-value="{{ live.last }}"
+    data-{{ controller }}-kinds-value="{{ kinds|json_encode(constant('JSON_UNESCAPED_UNICODE')) }}"
+    data-{{ controller }}-seen-value="{{ 'signals.seen'|trans({}, domain) }}"
+    data-{{ controller }}-sent-value="{{ 'signals.sent'|trans({}, domain) }}"
+    data-{{ controller }}-offline-value="{{ 'signals.offline'|trans({}, domain) }}">
+    <h2 id="tilttek-table-safety-signals-title">{{ 'signals.title'|trans({}, domain) }}</h2>
+    <ol class="tilttek-table-safety__signal-list" data-{{ controller }}-target="list">
+        {%- for signal in signals %}
+        <li data-id="{{ signal.id }}"{% if signal.acknowledged %} class="is-seen"{% endif %}>
+            <time datetime="{{ signal.raisedAt|date('c') }}">{{ signal.raisedAt|date('H:i') }}</time>
+            <strong>{{ ('signals.kinds.' ~ signal.kind.value)|trans({}, domain) }}</strong>
+            {%- if signal.audience.value == 'game-master' %} {% component (table_safety_kit('Badge')) with {variant: 'outline'} %}{% block content %}{{ 'signals.discreet'|trans({}, domain) }}{% endblock %}{% endcomponent %}{% endif %}
+            {%- if signal.raisedBy %} <span class="tilttek-table-safety__by">{{ signal.raisedBy.toString() }}</span>{% endif %}
+            {%- if signal.acknowledged %} <span>{{ 'signals.seen'|trans({}, domain) }}</span>
+            {%- elseif game_master %}
+            <form method="post" action="{{ path('tilttek_table_safety_acknowledge', {table: table, id: signal.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('tilttek_table_safety_acknowledge') }}">
+                {% component (table_safety_kit('Button')) with {type: 'submit', variant: 'outline', size: 'sm'} %}{% block content %}{{ 'signals.acknowledge'|trans({}, domain) }}{% endblock %}{% endcomponent %}
+            </form>
+            {%- endif %}
+        </li>
+        {%- endfor %}
+    </ol>
+    <p data-{{ controller }}-target="empty"{% if signals is not empty %} hidden{% endif %}>{{ 'signals.none'|trans({}, domain) }}</p>
+    <p class="tilttek-table-safety__announce" role="status" aria-live="polite" aria-atomic="true" data-{{ controller }}-target="status"></p>
+</section>

@@ -1,0 +1,16 @@
+{#
+ # The links between a table's screens.
+ #
+ # table: the table's reference
+ # game_master: whether the viewer runs the table
+ #}
+{%- set domain = 'tilttek_table_safety' -%}
+<nav class="tilttek-table-safety__nav" aria-label="{{ 'nav.label'|trans({}, domain) }}">
+    <ul role="list">
+        <li><a href="{{ path('tilttek_table_safety_table', {table: table}) }}">{{ 'nav.table'|trans({}, domain) }}</a></li>
+        <li><a href="{{ path('tilttek_table_safety_answers', {table: table}) }}">{{ 'nav.answers'|trans({}, domain) }}</a></li>
+        <li><a href="{{ path('tilttek_table_safety_session_zero', {table: table}) }}">{{ 'nav.session_zero'|trans({}, domain) }}</a></li>
+        <li><a href="{{ path('tilttek_table_safety_cards', {table: table}) }}">{{ 'nav.cards'|trans({}, domain) }}</a></li>
+        {%- if game_master %}<li><a href="{{ path('tilttek_table_safety_game_master', {table: table}) }}">{{ 'nav.game_master'|trans({}, domain) }}</a></li>{% endif %}
+    </ul>
+</nav>

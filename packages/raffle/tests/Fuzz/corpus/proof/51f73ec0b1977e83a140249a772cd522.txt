@@ -1,0 +1,1 @@
+{"version":"tilttek-raffle/1","raffle":"door-prize","stake":"prize","winners":2,"alternates":1,"entrants":["member-6"],"entrants_hash":"b19a9c4532d5cf25d9db2294f5a04922f621f5552e1ce1c794f17aa3062873f8","source":{"kind":"beacon","chain":{"hash":"9ff5r-qu"}},"seed":"e3","dawn":["zmbe"],"sealed_at":"1Z","drawn_at":"6-6T"}

@@ -1,0 +1,36 @@
+{#
+ # One box as the viewer sees it, a card of the kit: its day and date, and by its state — a locked box tells when it
+ # opens, an openable one is a form a member sends to open it, an opened one shows its surprise, a missed one says so.
+ # A box not opened never carries its surprise.
+ #
+ # calendar: the Calendar
+ # box: the BoxView
+ # member: whether the viewer is a member, who may open a box
+ #}
+{%- set domain = 'tilttek_advent_calendar' -%}
+<li id="tilttek-advent-calendar-box-{{ box.day }}" class="tilttek-advent-calendar__box" data-day="{{ box.day }}" data-state="{{ box.state.value }}">
+    {% component (advent_calendar_kit('Card')) with {as: 'article', 'aria-labelledby': 'tilttek-advent-calendar-box-' ~ box.day ~ '-title'} %}{% block content %}
+        {% component (advent_calendar_kit('Card:Header')) %}{% block content %}
+            {% component (advent_calendar_kit('Card:Title')) with {id: 'tilttek-advent-calendar-box-' ~ box.day ~ '-title', tabindex: '-1'} %}{% block content %}{{ 'box.title'|trans({day: box.day}, domain) }}{% endblock %}{% endcomponent %}
+            {% component (advent_calendar_kit('Card:Description')) %}{% block content %}<time datetime="{{ box.date }}">{{ 'box.date'|trans({date: date(box.date ~ ' 12:00', 'UTC')}, domain) }}</time>{% endblock %}{% endcomponent %}
+        {% endblock %}{% endcomponent %}
+        {% component (advent_calendar_kit('Card:Content')) %}{% block content %}
+            {%- if box.state.value == 'opened' %}
+            {{ include('@TilttekAdventCalendar/_surprise.html.twig', {surprise: box.surprise}) }}
+            {%- elseif box.state.value == 'openable' and member %}
+            <form method="post" action="{{ path('tilttek_advent_calendar_open', {calendar: calendar.id, day: box.day}) }}" data-tilttek-advent-calendar-open>
+                <input type="hidden" name="_token" value="{{ csrf_token('tilttek_advent_calendar_open') }}">
+                {% component (advent_calendar_kit('Button')) with {type: 'submit', size: 'lg'} %}{% block content %}{{ 'box.open'|trans({day: box.day}, domain) }}{% endblock %}{% endcomponent %}
+            </form>
+            {%- elseif box.state.value == 'openable' %}
+            <p>{{ 'box.openable'|trans({}, domain) }}</p>
+            {%- else %}
+            {% component (advent_calendar_kit('Badge')) with {variant: box.state.value == 'missed' ? 'outline' : 'secondary'} %}{% block content %}{{ ('box.state.' ~ box.state.value)|trans({}, domain) }}{% endblock %}{% endcomponent %}
+            {#- A message is given only the date it says: ICU cannot format a date it is given and does not use. #}
+            {%- set last_day = box.window.until|date_modify('-1 day')|date('Y-m-d', calendar.timezone) %}
+            {%- set dates = box.state.value == 'locked' ? {opens: date(box.date ~ ' 12:00', 'UTC')} : {last: date(last_day ~ ' 12:00', 'UTC')} %}
+            <p>{{ ('box.until.' ~ box.state.value)|trans(dates, domain) }}</p>
+            {%- endif %}
+        {% endblock %}{% endcomponent %}
+    {% endblock %}{% endcomponent %}
+</li>

@@ -1,0 +1,6 @@
+{#
+ # The confirmation that a form was saved, announced politely.
+ #}
+{% component (table_safety_kit('Alert')) with {role: 'status'} %}{% block content %}
+    {% component (table_safety_kit('Alert:Title')) %}{% block content %}{{ 'saved'|trans({}, 'tilttek_table_safety') }}{% endblock %}{% endcomponent %}
+{% endblock %}{% endcomponent %}

@@ -1,0 +1,32 @@
+form:
+    expression: 'Expression'
+    versus: 'Against (optional)'
+    show: 'The chart shows'
+show:
+    exactly: 'Exactly'
+    at_least: 'At least'
+    at_most: 'At most'
+summary:
+    mean: 'Mean'
+    deviation: 'Standard deviation'
+    range: 'Range'
+    range_value: '%minimum% to %maximum%'
+estimate:
+    too-large: 'Estimated from %samples% rolls, the exact computation being too large: each probability is within %margin% points, 19 times out of 20.'
+    unsupported: 'Estimated from %samples% rolls, the exact computation not following this expression: each probability is within %margin% points, 19 times out of 20.'
+remaining: 'Explosions are followed to a depth: %probability% % of the rolls would explode further, and are counted lower than they are.'
+table:
+    caption: 'Probabilities of %expression%'
+    value: 'Value'
+versus:
+    caption: '%first% against %second%'
+    first: '%first% is higher'
+    tie: 'Both are equal'
+    second: '%second% is higher'
+    estimated: 'Estimated: each probability is within %margin% points, 19 times out of 20.'
+error:
+    expression: '"%expression%" has no probabilities: %reason%'
+refusal:
+    groups: 'finding the groups of so many dice would take too long; roll fewer of them.'
+    outcomes: 'its distribution has %outcomes% values; at most %limit% are drawn.'
+    throttled: 'too many computations were asked for in a short time; try again in a moment.'

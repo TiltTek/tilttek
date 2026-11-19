@@ -1,0 +1,10 @@
+tilttek_loot_tables:
+    # The tables, one entry per side of the die, and the boxes a product rolls through the drawer "loot-box:<key>".
+    tables: {}
+    boxes: {}
+    # The draws of an order are committed as soon as it is placed; false leaves LootCommitments::commit() to you.
+    commit_on_place: true
+
+when@test:
+    tilttek_loot_tables:
+        store: memory

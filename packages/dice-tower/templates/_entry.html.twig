@@ -1,0 +1,18 @@
+{#
+ # One entry of a tower, as the Stimulus controller writes a new one.
+ #
+ # entry: an entry of DiceTowerExtension::view()
+ #}
+<li class="tilttek-dice-tower__entry" data-position="{{ entry.position }}">
+    {%- if entry.name is not null %}<span class="tilttek-dice-tower__roller">{{ entry.name }}</span> {% endif -%}
+    {%- for result in entry.results %}
+    <span class="tilttek-dice-tower__result"><code>{{ result.expression }}</code>
+        {%- if result.total is not null %} = <output>{{ result.total }}</output>{% elseif result.text is not null %} : <output>{{ result.text }}</output>{% endif -%}
+        {%- if result.dice is not empty %} <span class="tilttek-dice-tower__dice">
+            {%- for die in result.dice -%}
+            <span class="tilttek-dice-tower__die{{ die.kept ? '' : ' is-dropped' }}">{{ die.label }}{% if not die.kept %} ({{ 'tower.dropped'|trans({}, 'tilttek_dice_tower') }}){% endif %}</span>{{ loop.last ? '' : ', ' }}
+            {%- endfor -%}
+        </span>{% endif -%}
+    </span>
+    {%- endfor -%}
+</li>

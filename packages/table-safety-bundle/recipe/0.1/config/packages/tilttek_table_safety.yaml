@@ -1,0 +1,5 @@
+tilttek_table_safety:
+    # The service that says who takes part in a table and who runs it; every screen is refused without it.
+    # table_access: App\TableSafety\TableAccess
+    layout: base.html.twig
+    # mercure: { hub: mercure.hub.default }

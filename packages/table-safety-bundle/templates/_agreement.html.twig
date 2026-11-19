@@ -1,0 +1,26 @@
+{#
+ # What the table agreed: the themes behind a line or a veil and the strictest level of each theme of the checklist,
+ # by label. Nothing says who gave which answer. The game master sees the protective list, from every answer; the
+ # players see the answers in whole groups of the threshold, with how many answered.
+ #
+ # agreement: the view of Views::agreement()
+ #}
+{%- set domain = 'tilttek_table_safety' -%}
+{% component (table_safety_kit('Card')) with {as: 'section', class: 'tilttek-table-safety__agreement', 'aria-labelledby': 'tilttek-table-safety-agreement-title'} %}{% block content %}
+    {% component (table_safety_kit('Card:Header')) %}{% block content %}
+        {% component (table_safety_kit('Card:Title')) with {id: 'tilttek-table-safety-agreement-title'} %}{% block content %}{{ 'agreement.title'|trans({}, domain) }}{% endblock %}{% endcomponent %}
+        {% component (table_safety_kit('Card:Description')) %}{% block content %}
+            {%- if agreement.protective %}{{ 'agreement.protective'|trans({count: agreement.threshold}, domain) }}
+            {%- elseif agreement.enough %}{{ 'agreement.respondents'|trans({count: agreement.respondents}, domain) }}
+            {%- else %}{{ 'agreement.not_enough'|trans({count: agreement.threshold}, domain) }}{% endif -%}
+        {% endblock %}{% endcomponent %}
+    {% endblock %}{% endcomponent %}
+    {% component (table_safety_kit('Card:Content')) %}{% block content %}
+        <dl>
+            {%- for group in ['lines', 'veils', 'red', 'yellow', 'green'] %}
+            <dt>{{ ('agreement.' ~ group)|trans({}, domain) }}</dt>
+            <dd>{% if agreement[group] is empty %}{{ 'agreement.none'|trans({}, domain) }}{% else %}{{ agreement[group]|join(', ') }}{% endif %}</dd>
+            {%- endfor %}
+        </dl>
+    {% endblock %}{% endcomponent %}
+{% endblock %}{% endcomponent %}

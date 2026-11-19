@@ -1,0 +1,1 @@
+{"version":"tilttek-raffle/1","raffle":"fakr","stake":"none","winners":0,"alternates":2,"entrants_hash":"e62c85wcyf1","source":{"kind":"commit-reveal","et":"468e4f31d2"},"seed":"c2d30","d":["mamm"],"sealed_at":"2276TZ","drawn_at":"20-1"}

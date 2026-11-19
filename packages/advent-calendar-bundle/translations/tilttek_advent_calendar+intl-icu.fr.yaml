@@ -1,0 +1,59 @@
+calendar:
+    visitor: 'Connectez-vous pour ouvrir les cases : chacune cache une surprise.'
+    refused:
+        title: 'La case {day} ne peut pas être ouverte maintenant'
+        locked: 'Elle s’ouvre le {opens, date, long}.'
+        missed: 'Elle pouvait être ouverte jusqu’au {last, date, long}.'
+        openable: 'Réessayez.'
+        opened: 'Elle est déjà ouverte.'
+policy:
+    until_closing: 'Jusqu’à la clôture du calendrier'
+    same_day: 'Le jour même seulement'
+    catch_up: 'Le jour même et quelques jours de rattrapage'
+    explained:
+        until_closing: 'Une case s’ouvre à son jour et le reste jusqu’au {closing, date, long} : un jour manqué n’est pas perdu.'
+        same_day: 'Une case s’ouvre le jour même seulement.'
+        catch_up: '{days, plural, one {Une case s’ouvre à son jour et le reste un jour de plus.} other {Une case s’ouvre à son jour et le reste # jours de plus.}}'
+box:
+    title: 'Jour {day}'
+    date: '{date, date, long}'
+    open: 'Ouvrir la case {day}'
+    openable: 'Prête à ouvrir.'
+    state:
+        locked: Verrouillée
+        missed: Manquée
+    until:
+        locked: 'S’ouvre le {opens, date, long}.'
+        missed: 'Pouvait être ouverte jusqu’au {last, date, long}.'
+    announce:
+        opened: 'Case ouverte.'
+        failed: 'La case n’a pas pu être ouverte ; rechargez la page.'
+surprise:
+    kind:
+        points: Points
+        badge: Badge
+        content: Contenu
+        code: Code
+    granted:
+        points: '{quantity, plural, one {# point} other {# points}}'
+        badge: 'Un badge : {reference}'
+        content: 'Quelque chose à découvrir : {reference}'
+        code: 'Un code de {reference}'
+celebration:
+    message: 'Case ouverte !'
+    box: 'Case {day} ouverte !'
+form:
+    calendar:
+        id: Identifiant
+        title: Titre
+        timezone: 'Fuseau horaire'
+        first_date: 'Date de la case 1'
+        closing_date: 'Date de clôture'
+        policy: 'Durée d’ouverture d’une case'
+        catch_up_days: 'Jours de rattrapage'
+        published: Publié
+        surprises: 'Surprises, une par case'
+    surprise:
+        kind: Genre
+        reference: Référence
+        quantity: Quantité

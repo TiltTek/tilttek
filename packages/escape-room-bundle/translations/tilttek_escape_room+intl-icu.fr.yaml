@@ -1,0 +1,45 @@
+screen:
+    left: 'Temps restant :'
+    left_announced: 'Il reste {minutes} minutes.'
+    paused: En pause, par le meneur.
+    hint_for: 'Indice pour {puzzle}'
+    penalty: '{time} ajoutées au temps final'
+    message: Message du meneur
+outcome:
+    escaped: 'Évadés ! Temps final {time}, {hints, plural, =0 {sans indice} one {avec # indice} other {avec # indices}}.'
+    time-up: Le temps est écoulé.
+    abandoned: La partie est terminée.
+    celebration: 'Évadés en {time} !'
+status:
+    locked: verrouillée
+    open: ouverte
+    solved: résolue
+console:
+    title: 'Console : {room}'
+    totals: 'Joué {played}, pénalités {penalty}, {hints, plural, =0 {aucun indice} one {# indice} other {# indices}}, {skips, plural, =0 {aucun saut} one {# saut} other {# sauts}}.'
+    puzzles: Énigmes
+    push_hint: 'Envoyer un indice pour {puzzle} ({left} restants)'
+    skip: 'Sauter {puzzle}'
+    screen: Écran d’indices
+    message: Message pour l’écran
+    send: Envoyer le message
+    clear: Effacer l’écran
+    clock: Compte à rebours
+    pause: Mettre le compte à rebours en pause
+    resume: Reprendre le compte à rebours
+    abandon: Terminer la partie
+    done: Fait.
+consent:
+    hidden: Votre résultat n’est pas au classement public.
+    shown: Votre résultat est au classement public.
+    show: Montrer notre résultat au classement
+    hide: Retirer notre résultat du classement
+leaderboard:
+    title: 'Classement : {room}'
+    caption: 'Les équipes évadées de {room} qui ont accepté de montrer leur résultat, par temps final'
+    empty: Aucune équipe au classement pour l’instant.
+    place: Place
+    team: Équipe
+    time: Temps final
+    hints: Indices
+    unnamed: 'Équipe {place}'

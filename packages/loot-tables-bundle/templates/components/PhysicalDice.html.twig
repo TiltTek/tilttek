@@ -1,0 +1,20 @@
+{#
+ # The form of the physical dice: the box in the legend, one field per unit — its label, its help naming the tables in
+ # the order of the dice, its errors — and the button that enters them. The form works without JavaScript.
+ #}
+{%- set domain = 'tilttek_loot_tables' -%}
+{%- set form = this.form -%}
+{%- if form is not null -%}
+<div{{ attributes.defaults({class: 'tilttek-loot-physical-dice'}) }}>
+    {{ form_start(form, {attr: {class: 'tilttek-loot-physical-dice__form'}}) }}
+    <fieldset>
+        <legend>{{ 'physical_dice.legend'|trans({'%box%': form.vars.loot_box}, domain) }}</legend>
+        {{ form_errors(form) }}
+        {%- for field in form %}
+        {{ form_row(field) }}
+        {%- endfor %}
+    </fieldset>
+    <button type="submit">{{ 'physical_dice.submit'|trans({}, domain) }}</button>
+    {{ form_end(form) }}
+</div>
+{%- endif -%}

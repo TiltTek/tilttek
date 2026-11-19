@@ -1,0 +1,189 @@
+saved: Enregistré.
+count: '{label} : {count}'
+nav:
+    label: Sécurité à la table
+    table: La table
+    answers: Mes lignes, voiles et liste
+    session_zero: Séance zéro
+    cards: Cartes à imprimer
+    game_master: Meneur
+table:
+    title: Sécurité à la table
+    raise: Lever un signal
+    no_explanation: Chacun peut lever un signal à tout moment, sans avoir à s'expliquer. Personne ne voit qui l'a levé, sauf si la table l'a choisi.
+signals:
+    title: Signaux
+    none: Aucun signal pour l'instant.
+    seen: vu par le meneur
+    sent: Signal envoyé.
+    offline: Les mises à jour en direct sont interrompues ; rechargez la page pour voir les derniers signaux.
+    discreet: meneur seulement
+    acknowledge: Marquer comme vu
+    kinds:
+        x-card: Carte X
+        pause: Pause
+        rewind: Retour
+        fast-forward: Avance
+        open-door: Quitter la partie
+        check-in: Demander un point d'étape
+        all-good: Tout va bien
+        unsure: Incertain
+        not-okay: Ça ne va pas
+    help:
+        x-card: Retirer ce qui vient d'arriver.
+        pause: Arrêter la scène un moment.
+        rewind: Revenir en arrière et rejouer le moment autrement.
+        fast-forward: Passer la scène.
+        open-door: Quitter la partie maintenant ; seul le meneur est averti.
+        check-in: Demander à chacun comment il va.
+        all-good: On continue.
+        unsure: On ralentit.
+        not-okay: On arrête.
+agreement:
+    title: Ce que la table a convenu
+    respondents: '{count, plural, =0 {Personne n''a encore répondu.} one {# participant a répondu.} other {# participants ont répondu.}}'
+    protective: 'Chaque réponse compte ici dès la première, sans dire qui l''a donnée. Les joueurs voient ces thèmes par groupes de {count, plural, one {# participant} other {# participants}}.'
+    not_enough: 'Pas encore assez de réponses : les thèmes sont montrés par groupes de {count, plural, one {# participant} other {# participants}}, pour que personne ne puisse savoir qui a donné laquelle. Le meneur voit déjà chaque ligne et chaque voile.'
+    lines: Lignes, jamais dans la partie
+    veils: Voiles, hors champ seulement
+    red: Rouge, pas à cette table
+    yellow: Jaune, avec précaution
+    green: Vert, bienvenu
+    none: Aucun
+answers:
+    title: Mes réponses
+    private: Personne ne voit vos réponses. La table ne voit, pour chaque thème, que la réponse la plus stricte, jamais qui l'a donnée. Changez-les à tout moment.
+    lines_and_veils: Lignes et voiles
+    lines_and_veils_help: Une ligne garde un thème hors de la partie ; un voile le laisse arriver hors champ.
+    consent: Liste de consentement
+    consent_help: Vert, bienvenu ; jaune, avec précaution ; rouge, pas à cette table.
+    table_themes: Les thèmes de cette table
+    open: Ouvert
+    unanswered: Sans réponse
+    line: Ligne
+    veil: Voile
+    green: Vert
+    yellow: Jaune
+    red: Rouge
+    save: Enregistrer
+cards:
+    title: Cartes à imprimer
+    help: Imprimez ces cartes pour une table jouée en personne ; chaque participant remplit ses feuilles à la main, et personne d'autre n'a besoin de les voir.
+    pdf: Les télécharger en PDF.
+    none: Cette table n'utilise aucun outil qui a une carte à imprimer.
+    x_card: Carte X
+    x_card_help: Touchez ou levez cette carte pour retirer ce qui vient d'arriver. Personne ne demande pourquoi.
+    lines_and_veils: Lignes et voiles
+    lines_and_veils_help: Une ligne garde un thème hors de la partie ; un voile le laisse arriver hors champ. Laissez les deux cases vides pour un thème ouvert.
+    consent: Liste de consentement
+    consent_help: Vert, bienvenu ; jaune, avec précaution ; rouge, pas à cette table. Laissez les cases vides pour un thème auquel vous ne répondez pas.
+    table_themes: Les thèmes de cette table
+    theme: Thème
+    line: Ligne
+    veil: Voile
+    green: Vert
+    yellow: Jaune
+    red: Rouge
+session_zero:
+    title: Séance zéro
+    help: Les réponses de la table forment son pacte. Le meneur les voit rassemblées, jamais qui a donné laquelle.
+    safety_help: 'Gardez ce qui doit rester hors de la partie pour vos lignes et voiles et votre liste de consentement : le meneur les voit dès votre première réponse, jamais qui les a données, alors que les réponses d''ici attendent un groupe de participants.'
+    safety_link: Répondre aux lignes, voiles et à la liste
+    questions:
+        tone: Quel ton voulez-vous pour la partie ?
+        pillars: Qu'aimez-vous le plus à la table ?
+        themes-welcome: Quels thèmes aimeriez-vous rencontrer ?
+        expectations: Qu'espérez-vous de cette partie ?
+        player-conflict: Les personnages peuvent-ils agir les uns contre les autres ?
+        character-death: Les personnages peuvent-ils mourir ?
+        frequency: À quelle fréquence aimeriez-vous jouer ?
+        schedule: Quand êtes-vous disponible ?
+        table-rules: Quelles règles de table comptent pour vous (téléphones, nourriture, pauses) ?
+        comfort: Qu'est-ce qui vous aiderait à jouer à l'aise ?
+        experience: Avez-vous souvent joué à des jeux comme celui-ci ?
+        camera: Comment aimeriez-vous participer en ligne ?
+        recording: Les séances peuvent-elles être enregistrées ?
+    options:
+        tone:
+            light: Léger
+            mixed: Mélangé
+            serious: Sérieux
+            dark: Sombre
+        pillars:
+            combat: Les combats
+            exploration: L'exploration
+            social: Parler et négocier
+            mystery: Les mystères et les énigmes
+            drama: Le drame et les relations
+        player-conflict:
+            never: Jamais
+            with-consent: Avec l'accord des joueurs
+            welcome: Bienvenu
+        character-death:
+            never: Jamais
+            rare: Rarement, à un moment marquant
+            possible: Quand les dés le disent
+        frequency:
+            weekly: Chaque semaine
+            fortnightly: Aux deux semaines
+            monthly: Chaque mois
+        experience:
+            new: Jamais
+            some: Quelques fois
+            seasoned: Souvent
+        camera:
+            video: Avec une caméra
+            voice: La voix seulement
+            text: Le texte seulement
+        recording:
+            never: Jamais
+            ask-first: Seulement si chacun accepte à chaque fois
+            allowed: Oui
+feedback:
+    title: 'Étoiles et souhaits : {session}'
+    help: Ce que vous avez aimé, et ce que vous voudriez voir la prochaine fois. Le meneur les voit rassemblés, jamais qui a écrit lequel.
+    stars: Étoiles
+    wishes: Souhaits
+    one_per_line: Un par ligne.
+    summary: Étoiles et souhaits d'une séance
+    session: Séance
+    show: Afficher
+    not_enough: 'Pas assez de réponses : les étoiles et les souhaits sont montrés par groupes de {count} participants, pour que personne ne puisse dire qui a écrit quoi.'
+check_in:
+    title: Point d'étape
+    none: Aucun point d'étape demandé pour l'instant.
+    asked: 'Demandé à {time}.'
+    attention: Quelqu'un a demandé de ralentir ou d'arrêter.
+pact:
+    title: Le pacte de la table
+game_master:
+    title: Meneur
+tools:
+    label: Outils de sécurité
+    recommended: Nommer les outils de la table est recommandé, jamais exigé.
+    lines-and-veils: Lignes et voiles
+    consent-checklist: Liste de consentement
+    session-zero: Séance zéro
+    x-card: Carte X
+    script-change: Script Change
+    open-door: Porte ouverte
+    check-in: Points d'étape
+    stars-and-wishes: Étoiles et souhaits
+settings:
+    title: Réglages de la table
+    named_signals: Signaux nommés
+    named_signals_help: Un signal dit alors qui l'a levé. Sinon les signaux sont anonymes ; les réponses à un point d'étape le sont toujours.
+    signals_seen_by: Qui voit la carte X et Script Change
+    audience:
+        table: Toute la table
+        game-master: Le meneur seul
+    custom_themes: Thèmes que cette table ajoute
+    one_per_line: Un par ligne.
+    template: Séance zéro
+    templates:
+        keep: Garder les questions actuelles
+        one-shot: Partie unique
+        campaign: Campagne
+        convention: Table de convention
+        online: Table en ligne
+    questions: Vos propres questions

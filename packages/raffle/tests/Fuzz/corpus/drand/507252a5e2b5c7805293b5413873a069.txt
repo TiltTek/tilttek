@@ -1,0 +1,1 @@
+{"public_key":"a0a0a0a0a0a0a0a0a0a0aaa000a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0","period":3,"genesis_time":843,"hash":"52db9ba70e0cc0f6eaf7803dd07446a1f5477735fd3b661792ba94600c84e971","schemeID":"b380","ma":{"beacoID":"qct"}}

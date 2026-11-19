@@ -1,0 +1,1 @@
+{"version":"tilttek-raffle/1","raffle":"do","stake":"prize","winners":2,"alternates":1,"entrants_hash":"390f90","source":{"kind":"commit-reveal"},"seed":"80","radgn":["ember-2","4"],"sealed_at":"20Z","drawn_at":"1Z"}

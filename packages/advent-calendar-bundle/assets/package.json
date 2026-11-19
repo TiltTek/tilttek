@@ -1,0 +1,23 @@
+{
+    "name": "@tilttek/advent-calendar",
+    "description": "The advent calendar's Stimulus controller: opens a box without reloading the page, puts the opened box in its place, moves the focus to it, announces it to screen readers and asks the page to celebrate a first opening",
+    "version": "0.1.0",
+    "license": "MIT",
+    "type": "module",
+    "symfony": {
+        "controllers": {
+            "boxes": {
+                "main": "src/boxes_controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0"
+    }
+}

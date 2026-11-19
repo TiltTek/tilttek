@@ -1,0 +1,54 @@
+{#
+ # The component: the expressions, typed and computed again in place, then their probabilities. The fields are those of
+ # the UX kit; inside a recipe, `this` is the recipe, so the component's values are read into variables first. The
+ # controls bound to the component are written as the recipes `Input` and `RadioGroup:Item` write theirs, since a
+ # `data-model` passed to a child component would bind the child instead. The results are announced politely as they
+ # change; an expression that has none says why, in the words of the library or in a reason of the bundle's own.
+ #}
+{%- set domain = 'tilttek_dice_probability' -%}
+{%- set values = {expression: this.expression, versus: this.versus} -%}
+{%- set shown = this.shown -%}
+{%- set id = attributes.render('id')|default('tilttek-dice-probability') -%}
+<div{{ attributes.defaults({class: 'tilttek-dice-probability', id: id}) }}>
+    <div class="tilttek-dice-probability__form">
+        {% for field in ['expression', 'versus'] -%}
+        {%- component (tilttek_dice_probability_kit('Field')) -%}
+        {%- block content -%}
+            {%- component (tilttek_dice_probability_kit('Field:Label')) with {for: id ~ '-' ~ field} %}{% block content %}{{ ('form.' ~ field)|trans({}, domain) }}{% endblock %}{% endcomponent -%}
+            <input data-slot="input" type="text" id="{{ id }}-{{ field }}" name="{{ field }}" value="{{ values[field] }}" data-model="debounce(400)|{{ field }}" autocomplete="off" spellcheck="false"{% if field == 'expression' %} required{% endif %}>
+        {%- endblock -%}
+        {%- endcomponent %}
+        {% endfor -%}
+        {%- component (tilttek_dice_probability_kit('Field:Set')) -%}
+        {%- block content -%}
+            {%- component (tilttek_dice_probability_kit('Field:Legend')) %}{% block content %}{{ 'form.show'|trans({}, domain) }}{% endblock %}{% endcomponent -%}
+            {%- component (tilttek_dice_probability_kit('RadioGroup')) with {name: 'show', value: shown, orientation: 'horizontal'} -%}
+            {%- block content -%}
+                {%- for choice in constant('Tilttek\\DiceProbabilityBundle\\Infrastructure\\Twig\\Components\\DistributionComponent::SHOWS') %}
+                <label><input type="radio" data-slot="radio-group-item" name="show" value="{{ choice }}" data-model="show"{% if shown == choice %} checked{% endif %}> {{ ('show.' ~ choice)|trans({}, domain) }}</label>
+                {%- endfor %}
+            {%- endblock -%}
+            {%- endcomponent -%}
+        {%- endblock -%}
+        {%- endcomponent %}
+    </div>
+    <div class="tilttek-dice-probability__results" aria-live="polite">
+        {%- for failure in this.failures %}
+        {%- set reason = failure.key is null ? failure.message : failure.key|trans(failure.parameters, domain) %}
+        {% component (tilttek_dice_probability_kit('Alert')) with {variant: 'destructive', role: 'status', class: 'tilttek-dice-probability__error'} -%}
+        {%- block content -%}
+            {%- component (tilttek_dice_probability_kit('Alert:Description')) %}{% block content %}{{ 'error.expression'|trans({'%expression%': failure.expression, '%reason%': reason}, domain) }}{% endblock %}{% endcomponent -%}
+        {%- endblock -%}
+        {%- endcomponent %}
+        {%- endfor %}
+        {%- if this.error is null %}
+            {{ include('@TilttekDiceProbability/probabilities.html.twig', {
+                expression: this.canonical,
+                distribution: this.distribution,
+                versus: this.comparison,
+                second: this.comparison ? this.canonicalVersus : null,
+                show: this.shown,
+            }) }}
+        {%- endif %}
+    </div>
+</div>

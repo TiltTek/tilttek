@@ -1,0 +1,1 @@
+{"public_key":"a0a0a0a0a0a-a0a0a1a0j0a0a0a0a0a0a0q0a0a6a0a0a0a0a0a0a0a00aaa000aa0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0","period":0,"genesis_time":864841,"hash":"52db9ba70e0cc0f6eaf7883dd07447a1f5477735fd3f161792ba94600c84e485","schemeID":"","eata":{"D":"quit"}}

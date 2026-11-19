@@ -1,0 +1,41 @@
+{#
+ # A table's tower, a card of the UX kit: its last entries in order, and the Stimulus controller that adds each new one
+ # from the hub and reads what was missed from the log when the connection comes back. Each entry says its result in
+ # words: a face by its label, a die that did not count as such, not only by a style. With `announce`, the list is a
+ # log that screen readers read as it grows; an accessible dice interface on the same page announces instead.
+ #
+ # tower: the view of DiceTowerExtension::view()
+ # title: the title of the card, or null for the translated one
+ # announce: whether the list is announced as it grows
+ #}
+{%- set domain = 'tilttek_dice_tower' -%}
+{%- set controller = 'tilttek--dice-tower--tower' -%}
+{%- set title_id = 'tilttek-dice-tower-' ~ tower.table|url_encode -%}
+{% component (dice_tower_kit('Card')) with {
+    as: 'section',
+    class: 'tilttek-dice-tower',
+    'aria-labelledby': title_id,
+    'data-controller': controller,
+    ('data-' ~ controller ~ '-hub-value'): tower.hub ?? '',
+    ('data-' ~ controller ~ '-entries-url-value'): tower.entries_url ?? '',
+    ('data-' ~ controller ~ '-last-value'): tower.last,
+    ('data-' ~ controller ~ '-faces-value'): tower.faces|json_encode(constant('JSON_UNESCAPED_UNICODE')),
+    ('data-' ~ controller ~ '-names-value'): tower.names|json_encode(constant('JSON_FORCE_OBJECT') b-or constant('JSON_UNESCAPED_UNICODE')),
+    ('data-' ~ controller ~ '-dropped-value'): 'tower.dropped'|trans({}, domain),
+    ('data-' ~ controller ~ '-offline-value'): 'tower.offline'|trans({}, domain),
+} -%}
+{%- block content -%}
+    {%- component (dice_tower_kit('Card:Header')) %}{% block content -%}
+        {%- component (dice_tower_kit('Card:Title')) with {id: title_id} %}{% block content %}{{ title ?? 'tower.title'|trans({}, domain) }}{% endblock %}{% endcomponent -%}
+    {%- endblock %}{% endcomponent -%}
+    {%- component (dice_tower_kit('Card:Content')) %}{% block content %}
+        <ol class="tilttek-dice-tower__entries"{% if announce %} role="log"{% endif %} aria-labelledby="{{ title_id }}" data-{{ controller }}-target="entries">
+            {%- for entry in tower.entries %}
+            {{ include('@TilttekDiceTower/_entry.html.twig', {entry: entry}) }}
+            {%- endfor %}
+        </ol>
+        <p class="tilttek-dice-tower__empty" data-{{ controller }}-target="empty"{% if tower.entries is not empty %} hidden{% endif %}>{{ 'tower.empty'|trans({}, domain) }}</p>
+        <p class="tilttek-dice-tower__status" role="status" data-{{ controller }}-target="status"></p>
+    {% endblock %}{% endcomponent -%}
+{%- endblock -%}
+{%- endcomponent %}

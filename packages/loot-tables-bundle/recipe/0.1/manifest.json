@@ -1,0 +1,8 @@
+{
+    "bundles": {
+        "Tilttek\\LootTablesBundle\\TilttekLootTablesBundle": ["all"]
+    },
+    "copy-from-recipe": {
+        "config/": "%CONFIG_DIR%/"
+    }
+}

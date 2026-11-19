@@ -1,0 +1,73 @@
+{
+    "name": "tilttek/dice-probability-bundle",
+    "description": "tilttek/dice-probability in Symfony: the odds of a dice expression in Twig, as an accessible table and chart, updated live as it is typed.",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": [
+        "dice",
+        "probability",
+        "statistics",
+        "rpg",
+        "symfony-bundle"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "symfony/config": "^8.2",
+        "symfony/dependency-injection": "^8.2",
+        "tilttek/dice": "^0.2@dev || ^0.3@dev",
+        "tilttek/dice-bundle": "^0.2@dev",
+        "tilttek/dice-probability": "^0.1.2@dev"
+    },
+    "require-dev": {
+        "phil/ux-kit": ">=0.1.0-alpha <1.0",
+        "phpunit/phpunit": "^13.4",
+        "symfony/event-dispatcher": "^8.2",
+        "symfony/framework-bundle": "^8.2",
+        "symfony/http-foundation": "^8.2",
+        "symfony/http-kernel": "^8.2",
+        "symfony/rate-limiter": "^8.2",
+        "symfony/routing": "^8.2",
+        "symfony/stimulus-bundle": "^3.7",
+        "symfony/translation": "^8.2",
+        "symfony/twig-bridge": "^8.2",
+        "symfony/twig-bundle": "^8.2",
+        "symfony/ux-live-component": "^3.7",
+        "symfony/ux-twig-component": "^3.7",
+        "symfony/yaml": "^8.2",
+        "twig/twig": "^3.21"
+    },
+    "suggest": {
+        "ext-gmp": "To write the long fractions of the probabilities in their lowest terms",
+        "phil/ux-kit": "For the recipes the table, the chart and the component are drawn with, installed by the Symfony UX Toolkit",
+        "symfony/rate-limiter": "For the rate limit of <twig:TilttekDiceProbability:Distribution>, on by default: required with symfony/ux-live-component unless \"rate_limit.enabled\" is false",
+        "symfony/translation": "To translate the words of the table, the chart and the component",
+        "symfony/twig-bundle": "For the Twig functions and the table and chart of the probabilities, with symfony/ux-twig-component",
+        "symfony/ux-live-component": "For the probabilities on a page, <twig:TilttekDiceProbability:Distribution>, with symfony/ux-twig-component"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\DiceProbabilityBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\DiceProbabilityBundle\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

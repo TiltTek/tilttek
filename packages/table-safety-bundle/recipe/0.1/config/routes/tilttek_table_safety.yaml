@@ -1,0 +1,2 @@
+tilttek_table_safety:
+    resource: '@TilttekTableSafetyBundle/config/routes.php'

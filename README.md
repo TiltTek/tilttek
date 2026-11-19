@@ -21,9 +21,13 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/dice-bundle`](https://github.com/TiltTek/dice-bundle) | Dice in a Symfony application: limits and custom dice in configuration, replayable rolls in Doctrine, macros, a form field, Twig and an accessible detail of a roll. |
 | [`tilttek/dice-skins`](https://github.com/TiltTek/dice-skins) | A member's dice appearance — skins, colours, materials and owned dice — applied to the roller, its numbers kept readable, in high contrast for a viewer who asks. |
 | [`tilttek/dice-probability`](https://github.com/TiltTek/dice-probability) | The exact odds of a dice expression, as fractions: distributions, at least and at most, mean, comparisons. |
+| [`tilttek/dice-probability-bundle`](https://github.com/TiltTek/dice-probability-bundle) | The odds of a dice expression in Symfony: an accessible table and chart in Twig, updated live as the expression is typed. |
 | [`tilttek/loot-tables`](https://github.com/TiltTek/loot-tables) | Loot tables rolled with any die, drawn in a way anyone can verify, physical dice included. |
+| [`tilttek/loot-tables-bundle`](https://github.com/TiltTek/loot-tables-bundle) | Loot boxes sold in Symfony orders: committed when placed, drawn once paid, physical dice at a register, and the proof of each draw kept. |
 | [`tilttek/accessible-dice`](https://github.com/TiltTek/accessible-dice) | An accessible dice form for Symfony, with or without JavaScript: large targets, faces spoken by label, shape and value, results announced to screen readers. |
 | [`tilttek/secret-rolls`](https://github.com/TiltTek/secret-rolls) | The game master's hidden rolls, committed before they are made and verifiable by the players after the reveal. |
+| [`tilttek/dice-jail`](https://github.com/TiltTek/dice-jail) | Unlucky dice sent to jail and checked with a fair statistical test, explained plainly, that never calls a die loaded without the evidence. |
+| [`tilttek/dice-tower`](https://github.com/TiltTek/dice-tower) | A shared dice tower for a table in Symfony: every roll seen by everyone, live and in order, with missed rolls read back from the log. |
 
 ### Generators
 
@@ -51,22 +55,27 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/collections`](https://github.com/TiltTek/collections) | Collectible items and sets: copies and doubles, the item of the day, packs drawn with published odds. |
 | [`tilttek/collections-bundle`](https://github.com/TiltTek/collections-bundle) | Collections in a Symfony application: the catalog in configuration or the database, copies in Doctrine DBAL, an album and the item of the day in Twig. |
 | [`tilttek/exchange`](https://github.com/TiltTek/exchange) | Rewards bought with points in two steps, points given between members, and items traded by offers and counter-offers in one transaction. |
+| [`tilttek/exchange-bundle`](https://github.com/TiltTek/exchange-bundle) | Exchanges in a Symfony application: rewards redeemed, points given and items traded, kept in the database with forms, safeguards and expiry. |
 | [`tilttek/bounties`](https://github.com/TiltTek/bounties) | Playful bounties prepaid in points and held in escrow, claimed and awarded within a bounded time; never money. |
 | [`tilttek/friend-challenges`](https://github.com/TiltTek/friend-challenges) | Challenges between friends or open to all, with a points prize held in escrow, proofs, judges and the site's moderation. |
 | [`tilttek/leaderboards`](https://github.com/TiltTek/leaderboards) | Leaderboards kept up to date from the activity journal: periods and sliding windows, tie-breaks, snapshots, weekly leagues, titles and teams. |
 | [`tilttek/leaderboards-bundle`](https://github.com/TiltTek/leaderboards-bundle) | Leaderboards in Symfony: boards, periods and weekly leagues in configuration, scores in Doctrine DBAL or Valkey kept up to date from members' activity, and standings drawn with a UX Toolkit kit. |
 | [`tilttek/luck-tokens`](https://github.com/TiltTek/luck-tokens) | Luck, inspiration or fate tokens a table hands out and spends, every move in an append-only ledger. |
+| [`tilttek/luck-tokens-bundle`](https://github.com/TiltTek/luck-tokens-bundle) | Luck tokens in Symfony: inspiration and fate tokens per table, every move stored in the database, with events, access rules and member erasure. |
 | [`tilttek/rating`](https://github.com/TiltTek/rating) | Per-game ratings of players from their results: Elo or OpenSkill, duels, teams and draws, private by default, and a replay that gives the same values. |
 | [`tilttek/advent-calendar`](https://github.com/TiltTek/advent-calendar) | An advent calendar: one box per day in the calendar's timezone, an opening policy, each box opened once and told by an event. |
+| [`tilttek/advent-calendar-bundle`](https://github.com/TiltTek/advent-calendar-bundle) | An advent calendar in Symfony: calendars in configuration or the database, each box opened once, a screen that works without JavaScript and a celebration. |
 | [`tilttek/writing-goals`](https://github.com/TiltTek/writing-goals) | An author's writing goals: a target in words or pages, a plan on a curve, a daily quota recomputed from what remains, no streak counted. |
 | [`tilttek/seasonal-events`](https://github.com/TiltTek/seasonal-events) | Yearly seasons by RFC 5545 rule, with their contents and the multipliers they announce. |
 | [`tilttek/sets`](https://github.com/TiltTek/sets) | Versioned sets with tiers and rewards: a neutral building block that collections and badges build on. |
 | [`tilttek/stickers`](https://github.com/TiltTek/stickers) | Stickers placed on surfaces, with limits per surface and per holder, and moderation. |
 | [`tilttek/bingo`](https://github.com/TiltTek/bingo) | Bingo with cards drawn from a server secret, printed cards that can be verified, and wins checked on the server. |
+| [`tilttek/raffle`](https://github.com/TiltTek/raffle) | Raffles with one chance per entrant and none for sale: the entrant list is fixed and hashed first, and anyone can check the draw was fair. |
 | [`tilttek/quiz`](https://github.com/TiltTek/quiz) | Quiz games: six kinds of questions, a timer and a speed bonus, self-paced plays and live sessions with pseudonymous guests and teams. |
 | [`tilttek/game-engine`](https://github.com/TiltTek/game-engine) | Turn-based games as a log of moves: seeded randomness committed in advance, undo, snapshots and replay. |
 | [`tilttek/game-engine-bundle`](https://github.com/TiltTek/game-engine-bundle) | Game tables in Symfony: opaque seat identifiers, the log in DBAL, a lock, and private Mercure updates. |
 | [`tilttek/table-safety`](https://github.com/TiltTek/table-safety) | Safety tools for tabletop games: lines and veils, anonymous signals, and the credits of each tool. |
+| [`tilttek/table-safety-bundle`](https://github.com/TiltTek/table-safety-bundle) | Table safety in Symfony: screens for lines, veils and signals, the game master's screen with live alerts, anonymous by default. |
 
 ### Game building
 
@@ -75,6 +84,8 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/deck-builder`](https://github.com/TiltTek/deck-builder) | Card decks built to a format's declared rules: sizes, copies, banned cards and taboo lists, every violation readable, no publisher's catalogue bundled. |
 | [`tilttek/wargame-army`](https://github.com/TiltTek/wargame-army) | Army lists for miniatures games on a generic engine: units, options, points and detachment slots checked against a catalogue the application provides. |
 | [`tilttek/puzzle-builder`](https://github.com/TiltTek/puzzle-builder) | Puzzles for a scenario, checked on the server: normalized and partial answers, bounded guesses, tiered hints and a validated unlock graph. |
+| [`tilttek/escape-room`](https://github.com/TiltTek/escape-room) | Escape rooms on chained puzzles: a countdown, hints that cost time, a host console, bookable sessions and a leaderboard by consent. |
+| [`tilttek/escape-room-bundle`](https://github.com/TiltTek/escape-room-bundle) | Escape rooms in Symfony: rooms, bookings, a host console, live hint screens, countdowns that end on time and a leaderboard by consent. |
 
 Every package is at `0.x`: its API may still change between minor versions, as its CHANGELOG records.
 

@@ -1,0 +1,40 @@
+{#
+ # The probabilities of an expression: a summary, a chart and the table it draws from, and — with a second expression
+ # — how often each is higher, each part a card of the UX kit. The chart is hidden from assistive technologies: the
+ # table, always present, says the same.
+ #
+ # expression: the canonical form of the expression
+ # distribution: its Distribution
+ # versus: a Versus with a second expression, or null
+ # second: the canonical form of the second expression, or null
+ # show: what the chart draws — exactly, at_least or at_most
+ #}
+{%- set domain = 'tilttek_dice_probability' -%}
+<div class="tilttek-dice-probabilities">
+    {%- if versus %}
+    {% component (tilttek_dice_probability_kit('Card')) with {as: 'section', class: 'tilttek-dice-probabilities__versus'} -%}
+    {%- block content -%}
+        {%- component (tilttek_dice_probability_kit('Card:Header')) %}{% block content -%}
+            {%- component (tilttek_dice_probability_kit('Card:Title')) %}{% block content %}{{ 'versus.caption'|trans({'%first%': expression, '%second%': second}, domain) }}{% endblock %}{% endcomponent -%}
+        {%- endblock %}{% endcomponent -%}
+        {%- component (tilttek_dice_probability_kit('Card:Content')) %}{% block content %}
+            <dl>
+                <dt>{{ 'versus.first'|trans({'%first%': expression}, domain) }}</dt>
+                <dd>{{ include('@TilttekDiceProbability/_probability.html.twig', {probability: versus.first}) }}</dd>
+                <dt>{{ 'versus.tie'|trans({}, domain) }}</dt>
+                <dd>{{ include('@TilttekDiceProbability/_probability.html.twig', {probability: versus.tie}) }}</dd>
+                <dt>{{ 'versus.second'|trans({'%second%': second}, domain) }}</dt>
+                <dd>{{ include('@TilttekDiceProbability/_probability.html.twig', {probability: versus.second}) }}</dd>
+            </dl>
+            {%- if versus.estimated %}
+            <p class="tilttek-dice-probabilities__estimate">{{ 'versus.estimated'|trans({'%margin%': (versus.margin * 100)|number_format(1)}, domain) }}</p>
+            {%- endif %}
+        {% endblock %}{% endcomponent -%}
+    {%- endblock -%}
+    {%- endcomponent %}
+    {%- endif %}
+    {{ include('@TilttekDiceProbability/_distribution.html.twig', {expression: expression, distribution: distribution, show: show}) }}
+    {%- if versus %}
+    {{ include('@TilttekDiceProbability/_distribution.html.twig', {expression: second, distribution: versus.secondDistribution, show: show}) }}
+    {%- endif %}
+</div>

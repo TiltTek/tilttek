@@ -1,0 +1,9 @@
+{#
+ # The surprise of an opened box: what it granted, by its kind. The references are the application's — a ledger, a
+ # badge, a piece of content, a pool of codes —: an application that shows them otherwise overrides this template, in
+ # templates/bundles/TilttekAdventCalendarBundle/_surprise.html.twig.
+ #
+ # surprise: the Surprise
+ #}
+{%- set domain = 'tilttek_advent_calendar' -%}
+<p class="tilttek-advent-calendar__surprise" data-kind="{{ surprise.kind.value }}">{{ ('surprise.granted.' ~ surprise.kind.value)|trans({quantity: surprise.quantity, reference: surprise.reference}, domain) }}</p>

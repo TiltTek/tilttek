@@ -1,0 +1,10 @@
+tilttek_escape_room:
+    # The service that says who runs, watches and speaks for a game; the console, the screen and the consent are refused without it.
+    # access: App\EscapeRoom\Access
+    layout: base.html.twig
+    rooms: {}
+    # schedule: { enabled: true }
+
+when@test:
+    tilttek_escape_room:
+        store: memory

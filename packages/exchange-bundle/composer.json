@@ -1,0 +1,71 @@
+{
+    "name": "tilttek/exchange-bundle",
+    "description": "tilttek/exchange in Symfony: members redeem rewards, give points and trade items, kept in the database with forms, safeguards and expiry.",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": [
+        "exchange",
+        "rewards",
+        "trading",
+        "gamification",
+        "symfony-bundle"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "doctrine/dbal": "^4.5",
+        "phil/resource": "^0.1@dev",
+        "psr/event-dispatcher": "^1.0",
+        "symfony/config": "^8.2",
+        "symfony/dependency-injection": "^8.2",
+        "tilttek/exchange": "^0.2@dev",
+        "tilttek/points": "^0.2@dev"
+    },
+    "require-dev": {
+        "doctrine/doctrine-bundle": "^3.3",
+        "doctrine/orm": "^3.7",
+        "phil/privacy-bundle": "^0.1@dev",
+        "phpunit/phpunit": "^13.4",
+        "psr/clock": "^1.0",
+        "symfony/clock": "^8.2",
+        "symfony/console": "^8.2",
+        "symfony/event-dispatcher": "^8.2",
+        "symfony/form": "^8.2",
+        "symfony/framework-bundle": "^8.2",
+        "symfony/http-kernel": "^8.2",
+        "symfony/options-resolver": "^8.2",
+        "tilttek/points-bundle": "^0.2@dev"
+    },
+    "suggest": {
+        "doctrine/orm": "To add the exchanges' tables to the schema the ORM generates, and so to the migrations",
+        "phil/privacy-bundle": "To export and erase a member's exchanges with the rest of their account",
+        "symfony/console": "For the commands that expire the reservations and the offers and show the journal of transfers",
+        "symfony/form": "For the forms that reserve a reward, give points and make an offer",
+        "tilttek/points-bundle": "For the Points and Currencies services the exchanges spend, give and refund through; an application may register its own instead"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\ExchangeBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\ExchangeBundle\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

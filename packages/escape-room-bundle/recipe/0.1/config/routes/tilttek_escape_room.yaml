@@ -1,0 +1,2 @@
+tilttek_escape_room:
+    resource: '@TilttekEscapeRoomBundle/config/routes.php'

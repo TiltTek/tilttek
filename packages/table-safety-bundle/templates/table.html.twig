@@ -1,0 +1,22 @@
+{#
+ # The table's screen during play: the signals to raise, those the table sees, and what the table agreed.
+ #}
+{% extends layout %}
+{%- set domain = 'tilttek_table_safety' -%}
+{% block body %}
+<main class="tilttek-table-safety">
+    <h1>{{ 'table.title'|trans({}, domain) }}</h1>
+    {{ include('@TilttekTableSafety/_nav.html.twig') }}
+    {% component (table_safety_kit('Card')) with {as: 'section', 'aria-labelledby': 'tilttek-table-safety-raise-title'} %}{% block content %}
+        {% component (table_safety_kit('Card:Header')) %}{% block content %}
+            {% component (table_safety_kit('Card:Title')) with {id: 'tilttek-table-safety-raise-title'} %}{% block content %}{{ 'table.raise'|trans({}, domain) }}{% endblock %}{% endcomponent %}
+            {% component (table_safety_kit('Card:Description')) %}{% block content %}{{ 'table.no_explanation'|trans({}, domain) }}{% endblock %}{% endcomponent %}
+        {% endblock %}{% endcomponent %}
+        {% component (table_safety_kit('Card:Content')) %}{% block content %}
+            {{ include('@TilttekTableSafety/_signal_buttons.html.twig', {kinds: signal_kinds}) }}
+        {% endblock %}{% endcomponent %}
+    {% endblock %}{% endcomponent %}
+    {{ include('@TilttekTableSafety/_signals.html.twig') }}
+    {{ include('@TilttekTableSafety/_agreement.html.twig') }}
+</main>
+{% endblock %}

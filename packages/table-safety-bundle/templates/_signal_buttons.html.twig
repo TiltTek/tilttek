@@ -1,0 +1,23 @@
+{#
+ # The signals the viewer may raise, one plain form each: a button that works without JavaScript, sends the CSRF
+ # token, and needs no explanation. The Stimulus controller of the signals sends the same form in the background when
+ # it is there.
+ #
+ # table: the table's reference
+ # kinds: the SignalKind the viewer may raise
+ # return: "game-master" to come back to the game master's screen
+ #}
+{%- set domain = 'tilttek_table_safety' -%}
+<ul class="tilttek-table-safety__buttons" role="list">
+    {%- for kind in kinds %}
+    <li>
+        <form method="post" action="{{ path('tilttek_table_safety_raise', {table: table}) }}" data-tilttek-table-safety-signal>
+            <input type="hidden" name="_token" value="{{ csrf_token('tilttek_table_safety_signal') }}">
+            <input type="hidden" name="kind" value="{{ kind.value }}">
+            {%- if return is defined %}<input type="hidden" name="return" value="{{ return }}">{% endif %}
+            {% component (table_safety_kit('Button')) with {type: 'submit', variant: kind.value in ['x-card', 'open-door', 'not-okay'] ? 'destructive' : 'secondary', size: 'lg', 'aria-describedby': 'tilttek-table-safety-help-' ~ kind.value} %}{% block content %}{{ ('signals.kinds.' ~ kind.value)|trans({}, domain) }}{% endblock %}{% endcomponent %}
+            <small id="tilttek-table-safety-help-{{ kind.value }}">{{ ('signals.help.' ~ kind.value)|trans({}, domain) }}</small>
+        </form>
+    </li>
+    {%- endfor %}
+</ul>

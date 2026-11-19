@@ -21,9 +21,13 @@ ensuite copié dans son propre dépôt, en **lecture seule**, d'où Composer l'i
 | [`tilttek/dice-bundle`](https://github.com/TiltTek/dice-bundle) | Des dés dans une application Symfony : limites et dés personnalisés dans la configuration, lancers rejouables dans Doctrine, macros, champ de formulaire, Twig et détail accessible d'un lancer. |
 | [`tilttek/dice-skins`](https://github.com/TiltTek/dice-skins) | L'apparence des dés d'un membre (skins, couleurs, matières et dés possédés) appliquée au lanceur, ses chiffres toujours lisibles, en contraste élevé pour un spectateur qui le demande. |
 | [`tilttek/dice-probability`](https://github.com/TiltTek/dice-probability) | Les probabilités exactes d'une expression de dés, en fractions : distributions, au moins et au plus, moyenne, comparaisons. |
+| [`tilttek/dice-probability-bundle`](https://github.com/TiltTek/dice-probability-bundle) | Les probabilités d'une expression de dés dans Symfony : un tableau et un graphique accessibles en Twig, mis à jour pendant la saisie. |
 | [`tilttek/loot-tables`](https://github.com/TiltTek/loot-tables) | Des tables de butin lancées avec n'importe quel dé, tirées d'une façon que chacun peut vérifier, dés physiques compris. |
+| [`tilttek/loot-tables-bundle`](https://github.com/TiltTek/loot-tables-bundle) | Des boîtes de butin vendues dans les commandes Symfony : engagées à la commande, tirées une fois payées, dés physiques à la caisse, et la preuve de chaque tirage gardée. |
 | [`tilttek/accessible-dice`](https://github.com/TiltTek/accessible-dice) | Un formulaire de dés accessible pour Symfony, avec ou sans JavaScript : grandes cibles, faces dites par libellé, forme et valeur, résultats annoncés aux lecteurs d'écran. |
 | [`tilttek/secret-rolls`](https://github.com/TiltTek/secret-rolls) | Les jets cachés du meneur, engagés avant d'être faits et vérifiables par les joueurs après leur dévoilement. |
+| [`tilttek/dice-jail`](https://github.com/TiltTek/dice-jail) | Les dés malchanceux mis en prison et vérifiés par un test statistique juste, expliqué simplement, qui ne déclare jamais un dé pipé sans preuve. |
+| [`tilttek/dice-tower`](https://github.com/TiltTek/dice-tower) | Une tour de dés partagée par une table dans Symfony : chaque jet vu de tous, en direct et dans l'ordre, et les jets manqués relus dans le journal. |
 
 ### Générateurs
 
@@ -51,22 +55,27 @@ ensuite copié dans son propre dépôt, en **lecture seule**, d'où Composer l'i
 | [`tilttek/collections`](https://github.com/TiltTek/collections) | Objets à collectionner et séries : exemplaires et doublons, l'objet du jour, paquets tirés selon des chances publiées. |
 | [`tilttek/collections-bundle`](https://github.com/TiltTek/collections-bundle) | Des collections dans une application Symfony : catalogue dans la configuration ou la base de données, exemplaires dans Doctrine DBAL, album et objet du jour dans Twig. |
 | [`tilttek/exchange`](https://github.com/TiltTek/exchange) | Des récompenses achetées avec des points en deux temps, des points donnés entre membres et des objets échangés par offres et contre-offres en une seule transaction. |
+| [`tilttek/exchange-bundle`](https://github.com/TiltTek/exchange-bundle) | Les échanges dans une application Symfony : récompenses réclamées, points donnés et objets échangés, gardés en base avec formulaires, garde-fous et expiration. |
 | [`tilttek/bounties`](https://github.com/TiltTek/bounties) | Des primes ludiques payées d'avance en points et tenues en séquestre, réclamées et attribuées dans un délai borné ; jamais d'argent. |
 | [`tilttek/friend-challenges`](https://github.com/TiltTek/friend-challenges) | Des défis entre amis ou ouverts à tous, avec un prix en points tenu en séquestre, des preuves, des juges et la modération du site. |
 | [`tilttek/leaderboards`](https://github.com/TiltTek/leaderboards) | Des classements tenus à jour à partir du journal d'activité : périodes et fenêtres glissantes, départages, instantanés, ligues hebdomadaires, titres et équipes. |
 | [`tilttek/leaderboards-bundle`](https://github.com/TiltTek/leaderboards-bundle) | Les classements dans Symfony : tableaux, périodes et ligues hebdomadaires en configuration, scores dans Doctrine DBAL ou Valkey tenus à jour par l'activité des membres, et classements dessinés avec un kit du UX Toolkit. |
 | [`tilttek/luck-tokens`](https://github.com/TiltTek/luck-tokens) | Des jetons de chance, d'inspiration ou de destin qu'une table donne et dépense, chaque mouvement dans un registre en ajout seul. |
+| [`tilttek/luck-tokens-bundle`](https://github.com/TiltTek/luck-tokens-bundle) | Les jetons de chance dans Symfony : jetons d'inspiration et de destin par table, chaque mouvement en base, avec événements, règles d'accès et effacement des membres. |
 | [`tilttek/rating`](https://github.com/TiltTek/rating) | Des cotes de joueurs par jeu tirées de leurs résultats : Elo ou OpenSkill, duels, équipes et nulles, privées par défaut, et un rejeu qui redonne les mêmes valeurs. |
 | [`tilttek/advent-calendar`](https://github.com/TiltTek/advent-calendar) | Un calendrier de l'Avent : une case par jour dans le fuseau du calendrier, une politique d'ouverture, chaque case ouverte une seule fois et annoncée par un événement. |
+| [`tilttek/advent-calendar-bundle`](https://github.com/TiltTek/advent-calendar-bundle) | Un calendrier de l'Avent dans Symfony : calendriers en configuration ou en base, chaque case ouverte une fois, un écran qui marche sans JavaScript et une célébration. |
 | [`tilttek/writing-goals`](https://github.com/TiltTek/writing-goals) | Les objectifs d'écriture d'un auteur : une cible en mots ou en pages, un plan sur une courbe, un quota du jour recalculé selon ce qui reste, aucune série comptée. |
 | [`tilttek/seasonal-events`](https://github.com/TiltTek/seasonal-events) | Des saisons annuelles par règle RFC 5545, avec leurs contenus et les multiplicateurs qu'elles annoncent. |
 | [`tilttek/sets`](https://github.com/TiltTek/sets) | Des ensembles versionnés à paliers et à récompenses : une brique neutre sur laquelle collections et badges se bâtissent. |
 | [`tilttek/stickers`](https://github.com/TiltTek/stickers) | Des autocollants posés sur des surfaces, avec des limites par surface et par détenteur, et la modération. |
 | [`tilttek/bingo`](https://github.com/TiltTek/bingo) | Un bingo aux cartes tirées d'un secret du serveur, aux cartes imprimées vérifiables, et aux victoires vérifiées sur le serveur. |
+| [`tilttek/raffle`](https://github.com/TiltTek/raffle) | Des tirages au sort à une chance par participant, sans chance à vendre : la liste est figée et hachée d'abord, et chacun peut vérifier que le tirage était juste. |
 | [`tilttek/quiz`](https://github.com/TiltTek/quiz) | Des jeux-questionnaires : six genres de questions, une minuterie et un bonus de vitesse, des parties à son rythme et des sessions en direct avec invités sous pseudonyme et équipes. |
 | [`tilttek/game-engine`](https://github.com/TiltTek/game-engine) | Des jeux au tour par tour en journal de coups : hasard semé et engagé d'avance, annulation, instantanés et rejeu. |
 | [`tilttek/game-engine-bundle`](https://github.com/TiltTek/game-engine-bundle) | Des tables de jeu dans Symfony : identifiants de siège opaques, journal en DBAL, verrou et mises à jour Mercure privées. |
 | [`tilttek/table-safety`](https://github.com/TiltTek/table-safety) | Des outils de sécurité pour les jeux de table : lignes et voiles, signaux anonymes, et le crédit de chaque outil. |
+| [`tilttek/table-safety-bundle`](https://github.com/TiltTek/table-safety-bundle) | La sécurité à la table dans Symfony : écrans des lignes, des voiles et des signaux, écran du meneur avec alertes en direct, anonyme par défaut. |
 
 ### Construction de jeux
 
@@ -75,6 +84,8 @@ ensuite copié dans son propre dépôt, en **lecture seule**, d'où Composer l'i
 | [`tilttek/deck-builder`](https://github.com/TiltTek/deck-builder) | Des paquets de cartes construits selon les règles déclarées d'un format : tailles, exemplaires, cartes bannies et listes taboues, chaque infraction lisible, sans catalogue d'éditeur. |
 | [`tilttek/wargame-army`](https://github.com/TiltTek/wargame-army) | Des listes d'armée pour des jeux de figurines sur un moteur générique : unités, options, points et emplacements de détachement vérifiés contre un catalogue que fournit l'application. |
 | [`tilttek/puzzle-builder`](https://github.com/TiltTek/puzzle-builder) | Des énigmes pour un scénario, vérifiées sur le serveur : réponses normalisées et partielles, propositions bornées, indices par paliers et graphe de déverrouillage validé. |
+| [`tilttek/escape-room`](https://github.com/TiltTek/escape-room) | Des jeux d'évasion sur des énigmes enchaînées : un compte à rebours, des indices qui coûtent du temps, une console d'animation, des séances à réserver et un classement par consentement. |
+| [`tilttek/escape-room-bundle`](https://github.com/TiltTek/escape-room-bundle) | Les jeux d'évasion dans Symfony : salles, réservations, console d'animation, écrans d'indices en direct, comptes à rebours qui finissent à l'heure et classement par consentement. |
 
 Chaque paquet est en `0.x` : son API peut encore changer d'une version mineure à l'autre, comme le note son CHANGELOG.
 

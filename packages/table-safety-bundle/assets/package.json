@@ -1,0 +1,23 @@
+{
+    "name": "@tilttek/table-safety",
+    "description": "The table safety signals' Stimulus controller: sends a signal without reloading the page, adds each new signal of a table from the Mercure hub, reads the missed ones from the feed and announces each to screen readers",
+    "version": "0.1.0",
+    "license": "MIT",
+    "type": "module",
+    "symfony": {
+        "controllers": {
+            "signals": {
+                "main": "src/signals_controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0"
+    }
+}

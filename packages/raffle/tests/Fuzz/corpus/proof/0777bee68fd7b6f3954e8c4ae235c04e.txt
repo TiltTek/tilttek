@@ -1,0 +1,1 @@
+{"version":"tilttek-raffle/1","raffle":"r-prize","stake":"prize","winners":8,"alternates":1,"entrants":["mmeber-1","mem","","mewber-5"],"entrants_hash":"a","source":{"kind":"beacon"},"seed":"5adb0","drawn":["meemr-6"],"sealed_at":"50:0:","drawn_at":"25:0Z"}

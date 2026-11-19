@@ -1,0 +1,189 @@
+saved: Saved.
+count: '{label}: {count}'
+nav:
+    label: Table safety
+    table: The table
+    answers: My lines, veils and checklist
+    session_zero: Session zero
+    cards: Printable cards
+    game_master: Game master
+table:
+    title: Table safety
+    raise: Raise a signal
+    no_explanation: Anyone may raise a signal at any moment, without explaining why. Nobody sees who raised it unless the table chose so.
+signals:
+    title: Signals
+    none: No signal yet.
+    seen: seen by the game master
+    sent: Signal sent.
+    offline: The live updates are interrupted; reload the page to see the latest signals.
+    discreet: game master only
+    acknowledge: Mark as seen
+    kinds:
+        x-card: X-card
+        pause: Pause
+        rewind: Rewind
+        fast-forward: Fast-forward
+        open-door: Leave the game
+        check-in: Ask for a check-in
+        all-good: All good
+        unsure: Unsure
+        not-okay: Not okay
+    help:
+        x-card: Take out what just happened.
+        pause: Stop the scene for a moment.
+        rewind: Go back and play the moment differently.
+        fast-forward: Skip past the scene.
+        open-door: Leave the game now; only the game master is told.
+        check-in: Ask everyone how they are doing.
+        all-good: Go on.
+        unsure: Slow down.
+        not-okay: Stop.
+agreement:
+    title: What the table agreed
+    respondents: '{count, plural, =0 {Nobody has answered yet.} one {# participant answered.} other {# participants answered.}}'
+    protective: 'Every answer counts here from the first one, without saying who gave it. The players see these themes in groups of {count, plural, one {# participant} other {# participants}}.'
+    not_enough: 'Not enough answers yet: the themes are shown in groups of {count, plural, one {# participant} other {# participants}}, so that nobody can tell who gave which. The game master already sees every line and veil.'
+    lines: Lines, never in the game
+    veils: Veils, off screen only
+    red: Red, not at this table
+    yellow: Yellow, with care
+    green: Green, welcome
+    none: None
+answers:
+    title: My answers
+    private: Your answers are seen by nobody. The table only sees the strictest answer for each theme, never who gave it. Change them at any moment.
+    lines_and_veils: Lines and veils
+    lines_and_veils_help: A line keeps a theme out of the game; a veil lets it happen off screen.
+    consent: Consent checklist
+    consent_help: Green, welcome; yellow, with care; red, not at this table.
+    table_themes: This table's themes
+    open: Open
+    unanswered: No answer
+    line: Line
+    veil: Veil
+    green: Green
+    yellow: Yellow
+    red: Red
+    save: Save
+cards:
+    title: Printable cards
+    help: Print these cards for a table played in person; each participant fills their sheets by hand, and nobody else needs to see them.
+    pdf: Download them as a PDF.
+    none: This table uses no tool with a printable card.
+    x_card: X-card
+    x_card_help: Touch or raise this card to take out what just happened. Nobody asks why.
+    lines_and_veils: Lines and veils
+    lines_and_veils_help: A line keeps a theme out of the game; a veil lets it happen off screen. Leave both boxes empty for an open theme.
+    consent: Consent checklist
+    consent_help: Green, welcome; yellow, with care; red, not at this table. Leave the boxes empty for a theme you do not answer.
+    table_themes: This table's themes
+    theme: Theme
+    line: Line
+    veil: Veil
+    green: Green
+    yellow: Yellow
+    red: Red
+session_zero:
+    title: Session zero
+    help: The answers of the table form its pact. The game master sees them gathered, never who gave which.
+    safety_help: 'Keep what must stay out of the game for your lines and veils and your consent checklist: the game master sees them from your first answer, never who gave them, while the answers here wait for a group of participants.'
+    safety_link: Answer the lines, veils and checklist
+    questions:
+        tone: What tone do you want for the game?
+        pillars: What do you enjoy most at the table?
+        themes-welcome: Which themes would you like to meet?
+        expectations: What do you hope to get from this game?
+        player-conflict: May characters work against each other?
+        character-death: May characters die?
+        frequency: How often would you like to play?
+        schedule: When are you available?
+        table-rules: Which table rules matter to you (phones, food, breaks)?
+        comfort: What would help you play comfortably?
+        experience: How much have you played games like this one?
+        camera: How would you like to take part online?
+        recording: May the sessions be recorded?
+    options:
+        tone:
+            light: Light
+            mixed: Mixed
+            serious: Serious
+            dark: Dark
+        pillars:
+            combat: Combat
+            exploration: Exploration
+            social: Talking and negotiating
+            mystery: Mysteries and puzzles
+            drama: Drama and relationships
+        player-conflict:
+            never: Never
+            with-consent: With the players' consent
+            welcome: Welcome
+        character-death:
+            never: Never
+            rare: Rarely, at a meaningful moment
+            possible: Whenever the dice say so
+        frequency:
+            weekly: Every week
+            fortnightly: Every two weeks
+            monthly: Every month
+        experience:
+            new: Never
+            some: A few times
+            seasoned: Often
+        camera:
+            video: With a camera
+            voice: Voice only
+            text: Text only
+        recording:
+            never: Never
+            ask-first: Only if everyone agrees each time
+            allowed: Yes
+feedback:
+    title: 'Stars and wishes: {session}'
+    help: What you enjoyed, and what you would like to see next time. The game master sees them gathered, never who wrote which.
+    stars: Stars
+    wishes: Wishes
+    one_per_line: One per line.
+    summary: Stars and wishes of a session
+    session: Session
+    show: Show
+    not_enough: 'Not enough answers yet: the stars and wishes are shown in groups of {count} participants, so that nobody can tell who wrote which.'
+check_in:
+    title: Check-in
+    none: No check-in asked yet.
+    asked: 'Asked at {time}.'
+    attention: Someone asked to slow down or stop.
+pact:
+    title: The table's pact
+game_master:
+    title: Game master
+tools:
+    label: Safety tools
+    recommended: Naming the tools of the table is recommended, never required.
+    lines-and-veils: Lines and veils
+    consent-checklist: Consent checklist
+    session-zero: Session zero
+    x-card: X-card
+    script-change: Script Change
+    open-door: Open door
+    check-in: Check-ins
+    stars-and-wishes: Stars and wishes
+settings:
+    title: Settings of the table
+    named_signals: Named signals
+    named_signals_help: A signal then says who raised it. Signals are anonymous otherwise; the answers to a check-in always are.
+    signals_seen_by: Who sees the X-card and Script Change
+    audience:
+        table: The whole table
+        game-master: The game master alone
+    custom_themes: Themes this table adds
+    one_per_line: One per line.
+    template: Session zero
+    templates:
+        keep: Keep the current questions
+        one-shot: One-shot
+        campaign: Campaign
+        convention: Convention table
+        online: Online table
+    questions: Questions of your own

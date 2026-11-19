@@ -1,0 +1,62 @@
+{#
+ # One distribution, in a card of the UX kit: its summary, its chart and its table.
+ #
+ # expression: the canonical form of the expression
+ # distribution: its Distribution
+ # show: what the chart draws — exactly, at_least or at_most
+ #}
+{%- set domain = 'tilttek_dice_probability' -%}
+{%- set outcomes = distribution.outcomes -%}
+{%- set column = show == 'at_least' ? 'atLeast' : (show == 'at_most' ? 'atMost' : 'probability') -%}
+{%- component (tilttek_dice_probability_kit('Card')) with {as: 'section', class: 'tilttek-dice-distribution'} -%}
+{%- block content -%}
+{%- component (tilttek_dice_probability_kit('Card:Content')) -%}
+{%- block content %}
+    <dl class="tilttek-dice-distribution__summary">
+        <dt>{{ 'summary.mean'|trans({}, domain) }}</dt>
+        <dd>{{ distribution.mean.toFloat|number_format(2) }}</dd>
+        <dt>{{ 'summary.deviation'|trans({}, domain) }}</dt>
+        <dd>{{ distribution.standardDeviation|number_format(2) }}</dd>
+        <dt>{{ 'summary.range'|trans({}, domain) }}</dt>
+        <dd>{{ 'summary.range_value'|trans({'%minimum%': distribution.minimum, '%maximum%': distribution.maximum}, domain) }}</dd>
+    </dl>
+    {%- if distribution.estimated %}
+    <p class="tilttek-dice-distribution__estimate">{{ ('estimate.' ~ distribution.estimate.reason.value)|trans({'%samples%': distribution.estimate.samples|number_format, '%margin%': (distribution.estimate.margin * 100)|number_format(1)}, domain) }}</p>
+    {%- endif %}
+    {%- if not distribution.remaining.isZero %}
+    <p class="tilttek-dice-distribution__remaining">{{ 'remaining'|trans({'%probability%': (distribution.remaining.toFloat * 100)|number_format(4)}, domain) }}</p>
+    {%- endif %}
+    <div class="tilttek-dice-distribution__chart" aria-hidden="true">
+        {{- component(tilttek_dice_probability_kit('Chart'), {
+            label: ('show.' ~ show)|trans({}, domain),
+            labels: outcomes|map(outcome => outcome.value),
+            series: [{label: expression, values: outcomes|map(outcome => (outcome.(column).toFloat * 100)|round(4))}],
+            height: 200,
+        }) -}}
+    </div>
+    {% component (tilttek_dice_probability_kit('Table')) with {class: 'tilttek-dice-distribution__table'} -%}
+    {%- block content -%}
+        {%- component (tilttek_dice_probability_kit('Table:Caption')) %}{% block content %}{{ 'table.caption'|trans({'%expression%': expression}, domain) }}{% endblock %}{% endcomponent -%}
+        {%- component (tilttek_dice_probability_kit('Table:Header')) %}{% block content -%}
+            {%- component (tilttek_dice_probability_kit('Table:Row')) %}{% block content -%}
+                {%- for heading in ['table.value', 'show.exactly', 'show.at_least', 'show.at_most'] -%}
+                    {%- component (tilttek_dice_probability_kit('Table:Head')) %}{% block content %}{{ heading|trans({}, domain) }}{% endblock %}{% endcomponent -%}
+                {%- endfor -%}
+            {%- endblock %}{% endcomponent -%}
+        {%- endblock %}{% endcomponent -%}
+        {%- component (tilttek_dice_probability_kit('Table:Body')) %}{% block content -%}
+            {%- for outcome in outcomes -%}
+                {%- component (tilttek_dice_probability_kit('Table:Row')) %}{% block content -%}
+                    {%- component (tilttek_dice_probability_kit('Table:Head')) with {scope: 'row'} %}{% block content %}{{ outcome.value }}{% endblock %}{% endcomponent -%}
+                    {%- for probability in [outcome.probability, outcome.atLeast, outcome.atMost] -%}
+                        {%- component (tilttek_dice_probability_kit('Table:Cell')) %}{% block content %}{{ include('@TilttekDiceProbability/_probability.html.twig', {probability: probability}) }}{% endblock %}{% endcomponent -%}
+                    {%- endfor -%}
+                {%- endblock %}{% endcomponent -%}
+            {%- endfor -%}
+        {%- endblock %}{% endcomponent -%}
+    {%- endblock -%}
+    {%- endcomponent %}
+{% endblock -%}
+{%- endcomponent -%}
+{%- endblock -%}
+{%- endcomponent -%}

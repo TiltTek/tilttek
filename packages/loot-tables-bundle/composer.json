@@ -1,0 +1,86 @@
+{
+    "name": "tilttek/loot-tables-bundle",
+    "description": "tilttek/loot-tables in Symfony: loot boxes sold in an order, committed when placed and drawn once paid, with physical dice at a register and proof kept.",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": [
+        "loot",
+        "loot-box",
+        "dice",
+        "provably-fair",
+        "commerce",
+        "symfony-bundle"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-sodium": "*",
+        "doctrine/orm": "^3.7",
+        "phil/commerce-bundle": "^0.2@dev || ^0.3@dev",
+        "psr/clock": "^1.0",
+        "symfony/config": "^8.2",
+        "symfony/dependency-injection": "^8.2",
+        "symfony/service-contracts": "^3.6",
+        "symfony/workflow": "^8.2",
+        "tilttek/loot-tables": "^0.3@dev"
+    },
+    "require-dev": {
+        "ext-zlib": "*",
+        "doctrine/dbal": "^4.5",
+        "doctrine/doctrine-bundle": "^3.3",
+        "phil/money": "^0.1@dev",
+        "phil/paged-media": "^0.1@dev",
+        "phil/ux-kit": "^0.5@dev",
+        "phpunit/phpunit": "^13.4",
+        "psr/log": "^3.0",
+        "symfony/clock": "^8.2",
+        "symfony/console": "^8.2",
+        "symfony/event-dispatcher": "^8.2",
+        "symfony/form": "^8.2",
+        "symfony/framework-bundle": "^8.2",
+        "symfony/http-kernel": "^8.2",
+        "symfony/options-resolver": "^8.2",
+        "symfony/routing": "^8.2",
+        "symfony/translation": "^8.2",
+        "symfony/translation-contracts": "^3.6",
+        "symfony/twig-bridge": "^8.2",
+        "symfony/twig-bundle": "^8.2",
+        "symfony/ux-twig-component": "^3.7",
+        "symfony/yaml": "^8.2",
+        "tilttek/dice": "^0.3@dev",
+        "twig/twig": "^3.21"
+    },
+    "suggest": {
+        "phil/paged-media": "For LootSheetPdf, the production sheet of an order's draws",
+        "phil/ux-kit": "For the recipes Card and Badge the buyer's draws are drawn with, through the Symfony UX Toolkit",
+        "symfony/console": "For the command that rolls a revealed draw again from its seed and checks it against its commitment",
+        "symfony/form": "For PhysicalDiceType, the form of the physical dice at a register, with symfony/options-resolver",
+        "symfony/translation": "To translate the form, the components and their messages, in English and French",
+        "symfony/ux-twig-component": "For <twig:TilttekLootTables:Commitments>, the buyer's draws, and <twig:TilttekLootTables:PhysicalDice>, the form of the physical dice on the register's page"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\LootTablesBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\LootTablesBundle\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

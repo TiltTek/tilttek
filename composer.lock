@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ceabb2c419f2828f02aad067a16ec5a1",
+    "content-hash": "a830c5154f57a4fbbb54863b5797132d",
     "packages": [],
     "packages-dev": [
         {
@@ -1767,7 +1767,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../Phil/phil/packages/almanac",
-                "reference": "45c72920cbeeeb3c2afcdea69c7a247448e742d4"
+                "reference": "d1ce071e84aac36bddd1a30026c8c6bf42303c05"
             },
             "require": {
                 "ext-mbstring": "*",
@@ -1804,7 +1804,7 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Computed dates for PHP: Easter, the phases of the Moon, the equinoxes and solstices, eclipses, sunrise, sunset and twilights by Meeus's algorithms, the Chinese New Year, and rules written in words — 2nd monday of october, easter - 47 days — for an almanac of a period",
+            "description": "Easter, Moon phases, seasons, eclipses, sunrise and sunset, and dates written in words such as \"2nd monday of october\", computed for any year.",
             "homepage": "https://ph-il.ca",
             "keywords": [
                 "calendar",
@@ -1822,6 +1822,84 @@
                 "symlink": true,
                 "relative": true
             }
+        },
+        {
+            "name": "phil/commerce-bundle",
+            "version": "0.3.0-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/commerce-bundle.git",
+                "reference": "44a15f698b60fe1f517ea51ae83ff2f7f09eff47"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/commerce-bundle/zipball/44a15f698b60fe1f517ea51ae83ff2f7f09eff47",
+                "reference": "44a15f698b60fe1f517ea51ae83ff2f7f09eff47",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "^4.5",
+                "doctrine/orm": "^3.7",
+                "ext-filter": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "ext-sodium": "*",
+                "phil/ddd-bundle": "^0.1@dev",
+                "phil/money": "^0.1@dev",
+                "phil/paged-media": "^0.1@dev",
+                "phil/tax": "^0.1@dev",
+                "php": ">=8.5",
+                "psr/clock": "^1.0",
+                "symfony/config": "^8.2",
+                "symfony/dependency-injection": "^8.2",
+                "symfony/event-dispatcher-contracts": "^3.6",
+                "symfony/http-foundation": "^8.2",
+                "symfony/uid": "^8.2",
+                "symfony/workflow": "^8.2"
+            },
+            "require-dev": {
+                "doctrine/doctrine-bundle": "^3.3",
+                "doctrine/persistence": "^4.1",
+                "ext-zlib": "*",
+                "phpunit/phpunit": "^13.4",
+                "psr/log": "^3.0",
+                "symfony/clock": "^8.2",
+                "symfony/console": "^8.2",
+                "symfony/event-dispatcher": "^8.2",
+                "symfony/framework-bundle": "^8.2",
+                "symfony/http-kernel": "^8.2"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\CommerceBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The core of a Symfony store: orders, prices, taxes, payments and receipts with their PDF invoices, on which separate modules plug to sell more kinds of things.",
+            "homepage": "https://ph-il.ca",
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/commerce-bundle/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/commerce-bundle/tree/0.3.0-alpha"
+            },
+            "time": "2026-11-18T22:00:00+00:00",
+            "published-time": "2026-11-19T00:42:20+00:00"
         },
         {
             "name": "phil/content-warnings",
@@ -1880,6 +1958,88 @@
             "support": {
                 "issues": "https://github.com/parler-haut-interagir-librement/content-warnings/issues",
                 "source": "https://github.com/parler-haut-interagir-librement/content-warnings/tree/0.1.0-alpha"
+            },
+            "time": "2026-11-11T06:11:30+00:00",
+            "published-time": "2026-11-11T13:31:59+00:00"
+        },
+        {
+            "name": "phil/content-warnings-bundle",
+            "version": "0.1.0-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/content-warnings-bundle.git",
+                "reference": "9789987d56eefb831f87add28a181e6e824a28b2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/content-warnings-bundle/zipball/9789987d56eefb831f87add28a181e6e824a28b2",
+                "reference": "9789987d56eefb831f87add28a181e6e824a28b2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-intl": "*",
+                "phil/content-warnings": "^0.1@dev",
+                "php": ">=8.5",
+                "symfony/config": "^8.2",
+                "symfony/dependency-injection": "^8.2",
+                "symfony/form": "^8.2",
+                "symfony/options-resolver": "^8.2",
+                "symfony/service-contracts": "^3.6"
+            },
+            "require-dev": {
+                "doctrine/dbal": "^4.5",
+                "doctrine/doctrine-bundle": "^3.3",
+                "doctrine/orm": "^3.7",
+                "phpunit/phpunit": "^13.4",
+                "psr/log": "^3.0",
+                "symfony/event-dispatcher": "^8.2",
+                "symfony/framework-bundle": "^8.2",
+                "symfony/http-foundation": "^8.2",
+                "symfony/http-kernel": "^8.2",
+                "symfony/translation": "^8.2",
+                "symfony/twig-bridge": "^8.2",
+                "symfony/twig-bundle": "^8.2",
+                "twig/twig": "^3.21"
+            },
+            "suggest": {
+                "doctrine/dbal": "For the phil_content_warnings column type",
+                "symfony/http-foundation": "For SessionWarningPreferences, the default store of preferences",
+                "twig/twig": "For the Twig functions and the folded display"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\ContentWarningsBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "phil/content-warnings in Symfony: the catalogue of warning themes from configuration, the JSON column type phil_content_warnings, fields for warnings and preferences, a folded display in Twig with a Stimulus controller, and a store of each member's preferences",
+            "homepage": "https://ph-il.ca",
+            "keywords": [
+                "accessibility",
+                "content-warnings",
+                "symfony-bundle",
+                "trigger-warnings"
+            ],
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/content-warnings-bundle/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/content-warnings-bundle/tree/0.1.0-alpha"
             },
             "time": "2026-11-11T06:11:30+00:00",
             "published-time": "2026-11-11T13:31:59+00:00"
@@ -1950,6 +2110,74 @@
             },
             "time": "2026-11-11T04:09:09+00:00",
             "published-time": "2026-11-11T05:15:51+00:00"
+        },
+        {
+            "name": "phil/ddd-bundle",
+            "version": "0.1.1-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/ddd-bundle.git",
+                "reference": "93c319d9b0671c607793f73ddf6cff23e29a4064"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/ddd-bundle/zipball/93c319d9b0671c607793f73ddf6cff23e29a4064",
+                "reference": "93c319d9b0671c607793f73ddf6cff23e29a4064",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.5",
+                "symfony/config": "^8.2",
+                "symfony/dependency-injection": "^8.2",
+                "symfony/messenger": "^8.2",
+                "symfony/uid": "^8.2"
+            },
+            "conflict": {
+                "doctrine/dbal": "<4.2"
+            },
+            "require-dev": {
+                "doctrine/dbal": "^4.2",
+                "phpunit/phpunit": "^13.4",
+                "psr/log": "^3.0",
+                "symfony/console": "^8.2",
+                "symfony/event-dispatcher": "^8.2",
+                "symfony/framework-bundle": "^8.2",
+                "symfony/http-kernel": "^8.2"
+            },
+            "suggest": {
+                "doctrine/dbal": "To store identifiers in a native uuid column, or BINARY(16) where the platform has none, through Infrastructure\\Doctrine\\IdentifierType"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\DddBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The few types every bounded context of a Symfony application shares: identifiers, domain events, domain errors, and command and query buses on Messenger.",
+            "homepage": "https://ph-il.ca",
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/ddd-bundle/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/ddd-bundle/tree/0.1.1-alpha"
+            },
+            "time": "2026-11-17T22:00:00+00:00",
+            "published-time": "2026-11-18T01:36:54+00:00"
         },
         {
             "name": "phil/dev-tools",
@@ -2163,12 +2391,73 @@
             "published-time": "2026-11-11T05:14:40+00:00"
         },
         {
+            "name": "phil/money",
+            "version": "0.1.1-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/money.git",
+                "reference": "625197d037f3fd5034aa59d84875a2e6bc6e320b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/money/zipball/625197d037f3fd5034aa59d84875a2e6bc6e320b",
+                "reference": "625197d037f3fd5034aa59d84875a2e6bc6e320b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-intl": "*",
+                "php": ">=8.5",
+                "symfony/intl": "^8.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\Money\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Handle money without rounding errors: exact integer amounts in a known currency, parsed and printed to its precision, split without ever losing a cent.",
+            "homepage": "https://ph-il.ca",
+            "keywords": [
+                "currency",
+                "ddd",
+                "iso4217",
+                "money",
+                "value-object"
+            ],
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/money/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/money/tree/0.1.1-alpha"
+            },
+            "time": "2026-11-17T22:00:00+00:00",
+            "published-time": "2026-11-18T01:36:34+00:00"
+        },
+        {
             "name": "phil/open-badges",
             "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "../../Phil/phil/packages/open-badges",
-                "reference": "847900c3642c3d47c9f5598a04f57615bb03983e"
+                "reference": "d17b3cf7b00671af199851bbe475773f9427f734"
             },
             "require": {
                 "ext-dom": "*",
@@ -2192,7 +2481,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "0.2.x-dev"
+                    "dev-main": "0.4.x-dev"
                 }
             },
             "autoload": {
@@ -2216,7 +2505,7 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Open Badges 3.0 and CLR 2.0 credentials: issued as Verifiable Credentials 2.0, signed as JSON Web Tokens (EdDSA, RS256) or with an eddsa-rdfc-2022 Data Integrity proof, verified offline, baked into PNG and SVG images, revoked through a Bitstring Status List, endorsed by third parties and gathered in learner records",
+            "description": "Issue Open Badges 3.0 that anyone can verify: signed, baked into the image, revoked, endorsed and gathered in a learner record (CLR 2.0).",
             "homepage": "https://ph-il.ca",
             "keywords": [
                 "badges",
@@ -2237,10 +2526,10 @@
             "dist": {
                 "type": "path",
                 "url": "../../Phil/phil/packages/open-badges-bundle",
-                "reference": "10d4bed105abf96013d65fc6e30d1c9c72c876d9"
+                "reference": "ea25bdc9b9cbaf05763a7345e9e397c2e71ed2da"
             },
             "require": {
-                "phil/open-badges": "^0.2@dev",
+                "phil/open-badges": "^0.2@dev || ^0.3@dev || ^0.4@dev",
                 "phil/safe-http": "^0.1@dev || ^0.2@dev",
                 "phil/url": "^0.1@dev",
                 "php": ">=8.5",
@@ -2300,7 +2589,7 @@
                     "role": "Developer"
                 }
             ],
-            "description": "phil/open-badges in Symfony: the issuer and its key from configuration, credentials secured as JSON Web Tokens or Data Integrity proofs, the issuer's profile and keys served, Bitstring Status Lists served, a verification page for tokens, documents and baked images, and the keys of other issuers read from their profiles",
+            "description": "phil/open-badges in Symfony: the issuer configured once, its profile and keys published, revocations served, and a page where anyone verifies a badge.",
             "homepage": "https://ph-il.ca",
             "keywords": [
                 "clr",
@@ -2314,12 +2603,85 @@
             }
         },
         {
+            "name": "phil/paged-media",
+            "version": "0.1.0-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/paged-media.git",
+                "reference": "9b95d8426cf89ba04bdf088b47bfc0fe3dce23cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/paged-media/zipball/9b95d8426cf89ba04bdf088b47bfc0fe3dce23cd",
+                "reference": "9b95d8426cf89ba04bdf088b47bfc0fe3dce23cd",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "ext-mbstring": "*",
+                "ext-uri": "*",
+                "ext-zlib": "*",
+                "phil/url": "^0.1@dev",
+                "php": ">=8.5"
+            },
+            "require-dev": {
+                "ext-openssl": "*",
+                "phpunit/phpunit": "^13.4",
+                "symfony/http-client": "^8.2",
+                "symfony/http-client-contracts": "^3.6"
+            },
+            "suggest": {
+                "symfony/http-client": "For the Gotenberg client, which sends its requests through Symfony HttpClient"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\PagedMedia\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PDF documents behind one API: a native writer with embedded and subset TrueType fonts, images, lines and rectangles and compressed streams, with no dependency, fillable form fields and printed templates, and a Gotenberg 9 client for PDF stages, PDF/A and PDF/UA, signatures and LibreOffice conversions",
+            "homepage": "https://ph-il.ca",
+            "keywords": [
+                "Gotenberg",
+                "font-subsetting",
+                "paged-media",
+                "pdf",
+                "pdf-a",
+                "pdf-ua",
+                "print",
+                "truetype"
+            ],
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/paged-media/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/paged-media/tree/0.1.0-alpha"
+            },
+            "time": "2026-11-13T15:18:49+00:00",
+            "published-time": "2026-11-13T22:45:35+00:00"
+        },
+        {
             "name": "phil/privacy-bundle",
             "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "../../Phil/phil/packages/privacy-bundle",
-                "reference": "8296dbfcde7e6ada50dc2e1d89fe74e18de1f0bd"
+                "reference": "ecabf41fe0f0cdec36780baac27ea27a35ea81f2"
             },
             "require": {
                 "ext-mbstring": "*",
@@ -2413,7 +2775,7 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Privacy law in code for Symfony: personal fields declared by attribute, logs redacted, export and erasure, delayed account deletion, scheduled retention purges with the register of processing, cookie consent refused by default, third-party frames held until consent, requests by verified link, an incident register and anonymized copies of databases",
+            "description": "Privacy law in a Symfony application: personal fields declared, logs redacted, data export and erasure, retention purges, cookie consent and anonymized copies.",
             "homepage": "https://ph-il.ca",
             "transport-options": {
                 "symlink": true,
@@ -2479,6 +2841,66 @@
             },
             "time": "2026-11-11T04:05:26+00:00",
             "published-time": "2026-11-11T05:16:25+00:00"
+        },
+        {
+            "name": "phil/reservation",
+            "version": "0.1.0-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/reservation.git",
+                "reference": "ec3bea4f58d7a1ee8cf8acda6226f215a6b9643d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/reservation/zipball/ec3bea4f58d7a1ee8cf8acda6226f215a6b9643d",
+                "reference": "ec3bea4f58d7a1ee8cf8acda6226f215a6b9643d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=8.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\Reservation\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The core of bookings for PHP: a resource with its capacity, buffers, opening hours and rules; requests checked against the bookings made, with the reasons they are refused; the free slots of a period; and the reminders of a booking",
+            "homepage": "https://ph-il.ca",
+            "keywords": [
+                "availability",
+                "booking",
+                "reservation",
+                "scheduling",
+                "slots"
+            ],
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/reservation/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/reservation/tree/0.1.0-alpha"
+            },
+            "time": "2026-11-11T06:11:30+00:00",
+            "published-time": "2026-11-11T13:33:35+00:00"
         },
         {
             "name": "phil/resource",
@@ -2672,17 +3094,77 @@
             "published-time": "2026-11-11T13:33:37+00:00"
         },
         {
-            "name": "phil/url",
-            "version": "0.1.3-alpha",
+            "name": "phil/tax",
+            "version": "0.1.0-alpha",
             "source": {
                 "type": "git",
-                "url": "https://github.com/parler-haut-interagir-librement/url.git",
-                "reference": "ec06b8d2ac31ca3037a1e8ef032c49066dbea640"
+                "url": "https://github.com/parler-haut-interagir-librement/tax.git",
+                "reference": "7ace135d12f5e8e4f842488620dd7029f2630b44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/parler-haut-interagir-librement/url/zipball/ec06b8d2ac31ca3037a1e8ef032c49066dbea640",
-                "reference": "ec06b8d2ac31ca3037a1e8ef032c49066dbea640",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/tax/zipball/7ace135d12f5e8e4f842488620dd7029f2630b44",
+                "reference": "7ace135d12f5e8e4f842488620dd7029f2630b44",
+                "shasum": ""
+            },
+            "require": {
+                "phil/money": "^0.1@dev",
+                "php": ">=8.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\Tax\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Multi-rate taxation on a shared base: rates in parts per million, each tax rounded half away from zero on its own line in integer arithmetic, itemised breakdowns that a credit note reverses exactly",
+            "homepage": "https://ph-il.ca",
+            "keywords": [
+                "ddd",
+                "money",
+                "sales-tax",
+                "tax",
+                "vat"
+            ],
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/tax/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/tax/tree/0.1.0-alpha"
+            },
+            "time": "2026-11-11T06:11:30+00:00",
+            "published-time": "2026-11-11T13:33:38+00:00"
+        },
+        {
+            "name": "phil/url",
+            "version": "0.1.4-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/url.git",
+                "reference": "a2773c4e1442183919c137361df685c112e977e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/url/zipball/a2773c4e1442183919c137361df685c112e977e4",
+                "reference": "a2773c4e1442183919c137361df685c112e977e4",
                 "shasum": ""
             },
             "require": {
@@ -2729,10 +3211,108 @@
             ],
             "support": {
                 "issues": "https://github.com/parler-haut-interagir-librement/url/issues",
-                "source": "https://github.com/parler-haut-interagir-librement/url/tree/0.1.3-alpha"
+                "source": "https://github.com/parler-haut-interagir-librement/url/tree/0.1.4-alpha"
             },
-            "time": "2026-11-11T21:36:37+00:00",
-            "published-time": "2026-11-11T21:53:48+00:00"
+            "time": "2026-11-15T22:00:00+00:00",
+            "published-time": "2026-11-16T01:14:22+00:00"
+        },
+        {
+            "name": "phil/ux-kit",
+            "version": "0.5.0-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/ux-kit.git",
+                "reference": "99e34463104968689986b472014af246f28c9ea3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/ux-kit/zipball/99e34463104968689986b472014af246f28c9ea3",
+                "reference": "99e34463104968689986b472014af246f28c9ea3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "phil/url": "^0.1.3@dev",
+                "php": ">=8.5",
+                "psr/log": "^3.0",
+                "symfony/config": "^8.2",
+                "symfony/dependency-injection": "^8.2",
+                "symfony/http-foundation": "^8.2",
+                "symfony/http-kernel": "^8.2",
+                "twig/twig": "^3.21"
+            },
+            "require-dev": {
+                "ext-gd": "*",
+                "liip/imagine-bundle": "^2.18",
+                "phil/qr-code-bundle": "^0.1@dev",
+                "phil/structured-data": "^0.1@dev",
+                "php-webdriver/webdriver": "^1.16",
+                "phpunit/phpunit": "^13.4",
+                "psr/container": "^2.0",
+                "psr/link": "^2.0",
+                "symfony/asset": "^8.2",
+                "symfony/asset-mapper": "^8.2",
+                "symfony/console": "^8.2",
+                "symfony/framework-bundle": "^8.2",
+                "symfony/panther": "^2.4",
+                "symfony/routing": "^8.2",
+                "symfony/twig-bundle": "^8.2",
+                "symfony/ux-twig-component": "^3.7",
+                "symfony/web-link": "^8.2",
+                "symfony/yaml": "^8.2",
+                "twig/extra-bundle": "^3.24",
+                "twig/html-extra": "^3.24"
+            },
+            "suggest": {
+                "ext-gd": "To compare the screenshots of the browser test case of src/Test/ with their references",
+                "liip/imagine-bundle": "For image_filters(), the props of a picture from the filter sets of LiipImagine",
+                "phil/structured-data": "For image_json_ld(), the ImageObject of an image in JSON-LD, which the structured prop of the image recipes writes",
+                "php-webdriver/webdriver": "To extend the browser test case of src/Test/",
+                "phpunit/phpunit": "To extend the browser test case of src/Test/",
+                "symfony/asset-mapper": "For image_sources(), the props of a picture from the files of an image among the assets",
+                "symfony/console": "For phil:ux-kit:migrate-images, which proposes the image recipes in place of the img and picture elements of templates",
+                "symfony/panther": "To extend the browser test case of src/Test/",
+                "symfony/web-link": "For the preload of the main image of a page, which the image recipe requires"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.5.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\UxKit\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHIL UX kit for the Symfony UX Toolkit: the same recipes as the Shadcn kit, styled with phil-ux, installed with ux:install --kit; with the Twig functions its image recipes call, image_origin(), image_sources(), image_filters(), picture_props() and image_json_ld()",
+            "homepage": "https://ph-il.ca",
+            "keywords": [
+                "accessibility",
+                "design-system",
+                "stimulus",
+                "symfony-ux",
+                "twig-component",
+                "ux-toolkit"
+            ],
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/ux-kit/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/ux-kit/tree/0.5.0-alpha"
+            },
+            "time": "2026-11-12T13:28:22+00:00",
+            "published-time": "2026-11-12T13:47:43+00:00"
         },
         {
             "name": "php-webdriver/webdriver",
@@ -5032,16 +5612,16 @@
         },
         {
             "name": "symfony/browser-kit",
-            "version": "v8.1.11",
+            "version": "v8.2.0-BETA2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
-                "reference": "cc23f4014de03abce0425f9c6ff01c2d1e93ca5c"
+                "reference": "a9e1be3fa8611bb4ba19e3d31760b71081b39876"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/cc23f4014de03abce0425f9c6ff01c2d1e93ca5c",
-                "reference": "cc23f4014de03abce0425f9c6ff01c2d1e93ca5c",
+                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/a9e1be3fa8611bb4ba19e3d31760b71081b39876",
+                "reference": "a9e1be3fa8611bb4ba19e3d31760b71081b39876",
                 "shasum": ""
             },
             "require": {
@@ -5081,7 +5661,7 @@
             "description": "Simulates the behavior of a web browser, allowing you to make requests, click on links and submit forms programmatically",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/browser-kit/tree/v8.1.11"
+                "source": "https://github.com/symfony/browser-kit/tree/v8.2.0-BETA2"
             },
             "funding": [
                 {
@@ -5101,8 +5681,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-01T07:18:47+00:00",
-            "published-time": "2026-11-04T11:32:22+00:00"
+            "time": "2026-11-12T10:33:36+00:00",
+            "published-time": "2026-11-13T17:32:28+00:00"
         },
         {
             "name": "symfony/cache",
@@ -5549,6 +6129,76 @@
             "published-time": "2026-11-13T17:31:03+00:00"
         },
         {
+            "name": "symfony/css-selector",
+            "version": "v8.2.0-BETA1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/css-selector.git",
+                "reference": "9cfd588b8b07cf83e3426b030dbafd2291c132d9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/9cfd588b8b07cf83e3426b030dbafd2291c132d9",
+                "reference": "9cfd588b8b07cf83e3426b030dbafd2291c132d9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\CssSelector\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Jean-François Simon",
+                    "email": "jeanfrancois.simon@sensiolabs.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Converts CSS selectors to XPath expressions",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/css-selector/tree/v8.2.0-BETA1"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-10-18T14:56:39+00:00",
+            "published-time": "2026-11-04T12:38:35+00:00"
+        },
+        {
             "name": "symfony/dependency-injection",
             "version": "v8.2.0-BETA2",
             "source": {
@@ -5813,16 +6463,16 @@
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v8.1.10",
+            "version": "v8.2.0-BETA1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
-                "reference": "aa0674b52e1bd00502756fbaba8c982b446472e6"
+                "reference": "0bf3e73ed0d98abc2be097896a048cbc1518b98a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/aa0674b52e1bd00502756fbaba8c982b446472e6",
-                "reference": "aa0674b52e1bd00502756fbaba8c982b446472e6",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/0bf3e73ed0d98abc2be097896a048cbc1518b98a",
+                "reference": "0bf3e73ed0d98abc2be097896a048cbc1518b98a",
                 "shasum": ""
             },
             "require": {
@@ -5859,7 +6509,7 @@
             "description": "Eases DOM navigation for HTML and XML documents",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/dom-crawler/tree/v8.1.10"
+                "source": "https://github.com/symfony/dom-crawler/tree/v8.2.0-BETA1"
             },
             "funding": [
                 {
@@ -5879,8 +6529,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-25T14:40:25+00:00",
-            "published-time": "2026-10-28T18:24:41+00:00"
+            "time": "2026-10-28T08:03:22+00:00",
+            "published-time": "2026-11-04T12:34:53+00:00"
         },
         {
             "name": "symfony/error-handler",
@@ -6936,6 +7586,96 @@
             ],
             "time": "2026-11-13T17:29:00+00:00",
             "published-time": "2026-11-13T17:31:00+00:00"
+        },
+        {
+            "name": "symfony/intl",
+            "version": "v8.2.0-BETA1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/intl.git",
+                "reference": "546b8750796f361a7b57775a1be3a35783d556ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/intl/zipball/546b8750796f361a7b57775a1be3a35783d556ff",
+                "reference": "546b8750796f361a7b57775a1be3a35783d556ff",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4.1"
+            },
+            "conflict": {
+                "symfony/string": "<7.4"
+            },
+            "require-dev": {
+                "symfony/filesystem": "^7.4|^8.0",
+                "symfony/var-exporter": "^7.4|^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Intl\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/",
+                    "/Resources/data/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bernhard Schussek",
+                    "email": "bschussek@gmail.com"
+                },
+                {
+                    "name": "Eriksen Costa",
+                    "email": "eriksen.costa@infranology.com.br"
+                },
+                {
+                    "name": "Igor Wiedler",
+                    "email": "igor@wiedler.ch"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides access to the localization data of the ICU library",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "i18n",
+                "icu",
+                "internationalization",
+                "intl",
+                "l10n",
+                "localization"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/intl/tree/v8.2.0-BETA1"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-10-27T13:53:15+00:00",
+            "published-time": "2026-11-04T12:34:53+00:00"
         },
         {
             "name": "symfony/lock",
@@ -8651,16 +9391,16 @@
         },
         {
             "name": "symfony/string",
-            "version": "v8.1.10",
+            "version": "v8.2.0-BETA1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "6c6110979c0150393bbb336170e286d51ab4d76c"
+                "reference": "ea1fef84c20f1b4c136821fda398ada78c81c0ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/6c6110979c0150393bbb336170e286d51ab4d76c",
-                "reference": "6c6110979c0150393bbb336170e286d51ab4d76c",
+                "url": "https://api.github.com/repos/symfony/string/zipball/ea1fef84c20f1b4c136821fda398ada78c81c0ad",
+                "reference": "ea1fef84c20f1b4c136821fda398ada78c81c0ad",
                 "shasum": ""
             },
             "require": {
@@ -8717,7 +9457,7 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/symfony/string/tree/v8.1.10"
+                "source": "https://github.com/symfony/string/tree/v8.2.0-BETA1"
             },
             "funding": [
                 {
@@ -8737,8 +9477,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-23T17:06:53+00:00",
-            "published-time": "2026-10-28T18:24:27+00:00"
+            "time": "2026-10-23T17:17:23+00:00",
+            "published-time": "2026-11-04T12:36:03+00:00"
         },
         {
             "name": "symfony/translation",
@@ -8925,28 +9665,30 @@
         },
         {
             "name": "symfony/twig-bridge",
-            "version": "v8.1.10",
+            "version": "v8.2.0-BETA2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/twig-bridge.git",
-                "reference": "934f61e24587a2028ea920b651257faf293ccb11"
+                "reference": "dd907772595741a041f57aded3853f898c92b70a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/twig-bridge/zipball/934f61e24587a2028ea920b651257faf293ccb11",
-                "reference": "934f61e24587a2028ea920b651257faf293ccb11",
+                "url": "https://api.github.com/repos/symfony/twig-bridge/zipball/dd907772595741a041f57aded3853f898c92b70a",
+                "reference": "dd907772595741a041f57aded3853f898c92b70a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.4.1",
                 "symfony/translation-contracts": "^2.5|^3",
-                "twig/twig": "^3.25|^4.0"
+                "twig/twig": "^3.29|^4.0"
             },
             "conflict": {
                 "phpdocumentor/reflection-docblock": "<5.2|>=7",
                 "phpdocumentor/type-resolver": "<1.5.1",
+                "symfony/console": "<8.2",
                 "symfony/form": "<7.4.4|>8.0,<8.0.4",
-                "symfony/mime": "<7.4.9|>8.0,<8.0.9"
+                "symfony/mime": "<7.4.9|>8.0,<8.0.9",
+                "symfony/security-http": "<8.2"
             },
             "require-dev": {
                 "egulias/email-validator": "^2.1.10|^3|^4",
@@ -8954,7 +9696,7 @@
                 "phpdocumentor/reflection-docblock": "^5.2|^6.0",
                 "symfony/asset": "^7.4|^8.0",
                 "symfony/asset-mapper": "^7.4|^8.0",
-                "symfony/console": "^7.4|^8.0",
+                "symfony/console": "^8.2",
                 "symfony/dependency-injection": "^7.4|^8.0",
                 "symfony/emoji": "^7.4|^8.0",
                 "symfony/expression-language": "^7.4|^8.0",
@@ -8971,10 +9713,10 @@
                 "symfony/security-acl": "^2.8|^3.0",
                 "symfony/security-core": "^7.4|^8.0",
                 "symfony/security-csrf": "^7.4|^8.0",
-                "symfony/security-http": "^7.4|^8.0",
+                "symfony/security-http": "^8.2",
                 "symfony/serializer": "^7.4.17|^8.1.5",
                 "symfony/stopwatch": "^7.4|^8.0",
-                "symfony/translation": "^7.4|^8.0",
+                "symfony/translation": "^8.2",
                 "symfony/validator": "^7.4|^8.0",
                 "symfony/web-link": "^7.4|^8.0",
                 "symfony/workflow": "^7.4|^8.0",
@@ -9009,7 +9751,7 @@
             "description": "Provides integration for Twig with various Symfony components",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/twig-bridge/tree/v8.1.10"
+                "source": "https://github.com/symfony/twig-bridge/tree/v8.2.0-BETA2"
             },
             "funding": [
                 {
@@ -9029,8 +9771,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-15T16:00:52+00:00",
-            "published-time": "2026-10-28T18:24:45+00:00"
+            "time": "2026-11-12T16:19:10+00:00",
+            "published-time": "2026-11-13T17:32:39+00:00"
         },
         {
             "name": "symfony/twig-bundle",
@@ -10275,13 +11017,20 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "phil/almanac": 20,
+        "phil/commerce-bundle": 20,
         "phil/content-warnings": 20,
+        "phil/content-warnings-bundle": 20,
         "phil/dev-tools": 15,
+        "phil/money": 20,
         "phil/open-badges-bundle": 20,
+        "phil/paged-media": 20,
         "phil/privacy-bundle": 20,
         "phil/recurrence": 20,
+        "phil/reservation": 20,
         "phil/resource": 20,
-        "phil/svg-sanitizer": 20
+        "phil/svg-sanitizer": 20,
+        "phil/url": 20,
+        "phil/ux-kit": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

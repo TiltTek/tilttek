@@ -1,0 +1,37 @@
+{#
+ # The public leaderboard of a room: a table with its caption and headers — place, team, final time, hints —, readable
+ # without a script, the hints beside the time. Only the teams that agreed are on it; a team is named by the name the
+ # application gives it, or by its place.
+ #}
+{% extends layout %}
+{%- set domain = tilttek_escape_room_domain() -%}
+{% block body %}
+<main class="tilttek-escape-room tilttek-escape-room--leaderboard">
+    <h1>{{ 'leaderboard.title'|trans({'{room}': room.title}, domain) }}</h1>
+    {%- if standings is empty %}
+        <p>{{ 'leaderboard.empty'|trans({}, domain) }}</p>
+    {%- else %}
+        <table class="tilttek-escape-room__leaderboard">
+            <caption>{{ 'leaderboard.caption'|trans({'{room}': room.title}, domain) }}</caption>
+            <thead>
+                <tr>
+                    <th scope="col">{{ 'leaderboard.place'|trans({}, domain) }}</th>
+                    <th scope="col">{{ 'leaderboard.team'|trans({}, domain) }}</th>
+                    <th scope="col">{{ 'leaderboard.time'|trans({}, domain) }}</th>
+                    <th scope="col">{{ 'leaderboard.hints'|trans({}, domain) }}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {%- for standing in standings %}
+                <tr>
+                    <td>{{ standing.position }}</td>
+                    <td>{{ standing.team ?? 'leaderboard.unnamed'|trans({'{place}': loop.index}, domain) }}</td>
+                    <td><time datetime="PT{{ standing.final }}S">{{ tilttek_escape_room_clock(standing.final) }}</time></td>
+                    <td>{{ standing.hints }}</td>
+                </tr>
+            {%- endfor %}
+            </tbody>
+        </table>
+    {%- endif %}
+</main>
+{% endblock %}

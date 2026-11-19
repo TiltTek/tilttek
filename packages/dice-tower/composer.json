@@ -1,0 +1,80 @@
+{
+    "name": "tilttek/dice-tower",
+    "description": "A table's shared dice tower: every roll seen by everyone at the table, live and in order, with missed rolls read back from the log.",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": [
+        "dice",
+        "dice-tower",
+        "mercure",
+        "rpg",
+        "ttrpg",
+        "symfony-bundle"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-filter": "*",
+        "doctrine/orm": "^3.7",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "psr/log": "^3.0",
+        "symfony/config": "^8.2",
+        "symfony/dependency-injection": "^8.2",
+        "symfony/http-foundation": "^8.2",
+        "symfony/http-kernel": "^8.2",
+        "symfony/mercure": "^0.10",
+        "tilttek/dice": "^0.2@dev || ^0.3@dev",
+        "tilttek/dice-bundle": "^0.2@dev"
+    },
+    "require-dev": {
+        "doctrine/dbal": "^4.5",
+        "phil/ux-kit": "^0.5@dev",
+        "phpunit/phpunit": "^13.4",
+        "symfony/clock": "^8.2",
+        "symfony/event-dispatcher": "^8.2",
+        "symfony/framework-bundle": "^8.2",
+        "symfony/messenger": "^8.2",
+        "symfony/routing": "^8.2",
+        "symfony/stimulus-bundle": "^3.7",
+        "symfony/translation": "^8.2",
+        "symfony/twig-bridge": "^8.2",
+        "symfony/twig-bundle": "^8.2",
+        "symfony/ux-twig-component": "^3.7",
+        "symfony/yaml": "^8.2",
+        "twig/twig": "^3.21"
+    },
+    "suggest": {
+        "phil/ux-kit": "For the Card recipe the overlay is drawn with, installed by the Symfony UX Toolkit",
+        "symfony/mercure-bundle": "For the hub each new entry is pushed to and the authorization cookie of the viewers",
+        "symfony/messenger": "To reach the relays through a message bus rather than during the roll",
+        "symfony/routing": "For the route of the entries a viewer missed",
+        "symfony/stimulus-bundle": "For the controller that adds the new entries on the page",
+        "symfony/twig-bundle": "For dice_tower() and the overlay, with symfony/ux-twig-component"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\DiceTower\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\DiceTower\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

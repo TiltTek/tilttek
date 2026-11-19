@@ -1,0 +1,29 @@
+{
+    "name": "@tilttek/escape-room",
+    "description": "The escape rooms' Stimulus controllers: the hint screen, read again when the Mercure hub tells it the game moved or at intervals, with the countdown and its announcements; and the host console, whose forms are sent in the background",
+    "version": "0.1.0",
+    "license": "MIT",
+    "type": "module",
+    "symfony": {
+        "controllers": {
+            "screen": {
+                "main": "src/screen_controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            },
+            "console": {
+                "main": "src/console_controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0"
+    }
+}

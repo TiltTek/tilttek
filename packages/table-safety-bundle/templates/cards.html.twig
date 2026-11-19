@@ -1,0 +1,63 @@
+{#
+ # The printable cards of a table, blank, for a participant to fill by hand: the X-card, the sheet of the lines and
+ # veils and that of the consent checklist, for the tools the table uses. Each card is a section with the class
+ # `tilttek-table-safety__card`, so that the application's print stylesheet starts each on a new page.
+ #
+ # table: the table's reference
+ # game_master: whether the viewer runs the table
+ # tools: the values of the tools with a card, in the order they are printed
+ # groups: the view of Views::printableThemes()
+ # pdf: whether the same cards are offered as a PDF
+ #}
+{% extends layout %}
+{%- set domain = 'tilttek_table_safety' -%}
+{% block body %}
+<main class="tilttek-table-safety tilttek-table-safety--cards">
+    <h1>{{ 'cards.title'|trans({}, domain) }}</h1>
+    {{ include('@TilttekTableSafety/_nav.html.twig') }}
+    {%- if tools is empty %}
+    <p>{{ 'cards.none'|trans({}, domain) }}</p>
+    {%- else %}
+    <p class="tilttek-table-safety__print-help">{{ 'cards.help'|trans({}, domain) }}{% if pdf %} <a href="{{ path('tilttek_table_safety_cards_pdf', {table: table}) }}" type="application/pdf">{{ 'cards.pdf'|trans({}, domain) }}</a>{% endif %}</p>
+    {%- endif %}
+    {%- for tool in tools %}
+    {%- if tool == 'x-card' %}
+    <section class="tilttek-table-safety__card tilttek-table-safety__card--x-card" aria-labelledby="tilttek-table-safety-card-x-card">
+        <p class="tilttek-table-safety__x" aria-hidden="true">X</p>
+        <h2 id="tilttek-table-safety-card-x-card">{{ 'cards.x_card'|trans({}, domain) }}</h2>
+        <p>{{ 'cards.x_card_help'|trans({}, domain) }}</p>
+    </section>
+    {%- else %}
+    {%- set sheet = tool == 'lines-and-veils' ? 'lines_and_veils' : 'consent' -%}
+    {%- set columns = tool == 'lines-and-veils' ? ['line', 'veil'] : ['green', 'yellow', 'red'] -%}
+    <section class="tilttek-table-safety__card tilttek-table-safety__card--{{ tool }}" aria-labelledby="tilttek-table-safety-card-{{ tool }}">
+        <h2 id="tilttek-table-safety-card-{{ tool }}">{{ ('cards.' ~ sheet)|trans({}, domain) }}</h2>
+        <p>{{ ('cards.' ~ sheet ~ '_help')|trans({}, domain) }}</p>
+        {%- for group in groups %}
+        <table>
+            <caption>{{ group.category ?? 'cards.table_themes'|trans({}, domain) }}</caption>
+            <thead>
+                <tr>
+                    <th scope="col">{{ 'cards.theme'|trans({}, domain) }}</th>
+                    {%- for column in columns %}
+                    <th scope="col">{{ ('cards.' ~ column)|trans({}, domain) }}</th>
+                    {%- endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {%- for theme in group.themes %}
+                <tr>
+                    <th scope="row">{{ theme }}</th>
+                    {%- for column in columns %}
+                    <td><span class="tilttek-table-safety__box" role="img" aria-label="{{ ('cards.' ~ column)|trans({}, domain) }}">&#9744;</span></td>
+                    {%- endfor %}
+                </tr>
+                {%- endfor %}
+            </tbody>
+        </table>
+        {%- endfor %}
+    </section>
+    {%- endif %}
+    {%- endfor %}
+</main>
+{% endblock %}

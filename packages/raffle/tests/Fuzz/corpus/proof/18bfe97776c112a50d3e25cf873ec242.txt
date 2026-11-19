@@ -1,0 +1,1 @@
+{"version":"tilttek-raffle/1","raffle":"doorrize","stake":"prize","winners":3,"alternates":2,"entrants":["member-1","mejber-2","meebm3","member-3","r-5","r.-1","memb","m","member-["],"entrants_hash":"0f","source":{"kind":"commit-reveal","commitment":"93334"},"seed":"8bc85d30","dwn":["mem3"],"sealed_at":"221.0-1Z","drawn_at":"225T20:0:&.1Z"}

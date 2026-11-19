@@ -1,0 +1,45 @@
+screen:
+    left: 'Time left:'
+    left_announced: '{minutes} minutes left.'
+    paused: Paused by the host.
+    hint_for: 'Hint for {puzzle}'
+    penalty: '{time} added to the final time'
+    message: Message from the host
+outcome:
+    escaped: 'Escaped! Final time {time}, with {hints, plural, =0 {no hint} one {# hint} other {# hints}}.'
+    time-up: Time is up.
+    abandoned: The game has ended.
+    celebration: 'You escaped in {time}!'
+status:
+    locked: locked
+    open: open
+    solved: solved
+console:
+    title: 'Console: {room}'
+    totals: 'Played {played}, penalties {penalty}, {hints, plural, =0 {no hint} one {# hint} other {# hints}}, {skips, plural, =0 {no skip} one {# skip} other {# skips}}.'
+    puzzles: Puzzles
+    push_hint: 'Push a hint for {puzzle} ({left} left)'
+    skip: 'Skip {puzzle}'
+    screen: Hint screen
+    message: Message to the screen
+    send: Send the message
+    clear: Clear the screen
+    clock: Countdown
+    pause: Pause the countdown
+    resume: Resume the countdown
+    abandon: End the game
+    done: Done.
+consent:
+    hidden: Your result is not on the public leaderboard.
+    shown: Your result is on the public leaderboard.
+    show: Show our result on the leaderboard
+    hide: Take our result off the leaderboard
+leaderboard:
+    title: 'Leaderboard: {room}'
+    caption: 'The teams that escaped {room} and agreed to show their result, by final time'
+    empty: No team on the leaderboard yet.
+    place: Place
+    team: Team
+    time: Final time
+    hints: Hints
+    unnamed: 'Team {place}'

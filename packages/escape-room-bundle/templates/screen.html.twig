@@ -1,0 +1,33 @@
+{#
+ # The hint screen of a game, shown in the room: the state of `_screen.html.twig`, read again by the Stimulus controller
+ # `tilttek--escape-room--screen` when the hub tells it the game moved — or every few seconds without a hub —, and a
+ # polite live region that says each hint or message as a whole sentence and the time left at chosen marks. The
+ # controller dispatches `tilttek-escape-room:moved` on the element at each new state, and `tilttek-escape-room:finished`
+ # when the game ends, with `detail.outcome`. A viewer who speaks for the team chooses whether its result is shown on the
+ # public leaderboard; it is hidden until they do, and they may change their mind.
+ #}
+{% extends layout %}
+{%- set domain = tilttek_escape_room_domain() -%}
+{% block body %}
+<main class="tilttek-escape-room tilttek-escape-room--screen"
+      data-controller="tilttek--escape-room--screen"
+      data-tilttek--escape-room--screen-hub-value="{{ live.hub }}"
+      data-tilttek--escape-room--screen-state-url-value="{{ live.state }}"
+      data-tilttek--escape-room--screen-poll-value="{{ live.poll }}"
+      data-tilttek--escape-room--screen-paused-text-value="{{ 'screen.paused'|trans({}, domain) }}"
+      data-tilttek--escape-room--screen-left-text-value="{{ 'screen.left_announced'|trans({}, domain) }}">
+    <h1>{{ game.room }}</h1>
+    <div data-tilttek--escape-room--screen-target="state">
+        {{ include('@TilttekEscapeRoom/_screen.html.twig') }}
+    </div>
+    <p class="tilttek-escape-room__announcer" role="status" aria-live="polite" data-tilttek--escape-room--screen-target="status"></p>
+    {%- if consent is not null %}
+        <form method="post" action="{{ consent.action }}" class="tilttek-escape-room__consent">
+            <input type="hidden" name="_token" value="{{ csrf_token('tilttek_escape_room_consent') }}">
+            <input type="hidden" name="public" value="{{ consent.public ? '0' : '1' }}">
+            <p>{{ (consent.public ? 'consent.shown' : 'consent.hidden')|trans({}, domain) }}</p>
+            {% component (tilttek_escape_room_kit('Button')) with {type: 'submit', variant: 'outline'} %}{% block content %}{{ (consent.public ? 'consent.hide' : 'consent.show')|trans({}, domain) }}{% endblock %}{% endcomponent %}
+        </form>
+    {%- endif %}
+</main>
+{% endblock %}

@@ -1,0 +1,2 @@
+tilttek_advent_calendar:
+    resource: '@TilttekAdventCalendarBundle/config/routes.php'

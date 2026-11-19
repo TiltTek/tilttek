@@ -1,0 +1,32 @@
+form:
+    expression: 'Expression'
+    versus: 'Contre (facultatif)'
+    show: 'Le graphique montre'
+show:
+    exactly: 'Exactement'
+    at_least: 'Au moins'
+    at_most: 'Au plus'
+summary:
+    mean: 'Moyenne'
+    deviation: 'Écart type'
+    range: 'Étendue'
+    range_value: 'de %minimum% à %maximum%'
+estimate:
+    too-large: 'Estimé sur %samples% jets, le calcul exact étant trop long : chaque probabilité est juste à %margin% points près, 19 fois sur 20.'
+    unsupported: "Estimé sur %samples% jets, le calcul exact ne suivant pas cette expression : chaque probabilité est juste à %margin% points près, 19 fois sur 20."
+remaining: 'Les explosions sont suivies jusqu’à une profondeur : %probability% % des jets exploseraient encore, et sont comptés plus bas qu’ils ne sont.'
+table:
+    caption: 'Probabilités de %expression%'
+    value: 'Valeur'
+versus:
+    caption: '%first% contre %second%'
+    first: '%first% est plus haut'
+    tie: 'Égalité'
+    second: '%second% est plus haut'
+    estimated: 'Estimé : chaque probabilité est juste à %margin% points près, 19 fois sur 20.'
+error:
+    expression: '« %expression% » n’a pas de probabilités : %reason%'
+refusal:
+    groups: 'trouver les groupes d’autant de dés serait trop long ; lancez-en moins.'
+    outcomes: 'sa distribution a %outcomes% valeurs ; au plus %limit% sont dessinées.'
+    throttled: 'trop de calculs ont été demandés en peu de temps ; réessayez dans un instant.'

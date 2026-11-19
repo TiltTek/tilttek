@@ -1,0 +1,1 @@
+{"version":"tilttek-raffle/1","raffle":"fspeaker","stake":"none","winners":1,"alternates":4,"entrants":["member.-1","mem","t","member-["],"entrants_hash":"0d3f","source":{"kind":"commit-reveal","com":"933345"},"seed":"8b8c{}30","drwn":[],"sealed_at":"9Z","drawn_at":"2: "}

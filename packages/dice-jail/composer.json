@@ -1,0 +1,51 @@
+{
+    "name": "tilttek/dice-jail",
+    "description": "Send unlucky dice to jail, then check them with a fair statistical test, explained plainly, that never calls a die loaded without the evidence.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "dice",
+        "statistics",
+        "chi-squared",
+        "goodness-of-fit",
+        "rpg",
+        "ttrpg"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-mbstring": "*",
+        "psr/clock": "^1.0",
+        "tilttek/dice": "^0.2@dev || ^0.3@dev",
+        "tilttek/dice-probability": "^0.1@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "symfony/clock": "^8.2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\DiceJail\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\DiceJail\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

@@ -1,0 +1,5 @@
+tower:
+    title: Dice tower
+    empty: No roll yet.
+    dropped: not counted
+    offline: Connection lost; the missed rolls will appear when it comes back.

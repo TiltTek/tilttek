@@ -1,0 +1,1 @@
+{"version":"tilttek-raffle/1","raffle":"$","stake":"prize","winners":1,"alternates":1,"entrants_hash":"9a872f8","source":{"kind":"beacon","chain":{"ha":"m"}},"seed":"6e!","drn":["ber-6"],"sealed_at":".0","drawn_at":"6.1["}

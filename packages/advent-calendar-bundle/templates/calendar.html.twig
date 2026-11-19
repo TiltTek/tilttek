@@ -1,0 +1,42 @@
+{#
+ # A calendar's screen: its title, a word on how its boxes open, the box that could not be opened when there is one,
+ # and every box as the viewer sees it. The list is the Stimulus controller's: it opens a box in the background and puts
+ # the opened box in its place; without it, each box is a plain form. When the configuration enables it, the kit's
+ # Celebration plays for a box opened for the first time — at once on the page a form returns to, or on the event the
+ # controller dispatches —, and only says its message where motion is reduced.
+ #}
+{% extends layout %}
+{%- set domain = 'tilttek_advent_calendar' -%}
+{% block body %}
+<main class="tilttek-advent-calendar">
+    <h1 id="tilttek-advent-calendar-title">{{ title }}</h1>
+    {#- A message is given only the values it says: ICU cannot format a date it is given and does not use. #}
+    {%- set policy = calendar.policy.kind.value %}
+    <p class="tilttek-advent-calendar__policy">{{ ('policy.explained.' ~ policy)|trans(policy == 'until_closing' ? {closing: date(calendar.closingDate ~ ' 12:00', 'UTC')} : {days: calendar.policy.catchUpDays}, domain) }}</p>
+    {%- if not member %}
+    <p class="tilttek-advent-calendar__visitor">{{ 'calendar.visitor'|trans({}, domain) }}</p>
+    {%- endif %}
+    {%- if refused %}
+    {% component (advent_calendar_kit('Alert')) with {variant: 'destructive', id: 'tilttek-advent-calendar-refused'} %}{% block content %}
+        {% component (advent_calendar_kit('Alert:Title')) %}{% block content %}{{ 'calendar.refused.title'|trans({day: refused.day}, domain) }}{% endblock %}{% endcomponent %}
+        {%- set last_day = refused.window.until|date_modify('-1 day')|date('Y-m-d', calendar.timezone) %}
+        {%- set dates = refused.state.value == 'locked' ? {opens: date(refused.date ~ ' 12:00', 'UTC')} : (refused.state.value == 'missed' ? {last: date(last_day ~ ' 12:00', 'UTC')} : {}) %}
+        {% component (advent_calendar_kit('Alert:Description')) %}{% block content %}{{ ('calendar.refused.' ~ refused.state.value)|trans(dates, domain) }}{% endblock %}{% endcomponent %}
+    {% endblock %}{% endcomponent %}
+    {%- endif %}
+    <ol class="tilttek-advent-calendar__boxes" role="list" aria-labelledby="tilttek-advent-calendar-title"
+        data-controller="tilttek--advent-calendar--boxes"
+        data-tilttek--advent-calendar--boxes-opened-value="{{ 'box.announce.opened'|trans({}, domain) }}"
+        data-tilttek--advent-calendar--boxes-failed-value="{{ 'box.announce.failed'|trans({}, domain) }}"
+        data-tilttek--advent-calendar--boxes-celebration-value="{{ 'celebration.message'|trans({}, domain) }}"
+        data-tilttek--advent-calendar--boxes-effect-value="{{ celebration ? celebration.effect : '' }}">
+        {%- for box in boxes %}
+        {{ include('@TilttekAdventCalendar/_box.html.twig') }}
+        {%- endfor %}
+    </ol>
+    <p class="tilttek-advent-calendar__status" role="status" aria-live="polite" data-tilttek--advent-calendar--boxes-target="status"></p>
+    {%- if celebration %}
+    {{ component(advent_calendar_kit('Celebration'), {message: celebration.box ? 'celebration.box'|trans({day: celebration.box.day}, domain) : 'celebration.message'|trans({}, domain), effect: celebration.effect, autoplay: celebration.box is not null, id: 'tilttek-advent-calendar-celebration'}) }}
+    {%- endif %}
+</main>
+{% endblock %}

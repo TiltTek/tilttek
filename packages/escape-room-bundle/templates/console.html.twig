@@ -1,0 +1,81 @@
+{#
+ # The host's console: the countdown and the state of the game, the puzzles with their hints revealed and left — each
+ # hint pushed by a button that says its puzzle —, the skip of an open puzzle, the message and the clearing of the hint
+ # screen, the pause, the resume and the end of the game. Every form works without a script; the Stimulus controller
+ # `tilttek--escape-room--console` sends it in the background, says what was done in a polite live region, and reads
+ # the console again.
+ #}
+{% extends layout %}
+{%- set domain = tilttek_escape_room_domain() -%}
+{%- set token = csrf_token('tilttek_escape_room_console') -%}
+{% block body %}
+<main class="tilttek-escape-room tilttek-escape-room--console"
+      data-controller="tilttek--escape-room--console"
+      data-tilttek--escape-room--console-hub-value="{{ live.hub }}"
+      data-tilttek--escape-room--console-poll-value="{{ live.poll }}"
+      data-tilttek--escape-room--console-done-text-value="{{ 'console.done'|trans({}, domain) }}">
+    <h1>{{ 'console.title'|trans({'{room}': game.room}, domain) }}</h1>
+    <div data-tilttek--escape-room--console-target="panel">
+    {%- if refused != '' %}
+        {% component (tilttek_escape_room_kit('Alert')) with {variant: 'destructive'} %}{% block content %}<p>{{ refused }}</p>{% endblock %}{% endcomponent %}
+    {%- endif %}
+    {{ include('@TilttekEscapeRoom/_screen.html.twig', {celebrate: false}) }}
+    <p class="tilttek-escape-room__totals">{{ 'console.totals'|trans({'{played}': tilttek_escape_room_clock(game.played), '{penalty}': tilttek_escape_room_clock(game.penalty), '{hints}': game.hints, '{skips}': game.skips}, domain) }}</p>
+    {%- if game.outcome is null %}
+        <section aria-labelledby="tilttek-escape-room-puzzles">
+            <h2 id="tilttek-escape-room-puzzles">{{ 'console.puzzles'|trans({}, domain) }}</h2>
+            <ul class="tilttek-escape-room__puzzles">
+            {%- for puzzle in puzzles %}
+                <li data-puzzle="{{ puzzle.id }}">
+                    <span>{{ puzzle.title ?? puzzle.id }}</span>
+                    {% component (tilttek_escape_room_kit('Badge')) with {variant: 'outline'} %}{% block content %}{{ ('status.' ~ puzzle.status.value)|trans({}, domain) }}{% endblock %}{% endcomponent %}
+                    {%- if puzzle.hints is not empty %}
+                        <ol class="tilttek-escape-room__revealed">{% for hint in puzzle.hints %}<li>{{ hint }}</li>{% endfor %}</ol>
+                    {%- endif %}
+                    {%- if puzzle.status.value == 'open' %}
+                        {%- if puzzle.left > 0 %}
+                            <form method="post" action="{{ actions.hint }}" data-action="tilttek--escape-room--console#send">
+                                <input type="hidden" name="_token" value="{{ token }}">
+                                <input type="hidden" name="puzzle" value="{{ puzzle.id }}">
+                                {% component (tilttek_escape_room_kit('Button')) with {type: 'submit'} %}{% block content %}{{ 'console.push_hint'|trans({'{puzzle}': puzzle.title ?? puzzle.id, '{left}': puzzle.left}, domain) }}{% endblock %}{% endcomponent %}
+                            </form>
+                        {%- endif %}
+                        <form method="post" action="{{ actions.skip }}" data-action="tilttek--escape-room--console#send">
+                            <input type="hidden" name="_token" value="{{ token }}">
+                            <input type="hidden" name="puzzle" value="{{ puzzle.id }}">
+                            {% component (tilttek_escape_room_kit('Button')) with {type: 'submit', variant: 'outline'} %}{% block content %}{{ 'console.skip'|trans({'{puzzle}': puzzle.title ?? puzzle.id}, domain) }}{% endblock %}{% endcomponent %}
+                        </form>
+                    {%- endif %}
+                </li>
+            {%- endfor %}
+            </ul>
+        </section>
+        <section aria-labelledby="tilttek-escape-room-screen">
+            <h2 id="tilttek-escape-room-screen">{{ 'console.screen'|trans({}, domain) }}</h2>
+            <form method="post" action="{{ actions.message }}" data-action="tilttek--escape-room--console#send">
+                <input type="hidden" name="_token" value="{{ token }}">
+                <label for="tilttek-escape-room-message">{{ 'console.message'|trans({}, domain) }}</label>
+                <textarea id="tilttek-escape-room-message" name="message" maxlength="280" required></textarea>
+                {% component (tilttek_escape_room_kit('Button')) with {type: 'submit'} %}{% block content %}{{ 'console.send'|trans({}, domain) }}{% endblock %}{% endcomponent %}
+            </form>
+            <form method="post" action="{{ actions.clear }}" data-action="tilttek--escape-room--console#send">
+                <input type="hidden" name="_token" value="{{ token }}">
+                {% component (tilttek_escape_room_kit('Button')) with {type: 'submit', variant: 'secondary'} %}{% block content %}{{ 'console.clear'|trans({}, domain) }}{% endblock %}{% endcomponent %}
+            </form>
+        </section>
+        <section aria-labelledby="tilttek-escape-room-clock">
+            <h2 id="tilttek-escape-room-clock">{{ 'console.clock'|trans({}, domain) }}</h2>
+            <form method="post" action="{{ game.paused ? actions.resume : actions.pause }}" data-action="tilttek--escape-room--console#send">
+                <input type="hidden" name="_token" value="{{ token }}">
+                {% component (tilttek_escape_room_kit('Button')) with {type: 'submit', variant: 'secondary'} %}{% block content %}{{ (game.paused ? 'console.resume' : 'console.pause')|trans({}, domain) }}{% endblock %}{% endcomponent %}
+            </form>
+            <form method="post" action="{{ actions.abandon }}" data-action="tilttek--escape-room--console#send">
+                <input type="hidden" name="_token" value="{{ token }}">
+                {% component (tilttek_escape_room_kit('Button')) with {type: 'submit', variant: 'destructive'} %}{% block content %}{{ 'console.abandon'|trans({}, domain) }}{% endblock %}{% endcomponent %}
+            </form>
+        </section>
+    {%- endif %}
+    </div>
+    <p class="tilttek-escape-room__announcer" role="status" aria-live="polite" data-tilttek--escape-room--console-target="status"></p>
+</main>
+{% endblock %}

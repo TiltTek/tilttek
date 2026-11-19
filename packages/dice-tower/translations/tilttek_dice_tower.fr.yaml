@@ -1,0 +1,5 @@
+tower:
+    title: Tour de dés
+    empty: Aucun jet pour l'instant.
+    dropped: non compté
+    offline: Connexion perdue ; les jets manqués s'afficheront à son retour.

@@ -1,0 +1,18 @@
+{#
+ # A participant's answers to the table's session zero.
+ #}
+{% extends layout %}
+{%- set domain = 'tilttek_table_safety' -%}
+{% block body %}
+<main class="tilttek-table-safety">
+    <h1>{{ 'session_zero.title'|trans({}, domain) }}</h1>
+    {{ include('@TilttekTableSafety/_nav.html.twig', {game_master: false}) }}
+    {%- if saved %}{{ include('@TilttekTableSafety/_saved.html.twig') }}{% endif %}
+    <p>{{ 'session_zero.help'|trans({}, domain) }}</p>
+    <p class="tilttek-table-safety__safety-help">{{ 'session_zero.safety_help'|trans({}, domain) }} <a href="{{ path('tilttek_table_safety_answers', {table: table}) }}">{{ 'session_zero.safety_link'|trans({}, domain) }}</a></p>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {% component (table_safety_kit('Button')) with {type: 'submit'} %}{% block content %}{{ 'answers.save'|trans({}, domain) }}{% endblock %}{% endcomponent %}
+    {{ form_end(form) }}
+</main>
+{% endblock %}

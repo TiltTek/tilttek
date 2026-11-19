@@ -1,0 +1,12 @@
+tilttek_advent_calendar:
+    # The service that names the current member by a stable identifier; every viewer is a visitor without it.
+    # member_resolver: App\Advent\CurrentMember
+    layout: base.html.twig
+    # The Celebration of the PHIL UX kit for a first opening, once its recipe is installed:
+    # celebration: { enabled: true, effect: confetti }
+    # calendars:
+    #     advent-2026:
+    #         title: Advent 2026
+    #         timezone: America/Toronto
+    #         first_date: '2026-12-01'
+    #         surprises: [{ kind: points, quantity: 10 }]

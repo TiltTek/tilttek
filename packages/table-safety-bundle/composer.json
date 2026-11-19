@@ -1,0 +1,96 @@
+{
+    "name": "tilttek/table-safety-bundle",
+    "description": "tilttek/table-safety in Symfony: screens where players set lines and veils and raise signals, a game master's screen with live alerts, anonymous by default.",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": [
+        "symfony-bundle",
+        "table-safety",
+        "x-card",
+        "lines-and-veils",
+        "consent",
+        "session-zero",
+        "rpg",
+        "mercure"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-intl": "*",
+        "doctrine/dbal": "^4.5",
+        "phil/content-warnings": "^0.1@dev",
+        "phil/content-warnings-bundle": "^0.1@dev",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "psr/log": "^3.0",
+        "symfony/config": "^8.2",
+        "symfony/dependency-injection": "^8.2",
+        "symfony/form": "^8.2",
+        "symfony/http-foundation": "^8.2",
+        "symfony/http-kernel": "^8.2",
+        "symfony/options-resolver": "^8.2",
+        "symfony/routing": "^8.2",
+        "symfony/security-csrf": "^8.2",
+        "symfony/string": "^8.2",
+        "symfony/translation-contracts": "^3.6",
+        "tilttek/table-safety": "^0.3@dev",
+        "twig/twig": "^3.21"
+    },
+    "require-dev": {
+        "ext-zlib": "*",
+        "doctrine/doctrine-bundle": "^3.3",
+        "doctrine/orm": "^3.7",
+        "phil/paged-media": "^0.1@dev",
+        "phil/privacy-bundle": "^0.1@dev",
+        "phil/ux-kit": "^0.5@dev",
+        "phpunit/phpunit": "^13.4",
+        "symfony/browser-kit": "^8.2",
+        "symfony/clock": "^8.2",
+        "symfony/console": "^8.2",
+        "symfony/css-selector": "^8.2",
+        "symfony/dom-crawler": "^8.2",
+        "symfony/event-dispatcher": "^8.2",
+        "symfony/framework-bundle": "^8.2",
+        "symfony/mercure": "^0.10",
+        "symfony/translation": "^8.2",
+        "symfony/twig-bridge": "^8.2",
+        "symfony/twig-bundle": "^8.2",
+        "symfony/ux-twig-component": "^3.7",
+        "symfony/yaml": "^8.2"
+    },
+    "suggest": {
+        "doctrine/orm": "To add the tables of the safety tools to the schema the ORM generates, and so to the migrations",
+        "phil/paged-media": "For the printable cards of a table as a PDF: the X-card, the sheet of the lines and veils and that of the consent checklist",
+        "phil/privacy-bundle": "To export and erase a participant's answers, stars and wishes and named signals with the rest of their account",
+        "phil/ux-kit": "For the recipes Card, Badge, Button and Alert the screens are built of, through the Symfony UX Toolkit",
+        "symfony/console": "For the command that purges the signals older than the retention",
+        "symfony/mercure-bundle": "For the hub each signal is pushed to and the authorization cookie of the viewers",
+        "symfony/stimulus-bundle": "For the controller that sends the signals in the background and announces each new one",
+        "symfony/ux-twig-component": "For the screens, built of the recipes of a kit of the Symfony UX Toolkit"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\TableSafetyBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\TableSafetyBundle\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

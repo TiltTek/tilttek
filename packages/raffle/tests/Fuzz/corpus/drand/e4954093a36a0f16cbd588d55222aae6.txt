@@ -1,0 +1,1 @@
+{"public_key":"a0a0a0a0a0a-a0a0a0a0a0a0a0a0a0a0a0q0a0a6a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0","period":3,"genesis_time":841,"hash":"579abd2b0e0cc0f6eaf7803dd07447a1f5477735fd3f661492ba94600c84e971","schemeID":"bl~~80","metta":{}}

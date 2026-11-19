@@ -1,0 +1,17 @@
+{#
+ # A participant's stars and wishes after a session.
+ #}
+{% extends layout %}
+{%- set domain = 'tilttek_table_safety' -%}
+{% block body %}
+<main class="tilttek-table-safety">
+    <h1>{{ 'feedback.title'|trans({session: session}, domain) }}</h1>
+    {{ include('@TilttekTableSafety/_nav.html.twig', {game_master: false}) }}
+    {%- if saved %}{{ include('@TilttekTableSafety/_saved.html.twig') }}{% endif %}
+    <p>{{ 'feedback.help'|trans({}, domain) }}</p>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {% component (table_safety_kit('Button')) with {type: 'submit'} %}{% block content %}{{ 'answers.save'|trans({}, domain) }}{% endblock %}{% endcomponent %}
+    {{ form_end(form) }}
+</main>
+{% endblock %}
