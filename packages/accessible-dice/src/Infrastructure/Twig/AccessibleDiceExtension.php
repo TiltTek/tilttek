@@ -6,6 +6,7 @@ namespace Tilttek\AccessibleDice\Infrastructure\Twig;
 
 use Tilttek\AccessibleDice\Application\AccessibleDice;
 use Tilttek\AccessibleDice\Application\DieChoice;
+use Tilttek\AccessibleDice\Application\Exception\InvalidChoice;
 use Tilttek\AccessibleDice\Application\FaceDescriber;
 use Tilttek\AccessibleDice\Application\FaceDescription;
 use Tilttek\AccessibleDice\Application\Politeness;
@@ -29,6 +30,12 @@ final readonly class AccessibleDiceExtension
 {
     public const string TEMPLATE = '@TilttekAccessibleDice/dice.html.twig';
 
+    /** What the identifiers of a form start with when the template does not say: a letter, then letters, digits, "_" or "-". */
+    public const string ID_PATTERN = '/^[A-Za-z][A-Za-z0-9_-]{0,63}$/D';
+
+    /** What the identifiers of a form start with by default, followed by a random suffix for each form drawn. */
+    public const string ID_PREFIX = 'tilttek-accessible-dice-';
+
     /** The sentences the Stimulus controller announces a roll of a dice tower with, their placeholders kept. */
     public const array SENTENCES = ['with_dice' => 'roll.with_dice', 'without_dice' => 'roll.without_dice', 'total' => 'roll.total', 'gave' => 'roll.gave', 'nothing' => 'roll.nothing', 'dropped' => 'roll.dropped', 'by' => 'roll.by'];
 
@@ -48,23 +55,35 @@ final readonly class AccessibleDiceExtension
      * @param ?PoolResult                         $result     the roll the form was answered with, announced
      * @param ?string                             $name       the roller's name, said before that roll
      * @param ?string                             $politeness polite or assertive; the configured one when null
-     * @param string                              $id         what the identifiers of the form start with, distinct for each form of a page
+     * @param ?string                             $id         what the identifiers of the form start with, distinct for each form of a page;
+     *                                                        `ID_PREFIX` and a random suffix when null
+     *
+     * @throws InvalidChoice when the identifier does not match `ID_PATTERN`
      */
     #[AsTwigFunction('accessible_dice', needsEnvironment: true, isSafe: ['html'])]
-    public function form(Environment $twig, string $action, string $field = 'dice', ?array $token = null, ?PoolResult $result = null, ?string $name = null, ?string $politeness = null, string $id = 'tilttek-accessible-dice', ?string $locale = null): string
+    public function form(Environment $twig, string $action, string $field = 'dice', ?array $token = null, ?PoolResult $result = null, ?string $name = null, ?string $politeness = null, ?string $id = null, ?string $locale = null): string
     {
         return $twig->render(self::TEMPLATE, ['dice' => $this->view($action, $field, $token, $result, $name, $politeness, $id, $locale)]);
     }
 
     /**
-     * What the form draws.
+     * What the form draws. Each form drawn without an identifier gets its own, so that two forms of a page never share
+     * the identifiers their labels and descriptions point to.
      *
      * @param ?array{name: string, value: string} $token
      *
      * @return array{action: string, field: string, token: ?array{name: string, value: string}, id: string, choices: list<array{name: string, notation: string, label: string, faces: list<array{id: string, label: string, description: string, value: ?int, shape: ?string, color: ?string, image: ?string}>}>, most: int, politeness: string, announcement: string, labels: array<string, array<string, string>>, sentences: array<string, string>}
+     *
+     * @throws InvalidChoice when the identifier does not match `ID_PATTERN`
      */
-    public function view(string $action, string $field = 'dice', ?array $token = null, ?PoolResult $result = null, ?string $name = null, ?string $politeness = null, string $id = 'tilttek-accessible-dice', ?string $locale = null): array
+    public function view(string $action, string $field = 'dice', ?array $token = null, ?PoolResult $result = null, ?string $name = null, ?string $politeness = null, ?string $id = null, ?string $locale = null): array
     {
+        $id ??= self::ID_PREFIX.sodium_bin2hex(random_bytes(4));
+
+        if (1 !== preg_match(self::ID_PATTERN, $id)) {
+            throw InvalidChoice::because(\sprintf('The identifiers of a form start with a letter, then up to 63 letters, digits, "_" or "-"; "%s" does not.', $id));
+        }
+
         return [
             'action' => $action,
             'field' => $field,

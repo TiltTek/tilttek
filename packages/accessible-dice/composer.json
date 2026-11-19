@@ -23,6 +23,7 @@
     "require": {
         "php": ">=8.5",
         "ext-filter": "*",
+        "ext-sodium": "*",
         "symfony/config": "^8.2",
         "symfony/dependency-injection": "^8.2",
         "symfony/translation-contracts": "^3.6",

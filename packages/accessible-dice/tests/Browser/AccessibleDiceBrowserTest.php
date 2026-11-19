@@ -95,7 +95,7 @@ final class AccessibleDiceBrowserTest extends TestCase
         $browser->findElement(WebDriverBy::cssSelector('[aria-label="Un de plus"]'))->click();
         self::assertSame('3d{coin}', $this->read($browser, 'document.querySelector("output").textContent'));
         $browser->findElement(WebDriverBy::cssSelector('[aria-label="Un de moins"]'))->click();
-        $browser->findElement(WebDriverBy::id('tilttek-accessible-dice-modifier'))->clear()->sendKeys('5');
+        $browser->findElement(WebDriverBy::cssSelector('input[name="dice[modifier]"]'))->clear()->sendKeys('5');
         self::assertSame('2d{coin}+5', $this->read($browser, 'document.querySelector("output").textContent'));
     }
 

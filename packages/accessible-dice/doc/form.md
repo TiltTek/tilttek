@@ -14,7 +14,7 @@
 | `result` | `null` | The roll the form was answered with, a `PoolResult`, announced when the page loads |
 | `name` | `null` | The roller's name, said before that roll |
 | `politeness` | the configuration | `polite` or `assertive` |
-| `id` | `tilttek-accessible-dice` | What the identifiers of the form start with: distinct for each form of a page |
+| `id` | `null` | What the identifiers of the form start with: a letter, then up to 63 letters, digits, `_` or `-`; when null, `tilttek-accessible-dice-` and a random suffix, so that each form drawn has its own |
 | `locale` | the request's | The language of the words and the labels |
 
 ## The choice sent
