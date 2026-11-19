@@ -358,7 +358,7 @@ final readonly class Calculator
         }
 
         $selection->mode->highest() ? krsort($groups) : ksort($groups);
-        $binomials = Multisets::binomials($count);
+        $binomials = Multisets::binomials($count, $budget);
         // The ways to roll all the dice, which no weight of a state goes past: the size of the numbers multiplied.
         $ceiling = $die->total->power($count);
         // By dice placed and dice named so far: the weights of the sums kept.

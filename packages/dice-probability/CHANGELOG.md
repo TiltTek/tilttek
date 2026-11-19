@@ -19,6 +19,9 @@ Next version: 0.1.4-alpha.
   estimate would search its groups too long. A sample of `n` dice that count costs `n × 2ⁿ` steps up to twelve dice,
   `n²` beyond. At the defaults, `12d6g12` and `10d10g10` are refused within that second rather than searched for tens
   of seconds; on fewer samples, they are estimated.
+- The binomial coefficients a selection or an event over the multisets of the dice builds, about `n²/2` additions for
+  `n` dice, are counted in the work limit of the exact computation: past it, the expression is estimated, as for the
+  rest of its work. `4d6kh3` costs 6 operations more.
 
 ## 0.1.3-alpha - 2026-11-17
 

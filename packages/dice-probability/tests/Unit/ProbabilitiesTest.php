@@ -503,6 +503,17 @@ final class ProbabilitiesTest extends TestCase
         $this->assertTooLarge(static fn () => new Budget(10)->spendOn(\PHP_INT_MAX, $sixteen));
     }
 
+    public function testTheBinomialsAreSpentFromTheBudget(): void
+    {
+        // Four dice: one addition in the second row, two in the third, three in the fourth.
+        $rows = Multisets::binomials(4, new Budget(6));
+
+        self::assertSame(['1', '4', '6', '4', '1'], array_map(strval(...), $rows[4]));
+        self::assertSame(['1', '3', '3', '1'], array_map(strval(...), $rows[3]));
+        $this->assertTooLarge(static fn (): array => Multisets::binomials(4, new Budget(5)));
+        $this->assertTooLarge(static fn (): array => Multisets::binomials(10_000, new Budget(100_000)));
+    }
+
     public function testAFractionBroughtToItsLowestTermsCostsTheCubeOfItsSize(): void
     {
         // Three limbs: 27.
@@ -557,7 +568,7 @@ final class ProbabilitiesTest extends TestCase
         yield 'rerolled once and squared' => ['2d6ro1', 79];
         yield 'three rerolled once and squared' => ['3d6ro1', 146];
         yield 'count rolled first' => ['(1d2)d4', 107];
-        yield 'selection' => ['4d6kh3', 317];
+        yield 'selection' => ['4d6kh3', 323];
         yield 'explosion' => ['1d6!', 909];
     }
 

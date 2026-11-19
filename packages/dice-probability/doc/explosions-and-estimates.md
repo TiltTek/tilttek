@@ -51,7 +51,9 @@ them.
 The cost of an exact computation, as a guide: `30d6` is about 7 200 operations and `10d6!` about 300 000; a selection
 among many dice of many sides grows fastest, and `50d20kh10` goes past the default limit. The weights of many dice are
 numbers of many limbs: an operation on them counts one more for every sixteen products of limbs, and a fraction brought
-to its lowest terms — the probability that an explosion was cut, for one — the cube of its size in limbs.
+to its lowest terms — the probability that an explosion was cut, for one — the cube of its size in limbs. A selection
+or an event over the multisets of `n` dice first builds the binomial coefficients up to `n`, about `n²/2` additions,
+counted the same way.
 
 ## The roll limit
 

@@ -39,7 +39,7 @@ final class Multisets
             }
         }
 
-        return self::walk($values, 0, $count, [], Natural::one(), $powers, self::binomials($count), $event, $budget);
+        return self::walk($values, 0, $count, [], Natural::one(), $powers, self::binomials($count, $budget), $event, $budget);
     }
 
     /**
@@ -73,11 +73,13 @@ final class Multisets
     }
 
     /**
-     * The binomial coefficients up to a number of dice, by Pascal's triangle.
+     * The binomial coefficients up to a number of dice, by Pascal's triangle: each addition is spent from the budget.
      *
      * @return array<int, array<int, Natural>>
+     *
+     * @throws TooLarge when the triangle goes past the budget
      */
-    public static function binomials(int $count): array
+    public static function binomials(int $count, Budget $budget): array
     {
         $rows = [[Natural::one()]];
 
@@ -85,6 +87,7 @@ final class Multisets
             $rows[$row] = [Natural::one()];
 
             for ($column = 1; $column < $row; ++$column) {
+                $budget->spendOn(1, $rows[$row - 1][$column - 1]);
                 $rows[$row][$column] = $rows[$row - 1][$column - 1]->add($rows[$row - 1][$column]);
             }
 
