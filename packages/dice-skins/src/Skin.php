@@ -20,7 +20,13 @@ final readonly class Skin
     public const int MAX_LABEL_LENGTH = 80;
 
     /**
-     * @param array<int, SkinLook> $types the looks of some types of dice, by number of sides
+     * @var array<int, SkinLook> the looks of some types of dice, by number of sides
+     */
+    public array $types;
+
+    /**
+     * @param array<array-key, mixed> $types the looks of some types of dice, by number of sides: `SkinLook` values
+     *                                       under whole numbers
      *
      * @throws InvalidSkin when the key, the label, a number of sides or the contrast of a look is not as described
      */
@@ -28,14 +34,14 @@ final readonly class Skin
         public string $key,
         public string $label,
         public SkinLook $look,
-        public array $types = [],
+        array $types = [],
     ) {
         if (1 !== preg_match('/^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$/D', $key)) {
             throw InvalidSkin::because(\sprintf('The key of a skin is 1 to 64 characters among a-z, 0-9 and inner "-"; "%s" is not.', mb_substr($key, 0, 32)));
         }
 
-        if ('' === trim($label) || mb_strlen($label) > self::MAX_LABEL_LENGTH || 1 === preg_match('/\p{Cc}/u', $label)) {
-            throw InvalidSkin::because(\sprintf('The label of the skin "%s" is 1 to %d characters, without control characters.', $key, self::MAX_LABEL_LENGTH));
+        if ('' === trim($label) || !mb_check_encoding($label, 'UTF-8') || mb_strlen($label) > self::MAX_LABEL_LENGTH || 1 === preg_match('/\p{Cc}/u', $label)) {
+            throw InvalidSkin::because(\sprintf('The label of the skin "%s" is 1 to %d characters in UTF-8, without control characters.', $key, self::MAX_LABEL_LENGTH));
         }
 
         if (\count($types) > self::MAX_TYPES) {
@@ -43,11 +49,19 @@ final readonly class Skin
         }
 
         $this->readable($key, 'its dice', $look);
+        $looks = [];
 
         foreach ($types as $sides => $typeLook) {
+            if (!\is_int($sides) || !$typeLook instanceof SkinLook) {
+                throw InvalidSkin::because(\sprintf('The types of the skin "%s" are looks by number of sides.', $key));
+            }
+
             self::sides($sides);
             $this->readable($key, \sprintf('its d%d', $sides), $typeLook);
+            $looks[$sides] = $typeLook;
         }
+
+        $this->types = $looks;
     }
 
     /**
