@@ -41,8 +41,8 @@ final readonly class Multiplier
         $hundreds = intdiv($amount, 100);
         $rest = intdiv($amount % 100 * $this->percent, 100);
 
-        // The rest has the sign of the amount: past these bounds, the hundreds multiplied and the rest would not fit.
-        if ($hundreds > intdiv(\PHP_INT_MAX - $rest, $this->percent) || $hundreds < intdiv(\PHP_INT_MIN - $rest, $this->percent)) {
+        // The hundreds and the rest have the sign of the amount: past these bounds, their sum would not fit.
+        if ($hundreds > intdiv(\PHP_INT_MAX - max($rest, 0), $this->percent) || $hundreds < intdiv(\PHP_INT_MIN - min($rest, 0), $this->percent)) {
             throw InvalidSeason::because(\sprintf('%d multiplied by %d percent is more than an integer holds.', $amount, $this->percent));
         }
 
