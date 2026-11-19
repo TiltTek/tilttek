@@ -12,6 +12,12 @@ trip, the limits, the rolls die by die with every modifier, the integer arithmet
 the verifiable and replayable rolls, and the dialects. In the monorepo, Infection
 holds the library at 100 % of covered mutants.
 
+`ParserPropertyTest` checks properties over expressions generated from fixed seeds: each one parses within the limits
+or is refused with `InvalidExpression` or `LimitExceeded`, its rolls stay within the dice, explosions, rerolls and sides
+of the limits or are refused with a `DiceException`, any input of the notation's characters is parsed or refused by
+the library, and the canonical form parses back to itself and rolls the same totals from the same seed. A failure
+names the expression and its seed replays it.
+
 The tests script the dice with an engine that returns the numbers it is given: `Randomizer::getInt($min, $max)` then
 returns `$min` plus each number, which lets a test say which face each die shows.
 

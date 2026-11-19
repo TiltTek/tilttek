@@ -11,6 +11,7 @@ use Tilttek\Dice\Exception\InvalidExpression;
 use Tilttek\Dice\Exception\LimitExceeded;
 use Tilttek\Dice\Limits;
 use Tilttek\Dice\Notation\Notation;
+use Tilttek\Dice\Notation\NotationWriter;
 use Tilttek\Dice\Parser\DiceParser;
 use Tilttek\Dice\Parser\Lexer;
 use Tilttek\Dice\Parser\Token;
@@ -20,6 +21,7 @@ use Tilttek\Dice\Parser\TokenType;
 #[CoversClass(Lexer::class)]
 #[CoversClass(Token::class)]
 #[CoversClass(InvalidExpression::class)]
+#[CoversClass(NotationWriter::class)]
 final class ParserTest extends TestCase
 {
     private const string NO_SIDES = 'A die needs its number of sides, "%", "F", a range between brackets, an expression between parentheses or a name between braces';
@@ -92,6 +94,16 @@ final class ParserTest extends TestCase
         yield 'a floor and a ceiling' => ['4d6max5min2', '4d6min2max5'];
         yield 'a negative floor' => ['4dFmin-1', '4dFmin-1'];
         yield 'a compound explosion' => ['3d10!!', '3d10!!'];
+        yield 'successes after an explosion without threshold' => ['1d10>=4!p', '1d10!pc[>=4]'];
+        yield 'counted successes after an explosion without threshold' => ['3d6c[>=5]!', '3d6!c[>=5]'];
+        yield 'successes after an explosion on a face' => ['3d6>=5!6', '3d6!6>=5'];
+        yield 'successes after an explosion with a limit' => ['3d6>=5!(2)', '3d6!(2)>=5'];
+        yield 'successes after a selection that follows an explosion' => ['3d6>=5!kh2', '3d6!kh2>=5'];
+        yield 'successes after dice all the same that explode' => ['3d6>=5!t', '3d6!t>=5'];
+        yield 'successes after a floor that follows an explosion' => ['3d6>=5!min2', '3d6!min2>=5'];
+        yield 'successes after a ceiling that follows an explosion' => ['3d6>=5!max5', '3d6!max5>=5'];
+        yield 'successes after a transformation that follows an explosion' => ['3d6>=5!t[1:6]', '3d6!t[1:6]>=5'];
+        yield 'successes after a filter that follows an explosion' => ['3d6>=5!f[>1]', '3d6!f[>1]>=5'];
         yield 'a compound explosion on a face' => ['3d10!!=9', '3d10!!9'];
         yield 'a penetrating explosion' => ['2d6!p', '2d6!p'];
         yield 'a compound penetrating explosion' => ['2d6!!p>5', '2d6!!p>5'];

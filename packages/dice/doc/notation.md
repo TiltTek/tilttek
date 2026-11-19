@@ -112,9 +112,10 @@ A remainder has the sign of the divisor: `-7%3` is 2.
 
 `Pool::canonical()` writes an expression back with lower-case letters — but the `F` of Fudge dice and the `L` and `S`
 of [text lists and switches](instructions.md) —, every count written, the modifiers in the order they apply, the
-instructions separated by `", "`, and no more parentheses than the tree needs. A threshold on
-one face writes the face alone (`r1`, `!6`), or with `=` when it is negative (`r=-1`); successes judged on each final
-value by a comparison write it alone (`>=7`), any other `c[…]`; `s` is written `sa`, `a10` is written `!!10(1)`, `o`
+instructions separated by `", "`, and no more parentheses than the tree needs. A threshold on one face writes the face
+alone (`r1`, `!6`), or with `=` when it is negative (`r=-1`); successes judged on each final value by a comparison
+write it alone (`>=7`), unless they follow an explosion without threshold or limit, which would read the comparison as
+its threshold (`1d10!pc[>=4]`); any other successes write `c[…]`; `s` is written `sa`, `a10` is written `!!10(1)`, `o`
 writes its width.
 
 | Input | Canonical |
@@ -124,12 +125,13 @@ writes its width.
 | `d20 adv` | `2d20kh1` |
 | `4d6kh3!r1` | `4d6r1!kh3` |
 | `8d10c[>=6]-@c[=1]` | `8d10>=6-@=1` |
+| `1d10>=4!p` | `1d10!pc[>=4]` |
 | `3d10a10` | `3d10!!10(1)` |
 | `min(1d6,3)` | `min(1d6, 3)` |
 | `((2))` | `2` |
 | `3d{Chromatic}` | `3d{chromatic}` |
 
-The canonical form parses back to the same tree.
+The canonical form parses back to the same tree, and rolls the same totals from the same seed.
 
 ## Errors
 
