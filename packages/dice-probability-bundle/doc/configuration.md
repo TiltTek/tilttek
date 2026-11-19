@@ -19,6 +19,7 @@ tilttek_dice_probability:
         interval: '1 minute'
         cache_pool: cache.app
         limiter: ~
+        single_server: false
 ```
 
 | Key | Default | What it sets |
@@ -36,8 +37,9 @@ tilttek_dice_probability:
 | `rate_limit.enabled` | `true` | Whether the Live Component counts its computations against a rate limit per client |
 | `rate_limit.limit` | `60` | The computations of one client within the interval |
 | `rate_limit.interval` | `'1 minute'` | The sliding window the limit counts over |
-| `rate_limit.cache_pool` | `cache.app` | The cache pool the counts are kept in |
+| `rate_limit.cache_pool` | `cache.app` | The cache pool the counts are kept in, on a store the servers share: one local to each server is refused in the `prod` environment |
 | `rate_limit.limiter` | `null` | The service id of a rate limiter factory of the application, instead of the sliding window the bundle builds |
+| `rate_limit.single_server` | `false` | Accepts a cache pool local to the server in the `prod` environment, for an application on one server |
 
 Each bound is at least 1. A page computes on each request, and anyone may type a short expression that asks for a lot
 of work: `100d6!` or `10d1000` are seven characters. The bounds hold every request to a fraction of a second at the
@@ -63,6 +65,10 @@ The steps of one sample, times `samples`, must stay within `group_work_limit`. A
 pass, in about a third of a second; `7d6g7`, `12d6g12` or `10d10g10` are refused at once, with the reason
 `refusal.groups` of the translations. With fewer samples, larger sets pass.
 
+The same limit is given to the `Settings` of `tilttek/dice-probability`, whose estimate counts the steps of the groups
+it actually searches, sample by sample, and stops with `CannotCompute` past it: an expression the bundle weighs too
+low is still bounded.
+
 ## The rate limit of the component
 
 The Live Component computes again each time the browser sends the expressions back, on each pause in the typing.
@@ -76,8 +82,18 @@ Symfony so that the client's address is the one counted. The key of the limit is
 `kernel.secret`, never the address. A failure of the limiter or of its storage refuses the computation.
 
 The counts are kept in `cache_pool`: on several servers, name a pool they share — Redis, Memcached, a database —, or
-each server counts a client once. `limiter` names a factory of the application instead, such as one of
-`framework.rate_limiter`, whose service id is `limiter.<name>`.
+a client could spend the limit once per server. In the `prod` environment, the container refuses to compile with a
+pool local to each server — the filesystem, APCu, array or system adapters, `cache.app` by default —, through the
+`RateLimitGuard` of `phil/rate-limit`. An application on one server says so:
+
+```yaml
+tilttek_dice_probability:
+    rate_limit:
+        single_server: true
+```
+
+`limiter` names a factory of the application instead, such as one of `framework.rate_limiter`, whose service id is
+`limiter.<name>`; the bundle then builds no storage and checks none.
 
 With `symfony/ux-live-component` installed, the rate limit needs `symfony/rate-limiter`: the container refuses to
 compile without it, unless the rate limit is turned off:

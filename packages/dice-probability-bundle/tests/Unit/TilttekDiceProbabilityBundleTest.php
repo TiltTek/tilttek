@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tilttek\DiceProbabilityBundle\Tests\Unit;
 
 use LogicException;
+use Phil\RateLimit\RateLimitGuard;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -41,7 +42,7 @@ final class TilttekDiceProbabilityBundleTest extends TestCase
 
         self::assertSame('tilttek_dice_probability', $this->extension()->getAlias());
         self::assertSame(['service_container', Settings::class, ProbabilityServices::LIMITS, Probabilities::class, GroupSearch::class, DiceStatistics::class, KitComponents::class, ProbabilityExtension::class, DistributionComponent::class, ProbabilityServices::LIMITER_STORAGE, ProbabilityServices::LIMITER, ComputationThrottle::class], array_keys($container->getDefinitions()));
-        self::assertSame([10, 100_000, 5_000, 0, 50_000], $container->getDefinition(Settings::class)->getArguments());
+        self::assertSame([10, 100_000, 5_000, 0, 50_000, 2_000_000], $container->getDefinition(Settings::class)->getArguments());
         self::assertFalse($container->getDefinition(Settings::class)->isPublic());
         self::assertSame([ProbabilityServices::class, 'limits'], $container->getDefinition(ProbabilityServices::LIMITS)->getFactory());
         self::assertEquals([new Reference(Limits::class), 50], $container->getDefinition(ProbabilityServices::LIMITS)->getArguments());
@@ -75,7 +76,7 @@ final class TilttekDiceProbabilityBundleTest extends TestCase
     {
         $container = $this->load(['explosion_depth' => 3, 'work_limit' => 1_000, 'samples' => 50, 'seed' => -4, 'roll_limit' => 700, 'max_dice' => 12, 'max_outcomes' => 40, 'group_work_limit' => 9_000, 'rounding' => 'ceil', 'rate_limit' => ['limit' => 5, 'interval' => '10 seconds', 'cache_pool' => 'cache.limits']]);
 
-        self::assertSame([3, 1_000, 50, -4, 700], $container->getDefinition(Settings::class)->getArguments());
+        self::assertSame([3, 1_000, 50, -4, 700, 9_000], $container->getDefinition(Settings::class)->getArguments());
         self::assertSame(12, $container->getDefinition(ProbabilityServices::LIMITS)->getArgument(1));
         self::assertSame(Rounding::Ceil, $container->getDefinition(DiceStatistics::class)->getArgument(2));
         self::assertSame(40, $container->getDefinition(DiceStatistics::class)->getArgument(3));
@@ -106,7 +107,7 @@ final class TilttekDiceProbabilityBundleTest extends TestCase
     public function testTheRateLimitNeedsTheRateLimiter(): void
     {
         $config = ['explosion_depth' => 10, 'work_limit' => 100_000, 'samples' => 5_000, 'seed' => 0, 'roll_limit' => 50_000, 'max_dice' => 50, 'max_outcomes' => 500, 'group_work_limit' => 2_000_000, 'rounding' => 'floor', 'kit_subdirectory' => null];
-        $off = ['enabled' => false, 'limit' => 60, 'interval' => '1 minute', 'cache_pool' => 'cache.app', 'limiter' => null];
+        $off = ['enabled' => false, 'limit' => 60, 'interval' => '1 minute', 'cache_pool' => 'cache.app', 'limiter' => null, 'single_server' => false];
         $container = new ContainerBuilder();
         ProbabilityServices::register($container, [...$config, 'rate_limit' => $off], false);
         self::assertFalse($container->hasDefinition(ComputationThrottle::class));
@@ -121,7 +122,7 @@ final class TilttekDiceProbabilityBundleTest extends TestCase
     {
         $config = ['explosion_depth' => 10, 'work_limit' => 100_000, 'samples' => 5_000, 'seed' => 0, 'roll_limit' => 50_000, 'max_dice' => 50, 'max_outcomes' => 500, 'group_work_limit' => 2_000_000, 'rounding' => 'floor', 'kit_subdirectory' => null];
         $container = new ContainerBuilder();
-        ProbabilityServices::register($container, [...$config, 'rate_limit' => ['enabled' => true, 'limit' => 60, 'interval' => '1 minute', 'cache_pool' => 'cache.app', 'limiter' => null]]);
+        ProbabilityServices::register($container, [...$config, 'rate_limit' => ['enabled' => true, 'limit' => 60, 'interval' => '1 minute', 'cache_pool' => 'cache.app', 'limiter' => null, 'single_server' => false]]);
 
         self::assertTrue($container->hasDefinition(ComputationThrottle::class));
     }
@@ -132,6 +133,27 @@ final class TilttekDiceProbabilityBundleTest extends TestCase
         new TilttekDiceProbabilityBundle()->build($container);
 
         self::assertCount(1, array_filter($container->getCompilerPassConfig()->getBeforeOptimizationPasses(), static fn (object $pass): bool => $pass instanceof KitSubdirectoryPass));
+        self::assertCount(1, array_filter($container->getCompilerPassConfig()->getBeforeOptimizationPasses(), static fn (object $pass): bool => $pass instanceof RateLimitGuard));
+    }
+
+    public function testThePoolOfTheRateLimitIsWatchedUnlessTheApplicationRunsOnOneServer(): void
+    {
+        self::assertSame(['tilttek_dice_probability.rate_limit.cache_pool' => ['store' => 'cache.limits', 'switch' => 'enabled']], RateLimitGuard::watched($this->load(['rate_limit' => ['cache_pool' => 'cache.limits']])));
+        self::assertSame([], RateLimitGuard::watched($this->load(['rate_limit' => ['single_server' => true]])));
+        self::assertSame([], RateLimitGuard::watched($this->load(['rate_limit' => ['limiter' => 'app.limiter']])));
+        self::assertSame([], RateLimitGuard::watched($this->load(['rate_limit' => false])));
+    }
+
+    public function testALocalPoolIsRefusedInProduction(): void
+    {
+        $container = $this->load([]);
+        $container->setParameter('kernel.environment', 'prod');
+        $container->register('cache.app', 'Symfony\\Component\\Cache\\Adapter\\FilesystemAdapter');
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessageIsOrContains('tilttek_dice_probability.rate_limit.cache_pool: the store "cache.app" is local to each server');
+
+        new RateLimitGuard()->process($container);
     }
 
     public function testAnUnknownRoundingIsRefused(): void
@@ -165,7 +187,7 @@ final class TilttekDiceProbabilityBundleTest extends TestCase
             }
         }
 
-        self::assertSame([1, 1, 1, 0, 1], $container->getDefinition(Settings::class)->getArguments());
+        self::assertSame([1, 1, 1, 0, 1, 1], $container->getDefinition(Settings::class)->getArguments());
         self::assertSame(1, $container->getDefinition(ProbabilityServices::LIMITS)->getArgument(1));
         self::assertSame(1, $container->getDefinition(DiceStatistics::class)->getArgument(3));
     }

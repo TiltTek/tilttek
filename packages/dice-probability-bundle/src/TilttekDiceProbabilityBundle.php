@@ -6,6 +6,7 @@ namespace Tilttek\DiceProbabilityBundle;
 
 use LogicException;
 use Override;
+use Phil\RateLimit\RateLimitGuard;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Kernel\AbstractBundle;
@@ -38,6 +39,7 @@ use Tilttek\DiceProbabilityBundle\Infrastructure\DependencyInjection\Probability
  *         interval: '1 minute'
  *         cache_pool: cache.app
  *         limiter: ~
+ *         single_server: false
  * ```
  *
  * The expressions are read by the `DiceRoller` of `TilttekDiceBundle`, with its notations, limits and custom dice:
@@ -45,7 +47,8 @@ use Tilttek\DiceProbabilityBundle\Infrastructure\DependencyInjection\Probability
  * page may ask for, how a division rounds when the expression does not say, and where the recipes of the UX kit the
  * templates draw with are installed. The defaults keep a page that anyone may type into within a fraction of a second,
  * and the Live Component computes at most 60 expressions a minute for each client, by its IPv4 address or its IPv6 /64:
- * with the Live Component installed, that rate limit needs `symfony/rate-limiter`, or `enabled: false`.
+ * with the Live Component installed, that rate limit needs `symfony/rate-limiter`, or `enabled: false`. In the `prod`
+ * environment, its counts are kept in a cache pool the servers share, or `single_server` says there is only one.
  */
 final class TilttekDiceProbabilityBundle extends AbstractBundle
 {
@@ -56,6 +59,7 @@ final class TilttekDiceProbabilityBundle extends AbstractBundle
     public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new KitSubdirectoryPass());
+        $container->addCompilerPass(new RateLimitGuard());
     }
 
     #[Override]
@@ -117,8 +121,9 @@ final class TilttekDiceProbabilityBundle extends AbstractBundle
                     ->children()
                         ->integerNode('limit')->info('The computations of one client within the interval.')->min(1)->defaultValue(60)->end()
                         ->scalarNode('interval')->info('The sliding window the limit counts over, as symfony/rate-limiter reads it.')->cannotBeEmpty()->defaultValue('1 minute')->end()
-                        ->scalarNode('cache_pool')->info('The cache pool the counts are kept in: one shared by the servers counts a client once.')->cannotBeEmpty()->defaultValue('cache.app')->end()
+                        ->scalarNode('cache_pool')->info('The cache pool the counts are kept in, on a store the servers share: one local to each server is refused in the prod environment.')->cannotBeEmpty()->defaultValue('cache.app')->end()
                         ->scalarNode('limiter')->info('The service id of a rate limiter factory of the application, instead of the one built here.')->defaultNull()->end()
+                        ->booleanNode('single_server')->info('Accepts a cache pool local to the server in the prod environment, for an application on one server.')->defaultFalse()->end()
                     ->end()
                 ->end()
             ->end();
@@ -138,7 +143,7 @@ final class TilttekDiceProbabilityBundle extends AbstractBundle
     #[Override]
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        /** @var array{explosion_depth: int, work_limit: int, samples: int, seed: int, roll_limit: int, max_dice: int, max_outcomes: int, group_work_limit: int, rounding: string, kit_subdirectory: ?string, rate_limit: array{enabled: bool, limit: int, interval: string, cache_pool: string, limiter: ?string}} $config */
+        /** @var array{explosion_depth: int, work_limit: int, samples: int, seed: int, roll_limit: int, max_dice: int, max_outcomes: int, group_work_limit: int, rounding: string, kit_subdirectory: ?string, rate_limit: array{enabled: bool, limit: int, interval: string, cache_pool: string, limiter: ?string, single_server: bool}} $config */
         ProbabilityServices::register($builder, $config, interface_exists(RateLimiterFactoryInterface::class));
     }
 }
