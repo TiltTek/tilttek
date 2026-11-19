@@ -27,7 +27,7 @@
         "ext-mbstring": "*",
         "symfony/config": "^8.2",
         "symfony/dependency-injection": "^8.2",
-        "tilttek/dice": "^0.1@dev || ^0.2@dev || ^0.3@dev",
+        "tilttek/dice": "^0.2@dev || ^0.3@dev",
         "tilttek/generator": "^0.2@dev"
     },
     "require-dev": {

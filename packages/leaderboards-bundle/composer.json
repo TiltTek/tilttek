@@ -49,7 +49,7 @@
         "symfony/ux-twig-component": "^3.7",
         "symfony/yaml": "^8.2",
         "tilttek/activity": "^0.1@dev",
-        "tilttek/activity-bundle": "^0.1@dev || ^0.2@dev",
+        "tilttek/activity-bundle": "^0.2@dev",
         "twig/twig": "^3.21"
     },
     "suggest": {

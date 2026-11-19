@@ -4,6 +4,14 @@ All notable changes to `tilttek/exchange` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+Next version: 0.2.1-alpha.
+
+### Changed
+
+- `tilttek/points` 0.2 required: 0.1 is no longer accepted.
+
 ## 0.2.0-alpha - 2026-11-14
 
 ### Changed

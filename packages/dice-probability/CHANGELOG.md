@@ -8,6 +8,10 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 Next version: 0.1.4-alpha.
 
+### Changed
+
+- `tilttek/dice` 0.2 or 0.3 required: 0.1 is no longer accepted.
+
 ### Fixed
 
 - The search of the groups that reach a sum counts in the budget of an estimate: `Settings` takes a `groupWorkLimit`,

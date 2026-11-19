@@ -4,6 +4,14 @@ All notable changes to `tilttek/stickers` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+Next version: 0.1.3-alpha.
+
+### Changed
+
+- `tilttek/sets` 0.2 or 0.3 required: 0.1 is no longer accepted.
+
 ## 0.1.2-alpha - 2026-11-17
 
 Next version: 0.1.2-alpha.

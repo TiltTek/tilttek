@@ -8,6 +8,10 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 Next version: 0.2.2-alpha.
 
+### Changed
+
+- `tilttek/dice` 0.2 or 0.3 required: 0.1 is no longer accepted.
+
 ### Fixed
 
 - The package folder of the monorepo no longer holds a `dice` symbolic link to `tilttek/dice`; nothing read it, and
