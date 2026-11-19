@@ -334,15 +334,18 @@ final readonly class LuckTokens
             $last = $this->ledger->last($table);
             $at = $this->clock->now();
             $position = $last;
-            $entry = static function (EntryType $type, ?string $kind, ResourceReference $holder, int $change, int $balance, ?string $session = null) use ($table, $operation, $actor, $reason, $at, &$position): LedgerEntry {
+            // The ledger's limit is checked at each entry built, before the next: a session of many holders stops at the
+            // first entry past it rather than building them all.
+            $maxEntries = $this->maxEntries;
+            $entry = static function (EntryType $type, ?string $kind, ResourceReference $holder, int $change, int $balance, ?string $session = null) use ($table, $operation, $actor, $reason, $at, $last, $maxEntries, &$position): LedgerEntry {
+                if ($position >= $maxEntries) {
+                    throw TokenRefused::ledgerFull($table, $last);
+                }
+
                 return new LedgerEntry($table, ++$position, $operation, $type, $kind, $holder, $change, $balance, $actor, $at, $reason, $session);
             };
             $held = fn (string $kind, ResourceReference $holder): int => $this->ledger->balance($table, $kind, $holder);
             $entries = $build($rules, $held, $entry);
-
-            if ($last + \count($entries) > $this->maxEntries) {
-                throw TokenRefused::ledgerFull($table, $last);
-            }
 
             try {
                 $this->ledger->append($table, $last, $entries);

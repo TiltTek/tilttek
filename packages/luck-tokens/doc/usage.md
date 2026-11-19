@@ -108,4 +108,6 @@ offers reasons from a list. The game masters named in the rules of a table are t
 The library reads the last position of the ledger, checks the operation against the balances, and appends its entries
 right after that position. A store that finds another entry there refuses the append with `LedgerConflict`; the
 library then reads again — the operation done meanwhile under the same identifier is a replay — and checks again,
-three times in all, before the conflict reaches the caller, who may retry later. A ledger takes 100 000 entries at most.
+three times in all, before the conflict reaches the caller, who may retry later. A ledger takes 100 000 entries at most:
+an operation that would go past them is refused at the first entry beyond, before it builds the others — a session
+started for many holders included.

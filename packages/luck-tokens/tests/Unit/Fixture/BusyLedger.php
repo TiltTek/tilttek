@@ -19,6 +19,9 @@ final class BusyLedger implements TokenLedger
 {
     public int $appends = 0;
 
+    /** The balances read so far. */
+    public int $balances = 0;
+
     /**
      * @param list<Closure(): mixed> $others
      */
@@ -43,6 +46,8 @@ final class BusyLedger implements TokenLedger
     #[Override]
     public function balance(ResourceReference $table, string $kind, ResourceReference $holder): int
     {
+        ++$this->balances;
+
         return $this->inner->balance($table, $kind, $holder);
     }
 
