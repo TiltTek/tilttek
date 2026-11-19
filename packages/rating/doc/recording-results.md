@@ -18,7 +18,8 @@ game and the members are 1 to 128 letters, digits, `_`, `.`, `:`, `@` or `-`, st
 opaque reference, never a name.
 
 `toArray()` gives the result as plain values and `fromArray()` reads them back, the time as ISO 8601 with its offset —
-what a source of results keeps.
+what a source of results keeps. A day or a time that does not exist, `2026-02-30` or `24:00:00`, is refused with
+`InvalidRating` rather than carried over to another one.
 
 ## Recording
 

@@ -4,6 +4,15 @@ All notable changes to `tilttek/rating` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+Next version: 0.1.1-alpha.
+
+### Fixed
+
+- `GameResult::fromArray()` refuses a day or a time that does not exist, `2026-02-30T20:00:00Z` or `24:00:00`, with
+  `InvalidRating`: it was carried over to the next month or day.
+
 ## 0.1.0-alpha - 2026-11-14
 
 ### Added

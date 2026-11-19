@@ -62,6 +62,7 @@ final class GameResultTest extends TestCase
         self::assertFalse(GameResult::fromArray([...$data, 'friendly' => null])->friendly);
         self::assertSame('2026-11-13T20:00:00.000000Z', GameResult::fromArray([...$data, 'played_at' => '2026-11-13T20:00:00Z'])->toArray()['played_at']);
         self::assertSame('2026-11-13T20:00:00.000000Z', GameResult::fromArray([...$data, 'played_at' => '2026-11-13T22:00:00+02:00'])->toArray()['played_at']);
+        self::assertSame('2028-02-29T23:59:59.000000Z', GameResult::fromArray([...$data, 'played_at' => '2028-02-29T23:59:59Z'])->toArray()['played_at']);
     }
 
     public function testWhatDoesNotReadAsAResultIsRefused(): void
@@ -85,6 +86,9 @@ final class GameResultTest extends TestCase
             [[...$data, 'played_at' => '2026-11-13T20:00:00Z +1 day'], $time],
             [[...$data, 'played_at' => "2026-11-13T20:00:00Z\n"], $time],
             [[...$data, 'played_at' => '2026-13-45T20:00:00Z'], $time],
+            [[...$data, 'played_at' => '2026-02-30T20:00:00Z'], $time],
+            [[...$data, 'played_at' => '2026-11-13T24:00:00Z'], $time],
+            [[...$data, 'played_at' => '2026-11-13T20:60:00+01:00'], $time],
         ];
         $missing = $data;
         unset($missing['id']);
