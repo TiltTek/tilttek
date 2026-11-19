@@ -6,7 +6,7 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## 0.3.0-alpha - 2026-11-15
 
-The next version is 0.3.0-alpha: the Symfony integration leaves the library for `tilttek/sets-bundle`.
+The Symfony integration leaves the library for `tilttek/sets-bundle`.
 
 ### Changed
 
