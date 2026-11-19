@@ -32,6 +32,9 @@ final readonly class EntryList
      */
     public ?Attribution $attribution;
 
+    /**
+     * @throws InvalidDefinition when the list has no entry, or the weights of its entries add up to more than an integer holds
+     */
     public function __construct(public string $name, Entry ...$entries)
     {
         if ([] === $entries) {
@@ -40,9 +43,16 @@ final readonly class EntryList
 
         $this->entries = array_values($entries);
         $tags = [];
+        $total = 0;
 
         foreach ($this->entries as $entry) {
             $tags += array_fill_keys(array_keys($entry->tags()), true);
+
+            if ($entry->weight > \PHP_INT_MAX - $total) {
+                throw InvalidDefinition::at($name, \sprintf('the weights of the entries of a list add up to at most %d', \PHP_INT_MAX));
+            }
+
+            $total += $entry->weight;
         }
 
         $this->tags = $tags;

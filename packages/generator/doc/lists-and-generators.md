@@ -46,7 +46,7 @@ lists:
 | Key | Meaning |
 |---|---|
 | `text` | What the entry prints. Required in a map. |
-| `weight` | A whole number of at least 1, 1 by default: an entry of weight 3 comes three times as often. |
+| `weight` | A whole number of at least 1, 1 by default: an entry of weight 3 comes three times as often. The weights of a list, and those of the templates of a generator, add up to at most `PHP_INT_MAX`. |
 | `tags` | A map of tags, each with a value or a sequence of values, on which `pick(…, where: …)` filters. |
 | `source`, `licence`, `attribution` | Where this entry comes from, when not from where its list comes from; see [Where the text comes from](#where-the-text-comes-from). |
 | any other key | A field: a scalar or a sequence of scalars, read in a template as `entry.price`. |

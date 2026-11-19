@@ -12,6 +12,15 @@ Next version: 0.2.2-alpha.
 
 - `tilttek/dice` 0.2 or 0.3 required: 0.1 is no longer accepted.
 
+### Fixed
+
+- A list whose entries, or a text generator whose templates, have weights that add up to more than `PHP_INT_MAX` is
+  refused with `InvalidDefinition` when it is built, rather than failing with a `TypeError` at its first draw.
+
+### Security
+
+- A seed is at most `Draw::SEED_LENGTH` (256) characters long; a longer one is refused with `InvalidDefinition`.
+
 ## 0.2.1-alpha - 2026-11-17
 
 Next version: 0.2.1-alpha.

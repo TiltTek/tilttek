@@ -24,6 +24,11 @@ final readonly class Draw
     public const int STATE_LENGTH = 1024;
 
     /**
+     * The longest seed, in characters.
+     */
+    public const int SEED_LENGTH = 256;
+
+    /**
      * @var array<string, string>|null the previous state, its values as texts, or null for a first draw
      */
     public ?array $state;
@@ -43,6 +48,10 @@ final readonly class Draw
 
         if (null !== $seed && !mb_check_encoding($seed, 'UTF-8')) {
             throw InvalidDefinition::at('draw', 'a seed is written in UTF-8');
+        }
+
+        if (null !== $seed && mb_strlen($seed) > self::SEED_LENGTH) {
+            throw InvalidDefinition::at('draw', \sprintf('a seed is at most %d characters long', self::SEED_LENGTH));
         }
 
         $this->state = null === $state ? null : $this->state($state);
