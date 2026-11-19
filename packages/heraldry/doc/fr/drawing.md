@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=ec928aafa5e41ae5d8c17dd2e3cc7b9ea9875dfd49752fec23c900dc533688ee -->
+<!-- phil-dev source-sha256=0563a68968b0c788c1c84bcf8a5d519d08f08d9e2e1797354713833fec37966d -->
 # Le dessin
 
 `Svg\SvgRenderer::render()` écrit un écu comme un élément `<svg>` :
@@ -28,9 +28,10 @@ donné, ou « Coat of arms » / « Armoiries » ; la description est le blason d
 ## Identifiants
 
 Chaque `id` commence par le préfixe donné — une lettre, puis jusqu'à 47 lettres, chiffres, `-` ou `_` —, ou par `arms-`
-et 12 chiffres hexadécimaux dérivés des armes et de la forme. Plusieurs images partagent une page sans se heurter ;
-donnez à chacune son préfixe quand les mêmes armes paraissent deux fois. Tout autre préfixe lance
-`Exception\InvalidDrawing`.
+et 12 chiffres hexadécimaux dérivés des armes, de la forme et, quand il y en a un, du titre et de sa langue : les mêmes
+armes dessinées pour deux propriétaires sous leurs propres titres ne se heurtent pas, et le même appel dessine toujours
+la même image. Donnez à chaque image son préfixe quand les mêmes armes paraissent deux fois sous le même titre. Tout
+autre préfixe lance `Exception\InvalidDrawing`.
 
 ## Palette
 

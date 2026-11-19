@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=067020e2ba7c5864d1fa4c1c00ecf23247f99ec94effb6c21fcd72e4ebcfdaf6 -->
+<!-- phil-dev source-sha256=e7f96b264f9b23f0fe4d4f9361ae04ea848c988ccccaf1895e8c8ceea3a20f86 -->
 # Tests
 
 ## Les tests de la bibliothèque
@@ -12,6 +12,12 @@ La suite couvre chaque construction de la notation et ses erreurs, les validateu
 retour, les limites, les lancers dé par dé avec chaque modificateur, l'arithmétique entière dans chaque mode d'arrondi,
 les dés personnalisés, les lancers vérifiables et rejouables, et les dialectes. Dans le monodépôt, Infection maintient
 la bibliothèque à 100 % des mutants couverts.
+
+`ParserPropertyTest` vérifie des propriétés sur des expressions générées à partir de germes fixes : chacune s'analyse
+dans les limites ou est refusée avec `InvalidExpression` ou `LimitExceeded`, ses lancers restent dans les dés, les
+explosions, les relances et les faces des limites ou sont refusés avec une `DiceException`, toute entrée faite des
+caractères de la notation est analysée ou refusée par la bibliothèque, et la forme canonique s'analyse de nouveau en
+elle-même et lance les mêmes totaux avec le même germe. Un échec nomme l'expression, et son germe la rejoue.
 
 Les tests scénarisent les dés avec un moteur qui renvoie les nombres qu'on lui donne : `Randomizer::getInt($min, $max)`
 renvoie alors `$min` plus chaque nombre, ce qui permet à un test de dire quelle face montre chaque dé.

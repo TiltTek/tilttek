@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=2f29be4b9d2fd7c9d06856c3f66bb1d329d4e4df4a2be1ed41ee8224a7a4bea3 -->
+<!-- phil-dev source-sha256=70770be3cfacf95c0992559568ac4195610b900bd1bfca6dca5a95fddf6d9535 -->
 # Tests
 
 ## Les tests du paquet
@@ -24,8 +24,8 @@ d'une mise à jour, avec `node --test`. Dans le monodépôt, Infection maintient
 
 `tests/Functional` démarre une application avec FrameworkBundle, DoctrineBundle sur SQLite, TwigBundle, les composants
 Twig, un verrou en mémoire et un concentrateur Mercure qui enregistre : les tables sont créées par la commande, une
-table est jouée et publiée, lue depuis les points de terminaison, son gabarit rendu avec les recettes du kit quand on
-en trouve, son journal vérifié, et aucun coup repris une fois sa partie terminée.
+table est jouée et publiée, lue depuis les points de terminaison, son gabarit rendu avec les recettes Card et Badge de `phil/ux-kit`, une
+exigence de développement lue dans `vendor/`, son journal vérifié, et aucun coup repris une fois sa partie terminée.
 
 `tests/Benchmark/StorageBench.php` mesure un coup ajouté au journal et un journal de 100 coups relu, sur SQLite en
 mémoire, et un état mis dans un pool de tableau et relu : environ 22 µs, 0,34 ms, 9 µs et 13 µs sur PHP 8.5 sans son

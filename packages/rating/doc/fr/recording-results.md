@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=fb34e7bb378cc257942b36d322ed1263fc0e5fdbccf291fbf79a9c36be92521e -->
+<!-- phil-dev source-sha256=800f17594f2fc74a55c73e656fc29de78105ada41ea63edfda3bec4043b5ec4a -->
 # Enregistrer des résultats
 
 ## Un résultat
@@ -19,7 +19,8 @@ résultat, du jeu et des membres sont de 1 à 128 lettres, chiffres, `_`, `.`, `
 ou un chiffre : une référence opaque, jamais un nom.
 
 `toArray()` donne le résultat en valeurs simples et `fromArray()` les relit, le moment en ISO 8601 avec son décalage —
-ce que garde une source de résultats.
+ce que garde une source de résultats. Un jour ou une heure qui n'existe pas, `2026-02-30` ou `24:00:00`, est refusé avec
+`InvalidRating` plutôt que reporté sur un autre.
 
 ## Enregistrer
 
