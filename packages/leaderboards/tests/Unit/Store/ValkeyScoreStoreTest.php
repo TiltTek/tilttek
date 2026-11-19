@@ -161,12 +161,32 @@ final class ValkeyScoreStoreTest extends ScoreStoreTestCase
         self::assertSame(0, $this->connection()->execute('DBSIZE'));
     }
 
-    public function testAnIndexEntryWithoutItsScoreIsNotCounted(): void
+    public function testAnIndexEntryWithoutItsScoreIsErasedButNotCounted(): void
     {
         $store = $this->store();
-        $this->connection()->execute('SADD', '{tests}:member-score:["member:1"]', '["games","2026-11","member:1"]');
+        $connection = $this->connection();
+        $store->save(new Score('arcade', 'ever', ResourceReference::fromString('member:1'), 1, new DateTimeImmutable('2026-10-01 UTC')));
+        $store->save(new Score('arcade', 'ever', ResourceReference::fromString('member:2'), 1, new DateTimeImmutable('2026-10-01 UTC')));
+        // A partial write from elsewhere, a restore or a hand edit: the index names a score the hash no longer holds.
+        $connection->execute('SADD', '{tests}:member-score:["member:1"]', '["games","2026-11","member:1"]');
 
+        self::assertSame(1, $store->eraseMember(ResourceReference::fromString('member:1')));
+        self::assertSame(0, $connection->execute('EXISTS', '{tests}:member-score:["member:1"]'));
+        self::assertSame(['["arcade","ever","member:2"]'], $connection->execute('SMEMBERS', '{tests}:member-score:["member:2"]'));
+        self::assertSame(1, $connection->execute('ZCARD', '{tests}:rank:["arcade","ever"]'));
         self::assertSame(0, $store->eraseMember(ResourceReference::fromString('member:1')));
+    }
+
+    public function testDeletingAScoreNotHeldTakesItsEntryOutOfTheIndex(): void
+    {
+        $store = $this->store();
+        $connection = $this->connection();
+        $connection->execute('SADD', '{tests}:member-score:["member:1"]', '["games","2026-11","member:1"]', '["games","2026-10","member:1"]');
+
+        $store->delete('games', '2026-11', ResourceReference::fromString('member:1'));
+
+        self::assertSame(['["games","2026-10","member:1"]'], $connection->execute('SMEMBERS', '{tests}:member-score:["member:1"]'));
+        self::assertSame(1, $connection->execute('DBSIZE'));
     }
 
     public function testTheLatestScoreKeepsOnlyALaterMomentOrAnotherValue(): void
