@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=2672849b36905f5c6a9e671b6cb653fab580568eae7582d5c752a1c363839c03 -->
+<!-- phil-dev source-sha256=740a4e8f961507862976a86ce54b366cb79ebcabfb4ff7172e2b0e74255c0e48 -->
 # Listes et générateurs
 
 Un catalogue se lit à partir de documents YAML ou JSON décodés. Un document contient des tables `lists` et
@@ -48,7 +48,7 @@ lists:
 | Clé | Sens |
 |---|---|
 | `text` | Ce qu'affiche l'entrée. Obligatoire dans une table. |
-| `weight` | Un nombre entier d'au moins 1, 1 par défaut : une entrée de poids 3 revient trois fois plus souvent. |
+| `weight` | Un nombre entier d'au moins 1, 1 par défaut : une entrée de poids 3 revient trois fois plus souvent. Les poids d'une liste, et ceux des gabarits d'un générateur, totalisent au plus `PHP_INT_MAX`. |
 | `tags` | Une table d'étiquettes, chacune avec une valeur ou une séquence de valeurs, sur lesquelles filtre `pick(…, where: …)`. |
 | `source`, `licence`, `attribution` | D'où vient cette entrée, quand ce n'est pas d'où vient sa liste ; voyez [D'où vient le texte](#dou-vient-le-texte). |
 | toute autre clé | Un champ : un scalaire ou une séquence de scalaires, lu dans un gabarit comme `entry.price`. |

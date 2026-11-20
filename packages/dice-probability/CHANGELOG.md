@@ -4,6 +4,25 @@ All notable changes to `tilttek/dice-probability` will be documented in this fil
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+Next version: 0.1.4-alpha.
+
+### Changed
+
+- `tilttek/dice` 0.2 or 0.3 required: 0.1 is no longer accepted.
+
+### Fixed
+
+- The search of the groups that reach a sum counts in the budget of an estimate: `Settings` takes a `groupWorkLimit`,
+  20 000 000 steps over all the samples by default — about a second —, past which `CannotCompute` says that the
+  estimate would search its groups too long. A sample of `n` dice that count costs `n × 2ⁿ` steps up to twelve dice,
+  `n²` beyond. At the defaults, `12d6g12` and `10d10g10` are refused within that second rather than searched for tens
+  of seconds; on fewer samples, they are estimated.
+- The binomial coefficients a selection or an event over the multisets of the dice builds, about `n²/2` additions for
+  `n` dice, are counted in the work limit of the exact computation: past it, the expression is estimated, as for the
+  rest of its work. `4d6kh3` costs 6 operations more.
+
 ## 0.1.3-alpha - 2026-11-17
 
 Next version: 0.1.3-alpha.

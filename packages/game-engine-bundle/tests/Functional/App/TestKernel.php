@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tilttek\GameEngineBundle\Tests\Functional\App;
 
+use LogicException;
 use Override;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -37,24 +38,17 @@ final class TestKernel extends Kernel
     ];
 
     /**
-     * The PHIL UX kit in a PHIL monorepo beside the Tilttek one, or among the development requirements; null when none
-     * has it.
+     * The PHIL UX kit among the development requirements, of the package or of the monorepo that holds it.
      */
-    public static function kit(): ?string
+    public static function kit(): string
     {
-        foreach (['phil', 'phil-prerelease'] as $monorepo) {
-            if (is_file($kit = __DIR__.'/../../../../../../../Phil/'.$monorepo.'/packages/ux-kit/manifest.json')) {
-                return \dirname($kit);
-            }
-        }
-
-        foreach ([__DIR__.'/../../../../../vendor/phil/ux-kit', __DIR__.'/../../../vendor/phil/ux-kit'] as $kit) {
+        foreach ([__DIR__.'/../../../vendor/phil/ux-kit', __DIR__.'/../../../../../vendor/phil/ux-kit'] as $kit) {
             if (is_file($kit.'/manifest.json')) {
                 return $kit;
             }
         }
 
-        return null;
+        throw new LogicException('The PHIL UX kit is a development requirement of the bundle: run "composer install".');
     }
 
     #[Override]
@@ -83,7 +77,7 @@ final class TestKernel extends Kernel
         $root = sys_get_temp_dir().'/tilttek-game-engine-bundle-test/'.hash('xxh128', __DIR__).'/templates';
         $kit = self::kit();
 
-        foreach (null === $kit ? [] : self::RECIPES as $recipe) {
+        foreach (self::RECIPES as $recipe) {
             $target = $root.'/components/ui/'.substr($recipe, \strlen(explode('/components/', $recipe)[0]) + 12).'.html.twig';
 
             if (!is_dir(\dirname($target))) {

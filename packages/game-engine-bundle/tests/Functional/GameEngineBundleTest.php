@@ -110,10 +110,8 @@ final class GameEngineBundleTest extends KernelTestCase
         self::assertStringContainsString(hash('sha256', self::SEED), $page);
         self::assertStringContainsString('data-seat="bob"', $page);
 
-        if (null !== TestKernel::kit()) {
-            self::assertStringContainsString('data-slot="card"', $page);
-            self::assertStringContainsString('data-slot="badge"', $page);
-        }
+        self::assertStringContainsString('data-slot="card"', $page);
+        self::assertStringContainsString('data-slot="badge"', $page);
 
         while (!$tables->state('table:1')->isOver()) {
             $tables->play('table:1', new Move('roll.roll', $tables->state('table:1')->turn->toAct()[0]));

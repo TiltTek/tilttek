@@ -103,12 +103,16 @@ final readonly class ValkeyScoreStore implements ScoreStore
         return 1
         LUA;
 
+    /**
+     * The score taken out of the hash and the ranking, and its field out of the member's index whether or not the score
+     * is still held: an erasure leaves no index entry behind, even one a partial write left without its score.
+     */
     private const string DELETE = <<<'LUA'
+        redis.call('SREM', KEYS[3], ARGV[1])
         local held = redis.call('HGET', KEYS[1], ARGV[1])
         if not held then return 0 end
         redis.call('ZREM', KEYS[2], cjson.decode(held)[4])
         redis.call('HDEL', KEYS[1], ARGV[1])
-        redis.call('SREM', KEYS[3], ARGV[1])
         return 1
         LUA;
 

@@ -4,6 +4,19 @@ All notable changes to `tilttek/dice-skins` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+Next version: 0.1.1-alpha.
+
+### Changed
+
+- `tilttek/collections` 0.2 required: 0.1 is no longer accepted.
+
+### Fixed
+
+- `Skin` refuses with `InvalidSkin`, rather than a `TypeError`, types that are not `SkinLook` values under whole
+  numbers of sides, and a label that is not UTF-8.
+
 ## 0.1.0-alpha - 2026-11-14
 
 ### Added

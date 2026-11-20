@@ -25,6 +25,10 @@ longer holds a score.
 
 `leagues` is empty when `Leaderboards` is given no `Leagues`.
 
+`ValkeyScoreStore` keeps an index of the scores of each member. Erasing the member empties that index, entries whose
+score is no longer held included — a partial write from a restore or a hand edit leaves no trace of the member behind.
+Only the scores still held are counted.
+
 The journal of activity is erased by `tilttek/activity`: a rebuild after an erasure finds nothing of the member.
 
 Two things stay with the application. The snapshots and settlements already handed to an observer

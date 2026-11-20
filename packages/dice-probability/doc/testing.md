@@ -10,7 +10,10 @@ vendor/bin/phpunit --no-configuration tests
 The suite checks every distribution of a set of dice against all of its rolls, each judged by the roller of
 `tilttek/dice` as a list of values with the same modifiers; the explosions, rerolls, counts rolled first and arithmetic
 against probabilities worked by hand; the events against the reference example and the counts of their rolls; the
-estimates and their seeds; and the exact numbers. In the monorepo, Infection holds the library at 100 % of covered
+estimates, their seeds and their roll and group work limits; and the exact numbers. `AgreementPropertyTest` generates
+expressions from fixed seeds — sums and differences of sets of dice, kept, rerolled, and of numbers — and checks that
+the bounds of each distribution are those the expression allows and that every total the roller gives from the parsed
+expression is a value of its distribution. In the monorepo, Infection holds the library at 100 % of covered
 mutants.
 
 ## Testing code that uses probabilities

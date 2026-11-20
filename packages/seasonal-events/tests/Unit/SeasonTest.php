@@ -102,6 +102,23 @@ final class SeasonTest extends TestCase
         self::assertSame(0, $multiplier->apply(0));
         self::assertSame(148, $multiplier->apply(99));
         self::assertSame(1_500, $multiplier->apply(1_000));
+        self::assertSame(-15, $multiplier->apply(-10));
+        self::assertSame(-148, $multiplier->apply(-99));
+        self::assertSame(\PHP_INT_MAX, new Multiplier('xp', 500)->apply(intdiv(\PHP_INT_MAX, 5)) + 2);
+        self::assertSame(-\PHP_INT_MAX, new Multiplier('xp', 500)->apply(-intdiv(\PHP_INT_MAX, 5)) - 2);
+        // 127 divides the largest integer: a whole number of hundreds, without rest, reaches it exactly.
+        self::assertSame(\PHP_INT_MAX, new Multiplier('xp', 127)->apply(intdiv(\PHP_INT_MAX, 127) * 100));
+        self::assertSame(intdiv(\PHP_INT_MAX, 200) * 150 + 10, $multiplier->apply(intdiv(\PHP_INT_MAX, 200) * 100 + 7));
+
+        foreach ([[500, intdiv(\PHP_INT_MAX, 5) + 1], [150, \PHP_INT_MAX], [500, \PHP_INT_MIN]] as [$percent, $amount]) {
+            try {
+                new Multiplier('xp', $percent)->apply($amount);
+                self::fail(\sprintf('%d times %d percent fits no integer.', $amount, $percent));
+            } catch (InvalidSeason $invalid) {
+                self::assertSame(\sprintf('%d multiplied by %d percent is more than an integer holds.', $amount, $percent), $invalid->getMessage());
+            }
+        }
+
         self::assertSame(['ledger' => 'points', 'percent' => 150], $multiplier->toArray());
         self::assertSame(101, new Multiplier('xp', 101)->percent);
         self::assertSame(500, new Multiplier('xp', 500)->percent);

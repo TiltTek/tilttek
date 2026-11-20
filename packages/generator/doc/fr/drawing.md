@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=39797b2a9dcef1fcc34e5bac8dbcfd2ce95d01393ccc73aac02010c2228b28a7 -->
+<!-- phil-dev source-sha256=4d64f2434933621450b09335623d0add4bc24ac9a4b18c01a1a68a76d01de43e -->
 # Tirages
 
 `Generator::draw()` prend le nom d'un générateur et un `Draw`, et retourne un `DrawResult` :
@@ -59,7 +59,8 @@ assez : il retourne ce qu'il a trouvé, et `isShort()` le signale. Un tirage uni
 Un tirage sans germe utilise le `Randomizer` du générateur : un moteur sûr par défaut, un moteur scénarisé ou doté d'un
 germe dans les tests. Un tirage avec germe utilise `Xoshiro256StarStar` initialisé avec le SHA-256 du germe. Le même
 germe, le même catalogue et la même version de PHP donnent les mêmes résultats, ce qui permet à un site de rejouer un
-tirage ou de le partager par son germe.
+tirage ou de le partager par son germe. Un germe est un texte de 1 à `Draw::SEED_LENGTH` (256) caractères en UTF-8 ; tout
+autre est refusé avec `InvalidDefinition`.
 
 ## Limites
 

@@ -26,6 +26,9 @@ return [
             'DecrementInteger' => ['ignoreSourceCodeByRegex' => [
                 // A wider window only adds starts whose period ended before the moment, which `contains()` turns down.
                 '.*array_reverse\\(\\$this->startsBetween\\(\\$day - \\$this->days \\+ 1, \\$day\\)\\).*',
+                // Lowest hundreds: 2^63 has no divisor between 101 and 500, so the bound from the lowest integer is the same
+                // for a rest of 0 and for one of -1, unlike the one from the highest integer, whose 127 divides it.
+                '.*\\$lowest = intdiv\\(\\\\PHP_INT_MIN - min\\(\\$rest, 0\\), \\$this->percent\\);',
             ]],
             // Below the year 0, `intdiv()` truncates toward zero: -399 / 400 and 0 / 400 are both era 0.
             'GreaterThanOrEqualTo' => ['ignoreSourceCodeByRegex' => ['.*\\$era = intdiv\\(\\$year >= 0 \\? \\$year : \\$year - 399, 400\\);']],

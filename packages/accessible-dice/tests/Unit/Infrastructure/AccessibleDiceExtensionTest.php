@@ -7,6 +7,7 @@ namespace Tilttek\AccessibleDice\Tests\Unit\Infrastructure;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Tilttek\AccessibleDice\Application\AccessibleDice;
+use Tilttek\AccessibleDice\Application\Exception\InvalidChoice;
 use Tilttek\AccessibleDice\Application\FaceDescriber;
 use Tilttek\AccessibleDice\Application\Politeness;
 use Tilttek\AccessibleDice\Application\RollAnnouncer;
@@ -23,7 +24,8 @@ final class AccessibleDiceExtensionTest extends TestCase
     {
         $view = $this->extension()->view('/roll');
 
-        self::assertSame(['/roll', 'dice', null, 'tilttek-accessible-dice', 100, 'polite', ''], [$view['action'], $view['field'], $view['token'], $view['id'], $view['most'], $view['politeness'], $view['announcement']]);
+        self::assertSame(['/roll', 'dice', null, 100, 'polite', ''], [$view['action'], $view['field'], $view['token'], $view['most'], $view['politeness'], $view['announcement']]);
+        self::assertMatchesRegularExpression('/^tilttek-accessible-dice-[0-9a-f]{8}$/D', $view['id']);
         self::assertSame(['d6', 'coin'], array_column($view['choices'], 'name'));
         self::assertSame(['d6', 'd{coin}'], array_column($view['choices'], 'notation'));
         self::assertSame([], $view['choices'][0]['faces']);
@@ -54,7 +56,7 @@ final class AccessibleDiceExtensionTest extends TestCase
     {
         $twig = new Environment(new ArrayLoader([AccessibleDiceExtension::TEMPLATE => '{{ dice.action }} {{ dice.field }} {{ dice.id }} {{ dice.politeness }}']));
 
-        self::assertSame('/roll dice tilttek-accessible-dice polite', $this->extension()->form($twig, '/roll'));
+        self::assertMatchesRegularExpression('{^/roll dice tilttek-accessible-dice-[0-9a-f]{8} polite$}D', $this->extension()->form($twig, '/roll'));
         self::assertSame('/go pick two assertive', $this->extension()->form($twig, '/go', 'pick', politeness: 'assertive', id: 'two'));
     }
 
@@ -67,6 +69,27 @@ final class AccessibleDiceExtensionTest extends TestCase
         self::assertSame('3 : Total 3.', $this->extension(new Words(Dice::translator()))->announcement(Dice::roll('3'), locale: 'fr'));
         self::assertSame(['Pearl', 'Void'], array_map(static fn (object $face): string => $face->label, \array_slice($extension->faces('gem'), 1)));
         self::assertSame('Rubis', $this->extension(new Words(Dice::translator()))->faces('gem', 'fr')[0]->label);
+    }
+
+    public function testEachFormDrawnWithoutAnIdentifierHasItsOwn(): void
+    {
+        $extension = $this->extension();
+
+        self::assertNotSame($extension->view('/roll')['id'], $extension->view('/roll')['id']);
+        self::assertSame('table-2_b', $extension->view('/roll', id: 'table-2_b')['id']);
+        self::assertSame('a'.str_repeat('b', 63), $extension->view('/roll', id: 'a'.str_repeat('b', 63))['id']);
+    }
+
+    public function testAnIdentifierThatCannotBeOneIsRefused(): void
+    {
+        foreach (['', '2dice', 'two dice', 'dice"', 'a'.str_repeat('b', 64), "dice\n"] as $id) {
+            try {
+                $this->extension()->view('/roll', id: $id);
+                self::fail(\sprintf('"%s" is not an identifier.', $id));
+            } catch (InvalidChoice $invalid) {
+                self::assertSame(\sprintf('The identifiers of a form start with a letter, then up to 63 letters, digits, "_" or "-"; "%s" does not.', $id), $invalid->getMessage());
+            }
+        }
     }
 
     private function extension(Words $words = new Words(), Politeness $politeness = Politeness::Polite): AccessibleDiceExtension

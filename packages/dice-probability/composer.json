@@ -21,7 +21,7 @@
     "homepage": "https://ph-il.ca",
     "require": {
         "php": ">=8.5",
-        "tilttek/dice": "^0.1@dev || ^0.2@dev || ^0.3@dev"
+        "tilttek/dice": "^0.2@dev || ^0.3@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^13.4"

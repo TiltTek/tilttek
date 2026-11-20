@@ -4,6 +4,16 @@ All notable changes to `tilttek/dice` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+Next version: 0.3.1-alpha.
+
+### Fixed
+
+- The canonical form writes successes after an explosion without threshold or limit between brackets, `1d10!pc[>=4]`:
+  written alone, `1d10!p>=4`, the comparison read back as the threshold of the explosion, and the canonical form of
+  `1d10>=4!p` or `3d6c[>=5]!` rolled other totals than the expression it was written from.
+
 ## 0.3.0-alpha - 2026-11-17
 
 Next version: 0.3.0-alpha, for a change of the commitment format.

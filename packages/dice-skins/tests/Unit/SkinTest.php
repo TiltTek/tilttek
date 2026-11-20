@@ -94,15 +94,36 @@ final class SkinTest extends TestCase
         yield 'too long' => [str_repeat('é', 81)];
         yield 'a control character' => ["Ember\u{7}"];
         yield 'a new line' => ["Ember\nRed"];
+        yield 'not UTF-8' => ["Emb\xC3\x28r"];
     }
 
     #[DataProvider('notLabels')]
     public function testALabelIsShortPlainText(string $label): void
     {
         $this->expectException(InvalidSkin::class);
-        $this->expectExceptionMessageIsOrContains('The label of the skin "ember" is 1 to 80 characters, without control characters.');
+        $this->expectExceptionMessageIsOrContains('The label of the skin "ember" is 1 to 80 characters in UTF-8, without control characters.');
 
         new Skin('ember', $label, self::look('#fff', '#000'));
+    }
+
+    /**
+     * @return iterable<string, array{array<array-key, mixed>}>
+     */
+    public static function notTypes(): iterable
+    {
+        yield 'a key that is not a number of sides' => [['d6' => self::look('#fff', '#000')]];
+        yield 'a look that is not one' => [[6 => '#fff']];
+    }
+
+    /**
+     * @param array<array-key, mixed> $types
+     */
+    #[DataProvider('notTypes')]
+    public function testTheTypesAreLooksByNumberOfSides(array $types): void
+    {
+        $this->expectExceptionObject(InvalidSkin::because('The types of the skin "ember" are looks by number of sides.'));
+
+        new Skin('ember', 'Ember', self::look('#fff', '#000'), $types);
     }
 
     public function testASkinKeepsItsNumbersReadable(): void

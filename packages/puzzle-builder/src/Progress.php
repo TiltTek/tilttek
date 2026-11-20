@@ -104,6 +104,8 @@ final readonly class Progress
             $progress = new self($progress->solved, $progress->opened, $progress->hints, [...$progress->guesses, self::puzzle($scenario, $puzzle)->id => $count]);
         }
 
+        $progress->followsTheScenario($scenario);
+
         return $progress;
     }
 
@@ -197,6 +199,62 @@ final readonly class Progress
             'hints' => array_map(static fn (HintTaken $hint): array => ['puzzle' => $hint->puzzle, 'tier' => $hint->tier, 'at' => Instant::write($hint->at), 'pushed' => $hint->pushed], $this->hints),
             'guesses' => $this->guesses,
         ];
+    }
+
+    /**
+     * Whether the moves could have been played: each puzzle solved, in the order of its time, was open by then — the
+     * host had opened it, or the puzzles solved before it open it —, and so was each puzzle of a hint at its time and
+     * each puzzle guessed. A progress written by the engine always is; one edited by hand or forged may not be.
+     *
+     * @throws InvalidProgress when a move could not have been played
+     */
+    private function followsTheScenario(Scenario $scenario): void
+    {
+        $before = [];
+        $last = null;
+
+        foreach ($this->solved as $puzzle => $solved) {
+            if ($last instanceof DateTimeImmutable && $solved->at < $last) {
+                throw InvalidProgress::because('The puzzles solved are in the order of their times.');
+            }
+
+            if (!$this->wasOpen($scenario, $puzzle, $solved->at, $before)) {
+                throw InvalidProgress::because(\sprintf('The puzzle "%s" is solved while it was locked.', $puzzle));
+            }
+
+            $before[$puzzle] = $solved;
+            $last = $solved->at;
+        }
+
+        foreach ($this->hints as $hint) {
+            $solvedThen = array_filter($this->solved, static fn (Solved $solved): bool => $solved->at <= $hint->at);
+
+            if (!$this->wasOpen($scenario, $hint->puzzle, $hint->at, $solvedThen)) {
+                throw InvalidProgress::because(\sprintf('A hint of the puzzle "%s" is revealed while it was locked.', $hint->puzzle));
+            }
+        }
+
+        foreach (array_keys($this->guesses) as $puzzle) {
+            if (!$this->wasOpen($scenario, $puzzle, null, $this->solved)) {
+                throw InvalidProgress::because(\sprintf('The puzzle "%s" is guessed while it is locked.', $puzzle));
+            }
+        }
+    }
+
+    /**
+     * Whether a puzzle was open at a time, or now when it is null, with these puzzles solved.
+     *
+     * @param array<string, Solved> $solved
+     */
+    private function wasOpen(Scenario $scenario, string $puzzle, ?DateTimeImmutable $at, array $solved): bool
+    {
+        $opened = $this->opened[$puzzle] ?? null;
+
+        if ($opened instanceof DateTimeImmutable && (!$at instanceof DateTimeImmutable || $opened <= $at)) {
+            return true;
+        }
+
+        return $scenario->puzzle($puzzle)->unlock->opensWith($solved);
     }
 
     /**

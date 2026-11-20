@@ -285,4 +285,36 @@ final class DefinitionTest extends TestCase
 
         new Catalog([], [new GeneratorDefinition('item', $body), new GeneratorDefinition('item', $body)]);
     }
+
+    public function testTheWeightsOfAListAddUpToAnInteger(): void
+    {
+        self::assertCount(2, new EntryList('l', new Entry('a', \PHP_INT_MAX - 1), new Entry('b'))->entries);
+
+        $this->expectExceptionObject(InvalidDefinition::at('l', \sprintf('the weights of the entries of a list add up to at most %d', \PHP_INT_MAX)));
+
+        new EntryList('l', new Entry('a', \PHP_INT_MAX - 1), new Entry('b', 2));
+    }
+
+    public function testTheWeightsOfThreeEntriesAreAddedUp(): void
+    {
+        $this->expectExceptionObject(InvalidDefinition::at('l', \sprintf('the weights of the entries of a list add up to at most %d', \PHP_INT_MAX)));
+
+        new EntryList('l', new Entry('a'), new Entry('b', \PHP_INT_MAX - 1), new Entry('c'));
+    }
+
+    public function testTheWeightsOfTheTemplatesAddUpToAnInteger(): void
+    {
+        self::assertCount(2, new TextBody([new Template('a', \PHP_INT_MAX - 1), new Template('b')])->templates);
+
+        $this->expectExceptionObject(new InvalidDefinition(\sprintf('The weights of the templates of a text generator add up to at most %d.', \PHP_INT_MAX)));
+
+        new TextBody([new Template('a', \PHP_INT_MAX - 1), new Template('b', 2)]);
+    }
+
+    public function testTheWeightsOfThreeTemplatesAreAddedUp(): void
+    {
+        $this->expectExceptionObject(new InvalidDefinition(\sprintf('The weights of the templates of a text generator add up to at most %d.', \PHP_INT_MAX)));
+
+        new TextBody([new Template('a'), new Template('b', \PHP_INT_MAX - 1), new Template('c')]);
+    }
 }

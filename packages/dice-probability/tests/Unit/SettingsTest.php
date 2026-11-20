@@ -27,20 +27,21 @@ final class SettingsTest extends TestCase
         self::assertSame(20_000, $settings->samples);
         self::assertSame(0, $settings->seed);
         self::assertSame(200_000, $settings->rollLimit);
+        self::assertSame(20_000_000, $settings->groupWorkLimit);
         self::assertSame(1, new Settings(1, 1, 1, -5, 1)->explosionDepth);
     }
 
     #[DataProvider('belowOne')]
-    public function testEachBoundIsAtLeastOne(int $depth, int $work, int $samples, int $rolls, string $message): void
+    public function testEachBoundIsAtLeastOne(int $depth, int $work, int $samples, int $rolls, string $message, int $groupWork = 1): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageIsOrContains($message);
 
-        new Settings($depth, $work, $samples, rollLimit: $rolls);
+        new Settings($depth, $work, $samples, rollLimit: $rolls, groupWorkLimit: $groupWork);
     }
 
     /**
-     * @return iterable<string, array{int, int, int, int, string}>
+     * @return iterable<string, array{0: int, 1: int, 2: int, 3: int, 4: string, 5?: int}>
      */
     public static function belowOne(): iterable
     {
@@ -48,6 +49,7 @@ final class SettingsTest extends TestCase
         yield 'work' => [1, 0, 1, 1, 'The work limit is at least 1; 0 is not.'];
         yield 'samples' => [1, 1, -1, 1, 'The number of samples is at least 1; -1 is not.'];
         yield 'rolls' => [1, 1, 1, 0, 'The roll limit is at least 1; 0 is not.'];
+        yield 'group work' => [1, 1, 1, 1, 'The group work limit is at least 1; 0 is not.', 0];
     }
 
     public function testAChanceIsExactOrEstimated(): void

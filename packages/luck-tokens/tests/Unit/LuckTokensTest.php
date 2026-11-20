@@ -375,6 +375,20 @@ final class LuckTokensTest extends TestCase
         self::assertSame(3, $t->tokens->grant($t->table, 'bennies', $ana, 1, Table::gm(), 'op-4')->entries[0]->position);
     }
 
+    public function testASessionStopsAtTheFirstEntryPastAFullLedger(): void
+    {
+        $ledger = new BusyLedger();
+        $t = new Table($ledger, maxEntries: 3);
+        $holders = array_map(static fn (int $n): ResourceReference => Table::ref('member:p'.$n), range(1, 100));
+
+        $this->assertRefused('The ledger of the table table:1 holds 0 entries, the most it takes.', static fn (): Receipt => $t->tokens->startSession($t->table, 'session-1', $holders, Table::gm(), 'op-1'));
+        // Inspiration is read for the hundred holders without an entry; the bennies of the third holder would be the
+        // fourth entry, past the limit, and the fate points are never read.
+        self::assertSame(103, $ledger->balances);
+        self::assertSame(0, $ledger->appends);
+        self::assertSame([], $t->events->events);
+    }
+
     public function testWithoutADispatcherNothingIsTold(): void
     {
         $rules = new InMemoryTokenRules();

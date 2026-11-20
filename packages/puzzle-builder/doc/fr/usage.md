@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=bddef854f789d5f1b0565fdadcb74f3eef4ac8017cca31abc8e52144b4f419c5 -->
+<!-- phil-dev source-sha256=95ab197ee8087fd092abd9d875633a2eb051e53d5d11a4df2ad3b994b4e8166c -->
 # Utilisation
 
 ## Un scénario
@@ -132,7 +132,10 @@ La bibliothèque ne stocke rien. `Progress::toArray()` donne des valeurs simples
 et si elles ont été sautées, celles que l'animateur a ouvertes, les indices révélés et les propositions de chaque
 énigme —, chaque heure en UTC à la microseconde ; `Progress::fromArray()` les relit, vérifiées d'après le scénario : une
 énigme que le scénario ne contient pas, un indice hors de son ordre, un compte hors des bornes est refusé avec
-`InvalidProgress`.
+`InvalidProgress`. Les coups qui n'auraient pas pu être joués le sont aussi : des énigmes résolues hors de l'ordre de
+leurs heures, une énigme résolue, un indice révélé ou une énigme proposée alors qu'elle était verrouillée — avant que
+l'animateur l'ouvre, ou avant que soient résolues les énigmes qui l'ouvrent. Une progression gardée là où les joueurs
+peuvent la modifier n'est vérifiée que jusque-là : gardez-la sur le serveur, ou signez-la.
 
 ```php
 $progress = Progress::fromArray($scenario, $row['progress']);

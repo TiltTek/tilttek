@@ -4,6 +4,15 @@ All notable changes to `tilttek/luck-tokens` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+Next version: 0.1.1-alpha.
+
+### Fixed
+
+- The limit of entries of a ledger is checked as each entry is built: `startSession()` for many holders stops at the
+  first entry past it, rather than building every refresh before refusing them all.
+
 ## 0.1.0-alpha - 2026-11-15
 
 ### Added

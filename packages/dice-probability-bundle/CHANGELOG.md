@@ -4,6 +4,23 @@ All notable changes to `tilttek/dice-probability-bundle` will be documented in t
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+Next version: 0.1.1-alpha.
+
+### Changed
+
+- `tilttek/dice-probability` 0.1.4 required, and `group_work_limit` given to its `Settings` as well: its estimate
+  counts the steps of the groups it actually searches and stops past the same limit, behind the weighing of
+  `GroupSearch`.
+
+### Security
+
+- The rate limit of the Live Component refuses, in the `prod` environment, a cache pool local to each server, where a
+  client could spend the limit once per server: `rate_limit.cache_pool` names a pool on a shared store, or
+  `rate_limit.single_server: true` says the application runs on one server. The check is the `RateLimitGuard` of
+  `phil/rate-limit`, now required.
+
 ## 0.1.0-alpha - 2026-11-19
 
 ### Added

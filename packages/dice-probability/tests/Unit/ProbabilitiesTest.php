@@ -405,6 +405,83 @@ final class ProbabilitiesTest extends TestCase
         new Probabilities(settings: new Settings(workLimit: 1, samples: 10, rollLimit: 29))->chance(new AllEqual(), new DiceRoller()->parse('3d6'));
     }
 
+    /**
+     * @param int $work the steps of the group search over all the samples
+     */
+    #[DataProvider('groupSearches')]
+    public function testTheGroupSearchOfAnEstimateIsCounted(string $expression, int $samples, int $work): void
+    {
+        $pool = new DiceRoller()->parse($expression);
+
+        self::assertTrue(new Probabilities(settings: new Settings(workLimit: 1, samples: $samples, groupWorkLimit: $work))->distribution($pool)->isEstimated());
+
+        try {
+            new Probabilities(settings: new Settings(workLimit: 1, samples: $samples, groupWorkLimit: $work - 1))->distribution($pool);
+            self::fail('The group search should go past its limit.');
+        } catch (CannotCompute $cannotCompute) {
+            self::assertSame(\sprintf('The estimate would take more than %d steps to search the groups of its %d samples: lower the samples, or raise the group work limit.', $work - 1, $samples), $cannotCompute->getMessage());
+        }
+    }
+
+    /**
+     * @return iterable<string, array{string, int, int}>
+     */
+    public static function groupSearches(): iterable
+    {
+        // `n × 2ⁿ` steps for the `n` dice that count, searched exhaustively up to twelve dice; `n²` for one greedy pass.
+        yield 'three dice' => ['3d6g7', 10, 240];
+        yield 'two dice that count of four' => ['4d6kh2g7', 10, 80];
+        yield 'two sets' => ['3d6g7+3d6g7', 1, 48];
+        yield 'sets without groups add none' => ['3d6g7+3d6+3d6o2', 1, 24];
+        yield 'twelve dice, searched' => ['12d6g12', 1, 49_152];
+        yield 'thirteen dice, greedily' => ['13d6g10', 2, 338];
+    }
+
+    public function testASetWithoutGroupsSearchesNone(): void
+    {
+        self::assertTrue(new Probabilities(settings: new Settings(workLimit: 1, samples: 10, groupWorkLimit: 1))->distribution(new DiceRoller()->parse('3d6+3d6o2'))->isEstimated());
+    }
+
+    public function testTheChanceOfAnEstimateSearchesItsGroupsWithinItsLimit(): void
+    {
+        $pool = new DiceRoller()->parse('3d6g7');
+
+        self::assertSame('10', (string) new Probabilities(settings: new Settings(samples: 10, groupWorkLimit: 240))->chance(new AllEqual(), $pool)->probability->denominator);
+
+        $this->expectException(CannotCompute::class);
+        $this->expectExceptionMessageIsOrContains('The estimate would take more than 239 steps to search the groups of its 10 samples');
+
+        new Probabilities(settings: new Settings(samples: 10, groupWorkLimit: 239))->chance(new AllEqual(), $pool);
+    }
+
+    /**
+     * Large group searches are refused within the default limit, rather than searched on every sample for a minute, and
+     * estimated on fewer samples.
+     */
+    #[DataProvider('largeGroupSearches')]
+    public function testALargeGroupSearchStaysWithinTheDefaultLimit(string $expression, int $samples): void
+    {
+        $pool = new DiceRoller()->parse($expression);
+        $estimate = new Probabilities(settings: new Settings(samples: $samples))->distribution($pool);
+
+        self::assertTrue($estimate->isEstimated());
+        self::assertSame((string) $samples, (string) $estimate->total);
+
+        $this->expectException(CannotCompute::class);
+        $this->expectExceptionMessageIsOrContains('The estimate would take more than 20000000 steps to search the groups of its 20000 samples');
+
+        new Probabilities()->distribution($pool);
+    }
+
+    /**
+     * @return iterable<string, array{string, int}>
+     */
+    public static function largeGroupSearches(): iterable
+    {
+        yield 'twelve dice' => ['12d6g12', 100];
+        yield 'ten dice' => ['10d10g10', 300];
+    }
+
     public function testTheWorkOfLargeWeightsIsCountedByTheirSize(): void
     {
         $small = Natural::of(6);
@@ -425,6 +502,34 @@ final class ProbabilitiesTest extends TestCase
         $this->assertTooLarge(static fn () => new Budget(9)->spendOn(5, $small, $sixteen));
         new Budget(10)->spendOn(5, $sixteen);
         $this->assertTooLarge(static fn () => new Budget(10)->spendOn(\PHP_INT_MAX, $sixteen));
+    }
+
+    public function testTheBinomialsAreSpentFromTheBudget(): void
+    {
+        // Four dice: one addition in the second row, two in the third, three in the fourth.
+        $rows = Multisets::binomials(4, new Budget(6));
+
+        self::assertSame(['1', '4', '6', '4', '1'], array_map(strval(...), $rows[4]));
+        self::assertSame(['1', '3', '3', '1'], array_map(strval(...), $rows[3]));
+        $this->assertTooLarge(static fn (): array => Multisets::binomials(4, new Budget(5)));
+        $this->assertTooLarge(static fn (): array => Multisets::binomials(10_000, new Budget(100_000)));
+    }
+
+    public function testTheBinomialsCostTheSizeOfTheNumbersTheyAdd(): void
+    {
+        $rows = Multisets::binomials(520, new Budget(\PHP_INT_MAX));
+        $cost = 0;
+
+        // Each addition costs one, and one more per sixteen limbs of the product of the sizes of its operands, the left one alone.
+        for ($row = 1; $row <= 520; ++$row) {
+            for ($column = 1; $column < $row; ++$column) {
+                $cost += 1 + intdiv($rows[$row - 1][$column - 1]->size(), 16);
+            }
+        }
+
+        self::assertGreaterThan(519 * 520 / 2 - 520, $cost);
+        Multisets::binomials(520, new Budget($cost));
+        $this->assertTooLarge(static fn (): array => Multisets::binomials(520, new Budget($cost - 1)));
     }
 
     public function testAFractionBroughtToItsLowestTermsCostsTheCubeOfItsSize(): void
@@ -481,7 +586,7 @@ final class ProbabilitiesTest extends TestCase
         yield 'rerolled once and squared' => ['2d6ro1', 79];
         yield 'three rerolled once and squared' => ['3d6ro1', 146];
         yield 'count rolled first' => ['(1d2)d4', 107];
-        yield 'selection' => ['4d6kh3', 317];
+        yield 'selection' => ['4d6kh3', 323];
         yield 'explosion' => ['1d6!', 909];
     }
 

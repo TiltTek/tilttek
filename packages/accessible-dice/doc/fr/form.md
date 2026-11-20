@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=f9d56cdfcb65bd19d05e83ecebd22fee795c268799a98e4613ea0d87c5a70a9b -->
+<!-- phil-dev source-sha256=3f3ba077f06ce64b809fbc502f0e20efeafb76f15e75c26dbdf4f88df3b85e12 -->
 # Le formulaire
 
 ```twig
@@ -15,7 +15,7 @@
 | `result` | `null` | Le jet dont le formulaire a été répondu, un `PoolResult`, annoncé au chargement de la page |
 | `name` | `null` | Le nom du lanceur, dit avant ce jet |
 | `politeness` | la configuration | `polite` ou `assertive` |
-| `id` | `tilttek-accessible-dice` | Ce par quoi commencent les identifiants du formulaire : distinct pour chaque formulaire d'une page |
+| `id` | `null` | Ce par quoi commencent les identifiants du formulaire : une lettre, puis jusqu'à 63 lettres, chiffres, `_` ou `-` ; avec null, `tilttek-accessible-dice-` et un suffixe aléatoire, pour que chaque formulaire dessiné ait le sien |
 | `locale` | celle de la requête | La langue des mots et des libellés |
 
 ## Le choix envoyé

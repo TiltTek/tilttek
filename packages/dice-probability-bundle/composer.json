@@ -21,15 +21,17 @@
     "homepage": "https://ph-il.ca",
     "require": {
         "php": ">=8.5",
+        "phil/rate-limit": "^0.1.1@dev",
         "symfony/config": "^8.2",
         "symfony/dependency-injection": "^8.2",
         "tilttek/dice": "^0.2@dev || ^0.3@dev",
         "tilttek/dice-bundle": "^0.2@dev",
-        "tilttek/dice-probability": "^0.1.2@dev"
+        "tilttek/dice-probability": "^0.1.4@dev"
     },
     "require-dev": {
         "phil/ux-kit": ">=0.1.0-alpha <1.0",
         "phpunit/phpunit": "^13.4",
+        "symfony/cache": "^8.2",
         "symfony/event-dispatcher": "^8.2",
         "symfony/framework-bundle": "^8.2",
         "symfony/http-foundation": "^8.2",

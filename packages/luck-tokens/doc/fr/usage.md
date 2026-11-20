@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=04ca94924920de37ac55ae3cff8c87b0663949a306327cacb7121ab561221340 -->
+<!-- phil-dev source-sha256=623fbbb8618415990d0617a0dbb6d35ca300b60f4e6f8dcc3b8c14086c1758a2 -->
 # Utilisation
 
 ## Les sortes de jetons
@@ -113,4 +113,5 @@ La bibliothèque lit la dernière position du registre, vérifie l'opération se
 juste après cette position. Un stockage qui y trouve une autre entrée refuse l'ajout avec `LedgerConflict` ; la
 bibliothèque relit alors — l'opération faite entre-temps sous le même identifiant est une reprise — et vérifie de
 nouveau, trois fois en tout, avant que le conflit n'atteigne l'appelant, qui peut réessayer plus tard. Un registre
-prend 100 000 entrées au plus.
+prend 100 000 entrées au plus : une opération qui les dépasserait est refusée à la première entrée au-delà, avant de
+construire les autres — une session ouverte pour de nombreux détenteurs comprise.

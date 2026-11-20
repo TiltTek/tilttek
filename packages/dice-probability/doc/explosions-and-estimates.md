@@ -3,7 +3,7 @@
 ## `Settings`
 
 ```php
-new Settings(int $explosionDepth = 10, int $workLimit = 500_000, int $samples = 20_000, int $seed = 0, int $rollLimit = 200_000);
+new Settings(int $explosionDepth = 10, int $workLimit = 500_000, int $samples = 20_000, int $seed = 0, int $rollLimit = 200_000, int $groupWorkLimit = 20_000_000);
 ```
 
 | Setting | What it bounds |
@@ -13,9 +13,10 @@ new Settings(int $explosionDepth = 10, int $workLimit = 500_000, int $samples = 
 | `samples` | How many rolls an estimate is drawn from |
 | `seed` | The seed of those rolls: the same seed gives the same estimate |
 | `rollLimit` | How many dice an estimate rolls at most over all its samples, explosions and rerolls included |
+| `groupWorkLimit` | How many steps an estimate takes at most over all its samples to search the groups that reach a sum, `10d10g10` |
 
-Each bound is at least 1. Together, the work limit and the roll limit bound the work of any expression: at the
-defaults, about a second of processor time for the exact computation and as much for an estimate.
+Each bound is at least 1. Together, the work limit, the roll limit and the group work limit bound the work of any
+expression: at the defaults, about a second of processor time for the exact computation and as much for an estimate.
 
 ## Explosions
 
@@ -50,7 +51,9 @@ them.
 The cost of an exact computation, as a guide: `30d6` is about 7 200 operations and `10d6!` about 300 000; a selection
 among many dice of many sides grows fastest, and `50d20kh10` goes past the default limit. The weights of many dice are
 numbers of many limbs: an operation on them counts one more for every sixteen products of limbs, and a fraction brought
-to its lowest terms — the probability that an explosion was cut, for one — the cube of its size in limbs.
+to its lowest terms — the probability that an explosion was cut, for one — the cube of its size in limbs. A selection
+or an event over the multisets of `n` dice first builds the binomial coefficients up to `n`, about `n²/2` additions,
+counted the same way.
 
 ## The roll limit
 
@@ -62,4 +65,23 @@ the expressions that need it:
 ```php
 new Probabilities(settings: new Settings(samples: 2_000));          // 100d6!: about 240 000 dice, still too many
 new Probabilities(settings: new Settings(rollLimit: 3_000_000));    // 100d6!: allowed, about ten seconds
+```
+
+## The group work limit
+
+A set that forms groups reaching a sum, `10d10g10`, is always estimated, and each sample searches the most groups its
+dice form. For the `n` dice that count in a set, that search takes about `n × 2ⁿ` steps up to twelve dice, and one
+greedy pass of about `n²` steps beyond, as the roller of `tilttek/dice` does. The steps of every sample are counted;
+past `groupWorkLimit`, the estimate stops and the call throws `CannotCompute`. At the defaults, about a second of
+search:
+
+| Expression | Steps per sample | At 20 000 samples |
+|---|---|---|
+| `6d6g10` | 384 | 7.7 million: estimated |
+| `10d10g10` | 10 240 | 205 million: refused |
+| `12d6g12` | 49 152 | 983 million: refused |
+
+```php
+new Probabilities(settings: new Settings(samples: 1_000));               // 10d10g10: 10.2 million steps, estimated
+new Probabilities(settings: new Settings(groupWorkLimit: 250_000_000));  // 10d10g10: allowed, about ten seconds
 ```

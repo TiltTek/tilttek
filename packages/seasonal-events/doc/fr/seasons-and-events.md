@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=77c762a918bec8bf5ecf53c483611dff1136e1a0d74cf81ee1498247d59d4fda -->
+<!-- phil-dev source-sha256=ddd16c60b64a1118dcee634c53a226a337584a7a3247a81e98ddc60dde1242c4 -->
 # Saisons et événements
 
 ## Calendriers
@@ -63,7 +63,8 @@ liste, afin qu'un site montre ce qui s'en vient. Un `Multiplier` multiplie les g
 événement se déroule, en pourcentage : 150 ajoute la moitié, 200 double, de 101 à 500. Un événement doté d'un
 multiplicateur est annoncé au moins un jour d'avance : les membres le savent avant qu'il commence, et rien ne se
 multiplie par surprise. Les multiplicateurs d'événements qui se recoupent ne s'additionnent jamais : le plus haut
-s'applique. `Multiplier::apply()` arrondit à l'inférieur, afin qu'un gain ne grossisse jamais d'une fraction de point.
+s'applique. `Multiplier::apply()` arrondit à l'inférieur, afin qu'un gain ne grossisse jamais d'une fraction de point, et refuse avec
+`InvalidSeason` un montant dont le multiple dépasse ce qu'un entier peut contenir.
 
 ## Limites
 

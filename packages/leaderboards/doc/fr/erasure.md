@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=c13abcc8b1bf562d484abb8236e73fbe3fc607f570af7b996c2186c89987bb23 -->
+<!-- phil-dev source-sha256=ab84677f6899302417574202be4c9535a211d41402d7169eab37f075d9043765 -->
 # Effacement
 
 ## L'exportation
@@ -25,6 +25,10 @@ autres membres gardent leurs rangs dans les instantanés et leurs divisions ; le
 le membre n'a plus de score.
 
 `leagues` est vide quand `Leaderboards` ne reçoit aucun `Leagues`.
+
+`ValkeyScoreStore` garde un index des scores de chaque membre. Effacer le membre vide cet index, y compris les entrées
+dont le score n'est plus détenu : une écriture partielle venue d'une restauration ou d'une modification à la main ne
+laisse aucune trace du membre. Seuls les scores encore détenus sont comptés.
 
 Le journal d'activité est effacé par `tilttek/activity` : une reconstruction après un effacement ne trouve plus rien du
 membre.

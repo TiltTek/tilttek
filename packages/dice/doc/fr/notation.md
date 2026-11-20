@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=ebf2b2841b4b329ec5796496388b7c729123fb9117ef0c707b359f22b0a0d1a9 -->
+<!-- phil-dev source-sha256=991881997eae663f7f5412838fcded2006e77f5464cab9c4a706d0597d1af143 -->
 # Notation
 
 Une expression est analysée, vérifiée et normalisée avant d'être lancée. Les lettres s'écrivent en minuscules ou en
@@ -119,8 +119,9 @@ part à l'arithmétique. Un reste a le signe du diviseur : `-7%3` vaut 2.
 [listes de textes et des aiguillages](instructions.md) —, chaque nombre écrit, les modificateurs dans l'ordre où ils
 s'appliquent, les instructions séparées par `", "`, et pas plus de parenthèses que n'en exige l'arbre. Un seuil sur une
 face s'écrit avec la face seule (`r1`, `!6`), ou avec `=` quand elle est négative (`r=-1`). Des réussites jugées sur
-chaque valeur finale par une comparaison l'écrivent seule (`>=7`), toute autre par `c[…]`. `s` s'écrit `sa`, `a10`
-s'écrit `!!10(1)`, `o` écrit sa largeur.
+chaque valeur finale par une comparaison l'écrivent seule (`>=7`), sauf si elles suivent une explosion sans seuil ni
+limite, qui lirait la comparaison comme son seuil (`1d10!pc[>=4]`) ; toutes les autres réussites s'écrivent `c[…]`. `s`
+s'écrit `sa`, `a10` s'écrit `!!10(1)`, `o` écrit sa largeur.
 
 | Entrée | Forme canonique |
 |---|---|
@@ -129,12 +130,13 @@ s'écrit `!!10(1)`, `o` écrit sa largeur.
 | `d20 adv` | `2d20kh1` |
 | `4d6kh3!r1` | `4d6r1!kh3` |
 | `8d10c[>=6]-@c[=1]` | `8d10>=6-@=1` |
+| `1d10>=4!p` | `1d10!pc[>=4]` |
 | `3d10a10` | `3d10!!10(1)` |
 | `min(1d6,3)` | `min(1d6, 3)` |
 | `((2))` | `2` |
 | `3d{Chromatic}` | `3d{chromatic}` |
 
-La forme canonique s'analyse de nouveau en le même arbre.
+La forme canonique s'analyse de nouveau en le même arbre, et lance les mêmes totaux avec le même germe.
 
 ## Erreurs
 

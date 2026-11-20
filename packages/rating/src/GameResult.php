@@ -193,14 +193,21 @@ final readonly class GameResult
 
     private static function time(string $value): DateTimeImmutable
     {
-        if (1 !== preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})$/D', $value)) {
+        if (1 !== preg_match('/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})$/D', $value, $parts)) {
             throw InvalidRating::because('The time a game was played is an ISO 8601 date and time with its offset.');
         }
 
         try {
-            return new DateTimeImmutable($value);
+            $time = new DateTimeImmutable($value);
         } catch (Exception) {
             throw InvalidRating::because('The time a game was played is an ISO 8601 date and time with its offset.');
         }
+
+        // A day or an hour that does not exist, `2026-02-30` or `24:00:00`, would be carried over to another one.
+        if ($parts[1].' '.$parts[2] !== $time->format('Y-m-d H:i:s')) {
+            throw InvalidRating::because('The time a game was played is an ISO 8601 date and time with its offset.');
+        }
+
+        return $time;
     }
 }

@@ -123,6 +123,14 @@ final class ProgressTest extends TestCase
         yield 'too many guesses' => [['guesses' => ['clock' => 1_000_001]], 'The guesses of a puzzle are 1 to 1000000.'];
         yield 'guesses not a number' => [['guesses' => ['clock' => '3']], 'The guesses of a puzzle are 1 to 1000000.'];
         yield 'guesses of an unknown puzzle' => [['guesses' => ['door' => 3]], 'A progress names the puzzles of its scenario only.'];
+        yield 'a solve of a locked puzzle' => [['solved' => ['vault' => ['at' => $at, 'skipped' => false]]], 'The puzzle "vault" is solved while it was locked.'];
+        yield 'a solve before its requirements' => [['solved' => ['clock' => ['at' => $at, 'skipped' => false], 'vault' => ['at' => '2026-11-13T20:02:00.000000Z', 'skipped' => true], 'painting' => ['at' => '2026-11-13T20:03:00.000000Z', 'skipped' => false]]], 'The puzzle "vault" is solved while it was locked.'];
+        yield 'solves out of the order of their times' => [['solved' => ['clock' => ['at' => '2026-11-13T20:01:00.000000Z', 'skipped' => false], 'painting' => ['at' => $at, 'skipped' => false]]], 'The puzzles solved are in the order of their times.'];
+        yield 'a solve before the host opened it' => [['solved' => ['letter' => ['at' => $at, 'skipped' => false]], 'opened' => ['letter' => '2026-11-13T20:00:00.000001Z']], 'The puzzle "letter" is solved while it was locked.'];
+        yield 'a hint of a locked puzzle' => [['hints' => [['puzzle' => 'vault', 'tier' => 1, 'at' => $at, 'pushed' => false]]], 'A hint of the puzzle "vault" is revealed while it was locked.'];
+        yield 'a hint before its puzzle opened' => [['solved' => ['clock' => ['at' => $at, 'skipped' => false], 'painting' => ['at' => '2026-11-13T20:01:00.000000Z', 'skipped' => false]], 'hints' => [['puzzle' => 'vault', 'tier' => 1, 'at' => '2026-11-13T20:00:59.999999Z', 'pushed' => false]]], 'A hint of the puzzle "vault" is revealed while it was locked.'];
+        yield 'guesses of a locked puzzle' => [['guesses' => ['vault' => 1]], 'The puzzle "vault" is guessed while it is locked.'];
+        yield 'guesses of a puzzle the host did not open' => [['guesses' => ['letter' => 2]], 'The puzzle "letter" is guessed while it is locked.'];
     }
 
     /**
@@ -135,6 +143,24 @@ final class ProgressTest extends TestCase
         $this->expectExceptionMessageIsOrContains($message);
 
         Progress::fromArray(Manor::scenario(), $values);
+    }
+
+    public function testAProgressThatFollowsTheScenarioIsRead(): void
+    {
+        $values = [
+            'solved' => [
+                'clock' => ['at' => '2026-11-13T20:00:00.000000Z', 'skipped' => false],
+                'painting' => ['at' => '2026-11-13T20:00:00.000000Z', 'skipped' => false],
+                'letter' => ['at' => '2026-11-13T20:01:00.000000Z', 'skipped' => false],
+                'vault' => ['at' => '2026-11-13T20:01:00.000000Z', 'skipped' => true],
+            ],
+            'opened' => ['letter' => '2026-11-13T20:01:00.000000Z'],
+            'hints' => [['puzzle' => 'vault', 'tier' => 1, 'at' => '2026-11-13T20:00:00.000000Z', 'pushed' => false]],
+            'guesses' => ['vault' => 2],
+        ];
+
+        self::assertSame($values, Progress::fromArray(Manor::scenario(), $values)->toArray());
+        self::assertSame(1, Progress::fromArray(Manor::scenario(), ['opened' => ['letter' => '2026-11-13T20:01:00.000000Z'], 'guesses' => ['letter' => 1]])->guesses('letter'));
     }
 
     public function testALongUnknownFieldIsCut(): void

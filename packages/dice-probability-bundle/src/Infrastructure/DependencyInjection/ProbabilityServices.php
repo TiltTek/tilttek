@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tilttek\DiceProbabilityBundle\Infrastructure\DependencyInjection;
 
+use Phil\RateLimit\RateLimitGuard;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -30,7 +31,7 @@ use Twig\Attribute\AsTwigFunction;
  * `DiceStatistics` on its `DiceRoller`, and — when their components are installed — the names of the UX kit's
  * components, the Twig extension and the Live Component, with its rate limit unless it is turned off.
  *
- * @phpstan-type RateLimit array{enabled: bool, limit: int, interval: string, cache_pool: string, limiter: ?string}
+ * @phpstan-type RateLimit array{enabled: bool, limit: int, interval: string, cache_pool: string, limiter: ?string, single_server: bool}
  * @phpstan-type Config array{explosion_depth: int, work_limit: int, samples: int, seed: int, roll_limit: int, max_dice: int, max_outcomes: int, group_work_limit: int, rounding: string, kit_subdirectory: ?string, rate_limit: RateLimit}
  */
 final class ProbabilityServices
@@ -63,7 +64,7 @@ final class ProbabilityServices
      */
     public static function register(ContainerBuilder $container, array $config, bool $rateLimiter = true): void
     {
-        $container->register(Settings::class, Settings::class)->setArguments([$config['explosion_depth'], $config['work_limit'], $config['samples'], $config['seed'], $config['roll_limit']]);
+        $container->register(Settings::class, Settings::class)->setArguments([$config['explosion_depth'], $config['work_limit'], $config['samples'], $config['seed'], $config['roll_limit'], $config['group_work_limit']]);
         $container->register(self::LIMITS, Limits::class)
             ->setFactory([self::class, 'limits'])
             ->setArguments([new Reference(Limits::class), $config['max_dice']]);
@@ -94,7 +95,8 @@ final class ProbabilityServices
 
     /**
      * The rate limit of the Live Component: none when it is turned off; otherwise a sliding window in the configured
-     * cache pool, or the factory the configuration names.
+     * cache pool, or the factory the configuration names. The pool is noted for `RateLimitGuard`, which refuses one
+     * local to each server in the `prod` environment unless `single_server` says the application runs on one.
      *
      * @param RateLimit $rateLimit
      * @param bool      $installed whether symfony/rate-limiter is there
@@ -107,14 +109,13 @@ final class ProbabilityServices
             return null;
         }
 
-        if (!$installed) {
-            throw new InvalidConfigurationException('tilttek_dice_probability.rate_limit needs symfony/rate-limiter: install it, or set "enabled" to false.');
-        }
+        RateLimitGuard::requireComponent($installed, 'tilttek_dice_probability.rate_limit');
 
         $factory = $rateLimit['limiter'];
 
         if (null === $factory) {
             $factory = self::LIMITER;
+            RateLimitGuard::watch($container, $rateLimit['cache_pool'], 'tilttek_dice_probability.rate_limit.cache_pool', $rateLimit['single_server'], 'enabled');
             $container->register(self::LIMITER_STORAGE, CacheStorage::class)->setArguments([new Reference($rateLimit['cache_pool'])]);
             $container->register(self::LIMITER, RateLimiterFactory::class)->setArguments([
                 ['id' => 'tilttek_dice_probability', 'policy' => 'sliding_window', 'limit' => $rateLimit['limit'], 'interval' => $rateLimit['interval']],

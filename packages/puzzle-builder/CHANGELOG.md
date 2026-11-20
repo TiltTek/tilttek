@@ -4,6 +4,17 @@ All notable changes to `tilttek/puzzle-builder` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+Next version: 0.1.1-alpha.
+
+### Security
+
+- `Progress::fromArray()` refuses with `InvalidProgress` moves that could not have been played: puzzles solved out of
+  the order of their times, and a puzzle solved, a hint revealed or a puzzle guessed while it was locked — before the
+  host opened it, or before the puzzles that open it were solved. A progress written by the engine reads back as
+  before.
+
 ## 0.1.0-alpha - 2026-11-13
 
 ### Added

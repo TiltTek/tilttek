@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a830c5154f57a4fbbb54863b5797132d",
+    "content-hash": "c18f1deba3952e44e5455c581078b924",
     "packages": [],
     "packages-dev": [
         {
@@ -2781,6 +2781,74 @@
                 "symlink": true,
                 "relative": true
             }
+        },
+        {
+            "name": "phil/rate-limit",
+            "version": "0.1.1-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/rate-limit.git",
+                "reference": "2c999ce46f78535ca6dc8abb840cced47415d9ca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/rate-limit/zipball/2c999ce46f78535ca6dc8abb840cced47415d9ca",
+                "reference": "2c999ce46f78535ca6dc8abb840cced47415d9ca",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.5",
+                "symfony/config": "^8.2",
+                "symfony/dependency-injection": "^8.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.4",
+                "roave/security-advisories": "dev-latest",
+                "symfony/cache": "^8.2",
+                "symfony/rate-limiter": "^8.2"
+            },
+            "suggest": {
+                "symfony/rate-limiter": "The rate limiter whose stores the guard checks, and that requireComponent() asks for"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\RateLimit\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Make sure your Symfony rate limits really limit in production: the container fails to build when a limiter counts in a store that each server keeps for itself.",
+            "homepage": "https://ph-il.ca",
+            "keywords": [
+                "cache",
+                "compiler-pass",
+                "production",
+                "rate-limit",
+                "rate-limiter",
+                "symfony"
+            ],
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/rate-limit/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/rate-limit/tree/0.1.1-alpha"
+            },
+            "time": "2026-11-17T22:00:00+00:00",
+            "published-time": "2026-11-18T01:35:59+00:00"
         },
         {
             "name": "phil/recurrence",
@@ -11025,6 +11093,7 @@
         "phil/open-badges-bundle": 20,
         "phil/paged-media": 20,
         "phil/privacy-bundle": 20,
+        "phil/rate-limit": 20,
         "phil/recurrence": 20,
         "phil/reservation": 20,
         "phil/resource": 20,

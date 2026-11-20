@@ -26,7 +26,7 @@
         "php": ">=8.5",
         "ext-mbstring": "*",
         "symfony/yaml": "^8.2",
-        "tilttek/dice": "^0.1@dev || ^0.2@dev || ^0.3@dev",
+        "tilttek/dice": "^0.2@dev || ^0.3@dev",
         "twig/twig": "^3.21"
     },
     "require-dev": {

@@ -30,6 +30,7 @@
         "phil/open-badges-bundle": "^0.1@dev",
         "phil/paged-media": "^0.1@dev",
         "phil/privacy-bundle": "^0.1@dev",
+        "phil/rate-limit": "^0.1.1@dev",
         "phil/recurrence": "^0.1@dev",
         "phil/reservation": "^0.1@dev",
         "phil/resource": "^0.1@dev",

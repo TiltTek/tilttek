@@ -4,6 +4,21 @@ All notable changes to `tilttek/accessible-dice` will be documented in this file
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+Next version: 0.1.3-alpha.
+
+### Changed
+
+- `tilttek/dice` 0.2 or 0.3 and `tilttek/dice-bundle` 0.2 required: 0.1 of each is no longer accepted.
+
+### Fixed
+
+- Two forms of a page no longer share their identifiers, which the labels, `aria-controls` and `aria-describedby`
+  point to: `accessible_dice()` and `AccessibleDiceExtension::view()` take a null `id` by default, and each form drawn
+  without one gets `tilttek-accessible-dice-` and a random suffix. An `id` given is a letter, then up to 63 letters,
+  digits, `_` or `-`; any other is refused with `InvalidChoice`. `ext-sodium` is required for the suffix.
+
 ## 0.1.2-alpha - 2026-11-17
 
 Next version: 0.1.2-alpha.

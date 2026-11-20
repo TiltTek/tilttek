@@ -259,7 +259,7 @@ final class NotationWriter extends ExpressionWriter
             [] === $modifiers->transforms ? '' : 't['.implode(',', array_map(fn (Transform $transform): string => $this->condition($transform->when).':'.$transform->value, $modifiers->transforms)).']',
             $modifiers->filter instanceof Condition ? 'f['.$this->condition($modifiers->filter).']' : '',
             $modifiers->selection instanceof Selection ? $modifiers->selection->mode->value.$modifiers->selection->count : '',
-            $modifiers->success instanceof Condition ? $this->success($modifiers->success) : '',
+            $modifiers->success instanceof Condition ? $this->success($modifiers->success, $this->endsWithBareExplosion($modifiers)) : '',
             $modifiers->failure instanceof Comparison ? 'f'.$this->threshold($modifiers->failure) : '',
             $modifiers->occurrences instanceof Occurrences ? $this->occurrences($modifiers->occurrences) : '',
             null === $modifiers->groups ? '' : 'g'.$modifiers->groups,
@@ -277,11 +277,23 @@ final class NotationWriter extends ExpressionWriter
     }
 
     /**
-     * Successes judged on each final value by a plain comparison write it alone: `>=7`; any other `c[...]`.
+     * Whether the modifiers written before the successes end with an explosion without threshold or limit, `!p`: a
+     * comparison written right after it would be read as the threshold of the explosion.
      */
-    private function success(Condition $success): string
+    private function endsWithBareExplosion(Modifiers $modifiers): bool
     {
-        return Scope::Value === $success->scope && $success->validator instanceof Comparison && $success->validator->isPlain()
+        return $modifiers->explosion instanceof Explosion && !$modifiers->explosion->on instanceof Validator && !$modifiers->explosion->limit instanceof Node
+            && !$modifiers->explodeAllSame && null === $modifiers->minimum && null === $modifiers->maximum && [] === $modifiers->transforms
+            && !$modifiers->filter instanceof Condition && !$modifiers->selection instanceof Selection;
+    }
+
+    /**
+     * Successes judged on each final value by a plain comparison write it alone: `>=7`, unless it would follow an
+     * explosion without threshold, whose threshold it would be read as; any other `c[...]`.
+     */
+    private function success(Condition $success, bool $afterBareExplosion): string
+    {
+        return !$afterBareExplosion && Scope::Value === $success->scope && $success->validator instanceof Comparison && $success->validator->isPlain()
             ? $success->validator->comparator->value.$success->validator->value
             : 'c['.$this->condition($success).']';
     }

@@ -55,7 +55,8 @@ the state that result left.
 
 A draw without a seed uses the generator's `Randomizer`: a secure engine by default, a scripted or seeded one in tests.
 A draw with a seed uses `Xoshiro256StarStar` seeded with the SHA-256 of the seed: the same seed, the same catalog and
-the same version of PHP give the same results, which lets a site replay a draw or share it by its seed.
+the same version of PHP give the same results, which lets a site replay a draw or share it by its seed. A seed is a
+text of 1 to `Draw::SEED_LENGTH` (256) characters in UTF-8; any other is refused with `InvalidDefinition`.
 
 ## Limits
 

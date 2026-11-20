@@ -60,7 +60,8 @@ An event is announced `announceDays` days before it starts, 0 to 90: from then, 
 so that a site shows what is coming. A `Multiplier` multiplies the gains of a ledger while its event runs, in percent:
 150 adds half, 200 doubles, 101 to 500. An event with a multiplier is announced at least one day ahead: the members know
 of it before it begins, and nothing multiplies by surprise. Multipliers of events that meet never add up: the highest
-applies. `Multiplier::apply()` rounds down, so that a gain never grows by a fraction of a point.
+applies. `Multiplier::apply()` rounds down, so that a gain never grows by a fraction of a point, and refuses with
+`InvalidSeason` an amount whose multiple is more than an integer holds.
 
 ## Limits
 

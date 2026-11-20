@@ -100,6 +100,16 @@ final class ValuesTest extends TestCase
         new Draw(1, false, "\xC3\x28");
     }
 
+    public function testASeedIsAtMost256CharactersLong(): void
+    {
+        self::assertSame(256, Draw::SEED_LENGTH);
+        self::assertSame(str_repeat('é', 256), new Draw(1, false, str_repeat('é', 256))->seed);
+
+        $this->expectExceptionObject(InvalidDefinition::at('draw', 'a seed is at most 256 characters long'));
+
+        new Draw(1, false, str_repeat('a', 257));
+    }
+
     /**
      * @return iterable<string, array{array<string, string>}>
      */

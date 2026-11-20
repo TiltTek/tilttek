@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=4af52b76cc0eb8021303703eac193e59489073658bbbbd284d36fc0bf5eeee51 -->
+<!-- phil-dev source-sha256=a49c7c18e111fc0f8a0fa21fc0b77b4a5b465f0b20a8a50cbcab49650e30dc5a -->
 # Configuration
 
 ```yaml
@@ -20,6 +20,7 @@ tilttek_dice_probability:
         interval: '1 minute'
         cache_pool: cache.app
         limiter: ~
+        single_server: false
 ```
 
 | Clé | Par défaut | Ce qu'elle règle |
@@ -37,8 +38,9 @@ tilttek_dice_probability:
 | `rate_limit.enabled` | `true` | Si le Live Component compte ses calculs contre une limite de débit par client |
 | `rate_limit.limit` | `60` | Les calculs d'un client dans l'intervalle |
 | `rate_limit.interval` | `'1 minute'` | La fenêtre glissante sur laquelle la limite compte |
-| `rate_limit.cache_pool` | `cache.app` | Le pool de cache où les comptes sont gardés |
+| `rate_limit.cache_pool` | `cache.app` | Le pool de cache où les comptes sont gardés, sur un stockage que les serveurs partagent : un pool local à chaque serveur est refusé dans l'environnement `prod` |
 | `rate_limit.limiter` | `null` | L'identifiant de service d'une fabrique de limiteurs de débit de l'application, au lieu de la fenêtre glissante que construit le bundle |
+| `rate_limit.single_server` | `false` | Accepte un pool de cache local au serveur dans l'environnement `prod`, pour une application sur un seul serveur |
 
 Chaque borne vaut au moins 1. Une page calcule à chaque requête, et n'importe qui peut écrire une expression courte qui
 demande beaucoup de travail : `100d6!` ou `10d1000` tiennent en sept caractères. Les bornes gardent chaque requête sous
@@ -68,6 +70,10 @@ Les étapes d'un échantillon, multipliées par `samples`, doivent rester dans `
 les ensembles d'au plus 6 dés passent, en environ un tiers de seconde ; `7d6g7`, `12d6g12` ou `10d10g10` sont refusés
 aussitôt, avec la raison `refusal.groups` des traductions. Avec moins d'échantillons, de plus grands ensembles passent.
 
+La même limite est donnée aux `Settings` de `tilttek/dice-probability`, dont l'estimation compte les étapes des groupes
+qu'elle cherche réellement, échantillon par échantillon, et s'arrête avec `CannotCompute` au-delà : une expression que
+le bundle pèse trop bas reste bornée.
+
 ## La limite de débit du composant
 
 Le Live Component recalcule chaque fois que le navigateur renvoie les expressions, à chaque pause dans la saisie.
@@ -82,8 +88,18 @@ empreinte de ce réseau, calculée avec `kernel.secret`, jamais l'adresse. Une d
 refuse le calcul.
 
 Les comptes sont gardés dans `cache_pool` : sur plusieurs serveurs, nommez un pool qu'ils partagent (Redis, Memcached,
-une base de données), sinon chaque serveur compte un client une fois. `limiter` nomme plutôt une fabrique de
-l'application, comme une de `framework.rate_limiter`, dont l'identifiant de service est `limiter.<name>`.
+une base de données), sinon un client pourrait dépenser la limite une fois par serveur. Dans l'environnement `prod`, le conteneur refuse de
+compiler avec un pool local à chaque serveur — les adaptateurs de système de fichiers, APCu, tableau ou système,
+`cache.app` par défaut —, par le `RateLimitGuard` de `phil/rate-limit`. Une application sur un seul serveur le dit :
+
+```yaml
+tilttek_dice_probability:
+    rate_limit:
+        single_server: true
+```
+
+`limiter` nomme plutôt une fabrique de l'application, comme une de `framework.rate_limiter`, dont l'identifiant de
+service est `limiter.<name>` ; le bundle ne construit alors aucun stockage et n'en vérifie aucun.
 
 Avec `symfony/ux-live-component` installé, la limite de débit exige `symfony/rate-limiter` : le conteneur refuse de
 compiler sans lui, sauf si la limite de débit est désactivée :

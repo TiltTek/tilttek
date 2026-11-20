@@ -4,6 +4,16 @@ All notable changes to `tilttek/leaderboards` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+Next version: 0.2.1-alpha.
+
+### Fixed
+
+- `ValkeyScoreStore::delete()` and `eraseMember()` take the field of a score out of the member's index whether or not
+  the score is still held: an index entry left without its score by a partial write, a restore or a hand edit, stayed
+  in the index after an erasure. Only the scores still held are counted.
+
 ## 0.2.0-alpha - 2026-11-14
 
 ### Changed
