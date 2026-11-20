@@ -6,8 +6,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## 0.3.0-alpha - 2026-11-17
 
-Next version: 0.3.0-alpha, for a change of the API of `Quests`.
-
 ### Changed
 
 - `Contract\TeamMembership`, and `NoTeamMembership` under which no member belongs to any team: `Quests` takes one

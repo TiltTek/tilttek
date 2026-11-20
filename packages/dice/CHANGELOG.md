@@ -6,8 +6,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
-Next version: 0.3.1-alpha.
-
 ### Fixed
 
 - The canonical form writes successes after an explosion without threshold or limit between brackets, `1d10!pc[>=4]`:
@@ -15,8 +13,6 @@ Next version: 0.3.1-alpha.
   `1d10>=4!p` or `3d6c[>=5]!` rolled other totals than the expression it was written from.
 
 ## 0.3.0-alpha - 2026-11-17
-
-Next version: 0.3.0-alpha, for a change of the commitment format.
 
 ### Changed
 

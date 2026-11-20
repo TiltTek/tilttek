@@ -6,8 +6,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
-Next version: 0.1.1-alpha.
-
 ### Security
 
 - `Progress::fromArray()` refuses with `InvalidProgress` moves that could not have been played: puzzles solved out of

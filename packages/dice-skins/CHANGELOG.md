@@ -6,8 +6,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
-Next version: 0.1.1-alpha.
-
 ### Changed
 
 - `tilttek/collections` 0.2 required: 0.1 is no longer accepted.

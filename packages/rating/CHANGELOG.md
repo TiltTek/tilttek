@@ -6,8 +6,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
-Next version: 0.1.1-alpha.
-
 ### Fixed
 
 - `GameResult::fromArray()` refuses a day or a time that does not exist, `2026-02-30T20:00:00Z` or `24:00:00`, with

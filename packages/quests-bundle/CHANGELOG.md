@@ -6,8 +6,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## 0.3.0-alpha - 2026-11-17
 
-Next version: 0.3.0-alpha, for team quests refused until the application gives its `TeamMembership`.
-
 ### Changed
 
 - `Tilttek\Quests\Contract\TeamMembership` is a service of the bundle, given to `Quests` for `tilttek/quests` 0.3:

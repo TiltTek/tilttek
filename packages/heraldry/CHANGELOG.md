@@ -6,8 +6,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
-Next version: 0.1.1-alpha.
-
 ### Fixed
 
 - The prefix of the ids an image derives when none is given takes the title and its language as well as the arms and

@@ -6,8 +6,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
-Next version: 0.1.1-alpha.
-
 ### Fixed
 
 - The limit of entries of a ledger is checked as each entry is built: `startSession()` for many holders stops at the

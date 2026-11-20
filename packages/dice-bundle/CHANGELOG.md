@@ -6,8 +6,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
-Next version: 0.2.2-alpha.
-
 ### Changed
 
 - `tilttek/dice` 0.2 or 0.3 required: 0.1 is no longer accepted.
@@ -18,8 +16,6 @@ Next version: 0.2.2-alpha.
   the published package never contained it.
 
 ## 0.2.1-alpha - 2026-11-17
-
-Next version: 0.2.1-alpha.
 
 ### Changed
 

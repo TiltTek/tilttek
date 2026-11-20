@@ -6,8 +6,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
-Next version: 0.2.1-alpha.
-
 ### Changed
 
 - `phil/ux-kit` is a development requirement: the functional test renders the template of a table with its recipes

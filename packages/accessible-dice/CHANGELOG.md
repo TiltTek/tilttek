@@ -6,8 +6,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
-Next version: 0.1.3-alpha.
-
 ### Changed
 
 - `tilttek/dice` 0.2 or 0.3 and `tilttek/dice-bundle` 0.2 required: 0.1 of each is no longer accepted.
@@ -20,8 +18,6 @@ Next version: 0.1.3-alpha.
   digits, `_` or `-`; any other is refused with `InvalidChoice`. `ext-sodium` is required for the suffix.
 
 ## 0.1.2-alpha - 2026-11-17
-
-Next version: 0.1.2-alpha.
 
 ### Changed
 

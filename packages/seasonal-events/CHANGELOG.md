@@ -6,8 +6,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
-Next version: 0.1.1-alpha.
-
 ### Fixed
 
 - `Multiplier::apply()` multiplies the hundreds and the rest of an amount apart: an amount whose product with the

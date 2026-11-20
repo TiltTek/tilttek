@@ -6,8 +6,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
-Next version: 0.2.1-alpha.
-
 ### Fixed
 
 - `ValkeyScoreStore::delete()` and `eraseMember()` take the field of a score out of the member's index whether or not
