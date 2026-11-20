@@ -1,0 +1,178 @@
+# The daily security audit of the monorepo lock: composer audit reads the advisories of Packagist and of the
+# FriendsOfPHP database, osv-scanner those of OSV (GitHub advisories included). Each alert opens one issue, labelled
+# security-audit and titled « Security alert: <advisory> in <package> »; an alert already reported, by an open or a
+# closed issue, opens none. The two audit jobs only read the repository; the report job alone may write issues. Every
+# action is pinned to the commit of the version its comment names.
+name: security-audit
+
+on:
+  schedule:
+    - cron: '41 5 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+# Two runs at once would both find the same alert unreported and open it twice.
+concurrency:
+  group: security-audit
+  cancel-in-progress: false
+
+jobs:
+  composer-audit:
+    name: composer audit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      alerts: ${{ steps.audit.outputs.alerts }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP and Composer
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.5'
+          tools: composer:v2
+          coverage: none
+
+      # Composer before 2.11.2 has advisories of its own: the audit refuses to run on it.
+      - name: Check the Composer version
+        run: |
+          version="$(composer --version --no-ansi | sed -E 's/^Composer version ([0-9]+\.[0-9]+\.[0-9]+).*/\1/')"
+          lowest="$(printf '%s\n%s\n' 2.11.2 "$version" | sort -V | head -n 1)"
+          if [ "$lowest" != 2.11.2 ]; then
+            echo "::error::Composer $version is older than 2.11.2."
+            exit 1
+          fi
+          echo "Composer $version"
+
+      # Exit code 1 means advisories, 2 abandoned packages (ignored here); anything else, or a report that is not JSON,
+      # is a failure of the audit itself.
+      - name: Audit the lock
+        id: audit
+        run: |
+          set +e
+          composer audit --locked --no-plugins --no-interaction --abandoned=ignore --format=json > composer-audit.json
+          status=$?
+          set -e
+          if [ "$status" -gt 3 ] || ! jq -e 'type == "object"' composer-audit.json > /dev/null; then
+            cat composer-audit.json
+            echo "::error::composer audit failed with exit code $status."
+            exit 1
+          fi
+          alerts="$(jq -c --slurpfile lock composer.lock '
+            ($lock[0] | (.packages + ."packages-dev") | map({key: .name, value: .version}) | from_entries) as $versions
+            | [(.advisories // {})[][]
+                | {
+                    id: (if (.cve // "") == "" then .advisoryId else .cve end),
+                    package: .packageName,
+                    version: $versions[.packageName],
+                    title: .title,
+                    link: .link,
+                    source: "composer audit"
+                  }]
+          ' composer-audit.json)"
+          echo "alerts=$alerts" >> "$GITHUB_OUTPUT"
+          echo "$alerts" | jq -r 'length | "\(.) alert(s)"'
+
+  osv-scanner:
+    name: osv-scanner
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      alerts: ${{ steps.alerts.outputs.alerts }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # osv-scanner exits with 1 when it finds a vulnerability: the next step tells that from a failure by the report.
+      - name: Scan the lock
+        uses: google/osv-scanner-action/osv-scanner-action@32d3cd482bdadfb38b186c0ad1b031902d55d932 # v2.7.1
+        continue-on-error: true
+        with:
+          scan-args: |-
+            --lockfile=composer.lock
+            --format=json
+            --output=osv-scanner.json
+
+      - name: Read the alerts
+        id: alerts
+        run: |
+          if ! jq -e 'type == "object"' osv-scanner.json > /dev/null 2>&1; then
+            echo "::error::osv-scanner wrote no report."
+            exit 1
+          fi
+          alerts="$(jq -c '
+            [(.results // [])[] | (.packages // [])[] | .package as $package | (.vulnerabilities // [])[]
+              | {
+                  id: ([(.aliases // [])[] | select(startswith("CVE-"))][0] // .id),
+                  package: $package.name,
+                  version: $package.version,
+                  title: (.summary // .id),
+                  link: ("https://osv.dev/vulnerability/" + .id),
+                  source: "osv-scanner"
+                }]
+          ' osv-scanner.json)"
+          echo "alerts=$alerts" >> "$GITHUB_OUTPUT"
+          echo "$alerts" | jq -r 'length | "\(.) alert(s)"'
+
+  report:
+    name: report
+    needs: [composer-audit, osv-scanner]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write # to create the security-audit label and open one issue per new alert
+    steps:
+      # An advisory found by both tools under the same identifier opens one issue, which names both.
+      - name: Open one issue per new alert
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          COMPOSER_ALERTS: ${{ needs.composer-audit.outputs.alerts }}
+          OSV_ALERTS: ${{ needs.osv-scanner.outputs.alerts }}
+        run: |
+          set -euo pipefail
+          label=security-audit
+          alerts="$(jq -cn --argjson composer "${COMPOSER_ALERTS:-[]}" --argjson osv "${OSV_ALERTS:-[]}" '
+            $composer + $osv
+            | group_by([.package, .id])
+            | map({
+                id: .[0].id,
+                package: .[0].package,
+                version: (map(.version // empty) | first // "unknown"),
+                title: (.[0] as $first | $first.title | ltrimstr($first.id + ": ")),
+                links: (map(.link // empty) | unique),
+                sources: (map(.source) | unique)
+              })
+          ')"
+          if [ "$(jq 'length' <<< "$alerts")" -eq 0 ]; then
+            echo "No alert."
+            exit 0
+          fi
+          gh label create "$label" --color B60205 --description 'A dependency advisory found by the daily audit' --force
+          reported="$(gh issue list --label "$label" --state all --limit 1000 --json title --jq '.[].title')"
+          while IFS= read -r alert; do
+            title="$(jq -r '"Security alert: \(.id) in \(.package)"' <<< "$alert")"
+            if grep -Fxq -- "$title" <<< "$reported"; then
+              echo "Already reported: $title"
+              continue
+            fi
+            body="$(jq -r '[
+                "**Package:** `\(.package)`, locked at `\(.version)`",
+                "**Advisory:** \(.id): \(.title)",
+                "**Found by:** \(.sources | join(", "))",
+                "",
+                "**References:**",
+                (.links[] | "- \(.)"),
+                "",
+                "Raise the constraint of the package to a fixed release and update the lock, as SECURITY.md describes under Dependencies. Close this issue once the fix is merged."
+              ] | join("\n")' <<< "$alert")"
+            gh issue create --title "$title" --label "$label" --body "$body"
+          done < <(jq -c '.[]' <<< "$alerts")

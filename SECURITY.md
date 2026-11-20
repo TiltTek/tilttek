@@ -31,3 +31,11 @@ upgrade to the latest release to get a fix, or apply its `security:` commit your
 
 A vulnerability in a dependency is fixed by raising the dependency's constraint once a fixed release exists. If you
 find a dependency of a package with a known advisory (`composer audit` reports them), you may report it the same way.
+
+The monorepo lock is audited every day by the `security-audit` workflow (`.github/workflows/security-audit.yml`):
+`composer audit` (Composer 2.11.2 or later) and `osv-scanner` read `composer.lock`, and each advisory they find opens
+one public issue labelled `security-audit`, titled `Security alert: <advisory> in <package>`. The advisories are
+already public, so these issues are the exception to the rule above. An advisory found by both tools opens a single
+issue, and an advisory already reported opens none, whether its issue is open or closed: reopen the closed issue to
+track it again. The workflow can also be run by hand from the Actions tab. To check a change before it is merged,
+run `composer audit --locked` locally with Composer 2.11.2 or later.
