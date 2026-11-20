@@ -18,6 +18,9 @@ return [
             'DecrementInteger' => [
                 'ignoreSourceCodeByRegex' => [
                     '\\$digit = 0;',
+                    // The left operand of an addition of Pascal's triangle read one column further: the row costs the same
+                    // in all, its numbers being the same read from the other end.
+                    '.*\\$left = \\$above\\[\\$column - 1\\];',
                 ],
             ],
             // The leading digits of `Natural::leading()`: a numeric string divides as the float it is cast to.

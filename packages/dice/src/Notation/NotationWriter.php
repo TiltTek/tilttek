@@ -291,7 +291,7 @@ final class NotationWriter extends ExpressionWriter
      * Successes judged on each final value by a plain comparison write it alone: `>=7`, unless it would follow an
      * explosion without threshold, whose threshold it would be read as; any other `c[...]`.
      */
-    private function success(Condition $success, bool $afterBareExplosion = false): string
+    private function success(Condition $success, bool $afterBareExplosion): string
     {
         return !$afterBareExplosion && Scope::Value === $success->scope && $success->validator instanceof Comparison && $success->validator->isPlain()
             ? $success->validator->comparator->value.$success->validator->value

@@ -432,6 +432,7 @@ final class ProbabilitiesTest extends TestCase
         yield 'three dice' => ['3d6g7', 10, 240];
         yield 'two dice that count of four' => ['4d6kh2g7', 10, 80];
         yield 'two sets' => ['3d6g7+3d6g7', 1, 48];
+        yield 'sets without groups add none' => ['3d6g7+3d6+3d6o2', 1, 24];
         yield 'twelve dice, searched' => ['12d6g12', 1, 49_152];
         yield 'thirteen dice, greedily' => ['13d6g10', 2, 338];
     }
@@ -512,6 +513,23 @@ final class ProbabilitiesTest extends TestCase
         self::assertSame(['1', '3', '3', '1'], array_map(strval(...), $rows[3]));
         $this->assertTooLarge(static fn (): array => Multisets::binomials(4, new Budget(5)));
         $this->assertTooLarge(static fn (): array => Multisets::binomials(10_000, new Budget(100_000)));
+    }
+
+    public function testTheBinomialsCostTheSizeOfTheNumbersTheyAdd(): void
+    {
+        $rows = Multisets::binomials(520, new Budget(\PHP_INT_MAX));
+        $cost = 0;
+
+        // Each addition costs one, and one more per sixteen limbs of the product of the sizes of its operands, the left one alone.
+        for ($row = 1; $row <= 520; ++$row) {
+            for ($column = 1; $column < $row; ++$column) {
+                $cost += 1 + intdiv($rows[$row - 1][$column - 1]->size(), 16);
+            }
+        }
+
+        self::assertGreaterThan(519 * 520 / 2 - 520, $cost);
+        Multisets::binomials(520, new Budget($cost));
+        $this->assertTooLarge(static fn (): array => Multisets::binomials(520, new Budget($cost - 1)));
     }
 
     public function testAFractionBroughtToItsLowestTermsCostsTheCubeOfItsSize(): void

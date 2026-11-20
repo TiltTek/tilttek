@@ -85,10 +85,12 @@ final class Multisets
 
         for ($row = 1; $row <= $count; ++$row) {
             $rows[$row] = [Natural::one()];
+            $above = $rows[$row - 1];
 
             for ($column = 1; $column < $row; ++$column) {
-                $budget->spendOn(1, $rows[$row - 1][$column - 1]);
-                $rows[$row][$column] = $rows[$row - 1][$column - 1]->add($rows[$row - 1][$column]);
+                $left = $above[$column - 1];
+                $budget->spendOn(1, $left);
+                $rows[$row][$column] = $left->add($above[$column]);
             }
 
             $rows[$row][$row] = Natural::one();
