@@ -1,0 +1,18 @@
+# The luck tokens of the tables: inspiration, bennies, hero points. Create the tables of the ledgers with
+# doctrine:migrations:diff.
+tilttek_luck_tokens:
+    connection: default
+    # The rules of each table, by its reference: its game masters and the kinds of tokens it hands out.
+    tables: {}
+    #     'table:12':
+    #         game_masters: ['member:7']
+    #         kinds:
+    #             - { key: inspiration, name: Inspiration, cap: 1, transferable: true }
+    # Who spends and passes the tokens of whom, besides the game masters: self, security or service.
+    holder_access: self
+    # A lock around each operation, once framework.lock is set.
+    # lock: { enabled: true }
+
+when@test:
+    tilttek_luck_tokens:
+        store: memory

@@ -1,0 +1,12 @@
+# The dice tower of a table, whose log is kept with Doctrine: create the table tilttek_dice_tower_drop with
+# doctrine:migrations:diff. The overlay is drawn with the Card recipe of the PHIL UX kit:
+#     php bin/console ux:install card --kit=github.com/parler-haut-interagir-librement/ux-kit
+tilttek_dice_tower:
+    # The service, a TableAccess, that says whether the current viewer may watch a table; nobody may without it.
+    # table_access: App\Dice\TableMembers
+    # Each new entry is pushed to the Mercure hub of symfony/mercure-bundle; without it, nothing is pushed.
+    hub: Symfony\Component\Mercure\HubInterface
+
+when@test:
+    tilttek_dice_tower:
+        store: memory

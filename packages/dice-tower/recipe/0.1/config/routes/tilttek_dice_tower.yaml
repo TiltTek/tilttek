@@ -1,0 +1,3 @@
+# The route of the entries a viewer missed, which the overlay reads when it is drawn again.
+tilttek_dice_tower:
+    resource: '@TilttekDiceTowerBundle/config/routes.php'

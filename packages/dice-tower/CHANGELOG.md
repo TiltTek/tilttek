@@ -34,5 +34,7 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 - The Stimulus controller of the overlay: each new entry added once and in order, the missed entries read from the log
   when the subscription opens, the live entries held back meanwhile, and each entry dispatched as
   `tilttek--dice-tower--tower:drop`.
+- The Flex recipe in `recipe/0.1`: the bundle, `config/packages/tilttek_dice_tower.yaml` and the route of the missed
+  entries.
 - Documentation: installation, configuration, the tower in PHP, the overlay, extension points, testing and reference.
 - Community files: contribution guide, code of conduct, security policy and MIT licence.

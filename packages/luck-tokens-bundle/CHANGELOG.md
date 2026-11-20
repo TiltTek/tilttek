@@ -36,5 +36,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
   the locks are enabled, reported as pseudonymised.
 - The stores' tests on SQLite, MySQL 8.4 and PostgreSQL 17, four processes granting at once with and without the
   locks, and a benchmark of a spending after 10 000 entries in the database.
+- The Flex recipe in `recipe/0.1`: the bundle and `config/packages/tilttek_luck_tokens.yaml`.
 - The documentation in `doc/`, one file per topic, indexed by the README.
 - `CONTRIBUTING.md`, `SECURITY.md` and `CODE_OF_CONDUCT.md`.

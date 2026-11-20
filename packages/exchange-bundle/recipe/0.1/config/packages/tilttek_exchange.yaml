@@ -1,0 +1,17 @@
+# Points exchanged for rewards, and given or traded between members. The ledger of tilttek/points-bundle on the same
+# connection makes an exchange one transaction; create the tables with doctrine:migrations:diff, and have a scheduler
+# run tilttek:exchange:expire every few minutes.
+tilttek_exchange:
+    connection: default
+    # The rewards by code: their price in points, and optionally a currency, a stock, a period, a limit per member.
+    rewards: {}
+    #     discount-10: { price: 100 }
+    reservation_lifetime: PT30M
+    transfers:
+        enabled: false
+    trades:
+        enabled: false
+
+when@test:
+    tilttek_exchange:
+        store: memory

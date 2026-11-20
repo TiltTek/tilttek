@@ -35,5 +35,7 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 - `RedeemRewardType`, `TransferPointsType` and `OfferType`: the forms that reserve a reward, give points and make an
   offer or a counter-offer.
 - `ExchangePrivacy`: the export and erasure of a member's reservations, transfers and offers for `phil/privacy-bundle`.
+- The Flex recipe in `recipe/0.1`: the bundle and `config/packages/tilttek_exchange.yaml`, with transfers and trades
+  off.
 - The documentation in `doc/`, one file per topic, indexed by the README.
 - `CONTRIBUTING.md`, `SECURITY.md` and `CODE_OF_CONDUCT.md`.

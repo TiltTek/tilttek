@@ -4,23 +4,6 @@ All notable changes to `tilttek/dice-probability-bundle` will be documented in t
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
-## Unreleased
-
-Next version: 0.1.1-alpha.
-
-### Changed
-
-- `tilttek/dice-probability` 0.1.4 required, and `group_work_limit` given to its `Settings` as well: its estimate
-  counts the steps of the groups it actually searches and stops past the same limit, behind the weighing of
-  `GroupSearch`.
-
-### Security
-
-- The rate limit of the Live Component refuses, in the `prod` environment, a cache pool local to each server, where a
-  client could spend the limit once per server: `rate_limit.cache_pool` names a pool on a shared store, or
-  `rate_limit.single_server: true` says the application runs on one server. The check is the `RateLimitGuard` of
-  `phil/rate-limit`, now required.
-
 ## 0.1.0-alpha - 2026-11-19
 
 ### Added
@@ -53,5 +36,13 @@ Next version: 0.1.1-alpha.
 - The screens drawn with the recipes `Alert`, `Card`, `Chart`, `Field`, `Input`, `RadioGroup` and `Table` of the PHIL
   UX kit, installed by the Symfony UX Toolkit, named in the subdirectory of its configuration or of
   `kit_subdirectory`: `KitComponents` and `KitSubdirectoryPass`.
+- `group_work_limit` given to the `Settings` of `tilttek/dice-probability` 0.1.4 as well: its estimate counts the steps
+  of the groups it actually searches and stops past the same limit, behind the weighing of `GroupSearch`.
+- The rate limit of the Live Component refuses, in the `prod` environment, a cache pool local to each server, where a
+  client could spend the limit once per server: `rate_limit.cache_pool` names a pool on a shared store, or
+  `rate_limit.single_server: true` says the application runs on one server. The check is the `RateLimitGuard` of
+  `phil/rate-limit`.
+- The Flex recipe in `recipe/0.1`: the bundle and `config/packages/tilttek_dice_probability.yaml`, with the rounding
+  and the rate limit of the component.
 - Documentation: installation, configuration, statistics in PHP, templates, extension points, testing and reference.
 - Community files: contribution guide, code of conduct, security policy and MIT licence.

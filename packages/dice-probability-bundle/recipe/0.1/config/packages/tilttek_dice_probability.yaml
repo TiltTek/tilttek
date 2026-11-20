@@ -1,0 +1,14 @@
+# The probabilities of the dice expressions, read with the notations and limits of tilttek/dice-bundle. The table, the
+# chart and the component are drawn with recipes of the PHIL UX kit:
+#     php bin/console ux:install alert card chart field input radio-group table --kit=github.com/parler-haut-interagir-librement/ux-kit
+tilttek_dice_probability:
+    # How a division rounds when the expression does not say: floor, ceil, round, towards_zero or away_from_zero.
+    rounding: floor
+    # The computations the Live Component does for each client. The counts are kept in cache.app, which the prod
+    # environment refuses when it is local to each server: name a pool on a store the servers share, or say that the
+    # application runs on one server.
+    rate_limit:
+        limit: 60
+        interval: '1 minute'
+        # cache_pool: cache.app
+        # single_server: false
