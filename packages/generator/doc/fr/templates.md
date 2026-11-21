@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=1f48632f34cf011fcc1f8d87615080baff0de486afc907b9548e420bd7205a02 -->
+<!-- phil-dev source-sha256=68650a44cd784e7018255b33970dd7195280c99b22cda48bf9719d0746e6ad09 -->
 # Gabarits
 
 Un gabarit est un gabarit Twig rendu en texte, sans échappement. Dans sa sortie, chaque suite d'espaces et de sauts de
@@ -56,9 +56,11 @@ Voyez [Grammaire](grammar.md).
 
 ## Le bac à sable
 
-Les gabarits s'exécutent dans le bac à sable de Twig, avec seulement les balises, les filtres, les fonctions et les
-tests ci-dessus. Ils ne voient aucun objet sauf les entrées, dont ils ne lisent que le texte et les champs. L'opérateur
-d'intervalle `..` est refusé, car il pourrait construire un tableau de n'importe quelle taille ; les boucles
+Les gabarits s'exécutent dans un `Twig\Sandbox\Sandbox`, dans un environnement Twig qui leur est propre et qui n'est
+jamais celui de l'application, avec seulement les balises, les filtres, les fonctions et les tests ci-dessus. Ils ne
+voient aucun objet sauf les entrées, dont ils ne lisent que le texte et les champs. Une balise qui nomme un autre
+gabarit (`include`, `use`, `import`, `from`, `embed`, `extends`) est refusée avant que ce gabarit soit chargé.
+L'opérateur d'intervalle `..` est refusé, car il pourrait construire un tableau de n'importe quelle taille ; les boucles
 parcourent des listes produites par des tirages, que borne la limite de tirages.
 
 ## Le budget d'un résultat

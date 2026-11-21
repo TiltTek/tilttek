@@ -3,7 +3,7 @@
 ## Requirements
 
 - PHP 8.5 or later, with the `mbstring` extension, which the grammars use to read accented words.
-- `twig/twig` 3.21 or later, whose sandbox compiles and runs the templates.
+- `twig/twig` 3.30 or later, whose sandbox compiles and runs the templates.
 - `symfony/yaml` 8.2, which reads the YAML documents.
 - `tilttek/dice`, which reads and rolls the dice expressions of `roll()`.
 

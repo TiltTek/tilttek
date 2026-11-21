@@ -10,6 +10,11 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 - `tilttek/dice` 0.2 or 0.3 required: 0.1 is no longer accepted.
 
+### Security
+
+- `twig/twig` 3.30 or later required, for the fixes of its sandbox in 3.29; the templates of the generators render
+  in a `Twig\Sandbox\Sandbox` of `tilttek/generator`.
+
 ## 0.2.1-alpha - 2026-11-17
 
 ### Changed
