@@ -8,10 +8,12 @@ use Override;
 use Tilttek\Generator\Timer;
 
 /**
- * A clock that moves forward by a fixed number of milliseconds each time it is read.
+ * A clock that moves forward by a fixed number of milliseconds each time it is read, and counts its readings.
  */
 final class SteppingTimer implements Timer
 {
+    public private(set) int $reads = 0;
+
     private float $now = 0.0;
 
     public function __construct(private readonly float $step)
@@ -21,6 +23,7 @@ final class SteppingTimer implements Timer
     #[Override]
     public function now(): float
     {
+        ++$this->reads;
         $now = $this->now;
         $this->now += $this->step;
 

@@ -14,16 +14,21 @@ use Tilttek\DiceProbability\Event\AllDifferent;
 use Tilttek\DiceProbability\Exact\Fraction;
 use Tilttek\DiceProbability\Exception\CannotCompute;
 use Tilttek\DiceProbability\Probabilities;
+use Tilttek\DiceProbability\Tests\Unit\Fixture\ProcessorTime;
 
 /**
  * Short expressions that cost the most, under the default settings: each answers, exactly, by an estimate or by
- * CannotCompute, within a few seconds of processor time.
+ * CannotCompute, within a few seconds of processor time on an idle machine. The time is counted in runs of a reference
+ * loop timed beside the work, so that a busy machine, which slows both, does not fail the bound.
  */
 #[CoversClass(Probabilities::class)]
 final class LoadTest extends TestCase
 {
-    /** The processor time an expression may take, with room for a slow or busy machine. */
-    private const float SECONDS = 4.0;
+    /**
+     * The processor time an expression may take, in runs of the reference loop: about four seconds on an idle machine,
+     * twice the time of the costliest expression.
+     */
+    private const float REFERENCES = 18.0;
 
     #[DataProvider('expressions')]
     public function testADistributionIsBounded(string $expression): void
@@ -60,24 +65,14 @@ final class LoadTest extends TestCase
 
     private function assertBounded(Closure $work): void
     {
-        $start = $this->processorTime();
+        $references = ProcessorTime::inReferences(static function () use ($work): void {
+            try {
+                $work();
+            } catch (CannotCompute $cannotCompute) {
+                self::assertStringContainsString('roll limit', $cannotCompute->getMessage());
+            }
+        });
 
-        try {
-            $work();
-        } catch (CannotCompute $cannotCompute) {
-            self::assertStringContainsString('roll limit', $cannotCompute->getMessage());
-        }
-
-        self::assertLessThan(self::SECONDS, $this->processorTime() - $start);
-    }
-
-    private function processorTime(): float
-    {
-        $usage = getrusage();
-        self::assertIsArray($usage);
-        self::assertIsInt($usage['ru_utime.tv_sec']);
-        self::assertIsInt($usage['ru_utime.tv_usec']);
-
-        return $usage['ru_utime.tv_sec'] + $usage['ru_utime.tv_usec'] / 1_000_000;
+        self::assertLessThan(self::REFERENCES, $references);
     }
 }
