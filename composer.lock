@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c18f1deba3952e44e5455c581078b924",
+    "content-hash": "fecb3f6e3e88535a9dd7e78543439a13",
     "packages": [],
     "packages-dev": [
         {
@@ -1422,16 +1422,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "3.12.1",
+            "version": "3.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "d7059e4c691d05ea1222b5124bed0f961be46e15"
+                "reference": "1f5f55bb4a9a230ff6d8a4ceccea31d10b0142ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/d7059e4c691d05ea1222b5124bed0f961be46e15",
-                "reference": "d7059e4c691d05ea1222b5124bed0f961be46e15",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1f5f55bb4a9a230ff6d8a4ceccea31d10b0142ac",
+                "reference": "1f5f55bb4a9a230ff6d8a4ceccea31d10b0142ac",
                 "shasum": ""
             },
             "require": {
@@ -1511,7 +1511,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/3.12.1"
+                "source": "https://github.com/Seldaek/monolog/tree/3.13.0"
             },
             "funding": [
                 {
@@ -1523,8 +1523,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-29T19:21:12+00:00",
-            "published-time": "2026-09-29T19:21:44+00:00"
+            "time": "2026-11-16T10:43:05+00:00",
+            "published-time": "2026-11-16T10:45:37+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1825,16 +1825,16 @@
         },
         {
             "name": "phil/commerce-bundle",
-            "version": "0.3.0-alpha",
+            "version": "0.4.0-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/parler-haut-interagir-librement/commerce-bundle.git",
-                "reference": "44a15f698b60fe1f517ea51ae83ff2f7f09eff47"
+                "reference": "b2ce29c5c7eb08c63955bb6a2fa570f8ab2b7539"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/parler-haut-interagir-librement/commerce-bundle/zipball/44a15f698b60fe1f517ea51ae83ff2f7f09eff47",
-                "reference": "44a15f698b60fe1f517ea51ae83ff2f7f09eff47",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/commerce-bundle/zipball/b2ce29c5c7eb08c63955bb6a2fa570f8ab2b7539",
+                "reference": "b2ce29c5c7eb08c63955bb6a2fa570f8ab2b7539",
                 "shasum": ""
             },
             "require": {
@@ -1867,7 +1867,8 @@
                 "symfony/console": "^8.2",
                 "symfony/event-dispatcher": "^8.2",
                 "symfony/framework-bundle": "^8.2",
-                "symfony/http-kernel": "^8.2"
+                "symfony/http-kernel": "^8.2",
+                "symfony/process": "^8.2"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -1896,10 +1897,10 @@
             "homepage": "https://ph-il.ca",
             "support": {
                 "issues": "https://github.com/parler-haut-interagir-librement/commerce-bundle/issues",
-                "source": "https://github.com/parler-haut-interagir-librement/commerce-bundle/tree/0.3.0-alpha"
+                "source": "https://github.com/parler-haut-interagir-librement/commerce-bundle/tree/0.4.0-alpha"
             },
-            "time": "2026-11-18T22:00:00+00:00",
-            "published-time": "2026-11-19T00:42:20+00:00"
+            "time": "2026-11-20T22:00:00+00:00",
+            "published-time": "2026-11-21T02:56:49+00:00"
         },
         {
             "name": "phil/content-warnings",
@@ -2681,7 +2682,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../Phil/phil/packages/privacy-bundle",
-                "reference": "ecabf41fe0f0cdec36780baac27ea27a35ea81f2"
+                "reference": "3a0da729981852cf7967bf9155d63b1648dcc036"
             },
             "require": {
                 "ext-mbstring": "*",
@@ -2715,6 +2716,8 @@
                 "doctrine/persistence": "^4.1",
                 "ext-pdo": "*",
                 "ext-zip": "*",
+                "phil/outbox": "^0.2@dev",
+                "phil/outbox-bundle": "^0.2@dev",
                 "phpunit/phpunit": "^13.4",
                 "psr/cache": "^3.0",
                 "symfony/asset-mapper": "^8.2",
@@ -2736,13 +2739,14 @@
                 "symfony/twig-bundle": "^8.2"
             },
             "suggest": {
-                "doctrine/dbal": "For phil:privacy:anonymize, and the tables of the account deletions, the consent proofs, the requests without an account and the incidents",
+                "doctrine/dbal": "For phil:privacy:anonymize, and the tables of the account deletions, the consent proofs, the requests without an account, the incidents and the erasure requests",
                 "doctrine/orm": "To draw the anonymization plan from #[Anonymize] and #[PersonalData] on Doctrine entities",
                 "doctrine/persistence": "To draw the register of processing from every Doctrine entity",
                 "ext-zlib": "To compress the archives of an export, which are stored without it",
+                "phil/outbox-bundle": "For erasure_workflow: one message per module through the outbox, written in the transaction of the request",
                 "phpunit/phpunit": "For AssertsDeclaredCookies, which fails a functional test on a response that sets an undeclared cookie",
                 "symfony/asset-mapper": "To serve the Stimulus controllers of the consent and of the frames held until it without a build step",
-                "symfony/console": "For phil:privacy:export, phil:privacy:erase, phil:privacy:register, phil:privacy:anonymize, phil:privacy:retention, phil:privacy:deletions, phil:privacy:incident and phil:privacy:incidents",
+                "symfony/console": "For phil:privacy:export, phil:privacy:erase, phil:privacy:register, phil:privacy:anonymize, phil:privacy:retention, phil:privacy:deletions, phil:privacy:incident, phil:privacy:incidents and phil:privacy:erasure",
                 "symfony/mailer": "To send the links of the requests made without an account",
                 "symfony/rate-limiter": "Required by the requests made without an account, guest_requests.enabled",
                 "symfony/scheduler": "For the schedule phil_privacy, which runs the account deletions and the retention schedule",
@@ -2751,7 +2755,7 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "0.1.x-dev"
+                    "dev-main": "0.3.x-dev"
                 }
             },
             "autoload": {
