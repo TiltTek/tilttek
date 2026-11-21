@@ -4,7 +4,7 @@ All notable changes to `tilttek/exchange` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
-## Unreleased
+## 0.2.1-alpha - 2026-11-20
 
 ### Changed
 

@@ -4,7 +4,7 @@ All notable changes to `tilttek/generator-bundle` will be documented in this fil
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
-## Unreleased
+## 0.2.2-alpha - 2026-11-20
 
 ### Changed
 
