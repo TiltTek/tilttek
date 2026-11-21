@@ -53,8 +53,10 @@ See [Grammar](grammar.md).
 
 ## The sandbox
 
-Templates run in Twig's sandbox, with only the tags, filters, functions and tests above, and see no object but entries,
-whose text and fields only they read. The range operator `..` is refused, since it could build an array of any size;
+Templates run in a `Twig\Sandbox\Sandbox`, in a Twig environment of their own that is never the application's, with only
+the tags, filters, functions and tests above, and see no object but entries, whose text and fields only they read. A
+tag that names another template (`include`, `use`, `import`, `from`, `embed`, `extends`) is refused before that
+template is loaded. The range operator `..` is refused, since it could build an array of any size;
 loops go over lists that picks made, which the limit of picks bounds.
 
 ## The budget of a result

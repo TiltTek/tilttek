@@ -145,10 +145,6 @@ return [
         'ignoreErrors' => [
             // à corriger : complexité cognitive de la classe (137) au-dessus de 100, à découper.
             ['identifier' => 'complexity.classLike', 'path' => 'src/Engine/Producer.php', 'count' => 1],
-            // à corriger : SandboxExtension de Twig est marquée interne, à remplacer par l'API publique du bac à sable.
-            ['identifier' => 'method.internalClass', 'path' => 'src/Engine/Producer.php', 'count' => 1],
-            // à corriger : SandboxExtension de Twig est marquée interne, à remplacer par l'API publique du bac à sable.
-            ['identifier' => 'new.internalClass', 'path' => 'src/Engine/Producer.php', 'count' => 1],
             // à corriger : complexité cognitive de Italian::article() (33) au-dessus de 25, à découper.
             ['identifier' => 'complexity.functionLike', 'path' => 'src/Grammar/Italian.php', 'count' => 1],
             // à corriger : complexité cognitive de Spanish::article() (26) au-dessus de 25, à découper.

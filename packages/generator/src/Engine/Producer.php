@@ -43,14 +43,14 @@ use Tilttek\Generator\Limits;
 use Tilttek\Generator\Timer;
 use Twig\Environment;
 use Twig\Error\Error;
-use Twig\Extension\SandboxExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\NodeTraverser;
+use Twig\Sandbox\SandboxInterface;
 use Twig\Source;
 
 /**
- * Makes the results of a catalog: compiles its templates in a sandboxed Twig environment, checks them, and renders
- * them with the functions that pick, generate and roll and the filters of the grammars.
+ * Makes the results of a catalog: compiles its templates in a dedicated Twig environment, checks them, and renders
+ * them in its `Twig\Sandbox\Sandbox` with the functions that pick, generate and roll and the filters of the grammars.
  *
  * @internal
  */
@@ -62,6 +62,8 @@ final class Producer
     public const int POOLS_PER_LIST = 64;
 
     private readonly Environment $twig;
+
+    private readonly SandboxInterface $sandbox;
 
     /**
      * @var array<string, string>
@@ -100,8 +102,9 @@ final class Producer
         string|false $cache = false,
     ) {
         $this->sources = $this->sources($catalog);
-        $this->twig = new Environment(new ArrayLoader($this->sources), ['autoescape' => false, 'strict_variables' => true, 'cache' => $cache]);
-        $this->twig->addExtension(new SandboxExtension(new SandboxPolicy(), true));
+        $twig = new SandboxedTwig(new ArrayLoader($this->sources), $cache);
+        $this->twig = $twig->environment;
+        $this->sandbox = $twig->sandbox;
         $this->twig->addExtension(new GeneratorExtension($this));
     }
 
@@ -719,7 +722,7 @@ final class Producer
         $this->run()->checkTime();
 
         try {
-            $output = $this->twig->render($template, $context);
+            $output = $this->sandbox->render($template, $context);
         } catch (Error $error) {
             throw $this->unwrap($template, $error);
         }

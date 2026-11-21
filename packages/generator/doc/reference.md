@@ -66,6 +66,7 @@
 | `StepVisitor`, `StepNode` | Internal: the step compiled at each turn of a loop and after each assignment of a template. |
 | `MarkovModel` | Internal: what a Markov list learnt from its entries, and the words it writes. |
 | `SandboxPolicy` | Internal: what a template may use. |
+| `SandboxedTwig` | Internal: the dedicated Twig environment of the templates and the `Twig\Sandbox\Sandbox` that renders them. |
 | `ReferenceCollector` | Internal: the names and the sandbox features a template uses. |
 | `GeneratorExtension` | Internal: the functions and filters of the templates, `replace` and `join` bounded, and the steps. |
 
