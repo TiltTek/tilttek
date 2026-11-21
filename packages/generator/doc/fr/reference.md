@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=680d5083a788bffbc67b930d0c937230db9ddf5f826e59ec79ed618aaa0f0e17 -->
+<!-- phil-dev source-sha256=79f9aeffb543f3495d93d9d29c36c8195ac7b89b0e7c996ce27bba95f54ae0c4 -->
 # Référence
 
 ## Le générateur
@@ -67,6 +67,7 @@
 | `StepVisitor`, `StepNode` | Interne : le pas compilé à chaque tour d'une boucle et après chaque affectation d'un gabarit. |
 | `MarkovModel` | Interne : ce qu'une liste de Markov a appris de ses entrées, et les mots qu'elle écrit. |
 | `SandboxPolicy` | Interne : ce qu'un gabarit peut utiliser. |
+| `SandboxedTwig` | Interne : l'environnement Twig dédié aux gabarits et le `Twig\Sandbox\Sandbox` qui les rend. |
 | `ReferenceCollector` | Interne : les noms et les fonctionnalités du bac à sable qu'utilise un gabarit. |
 | `GeneratorExtension` | Interne : les fonctions et les filtres des gabarits, `replace` et `join` bornés, et les pas. |
 
