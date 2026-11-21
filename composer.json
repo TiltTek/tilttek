@@ -84,7 +84,7 @@
         "symfony/validator": "^8.2",
         "symfony/workflow": "^8.2",
         "symfony/yaml": "^8.2",
-        "twig/twig": "^3.21"
+        "twig/twig": "^3.30"
     },
     "replace": {
         "symfony/polyfill-ctype": "1.99",
