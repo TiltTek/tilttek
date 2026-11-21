@@ -67,5 +67,5 @@ pas une carte qu'un générateur a faite. `MapSchema::schema()` donne le schéma
 que le paquet livre aussi sous `schema/map.v1.json` : une grille carrée avec `x` et `y`, une grille hexagonale avec
 `col`, `row`, `q` et `r`, ou un graphe de nœuds avec leur `id` et d'arêtes en paires d'identifiants ; la `value` d'une
 case ou d'un nœud est un texte ou les champs d'un résultat structuré. `MapSchema::VERSION` est augmentée, et
-`MapSchema::ID` avec elle, chaque fois qu'une carte exportée change d'une manière qu'un ancien lecteur lirait de travers ;
-un lecteur vérifie `$schema` avant de lire le reste.
+`MapSchema::ID` avec elle, chaque fois qu'une carte exportée change d'une manière qu'un ancien lecteur lirait de travers
+; un lecteur vérifie `$schema` avant de lire le reste.

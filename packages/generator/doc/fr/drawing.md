@@ -42,9 +42,9 @@ $result->toArray();   // […, 'state' => ['cell' => '13']]
 
 L'état d'un tirage est une table d'au plus `Draw::STATE_VALUES` (32) noms vers des textes d'au plus
 `Draw::STATE_LENGTH` (1024) caractères, en UTF-8 comme le germe ; les nombres, les booléens et les objets qui
-s'affichent se lisent comme des textes, tout le reste est une `InvalidDefinition`. La bibliothèque ne garde aucun état : l'application le tient entre
-les tirages, par campagne, par table ou par personne, et le repasse. Un générateur sans état ignore celui qu'apporte un
-tirage, et son résultat n'a pas d'état. Voyez [Tables à mémoire](memory.md).
+s'affichent se lisent comme des textes, tout le reste est une `InvalidDefinition`. La bibliothèque ne garde aucun état :
+l'application le tient entre les tirages, par campagne, par table ou par personne, et le repasse. Un générateur sans
+état ignore celui qu'apporte un tirage, et son résultat n'a pas d'état. Voyez [Tables à mémoire](memory.md).
 
 ## Résultats uniques
 

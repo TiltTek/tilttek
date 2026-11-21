@@ -68,5 +68,5 @@ $journal = new Journal($log, $clock, observers: [new LiveProjections($projector,
 `LiveProjections` rattrape, après chaque nouvelle entrée, chaque projection dont le filtre la lit. Si une projection
 échoue, l'entrée reste enregistrée et le point de reprise de la projection reste avant elle : le rattrapage suivant la
 remet, et la même requête répétée sous la même clé fait rattraper, par `resume()`, les projections dont le point de
-reprise (`Projector::behind()`) est encore avant l'entrée. Une application qui a beaucoup de projections, ou des projections lentes, les garde hors de la requête et les
-rattrape plutôt depuis une tâche planifiée.
+reprise (`Projector::behind()`) est encore avant l'entrée. Une application qui a beaucoup de projections, ou des
+projections lentes, les garde hors de la requête et les rattrape plutôt depuis une tâche planifiée.

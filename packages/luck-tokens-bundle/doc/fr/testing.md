@@ -12,12 +12,13 @@ Les tests unitaires exécutent les stockages DBAL sur SQLite, dans un fichier en
 une seconde connexion pour l'autre écrivain, par le cas de test de contrat `StoresTestCase` : les entrées gardées et
 relues telles qu'elles ont été écrites, les index des soldes, des détenteurs, des opérations et des sessions, un écrivain
 refusé après une position qui n'est plus la dernière, un écrivain qui en rencontre un autre entre sa lecture et son
-insertion — un middleware des tests exécute alors l'autre —, une opération de la bibliothèque relue deux fois et écrite la
-troisième, les mêmes opérations sur le stockage et sur le registre en mémoire de la bibliothèque, un membre effacé dans
-chaque table, et les règles gardées et relues. Ils couvrent aussi les tables et l'écouteur du schéma, la configuration et
-les services, `LockedLuckTokens` et les verrous qu'il prend et libère, le voter et l'accès par le composant de sécurité,
-et le module d'effacement. Le test fonctionnel démarre une petite application avec les verrous activés et efface un
-membre par le bundle de vie privée. Dans le monodépôt, Infection maintient le bundle à 100 % des mutants couverts.
+insertion — un middleware des tests exécute alors l'autre —, une opération de la bibliothèque relue deux fois et écrite
+la troisième, les mêmes opérations sur le stockage et sur le registre en mémoire de la bibliothèque, un membre effacé
+dans chaque table, et les règles gardées et relues. Ils couvrent aussi les tables et l'écouteur du schéma, la
+configuration et les services, `LockedLuckTokens` et les verrous qu'il prend et libère, le voter et l'accès par le
+composant de sécurité, et le module d'effacement. Le test fonctionnel démarre une petite application avec les verrous
+activés et efface un membre par le bundle de vie privée. Dans le monodépôt, Infection maintient le bundle à 100 % des
+mutants couverts.
 
 ## Sur MySQL et PostgreSQL
 
