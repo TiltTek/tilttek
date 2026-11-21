@@ -4,6 +4,16 @@ All notable changes to `tilttek/generator` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+The next version is 0.2.3-alpha.
+
+### Security
+
+- `twig/twig` 3.30 or later required, for the fixes of its sandbox in 3.29: a template naming another one with `use`
+  is refused before that template is loaded. The templates render in a `Twig\Sandbox\Sandbox`, in a Twig environment
+  of their own, under the same strict policy.
+
 ## 0.2.2-alpha - 2026-11-20
 
 ### Changed
@@ -18,9 +28,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 ### Security
 
 - A seed is at most `Draw::SEED_LENGTH` (256) characters long; a longer one is refused with `InvalidDefinition`.
-- `twig/twig` 3.30 or later required, for the fixes of its sandbox in 3.29: a template naming another one with `use`
-  is refused before that template is loaded. The templates render in a `Twig\Sandbox\Sandbox`, in a Twig environment
-  of their own, under the same strict policy.
 
 ## 0.2.1-alpha - 2026-11-17
 
