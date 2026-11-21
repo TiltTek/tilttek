@@ -12,8 +12,8 @@ Development only.
 
 ### Changed
 
-- The development requirements accept `phil/privacy-bundle` 0.2 and 0.3, so that the package installs on its own beside
-  the published version of that bundle.
+- The development requirements accept `phil/privacy-bundle` 0.2, its latest published minor version, and no earlier
+  one, so that the package installs on its own beside the published version of that bundle.
 
 ## 0.1.0-alpha - 2026-11-15
 

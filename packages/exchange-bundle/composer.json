@@ -32,7 +32,7 @@
     "require-dev": {
         "doctrine/doctrine-bundle": "^3.3",
         "doctrine/orm": "^3.7",
-        "phil/privacy-bundle": "^0.1@dev || ^0.2@dev || ^0.3@dev",
+        "phil/privacy-bundle": "^0.2@dev",
         "phpunit/phpunit": "^13.4",
         "psr/clock": "^1.0",
         "symfony/clock": "^8.2",
