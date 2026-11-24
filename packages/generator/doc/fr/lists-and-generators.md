@@ -31,8 +31,8 @@ ou deux générateurs du même nom sont une erreur, où qu'ils soient.
 
 Un nom est fait de lettres, de chiffres, de `_` et de `-`, en parties reliées par des points :
 `name.fantasy.elf.female.first`. Les points ne servent qu'à ordonner les noms pour les gens ; la bibliothèque ne les
-lit pas. `Reader::isName()` dit si un texte est un nom. Un nom fait de chiffres seulement, comme `12`, que YAML et JSON décodent
-comme un nombre quand il est une clé, se lit comme un nom.
+lit pas. `Reader::isName()` dit si un texte est un nom. Un nom fait de chiffres seulement, comme `12`, que YAML et JSON
+décodent comme un nombre quand il est une clé, se lit comme un nom.
 
 ## Listes et entrées
 
@@ -50,11 +50,11 @@ lists:
 | `text` | Ce qu'affiche l'entrée. Obligatoire dans une table. |
 | `weight` | Un nombre entier d'au moins 1, 1 par défaut : une entrée de poids 3 revient trois fois plus souvent. Les poids d'une liste, et ceux des gabarits d'un générateur, totalisent au plus `PHP_INT_MAX`. |
 | `tags` | Une table d'étiquettes, chacune avec une valeur ou une séquence de valeurs, sur lesquelles filtre `pick(…, where: …)`. |
-| `source`, `licence`, `attribution` | D'où vient cette entrée, quand ce n'est pas d'où vient sa liste ; voyez [D'où vient le texte](#dou-vient-le-texte). |
+| `source`, `licence`, `attribution` | D'où vient cette entrée, quand ce n'est pas d'où vient sa liste ; voyez [D'où vient le texte](#doù-vient-le-texte). |
 | toute autre clé | Un champ : un scalaire ou une séquence de scalaires, lu dans un gabarit comme `entry.price`. |
 
 Une liste peut aussi s'écrire comme une table de ses entrées (`entries`), de sa chaîne de Markov (`markov`) et de son
-origine ; voyez [Listes de Markov](#listes-de-markov) et [D'où vient le texte](#dou-vient-le-texte).
+origine ; voyez [Listes de Markov](#listes-de-markov) et [D'où vient le texte](#doù-vient-le-texte).
 
 Ce que d'autres générateurs écrivent en intervalles d'index (« les six premiers adjectifs ne vont qu'avec les quatre
 premiers noms ») s'écrit ici avec des étiquettes. Un filtre sur une étiquette qu'aucune entrée de la liste ne porte est
@@ -107,7 +107,7 @@ Un générateur a exactement un corps, et peut avoir une langue, des variables e
 | `vars` | Des gabarits par nom de variable, rendus une fois par résultat, dans l'ordre, avant le corps ; chacun voit les précédents. |
 | `locale` | La langue des filtres de grammaire, comme `fr` ou `en_CA` ; sinon, celle du générateur par défaut. |
 | `state` | Des valeurs portées d'un résultat au suivant : une table à mémoire ; voyez [Tables à mémoire](memory.md). |
-| `source`, `licence`, `attribution` | D'où vient le texte de ses gabarits ; voyez [D'où vient le texte](#dou-vient-le-texte). |
+| `source`, `licence`, `attribution` | D'où vient le texte de ses gabarits ; voyez [D'où vient le texte](#doù-vient-le-texte). |
 
 Les champs d'un résultat structuré sont remplis dans l'ordre, et chacun voit les précédents comme des variables :
 

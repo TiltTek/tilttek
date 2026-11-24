@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Tilttek\DiceProbability\Exact\Natural;
+use Tilttek\DiceProbability\Tests\Unit\Fixture\ProcessorTime;
 
 #[CoversClass(Natural::class)]
 final class NaturalTest extends TestCase
@@ -164,11 +165,14 @@ final class NaturalTest extends TestCase
         // 1 - (1 - 1/6^11)^100, the probability that one of a hundred exploding dice was cut at its depth.
         $denominator = Natural::of(6)->power(1_100);
         $numerator = $denominator->subtract(Natural::of(6)->power(11)->subtract(Natural::one())->power(100));
-        $start = hrtime(true);
+        $references = ProcessorTime::inReferences(static function () use ($numerator, $denominator): void {
+            self::assertSame('1', (string) $numerator->gcd($denominator));
+            self::assertSame('6', (string) Natural::of(6)->power(95)->gcd(Natural::of(6)->power(96)->add(Natural::of(6))));
+        });
 
-        self::assertSame('1', (string) $numerator->gcd($denominator));
-        self::assertSame('6', (string) Natural::of(6)->power(95)->gcd(Natural::of(6)->power(96)->add(Natural::of(6))));
-        self::assertLessThan(5_000_000_000, hrtime(true) - $start);
+        // Twenty-two runs of the reference loop: about five seconds of processor time on an idle machine, seven times
+        // what the two divisors take.
+        self::assertLessThan(22.0, $references);
     }
 
     public function testDivisionByZeroIsRefused(): void

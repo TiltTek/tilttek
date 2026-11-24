@@ -1,0 +1,9 @@
+{
+    "name": "tilttek-monorepo-tools",
+    "private": true,
+    "description": "The Node.js tools of the documentation checks: the French dictionary that cspell reads for the French mirrors.",
+    "license": "MIT",
+    "devDependencies": {
+        "@cspell/dict-fr-fr": "2.3.2"
+    }
+}

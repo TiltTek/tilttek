@@ -1,7 +1,8 @@
 <!-- phil-dev source-sha256=2ba82dcb49caa515178e3a9becd7a747bf607bc6929eb83fb9fd88f62507a9f8 -->
 # tilttek/luck-tokens-bundle
 
-**Des jetons de chance, d'inspiration et de destin pour les tables d'une application Symfony, chaque mouvement gardé dans la base de données.**
+**Des jetons de chance, d'inspiration et de destin pour les tables d'une application Symfony, chaque mouvement gardé
+dans la base de données.**
 
 tilttek/luck-tokens-bundle intègre `tilttek/luck-tokens` à Symfony. Il garde les registres des tables, et leurs règles
 quand l'application les modifie, dans des tables d'une connexion Doctrine DBAL, ajoutées au schéma que génère l'ORM pour

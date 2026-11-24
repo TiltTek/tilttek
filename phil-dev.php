@@ -50,5 +50,7 @@ return [
     'docs' => [
         // The French mirrors catch up with the English documentation: their findings are reported, not blocking.
         'translations' => 'advisory',
+        // The words that the dictionaries of cspell do not hold: terms of the domain, in English and in French.
+        'words' => ['autocâblé', 'monodépôt', 'multiensembles', 'multisets', 'pseudonymisation', 'pseudonymised', 'pseudonymisées', 'relisible'],
     ],
 ];

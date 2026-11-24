@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 /*
  * One process of the concurrency test: grants a token to the same holder, again and again, each grant an operation of
- * its own, retried after a `LedgerConflict` as an application would; prints how many conflicts reached it, as JSON.
+ * its own, retried after a `LedgerConflict` as an application would, after a wait that grows with each conflict in a
+ * row; prints how many conflicts reached it, as JSON.
  *
  * php grants.php <autoload> <database: a URL, or the path of a SQLite file> <worker> <grants> [<lock directory>]
  */
@@ -38,6 +39,8 @@ $rules->save(TableRules::fromArray($table, ['kinds' => [['key' => 'fate', 'name'
 $tokens = new LuckTokens($rules, new DbalTokenLedger($connection));
 $locked = '' === $lockDirectory ? null : new LockedLuckTokens($tokens, new LockFactory(new FlockStore($lockDirectory)));
 $conflicts = 0;
+// The attempts at one grant, past which the worker gives up: a livelock fails the test rather than hang it.
+$attempts = 100;
 
 for ($grant = 0; $grant < (int) $grants; ++$grant) {
     for ($attempt = 0;; ++$attempt) {
@@ -48,11 +51,15 @@ for ($grant = 0; $grant < (int) $grants; ++$grant) {
         } catch (LedgerConflict $conflict) {
             ++$conflicts;
 
-            if ($attempt > 100) {
+            if ($attempt >= $attempts) {
                 throw $conflict;
             }
 
-            usleep(random_int(100, 2_000));
+            // A ledger can be busy without having moved: on SQLite, a writer that reads first and writes next is told
+            // at once that another one holds the write lock, and that one may be paused by a busy machine before it
+            // commits. The wait doubles at each conflict in a row, up to 64 ms, chosen at random below that: the
+            // attempts stay bounded, whatever the speed of the machine.
+            usleep(random_int(100, 2_000 << min($attempt, 5)));
         }
     }
 }

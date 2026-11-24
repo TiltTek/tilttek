@@ -14,13 +14,14 @@ derrière le port `Grammar`. Un générateur retourne un texte, un résultat str
 aubergiste, son personnel et son menu) ou une carte (cases carrées, hexagones, ou salles reliées par des passages). Une
 liste peut inventer des mots nouveaux à partir de ses entrées par une chaîne de Markov au lieu de les rendre ; un
 générateur peut porter un état d'un tirage au suivant (une table à mémoire, pour la météo d'une campagne, un voyage ou
-l'exploration d'une carte), que l'appelant garde et repasse. Une liste, une entrée et un générateur disent d'où vient leur texte (source, licence,
-attribution), et un tirage donne les attributions de ce que ses résultats ont utilisé. Des grammaires Tracery et des
-tables dans le sous-ensemble de la syntaxe de Perchance sans JavaScript sont importées en listes et en générateurs ; une
-carte s'exporte en JSON versionné avec son schéma JSON. Des tables aléatoires prêtes à tirer sont livrées dans
-`tables/`, en anglais et en français : rencontres, objets magiques, butins avec objets non identifiés, boutiques,
-accroches de scénario, rumeurs, oracle du jeu en solo et bonne aventure. Il ne garde de listes ni d'états pour personne, n'affiche pas de résultats et
-ne les sert pas : l'application tient ses propres listes, ses états et ses pages, et le bundle sert les tirages.
+l'exploration d'une carte), que l'appelant garde et repasse. Une liste, une entrée et un générateur disent d'où vient
+leur texte (source, licence, attribution), et un tirage donne les attributions de ce que ses résultats ont utilisé. Des
+grammaires Tracery et des tables dans le sous-ensemble de la syntaxe de Perchance sans JavaScript sont importées en
+listes et en générateurs ; une carte s'exporte en JSON versionné avec son schéma JSON. Des tables aléatoires prêtes à
+tirer sont livrées dans `tables/`, en anglais et en français : rencontres, objets magiques, butins avec objets non
+identifiés, boutiques, accroches de scénario, rumeurs, oracle du jeu en solo et bonne aventure. Il ne garde de listes ni
+d'états pour personne, n'affiche pas de résultats et ne les sert pas : l'application tient ses propres listes, ses états
+et ses pages, et le bundle sert les tirages.
 
 Elle s'adresse à tout code PHP qui crée du contenu aléatoire pour des gens : un générateur de noms, la boîte à outils
 d'un meneur de jeu, un oracle de jeu en solo, une table aléatoire dans un livre, un donjon pour une table virtuelle.

@@ -8,6 +8,16 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 The next version is 0.2.3-alpha.
 
+### Changed
+
+- The tests count the work of the costliest draw in readings of a clock that moves forward at each reading, rather
+  than on the wall clock: a busy machine no longer fails the load test, and a draw that renders without reading the
+  clock still does.
+
+### Fixed
+
+- The documentation in French: its links to the section on where the text comes from reach that section.
+
 ### Security
 
 - `twig/twig` 3.30 or later required, for the fixes of its sandbox in 3.29: a template naming another one with `use`

@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=28bca766a2daf3651df543d68e99b845a87220a72babf2a32a0847825dd466eb -->
+<!-- phil-dev source-sha256=d1e20af25e5d35740e61298fc6cc3d7591b5bae0dd31ca9f2bb2cb6a779c7d5c -->
 # Enregistrer l'activité
 
 ## Une activité

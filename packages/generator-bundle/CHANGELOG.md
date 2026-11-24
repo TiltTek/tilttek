@@ -8,6 +8,10 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 The next version is 0.2.3-alpha.
 
+### Changed
+
+- The documentation in French: the lines of its API page fit in 120 columns.
+
 ### Security
 
 - `twig/twig` 3.30 or later required, for the fixes of its sandbox in 3.29; the templates of the generators render
