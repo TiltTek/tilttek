@@ -84,7 +84,7 @@ public function __invoke(DiceRolls $dice): Response
 
 ## Requirements
 
-PHP 8.5 or later, Symfony 8.2, Doctrine ORM 3.7, `tilttek/dice` and `phil/resource` 0.1. Symfony Form, Validator, Twig
+PHP 8.5 or later, Symfony 8.2, Doctrine ORM 3.8, `tilttek/dice` and `phil/resource` 0.1. Symfony Form, Validator, Twig
 and Translation are optional.
 
 ## Contributing

@@ -8,9 +8,13 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 The next version is 0.2.3-alpha.
 
+### Changed
+
+- `tilttek/dice` 0.3 required: 0.2 is no longer accepted.
+
 ### Security
 
-- `twig/twig` 3.30 or later required, for the fixes of its sandbox in 3.29: a template naming another one with `use`
+- `twig/twig` 3.31 or later required, for the fixes of its sandbox in 3.29: a template naming another one with `use`
   is refused before that template is loaded. The templates render in a `Twig\Sandbox\Sandbox`, in a Twig environment
   of their own, under the same strict policy.
 

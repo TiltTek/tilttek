@@ -22,7 +22,7 @@
     "homepage": "https://ph-il.ca",
     "require": {
         "php": ">=8.5",
-        "doctrine/dbal": "^4.5",
+        "doctrine/dbal": "^4.6",
         "phil/resource": "^0.1@dev",
         "psr/clock": "^1.0",
         "psr/event-dispatcher": "^1.0",
@@ -31,8 +31,8 @@
         "tilttek/leaderboards": "^0.2@dev"
     },
     "require-dev": {
-        "doctrine/doctrine-bundle": "^3.3",
-        "doctrine/orm": "^3.7",
+        "doctrine/doctrine-bundle": "^3.4",
+        "doctrine/orm": "^3.8",
         "phil/privacy-bundle": "^0.2@dev",
         "phil/ux-kit": ">=0.5.0-alpha <1.0",
         "phpunit/phpunit": "^13.4",
@@ -46,11 +46,11 @@
         "symfony/scheduler": "^8.2",
         "symfony/translation": "^8.2",
         "symfony/twig-bundle": "^8.2",
-        "symfony/ux-twig-component": "^3.7",
+        "symfony/ux-twig-component": "^3.8",
         "symfony/yaml": "^8.2",
         "tilttek/activity": "^0.1@dev",
         "tilttek/activity-bundle": "^0.2@dev",
-        "twig/twig": "^3.21"
+        "twig/twig": "^3.31"
     },
     "suggest": {
         "doctrine/orm": "To add the leaderboards' tables to the schema the ORM generates, and so to the migrations",

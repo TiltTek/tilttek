@@ -23,19 +23,19 @@
     "require": {
         "php": ">=8.5",
         "ext-sodium": "*",
-        "doctrine/orm": "^3.7",
+        "doctrine/orm": "^3.8",
         "phil/commerce-bundle": "^0.4@dev",
         "psr/clock": "^1.0",
         "symfony/config": "^8.2",
         "symfony/dependency-injection": "^8.2",
-        "symfony/service-contracts": "^3.6",
+        "symfony/service-contracts": "^3.8",
         "symfony/workflow": "^8.2",
         "tilttek/loot-tables": "^0.3@dev"
     },
     "require-dev": {
         "ext-zlib": "*",
-        "doctrine/dbal": "^4.5",
-        "doctrine/doctrine-bundle": "^3.3",
+        "doctrine/dbal": "^4.6",
+        "doctrine/doctrine-bundle": "^3.4",
         "phil/money": "^0.1@dev",
         "phil/paged-media": "^0.1@dev",
         "phil/ux-kit": "^0.5@dev",
@@ -50,13 +50,13 @@
         "symfony/options-resolver": "^8.2",
         "symfony/routing": "^8.2",
         "symfony/translation": "^8.2",
-        "symfony/translation-contracts": "^3.6",
+        "symfony/translation-contracts": "^3.8",
         "symfony/twig-bridge": "^8.2",
         "symfony/twig-bundle": "^8.2",
-        "symfony/ux-twig-component": "^3.7",
+        "symfony/ux-twig-component": "^3.8",
         "symfony/yaml": "^8.2",
         "tilttek/dice": "^0.3@dev",
-        "twig/twig": "^3.21"
+        "twig/twig": "^3.31"
     },
     "suggest": {
         "phil/paged-media": "For LootSheetPdf, the production sheet of an order's draws",

@@ -76,7 +76,7 @@ A participant of `table:7` then opens `/table-safety/table:7`; its game master, 
 
 ## Requirements
 
-PHP 8.5 or later with `ext-intl`, Symfony 8.2, Doctrine DBAL 4.5, Twig 3.21.
+PHP 8.5 or later with `ext-intl`, Symfony 8.2, Doctrine DBAL 4.6, Twig 3.31.
 
 ## Contributing
 

@@ -4,6 +4,16 @@ All notable changes to `tilttek/bingo` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+The next version is 0.2.1-alpha.
+
+Development only.
+
+### Changed
+
+- The development requirements ask for the latest minor of `twig/twig`, 3.31.
+
 ## 0.2.0-alpha - 2026-11-14
 
 ### Changed

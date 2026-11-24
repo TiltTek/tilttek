@@ -87,7 +87,7 @@ php bin/console tilttek:loot-tables:replay <draw>  # rolls a revealed draw again
 
 ## Requirements
 
-PHP 8.5 or later with sodium, Symfony 8.2 with its Workflow component, Doctrine ORM 3.7, `phil/commerce-bundle` and
+PHP 8.5 or later with sodium, Symfony 8.2 with its Workflow component, Doctrine ORM 3.8, `phil/commerce-bundle` and
 `tilttek/loot-tables`; the Form component, Symfony UX with the PHIL UX kit, the Console component and
 `phil/paged-media` for the form, the components, the replay command and the production sheet.
 

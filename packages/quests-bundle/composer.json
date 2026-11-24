@@ -21,7 +21,7 @@
     "homepage": "https://ph-il.ca",
     "require": {
         "php": ">=8.5",
-        "doctrine/dbal": "^4.5",
+        "doctrine/dbal": "^4.6",
         "phil/resource": "^0.1@dev",
         "psr/event-dispatcher": "^1.0",
         "symfony/config": "^8.2",
@@ -29,8 +29,8 @@
         "tilttek/quests": "^0.3@dev"
     },
     "require-dev": {
-        "doctrine/doctrine-bundle": "^3.3",
-        "doctrine/orm": "^3.7",
+        "doctrine/doctrine-bundle": "^3.4",
+        "doctrine/orm": "^3.8",
         "phpunit/phpunit": "^13.4",
         "psr/clock": "^1.0",
         "symfony/clock": "^8.2",
@@ -43,7 +43,7 @@
         "symfony/yaml": "^8.2",
         "tilttek/activity": "^0.1@dev",
         "tilttek/activity-bundle": "^0.2@dev",
-        "twig/twig": "^3.21"
+        "twig/twig": "^3.31"
     },
     "suggest": {
         "doctrine/orm": "To add the quests' tables to the schema the ORM generates, and so to the migrations",

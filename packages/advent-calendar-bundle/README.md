@@ -82,7 +82,7 @@ A member then opens `/advent-calendar/advent-2026`, and the application grants e
 
 ## Requirements
 
-PHP 8.5 or later with `ext-intl`, Symfony 8.2, Doctrine DBAL 4.5, Twig 3.21.
+PHP 8.5 or later with `ext-intl`, Symfony 8.2, Doctrine DBAL 4.6, Twig 3.31.
 
 ## Contributing
 

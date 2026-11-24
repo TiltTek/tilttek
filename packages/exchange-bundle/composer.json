@@ -21,7 +21,7 @@
     "homepage": "https://ph-il.ca",
     "require": {
         "php": ">=8.5",
-        "doctrine/dbal": "^4.5",
+        "doctrine/dbal": "^4.6",
         "phil/resource": "^0.1@dev",
         "psr/event-dispatcher": "^1.0",
         "symfony/config": "^8.2",
@@ -30,8 +30,8 @@
         "tilttek/points": "^0.2@dev"
     },
     "require-dev": {
-        "doctrine/doctrine-bundle": "^3.3",
-        "doctrine/orm": "^3.7",
+        "doctrine/doctrine-bundle": "^3.4",
+        "doctrine/orm": "^3.8",
         "phil/privacy-bundle": "^0.2@dev",
         "phpunit/phpunit": "^13.4",
         "psr/clock": "^1.0",

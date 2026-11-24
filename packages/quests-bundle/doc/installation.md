@@ -10,7 +10,7 @@ Tilttek\ActivityBundle\TilttekActivityBundle::class => ['all' => true],
 Tilttek\QuestsBundle\TilttekQuestsBundle::class => ['all' => true],
 ```
 
-The bundle needs PHP 8.5 or later, Symfony 8.2, Doctrine DBAL 4.5 and a `clock` service — FrameworkBundle registers
+The bundle needs PHP 8.5 or later, Symfony 8.2, Doctrine DBAL 4.6 and a `clock` service — FrameworkBundle registers
 one. Install as well, when you need them:
 
 - `phil/almanac`, for quests that come back at computed dates;

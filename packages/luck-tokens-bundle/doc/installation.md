@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- PHP 8.5 or later, Symfony 8.2, Doctrine DBAL 4.5.
+- PHP 8.5 or later, Symfony 8.2, Doctrine DBAL 4.6.
 - `tilttek/luck-tokens`, the tokens themselves, and `phil/resource`, whose references name the tables and the holders.
 - `psr/event-dispatcher`; FrameworkBundle provides the dispatcher, and its `clock` service dates the entries.
 - Optional: `doctrine/orm` for the schema listener, `symfony/lock` for the locks, `symfony/security-bundle` for the

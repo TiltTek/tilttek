@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- PHP 8.5 or later, Symfony 8.2 (Config and DependencyInjection), Doctrine DBAL 4.5.
+- PHP 8.5 or later, Symfony 8.2 (Config and DependencyInjection), Doctrine DBAL 4.6.
 - `tilttek/activity`, `phil/resource` and `psr/clock`, required.
 - A `clock` service, which FrameworkBundle registers.
 - Optional: `doctrine/orm` and DoctrineBundle for the tables in the migrations, `symfony/console` for the commands,

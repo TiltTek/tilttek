@@ -4,7 +4,7 @@
 
 - PHP 8.5 or later, with `sodium`.
 - `tilttek/escape-room` 0.1 and `tilttek/puzzle-builder` 0.1.
-- Doctrine DBAL 4.5, Twig 3.21, and Symfony 8.2's container, HTTP kernel, routing and CSRF protection.
+- Doctrine DBAL 4.6, Twig 3.31, and Symfony 8.2's container, HTTP kernel, routing and CSRF protection.
 - Optional: the Doctrine ORM, for the tables in the generated schema; Symfony Console, Scheduler, Mercure and Rate
   Limiter; Twig components and the PHIL UX kit, for the screens; `phil/reservation`, for the bookings;
   `phil/privacy-bundle`, for the export and erasure of a member.

@@ -3,7 +3,7 @@
 ## Requirements
 
 - PHP 8.5 or later, with `mbstring`.
-- `tilttek/dice` 0.2 or 0.3, whose rolled dice a tally reads, and `tilttek/dice-probability` 0.1, whose exact distributions
+- `tilttek/dice` 0.3, whose rolled dice a tally reads, and `tilttek/dice-probability` 0.1, whose exact distributions
   give the faces of a fair die.
 - An implementation of `psr/clock`, such as `symfony/clock`.
 

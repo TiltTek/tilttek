@@ -2,7 +2,7 @@
 
 ## Requirements
 
-PHP 8.5 or later with the sodium extension, Symfony 8.2 with its Workflow component, Doctrine ORM 3.7 and
+PHP 8.5 or later with the sodium extension, Symfony 8.2 with its Workflow component, Doctrine ORM 3.8 and
 DoctrineBundle, `phil/commerce-bundle`, whose order workflow and option drawers the bundle plugs into, and
 `tilttek/loot-tables`. The screens and the production sheet are optional: the bundle registers
 each when its packages are installed.
