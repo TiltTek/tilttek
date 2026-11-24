@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=e8f77c3042d6f5ea3b04014ab95ee32ed0e7084ecc2e62383b367cb44e6fadba -->
+<!-- phil-dev source-sha256=ed45b8f48b4a7665438bf338cd1235b5641052080b8bc8ad41e1564ff78adbb5 -->
 # tilttek/activity-bundle
 
 **L'activité des membres d'une application Symfony, enregistrée une seule fois dans la base de données, pour que chaque
@@ -83,7 +83,7 @@ Ensuite, `bin/console doctrine:migrations:diff` écrit la migration des deux tab
 
 ## Prérequis
 
-PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.5.
+PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.6.
 
 ## Contribuer
 

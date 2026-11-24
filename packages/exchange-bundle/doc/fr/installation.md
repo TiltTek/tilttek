@@ -1,9 +1,9 @@
-<!-- phil-dev source-sha256=f224d7e53d9a0dcc4c035dce3c2fd8bfef57893e7f7f0a81e3c3e0a3090128f3 -->
+<!-- phil-dev source-sha256=236a5462c39807b9b0574f35a315224108ea53f3c1c450da34709610b613f4fb -->
 # Installation
 
 ## Prérequis
 
-- PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.5.
+- PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.6.
 - `tilttek/exchange`, les échanges eux-mêmes, et `tilttek/points`, le registre sur lequel ils déplacent des points.
 - Les services `Points` et `Currencies`, que `tilttek/points-bundle` enregistre ; gardez son registre sur la même
   connexion que les échanges, pour que les points d'un échange bougent dans la transaction de l'échange.

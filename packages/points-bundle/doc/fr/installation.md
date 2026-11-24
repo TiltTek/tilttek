@@ -1,9 +1,9 @@
-<!-- phil-dev source-sha256=e509e0b4a0a9057ba43148b6a794ea1cefd72dc488c681f2c677485fcae0d517 -->
+<!-- phil-dev source-sha256=0408d3444382743c9d2aad14d04008d96de3b7ad7e64940530c2296b53561134 -->
 # Installation
 
 ## Prérequis
 
-- PHP 8.5 ou plus récent, Symfony 8.2 (Config et DependencyInjection), Doctrine DBAL 4.5.
+- PHP 8.5 ou plus récent, Symfony 8.2 (Config et DependencyInjection), Doctrine DBAL 4.6.
 - `tilttek/points` et `phil/resource`, requis.
 - Un service `clock`, que FrameworkBundle enregistre.
 - `tilttek/activity-bundle`, pour les règles de gain : il garde le journal d'activité et rattrape la projection.

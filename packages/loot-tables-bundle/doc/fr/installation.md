@@ -1,9 +1,9 @@
-<!-- phil-dev source-sha256=6e18220cbc2cd66e4a37f799851d0f33e647bec41a37711fd3fd6490422b91ad -->
+<!-- phil-dev source-sha256=3a7a89afd69487653b254b10a395c22245d0716e75484ab9566d6972e3e1f057 -->
 # Installation
 
 ## Prérequis
 
-PHP 8.5 ou plus récent avec l'extension sodium, Symfony 8.2 avec son composant Workflow, Doctrine ORM 3.7 et
+PHP 8.5 ou plus récent avec l'extension sodium, Symfony 8.2 avec son composant Workflow, Doctrine ORM 3.8 et
 DoctrineBundle, `phil/commerce-bundle`, dont le bundle utilise le workflow de commande et les tireurs d'options, et
 `tilttek/loot-tables`. Les écrans et la fiche de production sont facultatifs : le
 bundle enregistre chacun quand ses paquets sont installés.

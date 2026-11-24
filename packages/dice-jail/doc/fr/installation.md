@@ -1,10 +1,10 @@
-<!-- phil-dev source-sha256=5d68b7d058b50a26dec383b767b7a871f45d253386521ff24c67943a7d0830bb -->
+<!-- phil-dev source-sha256=f55d973900d862166e40bbfd73f6b6c1f143aab9251c4d1b70674d719078550d -->
 # Installation
 
 ## Prérequis
 
 - PHP 8.5 ou une version plus récente, avec `mbstring`.
-- `tilttek/dice` 0.2 ou 0.3, dont un décompte lit les dés lancés, et `tilttek/dice-probability` 0.1, dont les distributions
+- `tilttek/dice` 0.3, dont un décompte lit les dés lancés, et `tilttek/dice-probability` 0.1, dont les distributions
   exactes donnent les faces d'un dé équitable.
 - Une implémentation de `psr/clock`, comme `symfony/clock`.
 

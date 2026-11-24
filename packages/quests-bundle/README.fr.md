@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=1013ee465e304bb044fc23c97d13b418622b6727e63f69fffc8dcc9d884eff89 -->
+<!-- phil-dev source-sha256=841a3ddeffad00a2540bb3b35f4a3542a8e5753d3d27fe28763e413447829c3b -->
 # tilttek/quests-bundle
 
 **Des quêtes et des défis pour une application Symfony, tirés du journal de l'activité de ses membres.**
@@ -93,7 +93,7 @@ public function __invoke(QuestCompleted $event): void
 
 ## Prérequis
 
-PHP 8.5 ou plus récent, Symfony 8.2 et Doctrine DBAL 4.5.
+PHP 8.5 ou plus récent, Symfony 8.2 et Doctrine DBAL 4.6.
 
 ## Contribuer
 

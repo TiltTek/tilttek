@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=758f5b1e1a358f777a76208cc6b5e7357a2aacdff03bb9603a38a3487e239464 -->
+<!-- phil-dev source-sha256=076a873f9c1a56ec76505b1656aefe459d8ec4efcc95b379929257ea52e60aa5 -->
 # tilttek/exchange-bundle
 
 **Récompenses, dons de points et échanges d'objets entre les membres d'une application Symfony, gardés en base de
@@ -101,7 +101,7 @@ Ensuite, `bin/console doctrine:migrations:diff` écrit la migration des tables, 
 
 ## Prérequis
 
-PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.5.
+PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.6.
 
 ## Contribuer
 

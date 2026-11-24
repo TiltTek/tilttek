@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=23aabf871cfa3c87246db3f35b7cd279cbcf0af9a22c3b323846b33b1374522e -->
+<!-- phil-dev source-sha256=e0f0984ad6d00f3a793d48b0bc8b46dc7616cd68db64e2df6d780599b33a79fc -->
 # tilttek/escape-room-bundle
 
 **Des escape games dans une application Symfony : la console de l'animateur, l'écran d'indices en temps réel, des séances
@@ -84,7 +84,7 @@ $desk->start('g-01J8', 'cell', ResourceReference::of('team', 'owls'));
 
 ## Prérequis
 
-PHP 8.5 ou une version plus récente, Symfony 8.2, Doctrine DBAL 4.5.
+PHP 8.5 ou une version plus récente, Symfony 8.2, Doctrine DBAL 4.6.
 
 ## Contribuer
 

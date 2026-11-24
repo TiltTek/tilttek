@@ -1,9 +1,9 @@
-<!-- phil-dev source-sha256=4b0aee7db18c2791dfa94b2e197d43baf61bb7790f124656e0702de65c0399bb -->
+<!-- phil-dev source-sha256=8f8aec016b0f38c2763166c9bdcb3b7ff186bf187ad0907f4f9455af1d53159c -->
 # Installation
 
 ## Prérequis
 
-- PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.5 et son bundle.
+- PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.6 et son bundle.
 - `tilttek/activity-bundle`, pour remettre l'objet du jour sur l'activité des membres.
 
 ## Enregistrer le bundle

@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=f244d030b6dc3479d0d788a142dda3c26ff24477de9003c722bc0f550491773b -->
+<!-- phil-dev source-sha256=faae6f100a9e5c0aee232c85d7672a13d56a8126f0c4c2e37b49cfa43ef4ca99 -->
 # tilttek/dice-bundle
 
 **Des dés pour une application Symfony : configurés, lancés, gardés pour être rejoués, vérifiés dans les formulaires et
@@ -88,7 +88,7 @@ public function __invoke(DiceRolls $dice): Response
 
 ## Prérequis
 
-PHP 8.5 ou plus récent, Symfony 8.2, Doctrine ORM 3.7, `tilttek/dice` et `phil/resource` 0.1. Symfony Form, Validator,
+PHP 8.5 ou plus récent, Symfony 8.2, Doctrine ORM 3.8, `tilttek/dice` et `phil/resource` 0.1. Symfony Form, Validator,
 Twig et Translation sont facultatifs.
 
 ## Contribuer

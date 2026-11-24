@@ -1,9 +1,9 @@
-<!-- phil-dev source-sha256=9a16e159bd08783c198da18951b1ff85553d8edb37f71c0219ba910f465576a6 -->
+<!-- phil-dev source-sha256=47fb12f2c414bcdde50015e64015c6ed6dbb119dc1553b7d9a1824070bb100f8 -->
 # Installation
 
 ## Prérequis
 
-- PHP 8.5 ou plus récent, Symfony 8.2 (Config et DependencyInjection), Doctrine DBAL 4.5.
+- PHP 8.5 ou plus récent, Symfony 8.2 (Config et DependencyInjection), Doctrine DBAL 4.6.
 - `tilttek/activity`, `phil/resource` et `psr/clock`, exigés.
 - Un service `clock`, qu'enregistre FrameworkBundle.
 - Facultatifs : `doctrine/orm` et DoctrineBundle pour les tables dans les migrations, `symfony/console` pour les

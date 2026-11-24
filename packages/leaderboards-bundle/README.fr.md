@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=594ec2b5eb8bb53541ce1405a7022230a9a19bc8dcc0b3022e0e935018f24169 -->
+<!-- phil-dev source-sha256=a4de543bc96179ea3f48af4e72a4c20c9c4f9450949b312f885c507661414e23 -->
 # tilttek/leaderboards-bundle
 
 **Des classements pour une application Symfony, tenus à jour à partir de l'activité de ses membres, chaque membre
@@ -95,7 +95,7 @@ tilttek_leaderboards:
 
 ## Prérequis
 
-PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.5.
+PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.6.
 
 ## Contribuer
 

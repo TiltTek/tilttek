@@ -1,9 +1,9 @@
-<!-- phil-dev source-sha256=c6aa5038cb442b5ec3d285a30b523faa40356ba583503b80c7684d60c1937faf -->
+<!-- phil-dev source-sha256=0b330dd0202638f70e40a371e1b1bebb67439229583a696abf8229cc2ad0c189 -->
 # Installation
 
 ## Prérequis
 
-- PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.5.
+- PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.6.
 - `tilttek/luck-tokens`, les jetons eux-mêmes, et `phil/resource`, dont les références nomment les tables et les
   détenteurs.
 - `psr/event-dispatcher` ; FrameworkBundle fournit le répartiteur, et son service `clock` date les entrées.

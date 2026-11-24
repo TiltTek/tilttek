@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=564166d5797a8a8bacd6c74e8f5032bfff0a831ace81ef0e1275c083a0cc8adb -->
+<!-- phil-dev source-sha256=3fb02cce5b6ad7ff17dded27795482ad1a6e5dd0cde76edd2236d5e156de11ed -->
 # Installation
 
 ```sh
@@ -11,7 +11,7 @@ Tilttek\ActivityBundle\TilttekActivityBundle::class => ['all' => true],
 Tilttek\QuestsBundle\TilttekQuestsBundle::class => ['all' => true],
 ```
 
-Le bundle exige PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.5 et un service `clock`, que FrameworkBundle
+Le bundle exige PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.6 et un service `clock`, que FrameworkBundle
 enregistre. Installez aussi, selon vos besoins :
 
 - `phil/almanac`, pour les quêtes qui reviennent à des dates calculées ;
