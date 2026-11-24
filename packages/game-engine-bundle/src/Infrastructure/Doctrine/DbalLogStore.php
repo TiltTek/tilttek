@@ -6,7 +6,6 @@ namespace Tilttek\GameEngineBundle\Infrastructure\Doctrine;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Generator;
 use JsonException;
@@ -119,8 +118,6 @@ final readonly class DbalLogStore implements LogStore
     #[Override]
     public function moves(string $gameId, int $from, int $to): Generator
     {
-        $drew = Type::getType(Types::BOOLEAN);
-        $platform = $this->connection->getDatabasePlatform();
         $next = max(1, $from);
 
         while ($next <= $to) {
@@ -147,7 +144,7 @@ final readonly class DbalLogStore implements LogStore
                     $payload[(string) $name] = $value;
                 }
 
-                yield new LoggedMove($next, new Move($type, $seat, $payload), true === $drew->convertToPHPValue($row['drew'], $platform));
+                yield new LoggedMove($next, new Move($type, $seat, $payload), true === $this->connection->convertToPHPValue($row['drew'], Types::BOOLEAN));
                 ++$next;
             }
 

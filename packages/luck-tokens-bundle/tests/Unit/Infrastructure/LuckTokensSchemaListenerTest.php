@@ -6,7 +6,7 @@ namespace Tilttek\LuckTokensBundle\Tests\Unit\Infrastructure;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Platforms\MariaDB1010Platform;
+use Doctrine\DBAL\Platforms\MariaDBPlatform;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Platforms\SQLitePlatform;
@@ -74,7 +74,7 @@ final class LuckTokensSchemaListenerTest extends TestCase
 
     public function testOnMySqlAndMariaDbTheTextsCompareByteByByte(): void
     {
-        foreach ([new MySQLPlatform(), new MariaDB1010Platform()] as $platform) {
+        foreach ([new MySQLPlatform(), new MariaDBPlatform()] as $platform) {
             $sql = $platform->getCreateTablesSQL(array_values(LuckTokensTables::tables($platform)));
 
             self::assertSame([
