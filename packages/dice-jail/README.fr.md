@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=552f8585560a0c45e8f56649486fdcba7815cd469c811f4c78ae372c61090bd0 -->
+<!-- phil-dev source-sha256=04732ab4a9b269caea26e6cd6c7d79aa667480582b0083291016feb43a0a1636 -->
 # tilttek/dice-jail
 
 **La prison des dés malchanceux et les statistiques qui la fondent : un test d'adéquation honnête, expliqué simplement.**
@@ -70,7 +70,7 @@ $warden->release('member-7', 'd20:blue', 'It has served its time.');
 
 ## Prérequis
 
-PHP 8.5 ou une version plus récente, avec `mbstring` ; `tilttek/dice` 0.2 ou 0.3 et `tilttek/dice-probability` 0.1 ; une
+PHP 8.5 ou une version plus récente, avec `mbstring` ; `tilttek/dice` 0.3 et `tilttek/dice-probability` 0.1 ; une
 implémentation de `psr/clock`.
 
 ## Contribuer

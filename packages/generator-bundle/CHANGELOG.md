@@ -11,10 +11,11 @@ The next version is 0.2.3-alpha.
 ### Changed
 
 - The documentation in French: the lines of its API page fit in 120 columns.
+- `tilttek/dice` 0.3 required: 0.2 is no longer accepted.
 
 ### Security
 
-- `twig/twig` 3.30 or later required, for the fixes of its sandbox in 3.29; the templates of the generators render
+- `twig/twig` 3.31 or later required, for the fixes of its sandbox in 3.29; the templates of the generators render
   in a `Twig\Sandbox\Sandbox` of `tilttek/generator`.
 
 ## 0.2.2-alpha - 2026-11-20

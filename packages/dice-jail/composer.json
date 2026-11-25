@@ -24,7 +24,7 @@
         "php": ">=8.5",
         "ext-mbstring": "*",
         "psr/clock": "^1.0",
-        "tilttek/dice": "^0.2@dev || ^0.3@dev",
+        "tilttek/dice": "^0.3@dev",
         "tilttek/dice-probability": "^0.1@dev"
     },
     "require-dev": {

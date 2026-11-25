@@ -8,8 +8,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 The next version is 0.1.1-alpha.
 
-Development, documentation and tests only.
-
 ### Changed
 
 - The development requirements accept `phil/privacy-bundle` 0.2, its latest published minor version, and no earlier
@@ -18,6 +16,7 @@ Development, documentation and tests only.
   to 64 ms, so that a writer that holds the SQLite write lock and is paused by a busy machine commits before the
   others run out of attempts.
 - The documentation in French: the lines of the README and of the page on testing fit in 120 columns.
+- Requires the latest minor of each dependency: `doctrine/orm` 3.8, `doctrine/dbal` 4.6, `doctrine/doctrine-bundle` 3.4.
 
 ## 0.1.0-alpha - 2026-11-20
 

@@ -24,7 +24,7 @@
         "phil/rate-limit": "^0.1.1@dev",
         "symfony/config": "^8.2",
         "symfony/dependency-injection": "^8.2",
-        "tilttek/dice": "^0.2@dev || ^0.3@dev",
+        "tilttek/dice": "^0.3@dev",
         "tilttek/dice-bundle": "^0.2@dev",
         "tilttek/dice-probability": "^0.1.4@dev"
     },
@@ -38,14 +38,14 @@
         "symfony/http-kernel": "^8.2",
         "symfony/rate-limiter": "^8.2",
         "symfony/routing": "^8.2",
-        "symfony/stimulus-bundle": "^3.7",
+        "symfony/stimulus-bundle": "^3.8",
         "symfony/translation": "^8.2",
         "symfony/twig-bridge": "^8.2",
         "symfony/twig-bundle": "^8.2",
-        "symfony/ux-live-component": "^3.7",
-        "symfony/ux-twig-component": "^3.7",
+        "symfony/ux-live-component": "^3.8",
+        "symfony/ux-twig-component": "^3.8",
         "symfony/yaml": "^8.2",
-        "twig/twig": "^3.21"
+        "twig/twig": "^3.31"
     },
     "suggest": {
         "ext-gmp": "To write the long fractions of the probabilities in their lowest terms",

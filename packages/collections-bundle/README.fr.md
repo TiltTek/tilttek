@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=593bca0d28dcb424c5fb2e95b134e8b594bd11868034a2dfa293692e5601d281 -->
+<!-- phil-dev source-sha256=44e0e7bb79104681ae35c96ab3265e52a84d0be22b440789d68f193b7db3a4c7 -->
 # tilttek/collections-bundle
 
 **Des objets à collectionner pour Symfony : le catalogue, les exemplaires des membres, l'objet du jour, les paquets et
@@ -85,7 +85,7 @@ tilttek_collections:
 
 ## Prérequis
 
-PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.5.
+PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.6.
 
 ## Contribuer
 

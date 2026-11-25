@@ -19,7 +19,7 @@
         "phil/resource": "^0.1@dev",
         "psr/clock": "^1.0",
         "psr/event-dispatcher": "^1.0",
-        "tilttek/sets": "^0.2@dev || ^0.3@dev"
+        "tilttek/sets": "^0.3@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^13.4"

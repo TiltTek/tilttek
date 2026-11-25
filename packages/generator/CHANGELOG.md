@@ -13,6 +13,7 @@ The next version is 0.2.3-alpha.
 - The tests count the work of the costliest draw in readings of a clock that moves forward at each reading, rather
   than on the wall clock: a busy machine no longer fails the load test, and a draw that renders without reading the
   clock still does.
+- `tilttek/dice` 0.3 required: 0.2 is no longer accepted.
 
 ### Fixed
 
@@ -20,7 +21,7 @@ The next version is 0.2.3-alpha.
 
 ### Security
 
-- `twig/twig` 3.30 or later required, for the fixes of its sandbox in 3.29: a template naming another one with `use`
+- `twig/twig` 3.31 or later required, for the fixes of its sandbox in 3.29: a template naming another one with `use`
   is refused before that template is loaded. The templates render in a `Twig\Sandbox\Sandbox`, in a Twig environment
   of their own, under the same strict policy.
 

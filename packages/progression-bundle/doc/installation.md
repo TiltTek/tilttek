@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- PHP 8.5 or later, Symfony 8.2, Doctrine DBAL 4.5 and `doctrine/doctrine-bundle`.
+- PHP 8.5 or later, Symfony 8.2, Doctrine DBAL 4.6 and `doctrine/doctrine-bundle`.
 - `tilttek/activity-bundle`, to keep the journal of activity the projection reads.
 - Optional: `doctrine/orm` (the tables in the generated schema), `symfony/console` (the commands), `symfony/twig-bundle`
   and `symfony/translation` (the templates), `phil/privacy-bundle` (export and erasure).

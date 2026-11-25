@@ -4,6 +4,16 @@ All notable changes to `tilttek/dice-probability-bundle` will be documented in t
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+The next version is 0.1.1-alpha.
+
+### Changed
+
+- Requires the latest minor of each dependency: `twig/twig` 3.31, `symfony/ux-twig-component` 3.8,
+  `symfony/ux-live-component` 3.8, `symfony/stimulus-bundle` 3.8.
+- `tilttek/dice` 0.3 required: 0.2 is no longer accepted.
+
 ## 0.1.0-alpha - 2026-11-20
 
 ### Added

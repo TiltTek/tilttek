@@ -21,17 +21,17 @@
     "homepage": "https://ph-il.ca",
     "require": {
         "php": ">=8.5",
-        "doctrine/orm": "^3.7",
+        "doctrine/orm": "^3.8",
         "phil/resource": "^0.1@dev",
         "psr/clock": "^1.0",
         "psr/event-dispatcher": "^1.0",
         "symfony/config": "^8.2",
         "symfony/dependency-injection": "^8.2",
-        "tilttek/dice": "^0.2@dev || ^0.3@dev"
+        "tilttek/dice": "^0.3@dev"
     },
     "require-dev": {
-        "doctrine/dbal": "^4.5",
-        "doctrine/doctrine-bundle": "^3.3",
+        "doctrine/dbal": "^4.6",
+        "doctrine/doctrine-bundle": "^3.4",
         "phpunit/phpunit": "^13.4",
         "symfony/clock": "^8.2",
         "symfony/event-dispatcher": "^8.2",
@@ -40,10 +40,10 @@
         "symfony/http-kernel": "^8.2",
         "symfony/options-resolver": "^8.2",
         "symfony/translation": "^8.2",
-        "symfony/translation-contracts": "^3.6",
+        "symfony/translation-contracts": "^3.8",
         "symfony/twig-bundle": "^8.2",
         "symfony/validator": "^8.2",
-        "twig/twig": "^3.21"
+        "twig/twig": "^3.31"
     },
     "suggest": {
         "symfony/form": "For the DiceExpressionType field",

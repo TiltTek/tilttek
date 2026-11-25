@@ -68,7 +68,7 @@ $warden->release('member-7', 'd20:blue', 'It has served its time.');
 
 ## Requirements
 
-PHP 8.5 or later, with `mbstring`; `tilttek/dice` 0.2 or 0.3 and `tilttek/dice-probability` 0.1; a `psr/clock` implementation.
+PHP 8.5 or later, with `mbstring`; `tilttek/dice` 0.3 and `tilttek/dice-probability` 0.1; a `psr/clock` implementation.
 
 ## Contributing
 

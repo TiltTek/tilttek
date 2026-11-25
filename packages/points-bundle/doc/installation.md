@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- PHP 8.5 or later, Symfony 8.2 (Config and DependencyInjection), Doctrine DBAL 4.5.
+- PHP 8.5 or later, Symfony 8.2 (Config and DependencyInjection), Doctrine DBAL 4.6.
 - `tilttek/points` and `phil/resource`, required.
 - A `clock` service, which FrameworkBundle registers.
 - `tilttek/activity-bundle`, for the earning rules: it keeps the journal of activity and catches up the projection.

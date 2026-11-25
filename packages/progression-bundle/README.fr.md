@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=209520d7afd72c8955000b0356618bd659faf8178567ce3372194bf3cb9d6278 -->
+<!-- phil-dev source-sha256=adab5d83fc99bee41c9de41fa96a570ccbefde23c17929d47e11e3b3ad5013eb -->
 # tilttek/progression-bundle
 
 **Des niveaux, des saisons et des séries pour une application Symfony, à partir du journal de l'activité de ses
@@ -80,7 +80,7 @@ tilttek_progression:
 
 ## Prérequis
 
-PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.5.
+PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.6.
 
 ## Contribuer
 

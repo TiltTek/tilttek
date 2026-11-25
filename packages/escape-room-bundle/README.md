@@ -81,7 +81,7 @@ $desk->start('g-01J8', 'cell', ResourceReference::of('team', 'owls'));
 
 ## Requirements
 
-PHP 8.5 or later, Symfony 8.2, Doctrine DBAL 4.5.
+PHP 8.5 or later, Symfony 8.2, Doctrine DBAL 4.6.
 
 ## Contributing
 

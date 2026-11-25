@@ -65,8 +65,8 @@ return [
             ['identifier' => 'method.internal', 'path' => 'tests/Unit/Infrastructure/Database.php', 'count' => 1],
             // à corriger : new Schema() est interne à DBAL, les tests de schéma doivent passer par un SchemaManager ou une SchemaConfig.
             ['identifier' => 'method.internal', 'path' => 'tests/Unit/Infrastructure/TablesTest.php', 'count' => 4],
-            // à corriger : API de schéma DBAL dépréciée dans les tests (getName(), getType()).
-            ['identifier' => 'method.deprecated', 'path' => 'tests/Unit/Infrastructure/TablesTest.php', 'count' => 2],
+            // à corriger : API de schéma DBAL dépréciée dans les tests (getName()).
+            ['identifier' => 'method.deprecated', 'path' => 'tests/Unit/Infrastructure/TablesTest.php', 'count' => 1],
             // à corriger : getName()/getObjectName() appelées sur des classes internes de DBAL dans les tests.
             ['identifier' => 'method.internalClass', 'path' => 'tests/Unit/Infrastructure/TablesTest.php', 'count' => 1],
             // The closure of a configuration rule receives the node as an array whose values the installed release of

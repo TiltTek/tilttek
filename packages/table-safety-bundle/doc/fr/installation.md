@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=f1de35e189967d707050aa905af68a9d2a30b34cd6bc46c49db6dde1c1f47470 -->
+<!-- phil-dev source-sha256=ed52fd1b915b8cddfcab49fe91bdd9d7b99ceeff28c675ee01e9187433a2f94c -->
 # Installation
 
 ```sh
@@ -76,6 +76,6 @@ composer require phil/paged-media
 
 ## Prérequis
 
-PHP 8.5 ou une version plus récente avec `ext-intl`, Symfony 8.2, Doctrine DBAL 4.5, Twig 3.21, avec les sessions, les
+PHP 8.5 ou une version plus récente avec `ext-intl`, Symfony 8.2, Doctrine DBAL 4.6, Twig 3.31, avec les sessions, les
 formulaires et la protection CSRF de FrameworkBundle. Mercure, la console, l'ORM, `phil/paged-media` et
 `phil/privacy-bundle` sont facultatifs.

@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=60fc3093c3a9d0526c06d7300827aaae5d6907f7c59176d022492f8bbd5ad934 -->
+<!-- phil-dev source-sha256=8948a11581e76d9984a65f1bbfe07b623f7262f8ba55b9778851660da8851869 -->
 # tilttek/loot-tables-bundle
 
 **Des tables de butin pour Symfony et ses commandes de commerce : engagées au moment de la commande, tirées une fois
@@ -90,7 +90,7 @@ php bin/console tilttek:loot-tables:replay <draw>  # rolls a revealed draw again
 
 ## Prérequis
 
-PHP 8.5 ou plus récent avec sodium, Symfony 8.2 avec son composant Workflow, Doctrine ORM 3.7,
+PHP 8.5 ou plus récent avec sodium, Symfony 8.2 avec son composant Workflow, Doctrine ORM 3.8,
 `phil/commerce-bundle` et `tilttek/loot-tables` ; le composant Form, Symfony UX avec le kit PHIL UX, le composant
 Console et `phil/paged-media` pour le formulaire, les composants, la commande de relance et la fiche de production.
 

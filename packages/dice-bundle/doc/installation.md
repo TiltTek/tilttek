@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- PHP 8.5 or later, Symfony 8.2, Doctrine ORM 3.7 with DoctrineBundle 3.
+- PHP 8.5 or later, Symfony 8.2, Doctrine ORM 3.8 with DoctrineBundle 3.
 - `tilttek/dice` and `phil/resource` 0.1, installed with the bundle.
 - Optional: Symfony Form for the field, Symfony Validator for the constraint, TwigBundle for the templates, Symfony
   Translation for the words of a roll and the labels of the faces.

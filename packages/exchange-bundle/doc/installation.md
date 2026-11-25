@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- PHP 8.5 or later, Symfony 8.2, Doctrine DBAL 4.5.
+- PHP 8.5 or later, Symfony 8.2, Doctrine DBAL 4.6.
 - `tilttek/exchange`, the exchanges themselves, and `tilttek/points`, the ledger they move points on.
 - The `Points` and `Currencies` services, which `tilttek/points-bundle` registers; keep its ledger on the same
   connection as the exchanges so that a trade's points move in the trade's transaction.

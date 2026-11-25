@@ -1,9 +1,9 @@
-<!-- phil-dev source-sha256=7dceadcbce19c571af74f3614caf7d89e8f326e8faede9333965fa66303391ba -->
+<!-- phil-dev source-sha256=f0f9f4b225e8e01aaa955e44fd4ca6044f0e0237ee33d21ca14088d26c5e7ee4 -->
 # Installation
 
 ## Prérequis
 
-- PHP 8.5 ou plus récent, Symfony 8.2, Doctrine ORM 3.7 avec DoctrineBundle 3.
+- PHP 8.5 ou plus récent, Symfony 8.2, Doctrine ORM 3.8 avec DoctrineBundle 3.
 - `tilttek/dice` et `phil/resource` 0.1, installés avec le bundle.
 - Facultatifs : Symfony Form pour le champ, Symfony Validator pour la contrainte, TwigBundle pour les gabarits, Symfony
   Translation pour les mots d'un lancer et les libellés des faces.

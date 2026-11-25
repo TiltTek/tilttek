@@ -17,7 +17,6 @@ use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Name\UnqualifiedName;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
@@ -45,7 +44,7 @@ final class TablesTest extends TestCase
         self::assertSame([64, 64, 255, 320], $this->lengths($contributions, 'quest', 'step', 'activity', 'member'));
         self::assertSame(['quest', 'step', 'activity'], $this->primary($contributions));
         self::assertSame(['tilttek_quests_contribution_quest', 'tilttek_quests_contribution_member', 'tilttek_quests_contribution_activity', 'tilttek_quests_contribution_occurred', 'primary'], $this->indexes($contributions));
-        self::assertSame(Types::BIGINT, Type::lookupName($contributions->getColumn('value')->getType()));
+        self::assertSame(Types::BIGINT, $contributions->getColumn('value')->getTypeName());
 
         $enrolments = $schema->getTable(QuestsTables::ENROLMENTS);
         self::assertSame(['quest', 'member', 'accepted_at', 'team', 'abandoned_at'], $this->columns($enrolments));

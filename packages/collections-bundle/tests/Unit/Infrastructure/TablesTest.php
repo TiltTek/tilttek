@@ -17,7 +17,6 @@ use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Name\UnqualifiedName;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
@@ -179,7 +178,7 @@ final class TablesTest extends TestCase
      */
     private function types(Table $table, string ...$columns): array
     {
-        return array_map(static fn (string $column): string => Type::lookupName($table->getColumn($column)->getType()), array_values($columns));
+        return array_map(static fn (string $column): string => $table->getColumn($column)->getTypeName(), array_values($columns));
     }
 
     /**

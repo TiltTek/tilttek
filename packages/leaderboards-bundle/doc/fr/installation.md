@@ -1,9 +1,9 @@
-<!-- phil-dev source-sha256=d2123e62b41df18b1e239e4ea781c66ea5792e59508cb93943f34b32ffa52f11 -->
+<!-- phil-dev source-sha256=c11a6b0deba6e2c379f4636803c63371b55901f878768b93a14e2918762ba669 -->
 # Installation
 
 ## Prérequis
 
-- PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.5 et `doctrine/doctrine-bundle`.
+- PHP 8.5 ou plus récent, Symfony 8.2, Doctrine DBAL 4.6 et `doctrine/doctrine-bundle`.
 - `tilttek/activity-bundle`, pour garder le journal d'activité que lit la projection.
 - Facultatifs : `doctrine/orm` (les tables dans le schéma généré), `symfony/console` (les commandes),
   `symfony/twig-bundle` et `symfony/translation` (les gabarits), `symfony/ux-twig-component` et les recettes `Card`,

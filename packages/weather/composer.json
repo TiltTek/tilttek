@@ -24,7 +24,7 @@
         "php": ">=8.5",
         "ext-mbstring": "*",
         "symfony/yaml": "^8.2",
-        "tilttek/dice": "^0.2@dev || ^0.3@dev",
+        "tilttek/dice": "^0.3@dev",
         "tilttek/generator": "^0.2@dev"
     },
     "require-dev": {

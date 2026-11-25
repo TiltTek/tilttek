@@ -1,11 +1,11 @@
-<!-- phil-dev source-sha256=7a33de274f91272518faf6c10f768b0fb2edf137a0958bd456c7cf72751fb52c -->
+<!-- phil-dev source-sha256=1c337da833c4a4e332fa7c6f2cac18c65c486e342a3f5aa3e6cd7154bf44df6d -->
 # Installation
 
 ## Prérequis
 
 - PHP 8.5 ou une version plus récente, avec `sodium`.
 - `tilttek/escape-room` 0.1 et `tilttek/puzzle-builder` 0.1.
-- Doctrine DBAL 4.5, Twig 3.21, et le conteneur, le noyau HTTP, le routage et la protection CSRF de Symfony 8.2.
+- Doctrine DBAL 4.6, Twig 3.31, et le conteneur, le noyau HTTP, le routage et la protection CSRF de Symfony 8.2.
 - Facultatifs : l'ORM Doctrine, pour les tables du schéma généré ; Symfony Console, Scheduler, Mercure et Rate Limiter ;
   les composants Twig et le kit PHIL UX, pour les écrans ; `phil/reservation`, pour les réservations ;
   `phil/privacy-bundle`, pour l'export et l'effacement d'un membre.

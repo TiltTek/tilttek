@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=2ba82dcb49caa515178e3a9becd7a747bf607bc6929eb83fb9fd88f62507a9f8 -->
+<!-- phil-dev source-sha256=e2af6d183866defee06b9abc903b05083b8372dbe13aae7bcba9e485ac40937b -->
 # tilttek/luck-tokens-bundle
 
 **Des jetons de chance, d'inspiration et de destin pour les tables d'une application Symfony, chaque mouvement gardé
@@ -91,7 +91,7 @@ Ensuite, `bin/console doctrine:migrations:diff` écrit la migration de la table 
 
 ## Prérequis
 
-PHP 8.5 ou une version plus récente, Symfony 8.2, Doctrine DBAL 4.5.
+PHP 8.5 ou une version plus récente, Symfony 8.2, Doctrine DBAL 4.6.
 
 ## Contribuer
 

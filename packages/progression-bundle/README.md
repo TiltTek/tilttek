@@ -77,7 +77,7 @@ tilttek_progression:
 
 ## Requirements
 
-PHP 8.5 or later, Symfony 8.2, Doctrine DBAL 4.5.
+PHP 8.5 or later, Symfony 8.2, Doctrine DBAL 4.6.
 
 ## Contributing
 
