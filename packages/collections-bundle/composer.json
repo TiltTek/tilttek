@@ -44,7 +44,10 @@
         "tilttek/activity-bundle": "^0.2@dev",
         "tilttek/dice-bundle": "^0.2@dev",
         "tilttek/exchange": "^0.2@dev",
-        "twig/twig": "^3.31"
+        "twig/twig": "^3.31.1"
+    },
+    "conflict": {
+        "twig/twig": "<3.31.1"
     },
     "suggest": {
         "doctrine/orm": "To add the collections' tables to the schema the ORM generates, and so to the migrations",

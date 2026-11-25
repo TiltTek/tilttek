@@ -28,7 +28,10 @@
     "require-dev": {
         "phpunit/phpunit": "^13.4",
         "symfony/mercure": "^0.10",
-        "twig/twig": "^3.31"
+        "twig/twig": "^3.31.1"
+    },
+    "conflict": {
+        "twig/twig": "<3.31.1"
     },
     "suggest": {
         "symfony/mercure": "To push the squares called, the squares ticked and the wins to the players' screens, as private updates naming identifiers only"

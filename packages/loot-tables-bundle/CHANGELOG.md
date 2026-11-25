@@ -13,6 +13,11 @@ The next version is 0.1.2-alpha.
 - The development requirements accept `phil/ux-kit` 0.6, the version published on 2026-11-24, and no earlier one, so
   that the package installs on its own beside the published version of the kit.
 
+### Security
+
+- `twig/twig` older than 3.31.1 refused, for the security fixes of that version: its sandbox checks the policy in more
+  places, and a template can no longer replace the content of a `Markup`.
+
 ## 0.1.1-alpha - 2026-11-24
 
 ### Changed

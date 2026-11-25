@@ -4,6 +4,17 @@ All notable changes to `tilttek/dice-probability-bundle` will be documented in t
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+The next version is 0.1.2-alpha.
+
+### Security
+
+- `symfony/ux-live-component` and `symfony/ux-icons` older than 3.8.1, `symfony/ux-twig-component` older than 3.8 and
+  `twig/twig` older than 3.31.1 refused, for the security fixes of those versions.
+  `<twig:TilttekDiceProbability:Distribution>` is tested under LiveComponent 3.8.1: computed again when it is reached by
+  its name, refused by its class, and not drawn when a 422 is thrown before its action is called.
+
 ## 0.1.1-alpha - 2026-11-24
 
 ### Changed

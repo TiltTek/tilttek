@@ -46,7 +46,10 @@
         "symfony/rate-limiter": "^8.2",
         "symfony/routing": "^8.2",
         "symfony/twig-bundle": "^8.2",
-        "twig/twig": "^3.31"
+        "twig/twig": "^3.31.1"
+    },
+    "conflict": {
+        "twig/twig": "<3.31.1"
     },
     "suggest": {
         "symfony/asset-mapper": "For the Stimulus controller",

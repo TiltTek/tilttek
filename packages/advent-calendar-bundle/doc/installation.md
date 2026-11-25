@@ -81,5 +81,5 @@ protection of FrameworkBundle, add it to `framework.csrf_protection.stateless_to
 
 ## Requirements
 
-PHP 8.5 or later with `ext-intl`, Symfony 8.2, Doctrine DBAL 4.6, Twig 3.31, with FrameworkBundle's CSRF protection and
-forms. The ORM, the console, Twig components and `phil/privacy-bundle` are optional.
+PHP 8.5 or later with `ext-intl`, Symfony 8.2, Doctrine DBAL 4.6, Twig 3.31.1, with FrameworkBundle's CSRF protection
+and forms. The ORM, the console, Twig components and `phil/privacy-bundle` are optional.

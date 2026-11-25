@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=affd9af9cd71212927dc571696058c2f5bc0704bcb09648ddab54f7f1d93eb18 -->
+<!-- phil-dev source-sha256=d4fc54eae5b3e0becd9e2945afa32f3d5bbfe8a98ec722511d26d47466252f29 -->
 # Installation
 
 ```sh
@@ -82,5 +82,5 @@ sans état de FrameworkBundle, ajoutez-le à `framework.csrf_protection.stateles
 
 ## Prérequis
 
-PHP 8.5 ou une version plus récente avec `ext-intl`, Symfony 8.2, Doctrine DBAL 4.6, Twig 3.31, avec la protection CSRF
+PHP 8.5 ou une version plus récente avec `ext-intl`, Symfony 8.2, Doctrine DBAL 4.6, Twig 3.31.1, avec la protection CSRF
 et les formulaires de FrameworkBundle. L'ORM, la console, les composants Twig et `phil/privacy-bundle` sont facultatifs.

@@ -8,11 +8,14 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 The next version is 0.2.1-alpha.
 
-Development only.
-
 ### Changed
 
 - The development requirements ask for the latest minor of `twig/twig`, 3.31.
+
+### Security
+
+- `twig/twig` older than 3.31.1 refused, for the security fixes of that version: its sandbox checks the policy in more
+  places, and a template can no longer replace the content of a `Markup`.
 
 ## 0.2.0-alpha - 2026-11-14
 

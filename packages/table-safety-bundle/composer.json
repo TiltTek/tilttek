@@ -42,7 +42,7 @@
         "symfony/string": "^8.2",
         "symfony/translation-contracts": "^3.8",
         "tilttek/table-safety": "^0.3@dev",
-        "twig/twig": "^3.31"
+        "twig/twig": "^3.31.1"
     },
     "require-dev": {
         "ext-zlib": "*",

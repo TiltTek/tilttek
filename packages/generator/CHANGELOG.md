@@ -4,6 +4,15 @@ All notable changes to `tilttek/generator` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+The next version is 0.2.4-alpha.
+
+### Security
+
+- `twig/twig` 3.31.1 or later required, for the fixes of its sandbox in 3.31.1: the policy is checked in more places,
+  and a template can no longer replace the content of a `Markup`.
+
 ## 0.2.3-alpha - 2026-11-24
 
 ### Changed

@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=52775581bb45b917469e52445f43815b24ef8491fd7f18dc8b217af2413d610e -->
+<!-- phil-dev source-sha256=70993bb9d94eec1ca151b58ed0af814ad8893b72fe5cb06ab0dc5ae3b2ae344a -->
 # tilttek/advent-calendar-bundle
 
 **Des calendriers de l'avent dans une application Symfony : une case par jour, un écran qui fonctionne sans JavaScript,
@@ -86,7 +86,7 @@ Un membre ouvre alors `/advent-calendar/advent-2026`, et l'application accorde c
 
 ## Prérequis
 
-PHP 8.5 ou une version plus récente avec `ext-intl`, Symfony 8.2, Doctrine DBAL 4.6, Twig 3.31.
+PHP 8.5 ou une version plus récente avec `ext-intl`, Symfony 8.2, Doctrine DBAL 4.6, Twig 3.31.1.
 
 ## Contribuer
 

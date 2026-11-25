@@ -42,7 +42,10 @@
         "symfony/twig-bridge": "^8.2",
         "symfony/twig-bundle": "^8.2",
         "symfony/yaml": "^8.2",
-        "twig/twig": "^3.31"
+        "twig/twig": "^3.31.1"
+    },
+    "conflict": {
+        "twig/twig": "<3.31.1"
     },
     "suggest": {
         "symfony/stimulus-bundle": "For the controller that shows the expression and announces the results",

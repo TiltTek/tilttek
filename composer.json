@@ -79,12 +79,12 @@
         "symfony/twig-bridge": "^8.2",
         "symfony/twig-bundle": "^8.2",
         "symfony/uid": "^8.2",
-        "symfony/ux-live-component": "^3.8",
+        "symfony/ux-live-component": "^3.8.1",
         "symfony/ux-twig-component": "^3.8",
         "symfony/validator": "^8.2",
         "symfony/workflow": "^8.2",
         "symfony/yaml": "^8.2",
-        "twig/twig": "^3.31"
+        "twig/twig": "^3.31.1"
     },
     "replace": {
         "symfony/polyfill-ctype": "1.99",
@@ -97,6 +97,9 @@
         "symfony/polyfill-php83": "1.99",
         "symfony/polyfill-php84": "1.99",
         "symfony/polyfill-php85": "1.99"
+    },
+    "conflict": {
+        "symfony/ux-icons": "<3.8.1"
     },
     "repositories": [
         {

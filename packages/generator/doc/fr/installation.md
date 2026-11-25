@@ -1,10 +1,10 @@
-<!-- phil-dev source-sha256=d7a00a12267b42ceb7c57742c84faf5c6d1de80de94e21ac9af9cd05b94306ff -->
+<!-- phil-dev source-sha256=8b35de42880345de0ff19a1737135c1a9a3d05ce7648e353ccfcde0db4c25168 -->
 # Installation
 
 ## Prérequis
 
 - PHP 8.5 ou plus récent, avec l'extension `mbstring`, dont les grammaires se servent pour lire les mots accentués.
-- `twig/twig` 3.31 ou plus récent, dont le bac à sable compile et exécute les gabarits.
+- `twig/twig` 3.31.1 ou plus récent, dont le bac à sable compile et exécute les gabarits.
 - `symfony/yaml` 8.2, qui lit les documents YAML.
 - `tilttek/dice`, qui lit et lance les expressions de dés de `roll()`.
 
