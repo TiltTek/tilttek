@@ -102,6 +102,7 @@ final class IntegrationsTest extends TestCase
         $kit->desk->start('g-1', 'cell', $member, 's-1');
         $kit->desk->start('g-2', 'crypt', ResourceReference::of('team', 'owls'));
         $kit->desk->message('g-2', $member, 'Look up');
+        $kit->desk->message('g-1', ResourceReference::of('member', '9'), 'Well done');
         $kit->clock->sleep(10);
         $kit->desk->guess('g-1', 'door', 'key');
         $kit->desk->consent('g-1', true);

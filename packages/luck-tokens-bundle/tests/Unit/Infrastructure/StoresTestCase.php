@@ -21,6 +21,8 @@ use Tilttek\LuckTokens\Store\InMemoryTokenRules;
 use Tilttek\LuckTokens\TableRules;
 use Tilttek\LuckTokensBundle\Infrastructure\Doctrine\DbalTokenLedger;
 use Tilttek\LuckTokensBundle\Infrastructure\Doctrine\DbalTokenRules;
+use Tilttek\LuckTokensBundle\Infrastructure\Doctrine\LuckTokensTables;
+use Tilttek\LuckTokensBundle\Infrastructure\Doctrine\Rows;
 use Tilttek\LuckTokensBundle\Tests\Unit\Fixture\Interloper;
 use Tilttek\LuckTokensBundle\Tests\Unit\Fixture\Recorder;
 use Tilttek\LuckTokensBundle\Tests\Unit\Fixture\Table;
@@ -263,7 +265,7 @@ abstract class StoresTestCase extends TestCase
         $store = new DbalTokenRules($this->connection());
         $gm = Table::gm();
         $bo = Table::ref('member:bo');
-        $store->save(new TableRules(Table::ref('table:1'), Table::rules()->kinds(), [$bo, $gm]));
+        $store->save(new TableRules(Table::ref('table:1'), Table::rules()->kinds(), [$gm, $bo]));
         $store->save(Table::rules('table:2'));
         $store->save(new TableRules(Table::ref('table:3'), Table::rules()->kinds(), [$bo]));
 
@@ -271,6 +273,9 @@ abstract class StoresTestCase extends TestCase
         self::assertEquals(new TableRules(Table::ref('table:1'), Table::rules()->kinds(), [$bo]), $store->rulesFor(Table::ref('table:1')));
         self::assertEquals(new TableRules(Table::ref('table:2'), Table::rules()->kinds()), $store->rulesFor(Table::ref('table:2')));
         self::assertEquals(new TableRules(Table::ref('table:3'), Table::rules()->kinds(), [$bo]), $store->rulesFor(Table::ref('table:3')));
+        $written = json_decode(Rows::text($this->connection()->fetchOne('SELECT rules FROM '.LuckTokensTables::RULES.' WHERE table_ref = ?', ['table:1'])), true, 512, \JSON_THROW_ON_ERROR);
+        self::assertIsArray($written);
+        self::assertSame(['member:bo'], $written['game_masters'] ?? null, 'The game masters left are written as a list.');
         self::assertSame(0, $store->removeGameMaster($gm));
         self::assertSame(0, $store->removeGameMaster(Table::ref('member:nobody')));
     }
