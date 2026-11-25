@@ -174,7 +174,7 @@ final class DbalStoresTest extends StoresTestCase
         $ids = array_map(static fn (int $n): string => 'g-'.$n, range(1, 1001));
         $sizes = [];
 
-        self::assertSame(1001, new DbalGameStore(self::countingConnection($sizes))->forget(...$ids, ...\array_slice($ids, 0, 10)));
+        self::assertSame(1001, new DbalGameStore($this->countingConnection($sizes))->forget(...$ids, ...\array_slice($ids, 0, 10)));
         self::assertSame([500, 500, 1], $sizes);
     }
 
@@ -183,7 +183,7 @@ final class DbalStoresTest extends StoresTestCase
         $games = array_map(static fn (int $n): string => 'g-'.$n, range(1, 1001));
         $sizes = [];
 
-        self::assertSame(1001, new DbalScreenStore(self::countingConnection($sizes))->forget(...$games, ...\array_slice($games, 0, 10)));
+        self::assertSame(1001, new DbalScreenStore($this->countingConnection($sizes))->forget(...$games, ...\array_slice($games, 0, 10)));
         self::assertSame([500, 500, 1], $sizes);
     }
 
@@ -192,7 +192,7 @@ final class DbalStoresTest extends StoresTestCase
      *
      * @param list<int> $sizes
      */
-    private static function countingConnection(array &$sizes): Connection
+    private function countingConnection(array &$sizes): Connection
     {
         $connection = self::createStub(Connection::class);
         $connection->method('executeStatement')->willReturnCallback(static function (string $sql, array $params) use (&$sizes): int {
