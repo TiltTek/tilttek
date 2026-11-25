@@ -16,8 +16,8 @@ The next version is 0.1.1-alpha.
 
 ### Fixed
 
-- It requires `phil/commerce-bundle` 0.4, the version published on 2026-11-20, beside which its requirement of 0.2 or
-  0.3 kept it from installing.
+- It requires `phil/commerce-bundle` 0.5, the version published the same day; its requirement of 0.2 or 0.3 kept it
+  from installing beside the published versions.
 
 ## 0.1.0-alpha - 2026-11-20
 
