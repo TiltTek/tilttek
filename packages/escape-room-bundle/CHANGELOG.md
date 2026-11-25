@@ -4,6 +4,15 @@ All notable changes to `tilttek/escape-room-bundle` will be documented in this f
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+The next version is 0.1.2-alpha.
+
+### Changed
+
+- The development requirements accept `phil/privacy-bundle` 0.3, the version published on 2026-11-24, and no earlier
+  one, so that the package installs on its own beside the published version of that bundle.
+
 ## 0.1.1-alpha - 2026-11-24
 
 ### Changed

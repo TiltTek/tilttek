@@ -38,7 +38,7 @@
         "doctrine/doctrine-bundle": "^3.4",
         "phil/money": "^0.1@dev",
         "phil/paged-media": "^0.1@dev",
-        "phil/ux-kit": "^0.5@dev",
+        "phil/ux-kit": "^0.6@dev",
         "phpunit/phpunit": "^13.4",
         "psr/log": "^3.0",
         "symfony/clock": "^8.2",

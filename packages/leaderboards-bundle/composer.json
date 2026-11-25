@@ -33,7 +33,7 @@
     "require-dev": {
         "doctrine/doctrine-bundle": "^3.4",
         "doctrine/orm": "^3.8",
-        "phil/privacy-bundle": "^0.2@dev",
+        "phil/privacy-bundle": "^0.3@dev",
         "phil/ux-kit": ">=0.5.0-alpha <1.0",
         "phpunit/phpunit": "^13.4",
         "symfony/cache": "^8.2",
