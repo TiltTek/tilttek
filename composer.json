@@ -25,7 +25,7 @@
         "phil/commerce-bundle": "^0.5@dev",
         "phil/content-warnings": "^0.1@dev",
         "phil/content-warnings-bundle": "^0.1@dev",
-        "phil/dev-tools": "^0.1@alpha",
+        "phil/dev-tools": "0.1.8-alpha",
         "phil/money": "^0.1@dev",
         "phil/open-badges-bundle": "^0.1@dev",
         "phil/paged-media": "^0.1@dev",

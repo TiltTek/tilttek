@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Rector\Doctrine\CodeQuality\Rector\Property\ColumnTypeToTypesConstantRector;
+
 /*
  * What phil/dev-tools reads of this monorepo: the globs of its packages, each of which keeps its own paths and
  * exceptions in its own phil-dev.php, and the terms no package names. See vendor/phil/dev-tools/doc/configuration.md
@@ -15,12 +17,15 @@ return [
     'deptrac' => [
         // What every library and every domain may use: the default of phil/dev-tools — the Symfony components and
         // contracts, the polyfills and the PSR interfaces — and the Doctrine mapping attributes, which the domain models
-        // of the bundles carry; the rest of Doctrine stays outside the domain.
+        // of the bundles carry; the rest of Doctrine stays outside the domain. The PSR-3 logger interface is named on
+        // its own as well: phil/dev-tools allows it to itself by that exact expression, which would otherwise become a
+        // layer that only phil/dev-tools may use.
         'default' => [
             '^Symfony\\\\Component\\\\.*',
             '^Symfony\\\\Contracts\\\\.*',
             '^Symfony\\\\Polyfill\\\\.*',
             '^Psr\\\\.*',
+            '^Psr\\\\Log\\\\LoggerInterface$',
             '^Doctrine\\\\ORM\\\\Mapping\\\\.*',
         ],
     ],
@@ -44,6 +49,12 @@ return [
             'packages/badges-bundle/tests/Unit/Infrastructure/BadgeCredentialsTest.php',
             'packages/quests-bundle/src/Infrastructure/Almanac/*',
             'packages/quests-bundle/tests/Unit/Infrastructure/AlmanacScheduleTest.php',
+            // Replacing a column type's name by a constant of `Doctrine\DBAL\Types\Types` would bring DBAL into the
+            // domain models, where only the mapping attributes are admitted; the shared configuration skips this rule
+            // under its former name.
+            ColumnTypeToTypesConstantRector::class => [
+                'packages/*/src/Domain/*',
+            ],
         ],
     ],
 
