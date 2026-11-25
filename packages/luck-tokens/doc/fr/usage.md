@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=623fbbb8618415990d0617a0dbb6d35ca300b60f4e6f8dcc3b8c14086c1758a2 -->
+<!-- phil-dev source-sha256=872018de451093e1e6aa2fad992ba9f632c5beb5c2edffe1643ec7cfcfe60715 -->
 # Utilisation
 
 ## Les sortes de jetons
@@ -103,9 +103,11 @@ null. Sinon `HolderErased` est réparti, avec le pseudonyme et le nombre d'entr�
 ni le membre ni une table. Une opération du membre envoyée de nouveau après l'effacement ne correspond plus à ce qui a
 été écrit, et est refusée comme un identifiant réutilisé.
 
-Les raisons sont gardées telles qu'elles ont été écrites : une application qui laisse les joueurs les saisir en exclut
-les noms, ou offre des raisons à choisir dans une liste. Les meneurs de jeu nommés dans les règles d'une table sont à
-l'application de les changer.
+La raison d'une entrée que le membre détient est effacée : elle a été écrite à son sujet, et la vérification des soldes
+n'a besoin que des changements. La raison d'une entrée que le membre a écrite pour un autre détenteur reste, puisqu'elle
+concerne ce détenteur : une application qui laisse les joueurs saisir des raisons en exclut les noms, ou offre des
+raisons à choisir dans une liste. Les meneurs de jeu nommés dans les règles d'une table sont à l'application de les
+changer.
 
 ## Les opérations simultanées
 

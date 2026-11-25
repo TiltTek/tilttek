@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=e0f0984ad6d00f3a793d48b0bc8b46dc7616cd68db64e2df6d780599b33a79fc -->
+<!-- phil-dev source-sha256=70ebb4a0dfc5bb3d2eb3fbaf6a041057585af838e0ec56dac5c4258dece3fa7b -->
 # tilttek/escape-room-bundle
 
 **Des escape games dans une application Symfony : la console de l'animateur, l'écran d'indices en temps réel, des séances
@@ -19,8 +19,8 @@ et célèbre une évasion avec la `Celebration` du kit PHIL UX ; il apprend chaq
 relit la partie à intervalles. Un horaire de Symfony Scheduler met fin aux parties dont la minuterie a atteint zéro, une
 fois chacune. Les séances sont réservées sur `phil/reservation` quand il est installé, sous un verrou par séance dans la
 base de données. Le classement public ne montre une équipe qu'une fois qu'elle y consent, et elle peut changer d'avis ;
-les parties, les résultats, les écrans et les réservations d'un membre sont exportés et pseudonymisés avec son compte
-par `phil/privacy-bundle`.
+les parties, les résultats, les écrans et les réservations d'un membre sont exportés et effacés avec son compte par
+`phil/privacy-bundle` : supprimés, ou pseudonymisés là où une partie en cours ou une réservation a besoin de la ligne.
 
 Il s'adresse à une application Symfony qui exploite des escape games, dans un lieu ou en ligne. La bibliothèque seule
 convient à une application sans Symfony.
