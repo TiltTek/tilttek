@@ -26,9 +26,15 @@ use Tilttek\EscapeRoomBundle\Infrastructure\Doctrine\EscapeRoomTables;
 /**
  * The escape rooms' part of an access or erasure request. The data subject is a member, referenced under the kind the
  * configuration names (`member` by default): the games and results they played as the team, the screens they showed
- * last as a host, the bookings they made as the party. The erasure writes one pseudonym of its own — `erased:` and 32
- * random hexadecimal digits — in place of the member everywhere, and withdraws their results from the leaderboard;
- * the times, the hints and the seats stay, so the other teams keep their places and the sessions their seats.
+ * last as a host, the bookings they made as the party.
+ *
+ * The erasure decides store by store, and `doc/privacy.md` gives the reasons:
+ *
+ * - the games over, their screens and every result of the team are deleted;
+ * - a game still running, and its screen, keep running under a pseudonym — `erased:` and 32 random hexadecimal
+ *   digits, drawn for this erasure — with the consent to show the result withdrawn;
+ * - a screen the member showed as a host is deleted once its game is over, and kept under the pseudonym while it runs;
+ * - a booking keeps its seats under the pseudonym, so that the session keeps its count.
  */
 final readonly class EscapeRoomPrivacy implements PersonalDataExporter, PersonalDataEraser
 {
@@ -92,13 +98,22 @@ final readonly class EscapeRoomPrivacy implements PersonalDataExporter, Personal
     {
         $member = $this->member($subject);
         $pseudonym = ResourceReference::of(EscapeRooms::ERASED_KIND, sodium_bin2hex(random_bytes(16)));
-        $this->games->eraseTeam($member, $pseudonym);
-        $this->results->eraseTeam($member, $pseudonym);
-        $this->screens->eraseHost($member, $pseudonym);
+
+        $over = array_keys(array_filter($this->games->ofTeam($member), self::isOver(...)));
+        $this->games->forget(...$over);
+        $this->screens->forget(...$over);
+        $running = 0 < $this->games->eraseTeam($member, $pseudonym);
+        $this->results->forgetTeam($member);
+
+        $shownOver = array_filter(array_keys($this->screens->ofHost($member)), $this->isGone(...));
+        $this->screens->forget(...$shownOver);
+        $hosting = 0 < $this->screens->eraseHost($member, $pseudonym);
+
         $effects = [
-            EscapeRoomTables::GAMES.'.team' => ErasureEffect::Pseudonymised,
-            EscapeRoomTables::RESULTS.'.team' => ErasureEffect::Pseudonymised,
-            EscapeRoomTables::SCREENS.'.host' => ErasureEffect::Pseudonymised,
+            EscapeRoomTables::GAMES.'.team' => self::effect($running),
+            EscapeRoomTables::RESULTS.'.team' => self::effect($running),
+            EscapeRoomTables::SCREENS.'.game' => self::effect($running),
+            EscapeRoomTables::SCREENS.'.host' => self::effect($hosting),
         ];
 
         if ($this->bookings instanceof PartyBookings) {
@@ -107,6 +122,35 @@ final readonly class EscapeRoomPrivacy implements PersonalDataExporter, Personal
         }
 
         return ErasureReport::of(self::MODULE, $effects);
+    }
+
+    /**
+     * Whether a game is over, by the values the library wrote: a game over has the moment it ended.
+     *
+     * @param array<array-key, mixed> $values
+     */
+    private static function isOver(array $values): bool
+    {
+        return null !== ($values['ended_at'] ?? null);
+    }
+
+    /**
+     * Whether the game of a screen is over, or no longer kept.
+     */
+    private function isGone(string $game): bool
+    {
+        $values = $this->games->find($game);
+
+        return null === $values || self::isOver($values);
+    }
+
+    /**
+     * Deleted when nothing of the member is left running; pseudonymised when a game still runs, which keeps its screen
+     * and records its result under the pseudonym.
+     */
+    private static function effect(bool $running): ErasureEffect
+    {
+        return $running ? ErasureEffect::Pseudonymised : ErasureEffect::Deleted;
     }
 
     private function member(DataSubject $subject): ResourceReference

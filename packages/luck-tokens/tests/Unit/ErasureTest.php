@@ -37,7 +37,7 @@ final class ErasureTest extends TestCase
         $t->tokens->grant($t->table, 'fate', $bo, 1, Table::gm(), 'op-1');
         $t->tokens->grant($t->table, 'fate', $ana, 3, Table::gm(), 'op-2', 'A clever plan');
         $t->tokens->spend($t->table, 'fate', $ana, 1, $ana, 'op-3');
-        $t->tokens->grant($t->table, 'bennies', $bo, 2, $ana, 'op-4');
+        $t->tokens->grant($t->table, 'bennies', $bo, 2, $ana, 'op-4', 'For the rescue');
         $t->tokens->transfer($t->table, 'bennies', $bo, $ana, 1, $bo, 'op-5');
         $t->tokens->startSession($t->table, 's-1', [], Table::gm(), 'op-6');
 
@@ -54,9 +54,9 @@ final class ErasureTest extends TestCase
         self::assertSame(
             [
                 [1, 'granted', 'fate', 'member:bo', 1, 1, 'member:gm', null],
-                [2, 'granted', 'fate', $pseudonym, 3, 3, 'member:gm', 'A clever plan'],
+                [2, 'granted', 'fate', $pseudonym, 3, 3, 'member:gm', null],
                 [3, 'spent', 'fate', $pseudonym, -1, 2, $pseudonym, null],
-                [4, 'granted', 'bennies', 'member:bo', 2, 2, $pseudonym, null],
+                [4, 'granted', 'bennies', 'member:bo', 2, 2, $pseudonym, 'For the rescue'],
                 [5, 'transferred-out', 'bennies', 'member:bo', -1, 1, 'member:bo', null],
                 [6, 'transferred-in', 'bennies', $pseudonym, 1, 1, 'member:bo', null],
                 [7, 'session-started', null, 'member:gm', 0, 0, 'member:gm', null],
@@ -187,13 +187,14 @@ final class ErasureTest extends TestCase
         $ana = Table::ref('member:ana');
         $pseudonym = Table::ref('erased:1');
         $held = new LedgerEntry($table, 4, 'op-1', EntryType::Spent, 'fate', $ana, -1, 2, Table::gm(), $at, 'Reroll', 's-1');
-        $done = new LedgerEntry($table, 5, 'op-2', EntryType::Granted, 'fate', Table::ref('member:bo'), 1, 1, $ana, $at);
-        $both = new LedgerEntry($table, 6, 'op-3', EntryType::Spent, 'fate', $ana, -1, 1, $ana, $at);
+        $done = new LedgerEntry($table, 5, 'op-2', EntryType::Granted, 'fate', Table::ref('member:bo'), 1, 1, $ana, $at, 'Thanks');
+        $both = new LedgerEntry($table, 6, 'op-3', EntryType::Spent, 'fate', $ana, -1, 1, $ana, $at, 'Mine');
         $other = new LedgerEntry($table, 7, 'op-4', EntryType::Granted, 'fate', Table::ref('member:bo'), 1, 2, Table::gm(), $at);
 
-        self::assertSame(array_replace($held->toArray(), ['holder' => 'erased:1']), $held->pseudonymized($ana, $pseudonym)->toArray());
+        self::assertSame(array_replace($held->toArray(), ['holder' => 'erased:1', 'reason' => null]), $held->pseudonymized($ana, $pseudonym)->toArray());
         self::assertSame(array_replace($done->toArray(), ['actor' => 'erased:1']), $done->pseudonymized($ana, $pseudonym)->toArray());
-        self::assertSame(array_replace($both->toArray(), ['holder' => 'erased:1', 'actor' => 'erased:1']), $both->pseudonymized($ana, $pseudonym)->toArray());
+        self::assertSame('Thanks', $done->pseudonymized($ana, $pseudonym)->reason);
+        self::assertSame(array_replace($both->toArray(), ['holder' => 'erased:1', 'actor' => 'erased:1', 'reason' => null]), $both->pseudonymized($ana, $pseudonym)->toArray());
         self::assertSame($other, $other->pseudonymized($ana, $pseudonym));
     }
 }

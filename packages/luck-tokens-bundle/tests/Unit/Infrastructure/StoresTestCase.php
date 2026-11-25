@@ -21,6 +21,8 @@ use Tilttek\LuckTokens\Store\InMemoryTokenRules;
 use Tilttek\LuckTokens\TableRules;
 use Tilttek\LuckTokensBundle\Infrastructure\Doctrine\DbalTokenLedger;
 use Tilttek\LuckTokensBundle\Infrastructure\Doctrine\DbalTokenRules;
+use Tilttek\LuckTokensBundle\Infrastructure\Doctrine\LuckTokensTables;
+use Tilttek\LuckTokensBundle\Infrastructure\Doctrine\Rows;
 use Tilttek\LuckTokensBundle\Tests\Unit\Fixture\Interloper;
 use Tilttek\LuckTokensBundle\Tests\Unit\Fixture\Recorder;
 use Tilttek\LuckTokensBundle\Tests\Unit\Fixture\Table;
@@ -199,9 +201,9 @@ abstract class StoresTestCase extends TestCase
         $two = Table::ref('table:2');
         $ana = Table::ref('member:ana');
         $bo = Table::ref('member:bo');
-        $tokens->grant($one, 'fate', $ana, 3, Table::gm(), 'op-1');
+        $tokens->grant($one, 'fate', $ana, 3, Table::gm(), 'op-1', 'A clever plan');
         $tokens->spend($one, 'fate', $ana, 1, $ana, 'op-2');
-        $tokens->grant($two, 'bennies', $bo, 2, $ana, 'op-1');
+        $tokens->grant($two, 'bennies', $bo, 2, $ana, 'op-1', 'For the rescue');
         $tokens->grant($two, 'fate', $bo, 1, Table::gm(), 'op-2');
         $tokens->grant($two, 'fate', Table::ref('member:Ana'), 1, Table::gm(), 'op-3');
 
@@ -216,9 +218,11 @@ abstract class StoresTestCase extends TestCase
         self::assertSame([2, 0], [$ledger->balance($one, 'fate', $erased->pseudonym), $ledger->balance($one, 'fate', $ana)]);
         self::assertEquals([$erased->pseudonym], $ledger->holders($one));
         self::assertSame([$erased->pseudonym->toString(), $erased->pseudonym->toString()], [$ledger->entries($one)[1]->holder->toString(), $ledger->entries($one)[1]->actor->toString()]);
+        self::assertSame([null, null], [$ledger->entries($one)[0]->reason, $ledger->entries($one)[1]->reason]);
         self::assertSame([[1, 3, 3], [2, -1, 2]], array_map(static fn (LedgerEntry $entry): array => [$entry->position, $entry->change, $entry->balance], $ledger->entries($one)));
         $after = $this->rows($ledger->entries($two));
         self::assertSame($erased->pseudonym->toString(), $after[0]['actor']);
+        self::assertSame('For the rescue', $after[0]['reason']);
         self::assertSame(array_replace($before[0], ['actor' => $erased->pseudonym->toString()]), $after[0]);
         self::assertSame(\array_slice($before, 1), \array_slice($after, 1), 'Another member, of a reference that differs only by case, is left as they were.');
         self::assertNull($tokens->eraseHolder($ana));
@@ -254,6 +258,39 @@ abstract class StoresTestCase extends TestCase
         self::assertFalse($store->remove(Table::ref('table:1')));
         self::assertNull($store->rulesFor(Table::ref('table:1')));
         self::assertEquals(Table::rules('table:2'), $store->rulesFor(Table::ref('table:2')), 'Forgetting the rules of a table leaves those of the others.');
+    }
+
+    public function testAMemberIsTakenOffTheGameMastersOfEveryTable(): void
+    {
+        $store = new DbalTokenRules($this->connection());
+        $gm = Table::gm();
+        $bo = Table::ref('member:bo');
+        $store->save(new TableRules(Table::ref('table:1'), Table::rules()->kinds(), [$gm, $bo]));
+        $store->save(Table::rules('table:2'));
+        $store->save(new TableRules(Table::ref('table:3'), Table::rules()->kinds(), [$bo]));
+
+        self::assertSame(2, $store->removeGameMaster($gm));
+        self::assertEquals(new TableRules(Table::ref('table:1'), Table::rules()->kinds(), [$bo]), $store->rulesFor(Table::ref('table:1')));
+        self::assertEquals(new TableRules(Table::ref('table:2'), Table::rules()->kinds()), $store->rulesFor(Table::ref('table:2')));
+        self::assertEquals(new TableRules(Table::ref('table:3'), Table::rules()->kinds(), [$bo]), $store->rulesFor(Table::ref('table:3')));
+        $written = json_decode(Rows::text($this->connection()->fetchOne('SELECT rules FROM '.LuckTokensTables::RULES.' WHERE table_ref = ?', ['table:1'])), true, 512, \JSON_THROW_ON_ERROR);
+        self::assertIsArray($written);
+        self::assertSame(['member:bo'], $written['game_masters'] ?? null, 'The game masters left are written as a list.');
+        self::assertSame(0, $store->removeGameMaster($gm));
+        self::assertSame(0, $store->removeGameMaster(Table::ref('member:nobody')));
+    }
+
+    public function testTheGameMastersAreTakenOffPageByPage(): void
+    {
+        $store = new DbalTokenRules($this->connection());
+
+        for ($table = 1; $table <= 1_001; ++$table) {
+            $store->save(Table::rules(\sprintf('table:%04d', $table)));
+        }
+
+        self::assertSame(1_001, $store->removeGameMaster(Table::gm()));
+        self::assertFalse($store->rulesFor(Table::ref('table:0001'))?->isGameMaster(Table::gm()));
+        self::assertFalse($store->rulesFor(Table::ref('table:1001'))?->isGameMaster(Table::gm()));
     }
 
     protected function ledger(): DbalTokenLedger

@@ -19,7 +19,9 @@ use Tilttek\TableSafetyBundle\Infrastructure\Doctrine\TableSafetyTables;
  * The safety tools' part of an access or erasure request. The data subject is a participant, referenced under the
  * kind the configuration names (`member` by default). The export holds their answers at each table, the named signals
  * they raised and their stars and wishes; the erasure deletes the answers and the stars and wishes, and takes their
- * name off the signals, which stay at their table as anonymous ones.
+ * name off the signals, which stay at their table as anonymous ones until the purge — redacted rather than anonymised,
+ * since the table and the moment of a signal may still point to the participant at a small table. `doc/privacy.md`
+ * gives the reason of each choice.
  */
 final readonly class TableSafetyPrivacy implements PersonalDataExporter, PersonalDataEraser
 {
@@ -56,7 +58,7 @@ final readonly class TableSafetyPrivacy implements PersonalDataExporter, Persona
         return ErasureReport::of(self::MODULE, [
             TableSafetyTables::PARTICIPATIONS => ErasureEffect::Deleted,
             TableSafetyTables::FEEDBACK => ErasureEffect::Deleted,
-            TableSafetyTables::SIGNALS => ErasureEffect::Pseudonymised,
+            TableSafetyTables::SIGNALS => ErasureEffect::Redacted,
         ]);
     }
 

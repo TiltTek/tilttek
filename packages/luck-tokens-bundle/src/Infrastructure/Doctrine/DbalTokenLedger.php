@@ -139,7 +139,7 @@ final readonly class DbalTokenLedger implements TokenLedger
 
         return $this->connection->transactional(static function (Connection $connection) use ($from, $to): int {
             $erased = Rows::integer($connection->fetchOne(\sprintf('SELECT COUNT(*) FROM %s WHERE holder = ? OR actor = ?', LuckTokensTables::ENTRIES), [$from, $from]));
-            $connection->executeStatement(\sprintf('UPDATE %s SET holder = ? WHERE holder = ?', LuckTokensTables::ENTRIES), [$to, $from]);
+            $connection->executeStatement(\sprintf('UPDATE %s SET holder = ?, reason = NULL WHERE holder = ?', LuckTokensTables::ENTRIES), [$to, $from]);
             $connection->executeStatement(\sprintf('UPDATE %s SET actor = ? WHERE actor = ?', LuckTokensTables::ENTRIES), [$to, $from]);
 
             return $erased;

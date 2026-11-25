@@ -80,6 +80,8 @@ final class LuckTokensBundleTest extends KernelTestCase
         self::assertSame([], $connection->fetchFirstColumn(\sprintf("SELECT position FROM %s WHERE holder = 'member:8' OR actor = 'member:8'", LuckTokensTables::ENTRIES)));
         self::assertSame(3, $reader->balance($table, 'fate', $reader->log($table)[1]->holder));
         self::assertSame('erased', $reader->log($table)[1]->holder->key);
+        self::assertNull($reader->log($table)[0]->reason, 'The reason of an entry the member held is cleared.');
+        self::assertSame('Reroll', $reader->log($table)[3]->reason);
         self::assertSame('HolderErased', $this->service('app.heard', HeardEvents::class)->heard[4]);
     }
 

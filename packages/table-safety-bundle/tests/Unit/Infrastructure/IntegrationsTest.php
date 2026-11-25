@@ -47,7 +47,7 @@ final class IntegrationsTest extends TestCase
         $report = $privacy->erase($subject);
 
         self::assertSame('tilttek_table_safety', $report->module->value);
-        self::assertSame(['tilttek_table_safety_participation' => ErasureEffect::Deleted, 'tilttek_table_safety_feedback' => ErasureEffect::Deleted, 'tilttek_table_safety_signal' => ErasureEffect::Pseudonymised], $report->effects);
+        self::assertSame(['tilttek_table_safety_participation' => ErasureEffect::Deleted, 'tilttek_table_safety_feedback' => ErasureEffect::Deleted, 'tilttek_table_safety_signal' => ErasureEffect::Redacted], $report->effects);
         self::assertSame([], $privacy->export($subject));
         self::assertSame([], new TableSafetyPrivacy($safety, 'player')->export(DataSubject::fromString('ana')));
     }

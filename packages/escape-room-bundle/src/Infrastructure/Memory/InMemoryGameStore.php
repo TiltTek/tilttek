@@ -67,11 +67,20 @@ final class InMemoryGameStore implements GameStore, ResetInterface
         $erased = 0;
 
         foreach ($this->ofTeam($team) as $id => $values) {
-            $this->games[$id]['values'] = [...$values, 'team' => $pseudonym->toString()];
+            $this->games[$id]['values'] = [...$values, 'team' => $pseudonym->toString(), 'public' => false];
             ++$erased;
         }
 
         return $erased;
+    }
+
+    #[Override]
+    public function forget(string ...$ids): int
+    {
+        $known = array_intersect_key($this->games, array_flip($ids));
+        $this->games = array_diff_key($this->games, $known);
+
+        return \count($known);
     }
 
     #[Override]

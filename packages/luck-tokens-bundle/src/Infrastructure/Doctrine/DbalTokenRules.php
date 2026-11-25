@@ -17,6 +17,11 @@ use Tilttek\LuckTokens\TableRules;
  */
 final readonly class DbalTokenRules implements TokenRules
 {
+    /**
+     * How many tables `removeGameMaster()` reads at a time.
+     */
+    private const int PAGE = 500;
+
     public function __construct(
         private Connection $connection,
     ) {
@@ -45,6 +50,48 @@ final readonly class DbalTokenRules implements TokenRules
             $connection->delete(LuckTokensTables::RULES, ['table_ref' => $table]);
             $connection->insert(LuckTokensTables::RULES, ['table_ref' => $table, 'rules' => $json]);
         });
+    }
+
+    /**
+     * Takes the member off the game masters of every table, the rest of each table's rules left as they were. The
+     * tables are read by pages of 500, in the order of their reference.
+     *
+     * @return int the tables changed; 0 when no table names the member, as once they are erased
+     *
+     * @throws InvalidTokenRule when a row holds rules the library no longer takes
+     */
+    public function removeGameMaster(ResourceReference $member): int
+    {
+        $changed = 0;
+        $after = null;
+
+        do {
+            $query = $this->connection->createQueryBuilder()
+                ->select('table_ref', 'rules')
+                ->from(LuckTokensTables::RULES)
+                ->orderBy('table_ref')
+                ->setMaxResults(self::PAGE);
+
+            if (null !== $after) {
+                $query->where('table_ref > :after')->setParameter('after', $after);
+            }
+
+            $rows = $query->fetchAllAssociative();
+
+            foreach ($rows as $row) {
+                $after = Rows::text($row['table_ref']);
+                $rules = TableRules::fromJson(ResourceReference::fromString($after), Rows::text($row['rules']));
+
+                if ($rules->isGameMaster($member)) {
+                    $masters = array_values(array_filter($rules->gameMasters, static fn (ResourceReference $master): bool => !$master->equals($member)));
+                    $json = json_encode(new TableRules($rules->table, $rules->kinds(), $masters)->toArray(), \JSON_THROW_ON_ERROR);
+                    $this->connection->update(LuckTokensTables::RULES, ['rules' => $json], ['table_ref' => $after]);
+                    ++$changed;
+                }
+            }
+        } while (self::PAGE === \count($rows));
+
+        return $changed;
     }
 
     /**

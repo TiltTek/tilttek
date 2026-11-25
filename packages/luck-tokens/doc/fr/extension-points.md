@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=0fceb97d298d2996a9612ea13de74a9f0bd1e5330506d2318ff2aceb3f2e4ec5 -->
+<!-- phil-dev source-sha256=841b9b040c2e5779222c257f4d81632799655fbed9cd6a19639deb90cd62e5f9 -->
 # Points d'extension
 
 Le paquet est en `0.x` : ses points d'extension sont stables seulement à partir de sa version 1.0. D'ici là, une
@@ -31,11 +31,12 @@ jamais ; le seul changement qu'il fait à une entrée est l'effacement d'un memb
 - `operation()` donne les entrées d'une opération ; `hasSession()` indique si le début d'une session s'y trouve.
 - `entries()` liste toutes les entrées, pour la vérification.
 - `eraseHolder($member, $pseudonym)` écrit le pseudonyme à la place du membre, comme détenteur et comme acteur, dans
-  chaque entrée de chaque table, ainsi que dans les soldes et les détenteurs qu'il indexe, toutes ou aucune ; les
-  positions, les changements, les soldes et l'ordre restent. Il renvoie le nombre d'entrées réécrites, chacune comptée une
-  fois, 0 si aucune ne nomme le membre, et refuse un pseudonyme égal au membre avec `InvalidTokenRule`. Dans une base de
-  données, deux mises à jour dans une même transaction — la colonne du détenteur, puis celle de l'acteur — donnent
-  exactement cela, avec un index sur chacune.
+  chaque entrée de chaque table, ainsi que dans les soldes et les détenteurs qu'il indexe, et efface la raison des
+  entrées que le membre détient, toutes ou aucune ; les positions, les changements, les soldes et l'ordre restent. Il
+  renvoie le nombre d'entrées réécrites, chacune comptée une fois, 0 si aucune ne nomme le membre, et refuse un
+  pseudonyme égal au membre avec `InvalidTokenRule`. Dans une base de données, deux mises à jour dans une même
+  transaction — la colonne du détenteur avec la raison, puis celle de l'acteur — donnent exactement cela, avec un index
+  sur chacune. `LedgerEntry::pseudonymized()` donne l'entrée réécrite.
 
 `LedgerEntry::toArray()` donne la ligne à conserver et `LedgerEntry::fromArray()` la relit, vérifiée. Les tests du
 registre en mémoire, dans `tests/Unit/Store/StoresTest.php` et `tests/Unit/ErasureTest.php`, tiennent ces comportements.

@@ -4,6 +4,16 @@ All notable changes to `tilttek/luck-tokens` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+The next version is 0.1.2-alpha.
+
+### Changed
+
+- `LuckTokens::eraseHolder()`, `LedgerEntry::pseudonymized()` and `InMemoryTokenLedger::eraseHolder()` clear the reason
+  of the entries the member holds: a reason is written about its holder, and the audit of the balances needs only the
+  changes. The reasons of the entries the member wrote for others stay. A `TokenLedger` of your own does the same.
+
 ## 0.1.1-alpha - 2026-11-20
 
 ### Fixed

@@ -13,13 +13,18 @@ use Phil\PrivacyBundle\Domain\Subject\ModuleName;
 use Phil\Resource\ResourceReference;
 use Tilttek\LuckTokens\LuckTokens;
 use Tilttek\LuckTokensBundle\Application\LockedLuckTokens;
+use Tilttek\LuckTokensBundle\Infrastructure\Doctrine\DbalTokenRules;
 use Tilttek\LuckTokensBundle\Infrastructure\Doctrine\LuckTokensTables;
 
 /**
  * The tokens' part of an erasure request of `phil/privacy-bundle`. The data subject is a member, referenced under the
- * kind the configuration names (`member` by default); `eraseHolder()` writes a pseudonym in their place, as holder and
- * as actor, in every ledger — under the member's lock when the locks are enabled. The report names the holder and the
- * actor of the entries as pseudonymised, an erasure sent again included.
+ * kind the configuration names (`member` by default). `doc/erasing-a-member.md` gives the reason of each choice:
+ *
+ * - in every ledger, `eraseHolder()` writes a pseudonym in their place, as holder and as actor — under the member's
+ *   lock when the locks are enabled — and clears the reasons of the entries they hold;
+ * - with the rules kept in the database, the member is taken off the game masters of every table.
+ *
+ * The report is the same for an erasure sent again.
  */
 final readonly class LuckTokensPrivacy implements PersonalDataEraser
 {
@@ -29,6 +34,7 @@ final readonly class LuckTokensPrivacy implements PersonalDataEraser
         private LuckTokens $tokens,
         private string $memberKind,
         private ?LockedLuckTokens $locked = null,
+        private ?DbalTokenRules $rules = null,
     ) {
     }
 
@@ -49,9 +55,17 @@ final readonly class LuckTokensPrivacy implements PersonalDataEraser
             $this->tokens->eraseHolder($member);
         }
 
-        return ErasureReport::of(self::MODULE, [
+        $effects = [
             LuckTokensTables::ENTRIES.'.holder' => ErasureEffect::Pseudonymised,
             LuckTokensTables::ENTRIES.'.actor' => ErasureEffect::Pseudonymised,
-        ]);
+            LuckTokensTables::ENTRIES.'.reason' => ErasureEffect::Deleted,
+        ];
+
+        if ($this->rules instanceof DbalTokenRules) {
+            $this->rules->removeGameMaster($member);
+            $effects[LuckTokensTables::RULES.'.game_masters'] = ErasureEffect::Deleted;
+        }
+
+        return ErasureReport::of(self::MODULE, $effects);
     }
 }

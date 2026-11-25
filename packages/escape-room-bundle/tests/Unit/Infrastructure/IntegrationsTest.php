@@ -102,6 +102,7 @@ final class IntegrationsTest extends TestCase
         $kit->desk->start('g-1', 'cell', $member, 's-1');
         $kit->desk->start('g-2', 'crypt', ResourceReference::of('team', 'owls'));
         $kit->desk->message('g-2', $member, 'Look up');
+        $kit->desk->message('g-1', ResourceReference::of('member', '9'), 'Well done');
         $kit->clock->sleep(10);
         $kit->desk->guess('g-1', 'door', 'key');
         $kit->desk->consent('g-1', true);
@@ -119,21 +120,63 @@ final class IntegrationsTest extends TestCase
 
         $report = $privacy->erase(DataSubject::fromString('7'));
         self::assertSame([
-            'tilttek_escape_room_game.team' => ErasureEffect::Pseudonymised,
-            'tilttek_escape_room_result.team' => ErasureEffect::Pseudonymised,
+            'tilttek_escape_room_game.team' => ErasureEffect::Deleted,
+            'tilttek_escape_room_result.team' => ErasureEffect::Deleted,
+            'tilttek_escape_room_screen.game' => ErasureEffect::Deleted,
             'tilttek_escape_room_screen.host' => ErasureEffect::Pseudonymised,
             'tilttek_escape_room_booking.party' => ErasureEffect::Pseudonymised,
         ], $report->effects);
         self::assertSame([], $privacy->export(DataSubject::fromString('7')));
+        self::assertNull($kit->games->find('g-1'));
+        self::assertNull($kit->screens->screen('g-1'));
+        self::assertSame([], $kit->results->ofTeam($member));
         self::assertSame([], $kit->desk->leaderboard('cell'));
-        $team = $kit->desk->game('g-1')->game->team;
-        self::assertSame('erased', $team->key);
-        self::assertMatchesRegularExpression('/^[0-9a-f]{32}$/D', $team->id);
         $screen = $kit->screens->screen('g-2');
         self::assertNotNull($screen);
-        self::assertTrue($team->equals($screen->host));
-        self::assertTrue($team->equals($ledger->bookings($session)[0]->party));
+        $host = $screen->host;
+        self::assertSame('erased', $host->key);
+        self::assertMatchesRegularExpression('/^[0-9a-f]{32}$/D', $host->id);
+        self::assertSame('Look up', $screen->message);
+        self::assertTrue($host->equals($ledger->bookings($session)[0]->party));
         self::assertSame('member:8', $kit->desk->game('g-3')->game->team->toString());
+        self::assertSame('team:owls', $kit->desk->game('g-2')->game->team->toString());
+    }
+
+    public function testAGameStillRunningKeepsRunningUnderThePseudonym(): void
+    {
+        $kit = new Desk();
+        $member = ResourceReference::of('member', '7');
+        $kit->desk->start('g-1', 'cell', $member);
+        $kit->desk->consent('g-1', true);
+        $kit->desk->message('g-1', ResourceReference::of('member', '9'), 'Look up');
+        $kit->desk->start('g-2', 'crypt', ResourceReference::of('team', 'owls'));
+        $kit->desk->message('g-2', $member, 'Mind the lamp');
+        $kit->desk->abandon('g-2');
+        $kit->desk->start('g-3', 'crypt', ResourceReference::of('team', 'bats'));
+        $kit->desk->message('g-3', $member, 'Left');
+        $kit->games->forget('g-3');
+
+        $report = new EscapeRoomPrivacy($kit->games, $kit->results, $kit->screens, 'member')->erase(DataSubject::fromString('7'));
+
+        self::assertSame([
+            'tilttek_escape_room_game.team' => ErasureEffect::Pseudonymised,
+            'tilttek_escape_room_result.team' => ErasureEffect::Pseudonymised,
+            'tilttek_escape_room_screen.game' => ErasureEffect::Pseudonymised,
+            'tilttek_escape_room_screen.host' => ErasureEffect::Deleted,
+        ], $report->effects);
+        $game = $kit->desk->game('g-1')->game;
+        self::assertSame('erased', $game->team->key);
+        self::assertFalse($game->public);
+        self::assertSame('member:9', $kit->screens->screen('g-1')?->host->toString());
+        self::assertNull($kit->screens->screen('g-2'));
+        self::assertNull($kit->screens->screen('g-3'));
+        self::assertSame([], $kit->games->ofTeam($member));
+        $kit->clock->sleep(10);
+        $kit->desk->guess('g-1', 'door', 'key');
+        self::assertSame([], $kit->desk->leaderboard('cell'));
+        $result = $kit->results->ofTeam($game->team)['g-1'] ?? null;
+        self::assertNotNull($result);
+        self::assertFalse($result->public);
     }
 
     public function testAnErasureWithoutBookingsLeavesThemOut(): void
@@ -142,7 +185,12 @@ final class IntegrationsTest extends TestCase
         $privacy = new EscapeRoomPrivacy($kit->games, $kit->results, $kit->screens, 'member');
 
         self::assertSame([], $privacy->export(DataSubject::fromString('7')));
-        self::assertSame(['tilttek_escape_room_game.team', 'tilttek_escape_room_result.team', 'tilttek_escape_room_screen.host'], array_keys($privacy->erase(DataSubject::fromString('7'))->effects));
+        self::assertSame([
+            'tilttek_escape_room_game.team' => ErasureEffect::Deleted,
+            'tilttek_escape_room_result.team' => ErasureEffect::Deleted,
+            'tilttek_escape_room_screen.game' => ErasureEffect::Deleted,
+            'tilttek_escape_room_screen.host' => ErasureEffect::Deleted,
+        ], $privacy->erase(DataSubject::fromString('7'))->effects);
     }
 
     public function testTheTablesAreAddedOnce(): void

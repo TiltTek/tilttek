@@ -6,12 +6,33 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## Unreleased
 
-The next version is 0.1.2-alpha.
+The next version is 0.2.0-alpha.
+
+The erasure of a member deletes what no longer serves and pseudonymises only what a running game or a booking needs; the
+reason of each choice is in [Privacy](doc/privacy.md#erasure). A `GameStore` or `ScreenStore` of your own implements
+`forget()`, and a `ResultStore` of your own implements `forgetTeam()` in place of `eraseTeam()`.
+
+### Added
+
+- `GameStore::forget()` and `ScreenStore::forget()`, which delete the games and the screens named, on Doctrine DBAL
+  by pages of 500 identifiers and in memory.
+- `ResultStore::forgetTeam()`, which deletes the results of a team.
 
 ### Changed
 
+- `EscapeRoomPrivacy::erase()` deletes the games of the member that are over, their screens, and every result of the
+  member; a game still running keeps running under the pseudonym, with the consent to show its result withdrawn; a
+  screen the member showed as a host is deleted once its game is over or gone, and keeps the pseudonym while it runs;
+  the bookings stay under the pseudonym. The report names `tilttek_escape_room_screen.game` too, and each column as
+  `deleted`, or `pseudonymised` while a game runs and for the bookings.
+- `GameStore::eraseTeam()` withdraws the consent to show the result of each game it rewrites.
+
 - The development requirements accept `phil/privacy-bundle` 0.3, the version published on 2026-11-24, and no earlier
   one, so that the package installs on its own beside the published version of that bundle.
+
+### Removed
+
+- `ResultStore::eraseTeam()`: a withdrawn result serves nothing, and `forgetTeam()` deletes it.
 
 ### Security
 

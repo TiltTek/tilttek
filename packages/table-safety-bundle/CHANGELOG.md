@@ -10,6 +10,9 @@ The next version is 0.1.2-alpha.
 
 ### Changed
 
+- The report of `TableSafetyPrivacy` names `tilttek_table_safety_signal` as redacted rather than pseudonymised: the
+  erasure clears the author of a named signal and writes no pseudonym, and the signal stays until the purge, its table
+  and moment possibly pointing to the participant. The reason of each choice is in [Privacy](doc/privacy.md).
 - The development requirements accept `phil/privacy-bundle` 0.3 and `phil/ux-kit` 0.6, the versions published on
   2026-11-24, and no earlier ones, so that the package installs on its own beside the published versions.
 

@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=816ae0873224a35c73b27d37794c5720a15baf76644b5835b05cc13d0deec0d4 -->
+<!-- phil-dev source-sha256=d577c18f693f0f94fb21d8b8c149c17c5284a10c9c3f31bb1778cbf770d9418a -->
 # Vie privée
 
 ## Ce qui reste anonyme
@@ -18,12 +18,13 @@ Avec `phil/privacy-bundle` installé, `TableSafetyPrivacy` est étiqueté comme 
 contrats de `Phil\PrivacyBundle\Application\Contract`. La personne concernée est un participant, référencé sous
 `privacy.participant_kind` (`member` par défaut).
 
-| Stockage | Export | Effacement |
-|---|---|---|
-| `tilttek_table_safety_participation` | les réponses à chaque table | supprimées |
-| `tilttek_table_safety_feedback` | les étoiles et souhaits de chaque séance | supprimés |
-| `tilttek_table_safety_signal` | les signaux nominatifs qu'il a levés | gardés sans le nom, comme signaux anonymes |
+| Stockage | Export | Effacement | Pourquoi |
+|---|---|---|---|
+| `tilttek_table_safety_participation` | les réponses à chaque table | supprimées | Les réponses disent ce que le participant ne jouera pas et jusqu'où il consent : les données les plus sensibles que détient le bundle. L'accord de la table est recalculé à partir des réponses restantes. |
+| `tilttek_table_safety_feedback` | les étoiles et souhaits de chaque séance | supprimés | Le sommaire d'une séance est recalculé à partir des étoiles et souhaits restants, par groupes entiers de `feedback_threshold`. |
+| `tilttek_table_safety_signal` | les signaux nominatifs qu'il a levés | caviardés : gardés sans le nom | Un signal sert au meneur de jeu pendant la partie — un signal pas encore vu, ou les réponses au dernier point de contrôle, seraient perdus pour la table s'il disparaissait — et la purge le supprime après `retention`. Son auteur est effacé, si bien qu'il devient un signal anonyme ; le rapport dit `redacted` plutôt que `anonymised`, puisque sa table, son genre et son moment peuvent encore désigner le participant à une petite table jusqu'à la purge. |
 
+Les réglages d'une table, `tilttek_table_safety_table`, ne nomment personne et ne sont pas dans le rapport.
 L'effacement peut s'exécuter de nouveau sur un participant effacé et rapporte la même chose.
 
 ## La purge des signaux

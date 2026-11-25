@@ -24,9 +24,15 @@ return [
             'UnwrapArrayValues' => ['ignoreSourceCodeByRegex' => [
                 '.*return array_values\\(array_map\\(Rows::text\\(\\.\\.\\.\\), \\$ids\\)\\);',
                 '.*return array_values\\(array_map\\(\\$this->result\\(\\.\\.\\.\\), \\$rows\\)\\);',
+                // `array_chunk()` hands out lists whatever the keys it is given: `array_unique()` leaves holes only before it.
+                '.*foreach \\(array_chunk\\(array_values\\(array_unique\\(.*',
             ]],
-            // The column holds integers: a database turns the string of the microseconds into the integer it stores.
-            'CastInt' => ['ignoreSourceCodeByRegex' => ['.*\'escaped_micro\' => \\(int\\) \\$result->escapedAt->format\\(\'u\'\\),']],
+            'CastInt' => ['ignoreSourceCodeByRegex' => [
+                // The column holds integers: a database turns the string of the microseconds into the integer it stores.
+                '.*\'escaped_micro\' => \\(int\\) \\$result->escapedAt->format\\(\'u\'\\),',
+                // The count of a deletion comes as an integer or a numeric string, and `+=` turns both into the same integer.
+                '.*\\$deleted \\+= \\(int\\) \\$this->connection->executeStatement\\(\'DELETE FROM.*',
+            ]],
         ],
     ],
 ];

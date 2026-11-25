@@ -17,10 +17,20 @@ A part without rows is left out; a member with none gets an empty export.
 
 ## Erasure
 
-The erasure draws one pseudonym of its own — `erased:` and 32 random hexadecimal digits — and writes it in place of the
-member in the games, the results, the screens and the bookings; their results are withdrawn from the leaderboard. The
-times, the hints and the seats stay, so the other teams keep their places and the sessions their seats. The report
-names each column as `pseudonymised`.
+The erasure decides column by column. Where a row stays, it holds a pseudonym the erasure draws for itself — `erased:`
+and 32 random hexadecimal digits — which nothing in the bundle joins back to the member.
+
+| Column | Effect | Why |
+|---|---|---|
+| `tilttek_escape_room_game.team` | Deleted, or pseudonymised while a game runs | A game over serves nobody once its result is recorded, so it is deleted. A game still running is the room's live session: its countdown, console and screen keep working under the pseudonym, with the consent to show the result withdrawn, and the game ends as usual. |
+| `tilttek_escape_room_result.team` | Deleted, or pseudonymised while a game runs | A result is read only by the leaderboard, and only when the team agreed to show it. Withdrawn, it serves nothing; kept, its room, session and moment to the microsecond would point back to the booking. Deleting it leaves the places of the other teams as they are. A game still running records its result under the pseudonym, hidden from the leaderboard. |
+| `tilttek_escape_room_screen.game` | Deleted, or pseudonymised while a game runs | A hint screen serves while its game runs: the screens of the member's games over are deleted with them, and the message of the host with them. |
+| `tilttek_escape_room_screen.host` | Deleted, or pseudonymised while a game runs | A screen the member showed as a host is deleted once its game is over or gone. While the game runs, the team still reads the hint: the screen stays with the pseudonym as its host. |
+| `tilttek_escape_room_booking.party` | Pseudonymised | A booking holds seats of a session that other parties share: deleting it would hand its seats out again and change the order of the session. It stays with the pseudonym. Its identifier is the application's, and may join the site's orders or payments, so the row is still personal data for whoever holds them: the application deletes the bookings of past sessions by its own retention. |
+
+The report names each column with its effect: `deleted` when nothing of the member is left running,
+`pseudonymised` when a game of theirs still runs or for the bookings. The lock of a session,
+`tilttek_escape_room_session_lock`, names nobody and is not in the report.
 
 A reference of the kind `erased` given by the caller — as a team, a party or a host — is refused by the library with
 `InvalidRoom`: only an erasure writes one.

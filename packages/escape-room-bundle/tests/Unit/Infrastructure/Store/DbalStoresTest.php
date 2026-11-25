@@ -120,7 +120,7 @@ final class DbalStoresTest extends StoresTestCase
 
         $this->games()->eraseTeam(ResourceReference::of('member', '7'), ResourceReference::of('erased', 'abc'));
 
-        self::assertSame('{"room":"crypt","team":"erased:abc","session":null,"progress":{"note":"é/ü"}}', $this->connection->fetchOne('SELECT state FROM '.EscapeRoomTables::GAMES.' WHERE id = ?', ['g-1']));
+        self::assertSame('{"room":"crypt","team":"erased:abc","session":null,"progress":{"note":"é/ü"},"public":false}', $this->connection->fetchOne('SELECT state FROM '.EscapeRoomTables::GAMES.' WHERE id = ?', ['g-1']));
     }
 
     public function testAStateIsReadDownToThirtyTwoLevels(): void
@@ -167,6 +167,42 @@ final class DbalStoresTest extends StoresTestCase
         $this->expectExceptionMessageIsOrContains('The state of a game is an object of values.');
 
         $this->games()->find('g-1');
+    }
+
+    public function testTheGamesForgottenAreDeletedFiveHundredAtATime(): void
+    {
+        $ids = array_map(static fn (int $n): string => 'g-'.$n, range(1, 1001));
+        $sizes = [];
+
+        self::assertSame(1001, new DbalGameStore($this->countingConnection($sizes))->forget(...$ids, ...\array_slice($ids, 0, 10)));
+        self::assertSame([500, 500, 1], $sizes);
+    }
+
+    public function testTheScreensForgottenAreDeletedFiveHundredAtATime(): void
+    {
+        $games = array_map(static fn (int $n): string => 'g-'.$n, range(1, 1001));
+        $sizes = [];
+
+        self::assertSame(1001, new DbalScreenStore($this->countingConnection($sizes))->forget(...$games, ...\array_slice($games, 0, 10)));
+        self::assertSame([500, 500, 1], $sizes);
+    }
+
+    /**
+     * A connection that deletes nothing, and tells how many identifiers each statement was given.
+     *
+     * @param list<int> $sizes
+     */
+    private function countingConnection(array &$sizes): Connection
+    {
+        $connection = self::createStub(Connection::class);
+        $connection->method('executeStatement')->willReturnCallback(static function (string $sql, array $params) use (&$sizes): int {
+            $count = \is_array($params[0] ?? null) ? \count($params[0]) : 0;
+            $sizes[] = $count;
+
+            return $count;
+        });
+
+        return $connection;
     }
 
     #[Override]
