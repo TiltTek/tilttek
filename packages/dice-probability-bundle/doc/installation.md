@@ -13,6 +13,9 @@ expressions with the application's notations, limits and custom dice. Twig, the 
 | `symfony/translation` | The words of the table, the chart and the component, in English and French |
 | `ext-gmp` | The fractions whose terms are longer than 18 digits, written in their lowest terms |
 
+Symfony UX 3.8.1 or later (TwigComponent 3.8) and Twig 3.31.1 or later, for their security fixes: older versions are
+refused.
+
 ## Installing
 
 ```sh

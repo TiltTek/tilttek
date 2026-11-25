@@ -4,6 +4,15 @@ All notable changes to `tilttek/quests-bundle` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+The next version is 0.3.2-alpha.
+
+### Security
+
+- `twig/twig` older than 3.31.1 refused, for the security fixes of that version: its sandbox checks the policy in more
+  places, and a template can no longer replace the content of a `Markup`.
+
 ## 0.3.1-alpha - 2026-11-24
 
 ### Changed

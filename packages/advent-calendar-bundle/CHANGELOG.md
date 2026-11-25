@@ -13,6 +13,11 @@ The next version is 0.1.2-alpha.
 - The development requirements accept `phil/privacy-bundle` 0.3 and `phil/ux-kit` 0.6, the versions published on
   2026-11-24, and no earlier ones, so that the package installs on its own beside the published versions.
 
+### Security
+
+- `twig/twig` 3.31.1 or later required, for the security fixes of that version: its sandbox checks the policy in more
+  places, and a template can no longer replace the content of a `Markup`.
+
 ## 0.1.1-alpha - 2026-11-24
 
 ### Changed

@@ -11,6 +11,9 @@ use RecursiveIteratorIterator;
 use SplFileInfo;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Tilttek\DiceProbabilityBundle\Infrastructure\Twig\KitComponents;
@@ -20,11 +23,14 @@ use Tilttek\DiceProbabilityBundle\Infrastructure\Twig\KitComponents;
  * TwigComponent and LiveComponent, the recipes of the PHIL UX kit copied where `ux:install` would put them, in the
  * subdirectory of the application's Toolkit configuration — the Toolkit itself stood for by its parameter —,
  * TilttekDiceBundle with a custom die and its journal in memory, and the bundle with a shallow explosion depth and few
- * samples.
+ * samples. A live request carrying the header `REFUSE_BEFORE_THE_ACTION` is refused with a 422 once its controller is
+ * known, as a controller attribute or an argument resolver would refuse it, before the action is called.
  */
 final class TestKernel extends Kernel
 {
     use MicroKernelTrait;
+
+    public const string REFUSE_BEFORE_THE_ACTION = 'X-Test-Refuse-Before-The-Action';
 
     public function __construct(
         string $environment,
@@ -32,6 +38,19 @@ final class TestKernel extends Kernel
         private readonly string $subdirectory = 'ui',
     ) {
         parent::__construct($environment, $debug);
+    }
+
+    /**
+     * Called before LiveComponent's own listener, the last one, which marks the action as called.
+     */
+    #[AsEventListener(event: ControllerArgumentsEvent::class)]
+    public function refuseBeforeTheAction(ControllerArgumentsEvent $event): void
+    {
+        $request = $event->getRequest();
+
+        if ($request->attributes->has('_live_component') && $request->headers->has(self::REFUSE_BEFORE_THE_ACTION)) {
+            throw new UnprocessableEntityHttpException('Refused before the action.');
+        }
     }
 
     #[Override]

@@ -75,5 +75,5 @@ composer require phil/paged-media
 
 ## Requirements
 
-PHP 8.5 or later with `ext-intl`, Symfony 8.2, Doctrine DBAL 4.6, Twig 3.31, with FrameworkBundle's sessions, forms and
-CSRF protection. Mercure, the console, the ORM, `phil/paged-media` and `phil/privacy-bundle` are optional.
+PHP 8.5 or later with `ext-intl`, Symfony 8.2, Doctrine DBAL 4.6, Twig 3.31.1, with FrameworkBundle's sessions, forms
+and CSRF protection. Mercure, the console, the ORM, `phil/paged-media` and `phil/privacy-bundle` are optional.
