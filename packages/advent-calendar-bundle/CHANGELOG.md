@@ -4,6 +4,15 @@ All notable changes to `tilttek/advent-calendar-bundle` will be documented in th
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+The next version is 0.1.2-alpha.
+
+### Changed
+
+- The development requirements accept `phil/privacy-bundle` 0.3 and `phil/ux-kit` 0.6, the versions published on
+  2026-11-24, and no earlier ones, so that the package installs on its own beside the published versions.
+
 ## 0.1.1-alpha - 2026-11-24
 
 ### Changed

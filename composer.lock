@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6c41325033be2f878a80e13bcabc6336",
+    "content-hash": "fe20489d3643509ee81ad09dd7d1cfa5",
     "packages": [],
     "packages-dev": [
         {
@@ -1846,21 +1846,21 @@
         },
         {
             "name": "phil/commerce-bundle",
-            "version": "0.4.0-alpha",
+            "version": "0.5.0-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/parler-haut-interagir-librement/commerce-bundle.git",
-                "reference": "b2ce29c5c7eb08c63955bb6a2fa570f8ab2b7539"
+                "reference": "4ce2326df319adc08d24e642b03ce7979a169c09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/parler-haut-interagir-librement/commerce-bundle/zipball/b2ce29c5c7eb08c63955bb6a2fa570f8ab2b7539",
-                "reference": "b2ce29c5c7eb08c63955bb6a2fa570f8ab2b7539",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/commerce-bundle/zipball/4ce2326df319adc08d24e642b03ce7979a169c09",
+                "reference": "4ce2326df319adc08d24e642b03ce7979a169c09",
                 "shasum": ""
             },
             "require": {
-                "doctrine/dbal": "^4.5",
-                "doctrine/orm": "^3.7",
+                "doctrine/dbal": "^4.6",
+                "doctrine/orm": "^3.8",
                 "ext-filter": "*",
                 "ext-json": "*",
                 "ext-mbstring": "*",
@@ -1871,19 +1871,19 @@
                 "phil/tax": "^0.1@dev",
                 "php": ">=8.5",
                 "psr/clock": "^1.0",
+                "psr/log": "^3.0",
                 "symfony/config": "^8.2",
                 "symfony/dependency-injection": "^8.2",
-                "symfony/event-dispatcher-contracts": "^3.6",
+                "symfony/event-dispatcher-contracts": "^3.8",
                 "symfony/http-foundation": "^8.2",
                 "symfony/uid": "^8.2",
                 "symfony/workflow": "^8.2"
             },
             "require-dev": {
-                "doctrine/doctrine-bundle": "^3.3",
-                "doctrine/persistence": "^4.1",
+                "doctrine/doctrine-bundle": "^3.4",
+                "doctrine/persistence": "^4.2",
                 "ext-zlib": "*",
                 "phpunit/phpunit": "^13.4",
-                "psr/log": "^3.0",
                 "symfony/clock": "^8.2",
                 "symfony/console": "^8.2",
                 "symfony/event-dispatcher": "^8.2",
@@ -1894,7 +1894,7 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "0.3.x-dev"
+                    "dev-main": "0.4.x-dev"
                 }
             },
             "autoload": {
@@ -1918,10 +1918,10 @@
             "homepage": "https://ph-il.ca",
             "support": {
                 "issues": "https://github.com/parler-haut-interagir-librement/commerce-bundle/issues",
-                "source": "https://github.com/parler-haut-interagir-librement/commerce-bundle/tree/0.4.0-alpha"
+                "source": "https://github.com/parler-haut-interagir-librement/commerce-bundle/tree/0.5.0-alpha"
             },
-            "time": "2026-11-20T22:00:00+00:00",
-            "published-time": "2026-11-21T02:56:49+00:00"
+            "time": "2026-11-24T22:00:00+00:00",
+            "published-time": "2026-11-25T03:52:34+00:00"
         },
         {
             "name": "phil/content-warnings",
@@ -2484,7 +2484,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../Phil/phil/packages/open-badges",
-                "reference": "d17b3cf7b00671af199851bbe475773f9427f734"
+                "reference": "76e96cd5f404e563eadb35c4fd368c3e6e1968c6"
             },
             "require": {
                 "ext-dom": "*",
@@ -2494,16 +2494,16 @@
                 "ext-openssl": "*",
                 "ext-sodium": "*",
                 "ext-zlib": "*",
-                "phil/safe-http": "^0.1@dev || ^0.2@dev",
+                "phil/safe-http": "^0.2@dev",
                 "phil/url": "^0.1@dev",
                 "php": ">=8.5",
-                "symfony/service-contracts": "^3.6",
+                "symfony/service-contracts": "^3.8",
                 "web-token/jwt-library": "^4.2"
             },
             "require-dev": {
                 "phpunit/phpunit": "^13.4",
                 "symfony/http-client": "^8.2",
-                "symfony/http-client-contracts": "^3.6"
+                "symfony/http-client-contracts": "^3.8"
             },
             "type": "library",
             "extra": {
@@ -2553,21 +2553,21 @@
             "dist": {
                 "type": "path",
                 "url": "../../Phil/phil/packages/open-badges-bundle",
-                "reference": "ea25bdc9b9cbaf05763a7345e9e397c2e71ed2da"
+                "reference": "55aa0b9c744776d842327ec89987a677e1dfa8ce"
             },
             "require": {
-                "phil/open-badges": "^0.2@dev || ^0.3@dev || ^0.4@dev",
-                "phil/safe-http": "^0.1@dev || ^0.2@dev",
+                "phil/open-badges": "^0.4@dev",
+                "phil/safe-http": "^0.2@dev",
                 "phil/url": "^0.1@dev",
                 "php": ">=8.5",
                 "psr/clock": "^1.0",
-                "symfony/cache-contracts": "^3.6",
+                "symfony/cache-contracts": "^3.8",
                 "symfony/config": "^8.2",
                 "symfony/dependency-injection": "^8.2",
                 "symfony/http-foundation": "^8.2",
                 "symfony/http-kernel": "^8.2",
                 "symfony/routing": "^8.2",
-                "twig/twig": "^3.21"
+                "twig/twig": "^3.31"
             },
             "require-dev": {
                 "ext-openssl": "*",
@@ -2708,12 +2708,12 @@
             "dist": {
                 "type": "path",
                 "url": "../../Phil/phil/packages/privacy-bundle",
-                "reference": "0059247bd61e7a92ec124d679cd402c05aef6c53"
+                "reference": "d2cadfbc0aabfa0beb669a2f582fe4bed6f7a3bf"
             },
             "require": {
                 "ext-mbstring": "*",
                 "ext-sodium": "*",
-                "monolog/monolog": "^3.0",
+                "monolog/monolog": "^3.13",
                 "phil/email-address": "^0.1@dev",
                 "phil/url": "^0.1@dev",
                 "php": ">=8.5",
@@ -2722,7 +2722,7 @@
                 "symfony/clock": "^8.2",
                 "symfony/config": "^8.2",
                 "symfony/dependency-injection": "^8.2",
-                "symfony/event-dispatcher-contracts": "^3.6",
+                "symfony/event-dispatcher-contracts": "^3.8",
                 "symfony/filesystem": "^8.2",
                 "symfony/http-foundation": "^8.2",
                 "symfony/http-kernel": "^8.2",
@@ -2734,12 +2734,12 @@
                 "symfony/security-http": "^8.2",
                 "symfony/workflow": "^8.2",
                 "symfony/yaml": "^8.2",
-                "twig/twig": "^3.21"
+                "twig/twig": "^3.31"
             },
             "require-dev": {
-                "doctrine/dbal": "^4.5",
-                "doctrine/orm": "^3.7",
-                "doctrine/persistence": "^4.1",
+                "doctrine/dbal": "^4.6",
+                "doctrine/orm": "^3.8",
+                "doctrine/persistence": "^4.2",
                 "ext-pdo": "*",
                 "ext-zip": "*",
                 "phil/legal-notices": "^0.1@dev",
@@ -2752,7 +2752,7 @@
                 "symfony/cache": "^8.2",
                 "symfony/console": "^8.2",
                 "symfony/css-selector": "^8.2",
-                "symfony/dom-crawler": "^8.1",
+                "symfony/dom-crawler": "^8.2",
                 "symfony/event-dispatcher": "^8.2",
                 "symfony/framework-bundle": "^8.2",
                 "symfony/mailer": "^8.2",
@@ -2761,7 +2761,7 @@
                 "symfony/rate-limiter": "^8.2",
                 "symfony/scheduler": "^8.2",
                 "symfony/security-bundle": "^8.2",
-                "symfony/stimulus-bundle": "^3.7",
+                "symfony/stimulus-bundle": "^3.8",
                 "symfony/translation": "^8.2",
                 "symfony/twig-bridge": "^8.2",
                 "symfony/twig-bundle": "^8.2"
@@ -3323,16 +3323,16 @@
         },
         {
             "name": "phil/ux-kit",
-            "version": "0.5.0-alpha",
+            "version": "0.6.0-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/parler-haut-interagir-librement/ux-kit.git",
-                "reference": "99e34463104968689986b472014af246f28c9ea3"
+                "reference": "969790c21c8e9a2660db7d655d80fed213cf054c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/parler-haut-interagir-librement/ux-kit/zipball/99e34463104968689986b472014af246f28c9ea3",
-                "reference": "99e34463104968689986b472014af246f28c9ea3",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/ux-kit/zipball/969790c21c8e9a2660db7d655d80fed213cf054c",
+                "reference": "969790c21c8e9a2660db7d655d80fed213cf054c",
                 "shasum": ""
             },
             "require": {
@@ -3344,11 +3344,11 @@
                 "symfony/dependency-injection": "^8.2",
                 "symfony/http-foundation": "^8.2",
                 "symfony/http-kernel": "^8.2",
-                "twig/twig": "^3.21"
+                "twig/twig": "^3.31"
             },
             "require-dev": {
                 "ext-gd": "*",
-                "liip/imagine-bundle": "^2.18",
+                "liip/imagine-bundle": "^2.19",
                 "phil/qr-code-bundle": "^0.1@dev",
                 "phil/structured-data": "^0.1@dev",
                 "php-webdriver/webdriver": "^1.16",
@@ -3362,11 +3362,11 @@
                 "symfony/panther": "^2.4",
                 "symfony/routing": "^8.2",
                 "symfony/twig-bundle": "^8.2",
-                "symfony/ux-twig-component": "^3.7",
+                "symfony/ux-twig-component": "^3.8",
                 "symfony/web-link": "^8.2",
                 "symfony/yaml": "^8.2",
-                "twig/extra-bundle": "^3.24",
-                "twig/html-extra": "^3.24"
+                "twig/extra-bundle": "^3.31",
+                "twig/html-extra": "^3.31"
             },
             "suggest": {
                 "ext-gd": "To compare the screenshots of the browser test case of src/Test/ with their references",
@@ -3402,7 +3402,7 @@
                     "role": "Developer"
                 }
             ],
-            "description": "PHIL UX kit for the Symfony UX Toolkit: the same recipes as the Shadcn kit, styled with phil-ux, installed with ux:install --kit; with the Twig functions its image recipes call, image_origin(), image_sources(), image_filters(), picture_props() and image_json_ld()",
+            "description": "PHIL UX kit for the Symfony UX Toolkit: the same recipes as the Shadcn kit, styled with phil-ux, plus responsive image recipes, installed with ux:install --kit.",
             "homepage": "https://ph-il.ca",
             "keywords": [
                 "accessibility",
@@ -3414,10 +3414,10 @@
             ],
             "support": {
                 "issues": "https://github.com/parler-haut-interagir-librement/ux-kit/issues",
-                "source": "https://github.com/parler-haut-interagir-librement/ux-kit/tree/0.5.0-alpha"
+                "source": "https://github.com/parler-haut-interagir-librement/ux-kit/tree/0.6.0-alpha"
             },
-            "time": "2026-11-12T13:28:22+00:00",
-            "published-time": "2026-11-12T13:47:43+00:00"
+            "time": "2026-11-24T22:00:00+00:00",
+            "published-time": "2026-11-25T03:52:12+00:00"
         },
         {
             "name": "php-webdriver/webdriver",

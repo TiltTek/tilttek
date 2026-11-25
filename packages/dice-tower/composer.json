@@ -37,7 +37,7 @@
     },
     "require-dev": {
         "doctrine/dbal": "^4.6",
-        "phil/ux-kit": "^0.5@dev",
+        "phil/ux-kit": "^0.6@dev",
         "phpunit/phpunit": "^13.4",
         "symfony/clock": "^8.2",
         "symfony/event-dispatcher": "^8.2",
