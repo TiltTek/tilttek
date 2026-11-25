@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=350d748aaf2bd8de789d7621ec6b673baec5ebd117154df0bdd98ef7f9e4d2a0 -->
+<!-- phil-dev source-sha256=022634a146c0959582c7fad5971762234e5f6e68902e95a145888084eff9b7e3 -->
 # tilttek/table-safety-bundle
 
 **Les outils de sécurité des tables de jeu de rôle dans une application Symfony : les écrans où les participants répondent et lèvent des signaux, l'écran du meneur de jeu, et les signaux en temps réel — anonymes par défaut.**
@@ -79,7 +79,7 @@ Un participant de `table:7` ouvre alors `/table-safety/table:7` ; son meneur de 
 
 ## Prérequis
 
-PHP 8.5 ou une version plus récente avec `ext-intl`, Symfony 8.2, Doctrine DBAL 4.6, Twig 3.31.
+PHP 8.5 ou une version plus récente avec `ext-intl`, Symfony 8.2, Doctrine DBAL 4.6, Twig 3.31.1.
 
 ## Contribuer
 

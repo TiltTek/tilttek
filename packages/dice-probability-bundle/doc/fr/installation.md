@@ -1,4 +1,4 @@
-<!-- phil-dev source-sha256=eec0005b50bfd80b5bd7905e81fe9c459a770051c2a8afaea7a6ca6679890c55 -->
+<!-- phil-dev source-sha256=caa02240311011c143c2c0f573030c0db4e1d7da0fe24e46eca881fa9e529a44 -->
 # Installation
 
 ## Prérequis
@@ -14,6 +14,9 @@ UX sont facultatifs :
 | `symfony/rate-limiter` | La limite de débit du composant, activée par défaut : nécessaire avec `symfony/ux-live-component` sauf si elle est désactivée |
 | `symfony/translation` | Les mots du tableau, du graphique et du composant, en anglais et en français |
 | `ext-gmp` | Les fractions dont les termes ont plus de 18 chiffres, écrites sous leur forme irréductible |
+
+Symfony UX 3.8.1 ou plus récent (TwigComponent 3.8) et Twig 3.31.1 ou plus récent, pour leurs correctifs de sécurité : les
+versions plus anciennes sont refusées.
 
 ## Installer
 
