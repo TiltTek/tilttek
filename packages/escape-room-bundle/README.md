@@ -16,8 +16,8 @@ the room shows the countdown, the hint or the message, and celebrates an escape 
 kit; it hears of each move through Mercure when a hub is there, or reads the game again at intervals. A schedule for
 Symfony Scheduler ends the games whose countdown reached zero, once each. The sessions are booked on `phil/reservation`
 when it is installed, under one lock per session in the database. The public leaderboard shows a team only once it
-agrees, and it may change its mind; a member's games, results, screens and bookings are exported and pseudonymised with
-their account through `phil/privacy-bundle`.
+agrees, and it may change its mind; a member's games, results, screens and bookings are exported and erased with their
+account through `phil/privacy-bundle`: deleted, or pseudonymised where a game still running or a booking needs the row.
 
 It is for a Symfony application that runs escape rooms, in a venue or online. The library alone suits an application
 without Symfony.

@@ -74,7 +74,7 @@ final class TilttekLuckTokensBundleTest extends TestCase
         ], $container->getDefinition(LuckTokens::class)->getArguments());
         self::assertSame(ContainerInterface::IGNORE_ON_INVALID_REFERENCE, $this->reference($container->getDefinition(LuckTokens::class)->getArgument(2))->getInvalidBehavior());
         self::assertTrue($container->getDefinition(LuckTokens::class)->isPublic());
-        self::assertEquals([new Reference(LuckTokens::class), 'member', null], $container->getDefinition(LuckTokensPrivacy::class)->getArguments());
+        self::assertEquals([new Reference(LuckTokens::class), 'member', null, null], $container->getDefinition(LuckTokensPrivacy::class)->getArguments());
         self::assertSame(['phil_privacy.eraser' => [[]]], $container->getDefinition(LuckTokensPrivacy::class)->getTags());
     }
 
@@ -135,7 +135,7 @@ final class TilttekLuckTokensBundleTest extends TestCase
         self::assertSame(5_000, $container->getDefinition(LuckTokens::class)->getArgument(5));
         self::assertEquals([new Reference(LuckTokens::class), new Reference('app.lock_factory'), LockScope::Table, 5.0], $container->getDefinition(LockedLuckTokens::class)->getArguments());
         self::assertTrue($container->getDefinition(LockedLuckTokens::class)->isPublic());
-        self::assertEquals([new Reference(LuckTokens::class), 'user', new Reference(LockedLuckTokens::class)], $container->getDefinition(LuckTokensPrivacy::class)->getArguments());
+        self::assertEquals([new Reference(LuckTokens::class), 'user', new Reference(LockedLuckTokens::class), new Reference(DbalTokenRules::class)], $container->getDefinition(LuckTokensPrivacy::class)->getArguments());
     }
 
     public function testTheServicesOfTheApplicationAndTheMemoryStore(): void

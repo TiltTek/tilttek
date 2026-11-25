@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tilttek\EscapeRoomBundle\Infrastructure\Doctrine;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
 use Override;
@@ -69,6 +70,18 @@ final readonly class DbalScreenStore implements ScreenStore
     public function eraseHost(ResourceReference $host, ResourceReference $pseudonym): int
     {
         return (int) $this->connection->update(EscapeRoomTables::SCREENS, ['host' => $pseudonym->toString()], ['host' => $host->toString()]);
+    }
+
+    #[Override]
+    public function forget(string ...$games): int
+    {
+        $deleted = 0;
+
+        foreach (array_chunk(array_values(array_unique($games)), 500) as $chunk) {
+            $deleted += (int) $this->connection->executeStatement('DELETE FROM '.EscapeRoomTables::SCREENS.' WHERE game IN (?)', [$chunk], [ArrayParameterType::STRING]);
+        }
+
+        return $deleted;
     }
 
     /**

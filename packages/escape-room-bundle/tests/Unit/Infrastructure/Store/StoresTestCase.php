@@ -81,6 +81,22 @@ abstract class StoresTestCase extends TestCase
         self::assertSame(0, $games->eraseTeam($member, $erased));
     }
 
+    public function testGamesAreForgotten(): void
+    {
+        $games = $this->games();
+        $games->save('g-1', $this->values('member:7'), null);
+        $games->save('g-2', $this->values('team:owls'), new DateTimeImmutable('2026-11-14 21:00:00 UTC'));
+        $games->save('g-3', $this->values('team:bats'), null);
+
+        self::assertSame(0, $games->forget());
+        self::assertSame(2, $games->forget('g-1', 'g-2', 'g-1', 'g-9'));
+        self::assertNull($games->find('g-1'));
+        self::assertNull($games->find('g-2'));
+        self::assertSame([], $games->due(new DateTimeImmutable('2026-11-14 21:00:00 UTC'), 10));
+        self::assertSame('team:bats', $games->find('g-3')['team'] ?? null);
+        self::assertSame(0, $games->forget('g-1'));
+    }
+
     public function testTheResultsShownAreThoseTheTeamsAgreedToShow(): void
     {
         $results = $this->results();
@@ -103,19 +119,21 @@ abstract class StoresTestCase extends TestCase
         self::assertSame(['team:c', 'team:d', 'team:b'], $this->teams($results->shown('crypt', 10)));
     }
 
-    public function testTheResultsOfATeamArePseudonymisedAndWithdrawn(): void
+    public function testTheResultsOfATeamAreDeletedAndWithdrawn(): void
     {
         $results = $this->results();
         $results->record('g-1', $this->escape('member:7', 600, 2, '20:10:00.000000', true));
         $results->record('g-2', $this->escape('team:b', 700, 1, '20:20:00.000000', true));
 
         $member = ResourceReference::of('member', '7');
-        $erased = ResourceReference::of('erased', 'abc');
 
         self::assertEquals(['g-1' => $this->escape('member:7', 600, 2, '20:10:00.000000', true)], $results->ofTeam($member));
-        self::assertSame(1, $results->eraseTeam($member, $erased));
+        self::assertSame(1, $results->forgetTeam($member));
         self::assertSame([], $results->ofTeam($member));
-        self::assertEquals(['g-1' => $this->escape('erased:abc', 600, 2, '20:10:00.000000', false)], $results->ofTeam($erased));
+        self::assertSame(['team:b'], $this->teams($results->shown('crypt', 10)));
+        self::assertCount(1, $results->ofTeam(ResourceReference::of('team', 'b')));
+        self::assertSame(0, $results->forgetTeam($member));
+        $results->consent('g-1', true);
         self::assertSame(['team:b'], $this->teams($results->shown('crypt', 10)));
     }
 
@@ -149,6 +167,22 @@ abstract class StoresTestCase extends TestCase
         self::assertSame([], $screens->ofHost($host));
         self::assertEquals(new Screen(ScreenKind::Cleared, $erased, $at), $screens->screen('g-1'));
         self::assertEquals(new Screen(ScreenKind::Cleared, $other, $at), $screens->screen('g-2'));
+    }
+
+    public function testScreensAreForgotten(): void
+    {
+        $screens = $this->screens();
+        $host = ResourceReference::of('member', '3');
+        $at = new DateTimeImmutable('2026-11-14 20:05:00 UTC');
+        $screens->show('g-1', new Screen(ScreenKind::Cleared, $host, $at));
+        $screens->show('g-2', new Screen(ScreenKind::Cleared, $host, $at));
+        $screens->show('g-3', new Screen(ScreenKind::Cleared, $host, $at));
+
+        self::assertSame(0, $screens->forget());
+        self::assertSame(2, $screens->forget('g-1', 'g-3', 'g-3', 'g-9'));
+        self::assertNull($screens->screen('g-1'));
+        self::assertNull($screens->screen('g-3'));
+        self::assertEquals(['g-2' => new Screen(ScreenKind::Cleared, $host, $at)], $screens->ofHost($host));
     }
 
     public function testTheLedgerKeepsWhatItsDecisionAccepts(): void
@@ -228,6 +262,9 @@ abstract class StoresTestCase extends TestCase
         $games->eraseTeam(ResourceReference::of('member', '7'), ResourceReference::of('erased', 'abc'));
 
         self::assertSame([...$this->values('member:7'), 'team' => 'erased:abc'], $games->find('g-1'));
+        $games->save('g-2', [...$this->values('member:8'), 'public' => true], null);
+        $games->eraseTeam(ResourceReference::of('member', '8'), ResourceReference::of('erased', 'def'));
+        self::assertSame([...$this->values('member:8'), 'team' => 'erased:def', 'public' => false], $games->find('g-2'));
     }
 
     public function testTheResultsOfATeamAreAllGiven(): void

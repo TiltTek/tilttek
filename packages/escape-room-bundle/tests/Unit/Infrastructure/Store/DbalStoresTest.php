@@ -120,7 +120,7 @@ final class DbalStoresTest extends StoresTestCase
 
         $this->games()->eraseTeam(ResourceReference::of('member', '7'), ResourceReference::of('erased', 'abc'));
 
-        self::assertSame('{"room":"crypt","team":"erased:abc","session":null,"progress":{"note":"é/ü"}}', $this->connection->fetchOne('SELECT state FROM '.EscapeRoomTables::GAMES.' WHERE id = ?', ['g-1']));
+        self::assertSame('{"room":"crypt","team":"erased:abc","session":null,"progress":{"note":"é/ü"},"public":false}', $this->connection->fetchOne('SELECT state FROM '.EscapeRoomTables::GAMES.' WHERE id = ?', ['g-1']));
     }
 
     public function testAStateIsReadDownToThirtyTwoLevels(): void

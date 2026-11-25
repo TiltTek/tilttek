@@ -109,8 +109,8 @@ final readonly class LedgerEntry
     }
 
     /**
-     * The entry with the pseudonym in place of the member, as holder and as actor; the same entry when it names
-     * neither.
+     * The entry with the pseudonym in place of the member, as holder and as actor, and without its reason when the
+     * member holds it — a reason is written about the holder; the same entry when it names neither.
      */
     public function pseudonymized(ResourceReference $member, ResourceReference $pseudonym): self
     {
@@ -132,7 +132,7 @@ final readonly class LedgerEntry
             $this->balance,
             $actor ? $pseudonym : $this->actor,
             $this->at,
-            $this->reason,
+            $holder ? null : $this->reason,
             $this->session,
         );
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tilttek\EscapeRoomBundle\Infrastructure\Doctrine;
 
 use DateTimeImmutable;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
 use Override;
@@ -90,13 +91,25 @@ final readonly class DbalGameStore implements GameStore
             foreach ($this->ofTeam($team) as $id => $values) {
                 $connection->update(EscapeRoomTables::GAMES, [
                     'team' => $pseudonym->toString(),
-                    'state' => json_encode([...$values, 'team' => $pseudonym->toString()], \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE),
+                    'state' => json_encode([...$values, 'team' => $pseudonym->toString(), 'public' => false], \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE),
                 ], ['id' => $id]);
                 ++$erased;
             }
 
             return $erased;
         });
+    }
+
+    #[Override]
+    public function forget(string ...$ids): int
+    {
+        $deleted = 0;
+
+        foreach (array_chunk(array_values(array_unique($ids)), 500) as $chunk) {
+            $deleted += (int) $this->connection->executeStatement('DELETE FROM '.EscapeRoomTables::GAMES.' WHERE id IN (?)', [$chunk], [ArrayParameterType::STRING]);
+        }
+
+        return $deleted;
     }
 
     /**

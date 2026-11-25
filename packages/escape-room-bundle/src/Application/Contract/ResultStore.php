@@ -34,9 +34,9 @@ interface ResultStore
     public function ofTeam(ResourceReference $team): array;
 
     /**
-     * Writes the pseudonym in place of the team in each of its results, and withdraws them from the leaderboard.
+     * Deletes the results of a team, and so withdraws them from the leaderboard.
      *
-     * @return int the results changed
+     * @return int the results deleted
      */
-    public function eraseTeam(ResourceReference $team, ResourceReference $pseudonym): int;
+    public function forgetTeam(ResourceReference $team): int;
 }

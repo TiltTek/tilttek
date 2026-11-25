@@ -31,7 +31,7 @@ final class InMemoryResultStore implements ResultStore, ResetInterface
         $result = $this->results[$game] ?? null;
 
         if ($result instanceof RoomResult) {
-            $this->results[$game] = $this->with($result, $result->team, $public);
+            $this->results[$game] = $this->with($result, $public);
         }
     }
 
@@ -51,13 +51,10 @@ final class InMemoryResultStore implements ResultStore, ResetInterface
     }
 
     #[Override]
-    public function eraseTeam(ResourceReference $team, ResourceReference $pseudonym): int
+    public function forgetTeam(ResourceReference $team): int
     {
         $results = $this->ofTeam($team);
-
-        foreach ($results as $game => $result) {
-            $this->results[$game] = $this->with($result, $pseudonym, false);
-        }
+        $this->results = array_diff_key($this->results, $results);
 
         return \count($results);
     }
@@ -68,8 +65,8 @@ final class InMemoryResultStore implements ResultStore, ResetInterface
         $this->results = [];
     }
 
-    private function with(RoomResult $result, ResourceReference $team, bool $public): RoomResult
+    private function with(RoomResult $result, bool $public): RoomResult
     {
-        return new RoomResult($result->room, $team, $result->session, $result->finalSeconds, $result->playedSeconds, $result->penaltySeconds, $result->hints, $result->skips, $result->escapedAt, $public);
+        return new RoomResult($result->room, $result->team, $result->session, $result->finalSeconds, $result->playedSeconds, $result->penaltySeconds, $result->hints, $result->skips, $result->escapedAt, $public);
     }
 }

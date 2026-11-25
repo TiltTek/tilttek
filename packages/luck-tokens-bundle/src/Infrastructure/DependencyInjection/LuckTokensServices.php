@@ -97,7 +97,8 @@ final class LuckTokensServices
 
     /**
      * The arguments of the erasure module the bundle class registers when `phil/privacy-bundle` is installed: the
-     * tokens, the kind of a member's reference, and the locked tokens when the locks are enabled.
+     * tokens, the kind of a member's reference, the locked tokens when the locks are enabled, and the rules when they
+     * are kept in the database.
      *
      * @param Config $config
      *
@@ -109,6 +110,7 @@ final class LuckTokensServices
             new Reference(LuckTokens::class),
             $config['privacy']['member_kind'],
             $config['lock']['enabled'] ? new Reference(LockedLuckTokens::class) : null,
+            'doctrine' === $config['rules'] ? new Reference(DbalTokenRules::class) : null,
         ];
     }
 

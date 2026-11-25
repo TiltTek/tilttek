@@ -68,7 +68,8 @@ interface TokenLedger
 
     /**
      * Writes the pseudonym in place of the member, as holder and as actor, in every entry of every table — and so in
-     * the balances and the holders it indexes —, the positions, changes, balances and order left as they were.
+     * the balances and the holders it indexes —, and clears the reason of the entries the member holds; the positions,
+     * changes, balances and order left as they were.
      *
      * @return int the entries rewritten; 0 when no entry names the member, as once they are erased
      *

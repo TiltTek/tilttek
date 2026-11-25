@@ -17,7 +17,10 @@ change them, and its CHANGELOG says how.
 
 A store is replaced by aliasing its contract to your own service; it passes the bundle's store scenarios
 (`tests/Unit/Infrastructure/Store/StoresTestCase.php`) and keeps nothing between two requests of a worker, or resets it
-on `kernel.reset`.
+on `kernel.reset`. For an erasure, `GameStore::forget()` and `ScreenStore::forget()` delete the rows of the games named,
+`ResultStore::forgetTeam()` deletes the results of a team, `GameStore::eraseTeam()` writes the pseudonym in the games
+left and withdraws their consent, and `ScreenStore::eraseHost()` and `PartyBookings::eraseParty()` write it in the
+screens and bookings left; see [Privacy](privacy.md).
 
 - **The events.** `EscapeRooms` and `SessionBooker` dispatch the library's events through the application's dispatcher:
   a listener on `GameFinished` lights the exit, one on `SeatsBooked` sends the confirmation.

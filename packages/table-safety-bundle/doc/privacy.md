@@ -17,13 +17,14 @@ With `phil/privacy-bundle` installed, `TableSafetyPrivacy` is tagged as an expor
 `Phil\PrivacyBundle\Application\Contract`. The data subject is a participant, referenced under
 `privacy.participant_kind` (`member` by default).
 
-| Store | Export | Erasure |
-|---|---|---|
-| `tilttek_table_safety_participation` | the answers at each table | deleted |
-| `tilttek_table_safety_feedback` | the stars and wishes of each session | deleted |
-| `tilttek_table_safety_signal` | the named signals they raised | kept without the name, as anonymous signals |
+| Store | Export | Erasure | Why |
+|---|---|---|---|
+| `tilttek_table_safety_participation` | the answers at each table | deleted | The answers say what the participant will not play and how far they consent: the most sensitive data the bundle holds. The agreement of the table is computed again from the answers left. |
+| `tilttek_table_safety_feedback` | the stars and wishes of each session | deleted | The summary of a session is computed again from the stars and wishes left, in whole groups of `feedback_threshold`. |
+| `tilttek_table_safety_signal` | the named signals they raised | redacted: kept without the name | A signal serves the game master during play — one not yet seen, or the answers to the last check-in, would be lost to the table if it vanished — and the purge deletes it after `retention`. Its author is cleared, so it becomes an anonymous signal; the report says `redacted` rather than `anonymised`, since its table, its kind and its moment may still point to the participant at a small table until the purge. |
 
-The erasure may run again on an erased participant and reports the same.
+The settings of a table, `tilttek_table_safety_table`, name nobody and are not in the report. The erasure may run again
+on an erased participant and reports the same.
 
 ## The purge of signals
 

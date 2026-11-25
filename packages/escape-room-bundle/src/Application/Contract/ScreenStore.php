@@ -27,4 +27,11 @@ interface ScreenStore
      * @return int the screens changed
      */
     public function eraseHost(ResourceReference $host, ResourceReference $pseudonym): int;
+
+    /**
+     * Deletes the screens of the games; a game with no screen is passed over.
+     *
+     * @return int the screens deleted
+     */
+    public function forget(string ...$games): int;
 }

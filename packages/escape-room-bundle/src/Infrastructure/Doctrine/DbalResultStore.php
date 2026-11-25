@@ -92,9 +92,9 @@ final readonly class DbalResultStore implements ResultStore
     }
 
     #[Override]
-    public function eraseTeam(ResourceReference $team, ResourceReference $pseudonym): int
+    public function forgetTeam(ResourceReference $team): int
     {
-        return (int) $this->connection->update(EscapeRoomTables::RESULTS, ['team' => $pseudonym->toString(), 'public' => false], ['team' => $team->toString()], ['public' => Types::BOOLEAN]);
+        return (int) $this->connection->delete(EscapeRoomTables::RESULTS, ['team' => $team->toString()]);
     }
 
     /**

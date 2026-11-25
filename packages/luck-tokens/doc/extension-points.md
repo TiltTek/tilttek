@@ -30,10 +30,11 @@ change it makes to an entry is the erasure of a member. What every implementatio
 - `operation()` gives the entries of an operation; `hasSession()` whether the start of a session is there.
 - `entries()` lists every entry, for the audit.
 - `eraseHolder($member, $pseudonym)` writes the pseudonym in place of the member, as holder and as actor, in every entry
-  of every table, and in the balances and holders it indexes, all or none; the positions, changes, balances and order
-  stay. It returns the number of entries rewritten, each counted once, 0 when none names the member, and refuses a
-  pseudonym equal to the member with `InvalidTokenRule`. In a database, two updates in one transaction — the holder
-  column, then the actor column — give exactly that, with an index on each.
+  of every table, and in the balances and holders it indexes, and clears the reason of the entries the member holds,
+  all or none; the positions, changes, balances and order stay. It returns the number of entries rewritten, each
+  counted once, 0 when none names the member, and refuses a pseudonym equal to the member with `InvalidTokenRule`. In a
+  database, two updates in one transaction — the holder column with the reason, then the actor column — give exactly
+  that, with an index on each. `LedgerEntry::pseudonymized()` gives the entry rewritten.
 
 `LedgerEntry::toArray()` gives the row to keep and `LedgerEntry::fromArray()` reads it back, checked. The memory
 ledger's tests, in `tests/Unit/Store/StoresTest.php` and `tests/Unit/ErasureTest.php`, hold these behaviours.

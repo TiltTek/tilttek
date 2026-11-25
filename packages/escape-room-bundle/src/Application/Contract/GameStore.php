@@ -41,9 +41,16 @@ interface GameStore
     public function ofTeam(ResourceReference $team): array;
 
     /**
-     * Writes the pseudonym in place of the team in each of its games.
+     * Writes the pseudonym in place of the team in each of its games, and withdraws the consent to show their results.
      *
      * @return int the games changed
      */
     public function eraseTeam(ResourceReference $team, ResourceReference $pseudonym): int;
+
+    /**
+     * Deletes the games; an identifier with no game is passed over.
+     *
+     * @return int the games deleted
+     */
+    public function forget(string ...$ids): int;
 }

@@ -50,6 +50,15 @@ final class InMemoryScreenStore implements ScreenStore, ResetInterface
     }
 
     #[Override]
+    public function forget(string ...$games): int
+    {
+        $known = array_intersect_key($this->screens, array_flip($games));
+        $this->screens = array_diff_key($this->screens, $known);
+
+        return \count($known);
+    }
+
+    #[Override]
     public function reset(): void
     {
         $this->screens = [];

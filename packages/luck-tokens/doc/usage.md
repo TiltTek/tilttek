@@ -100,8 +100,10 @@ An erasure sent again finds no entry naming the member, writes nothing, dispatch
 member nor a table. An operation of the member sent again after the erasure no longer matches what was written, and is
 refused as an identifier reused.
 
-The reasons are kept as they were written: an application that lets players type them keeps names out of them, or
-offers reasons from a list. The game masters named in the rules of a table are the application's to change.
+The reason of an entry the member holds is cleared: it was written about them, and the audit of the balances needs only
+the changes. The reason of an entry the member wrote for another holder stays, since it is about that holder: an
+application that lets players type reasons keeps names out of them, or offers reasons from a list. The game masters
+named in the rules of a table are the application's to change.
 
 ## Concurrent operations
 
