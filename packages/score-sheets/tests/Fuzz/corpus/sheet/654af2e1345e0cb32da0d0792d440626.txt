@@ -1,0 +1,1 @@
+{"game": "bo", "categories": [{"key": "btss", "operation": {"type": "product", "of": ["sets"], "f.as": 5}}, {"ry": "bo f"}], "teams": "um"}

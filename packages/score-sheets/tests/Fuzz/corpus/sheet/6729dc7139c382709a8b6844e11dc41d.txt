@@ -1,0 +1,1 @@
+{"game": "lbor", "categories": [{"key": "bd", "counmia": 7}, {"key": "lanrs","min":0}, {"key": "ha1rbo", "operation": {"type":"product", "of": ["etss"], "factor": 1}}, {"key": "feboats", "prefer": "fewest"}], "teams": "sum"}

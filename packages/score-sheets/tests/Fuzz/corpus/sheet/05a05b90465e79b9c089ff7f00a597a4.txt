@@ -1,0 +1,1 @@
+{"game": "lnt", "categories": [{"key": "b", "counted": false, "min": 0}], "reaams": "sum"}

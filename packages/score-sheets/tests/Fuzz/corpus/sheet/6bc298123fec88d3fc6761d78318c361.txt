@@ -1,0 +1,1 @@
+{"game": "lantern-or", "categories": [{"key": "boats", "label": "s moored", "coun": 1, "m": 6}, {"key": "lanter"}, {"key": "hbor", "label": "Har", "opion": {"pe": "sum", "of": ["boterns"]}}, {"key": "setsewest"}], "teams": "sum"}

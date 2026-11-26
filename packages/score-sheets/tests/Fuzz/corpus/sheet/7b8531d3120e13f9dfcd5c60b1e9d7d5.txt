@@ -1,0 +1,1 @@
+{"game": "lror", "categories":[{"key": "boats", "operation": {"type": "sum", "ints": 5}}, {"key": "coife"}], "teams": "usm"}

@@ -1,0 +1,1 @@
+{"game": "rbor", "categories": [{"key": "b", "operation": {"type": "product", "of": ["sets"], "aftor": 8}}, {"key": "fpoir sets", "operation": {"type": "product", "of": ["sets"], "f)ctor": 2}}, {"key": "hlats", "prefer": "f%west"}], "teams": "sum"}

@@ -1,0 +1,1 @@
+{"game": "lanternharor", "categories": [{"key": "boats", "": false, "on": {"t": ["b"]}}, {"key": "sets", "max": 5}, {"key": "fe"}], "": "s"}

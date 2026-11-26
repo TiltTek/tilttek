@@ -1,0 +1,1 @@
+{"game":"g","categories":[{"key":"b","operation":{"type":"majority","of":"a","points":[3,1],"prefer":"fewest","":1}}],"teaes":"bst"}

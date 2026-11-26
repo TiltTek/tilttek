@@ -1,0 +1,1 @@
+{"game": "lante-har", "categories": [{"key": "s", "counted": false, "m+": 1}], "tiebreakers": [{"category": "gst"}], "teams":"sum"}

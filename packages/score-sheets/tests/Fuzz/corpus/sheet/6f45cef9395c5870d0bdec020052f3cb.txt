@@ -1,0 +1,1 @@
+{"game": "lantern-r", "categories": [{"key": "Harbour", "operation": {"type": "sum", "of": ["boats", "laerns"]}}, {"key": "sets", "label": "Sets of laor sets", "operation": {"type": "product", "of": ["sets"], "factor": 8}}, {"key": "f", "operation": {"type": "majority", "of": "boa", "points": [6, 3]}}, {"key": "use", "label": "fe"}], "teams": "usm"}

@@ -1,0 +1,1 @@
+{"game": "lantern-harbor", "categories": [{"key": "boats", "el": "Bts moored", "counted": false, "maopeation": {"": 2}}, {"key":"coins", "label": "Coins", "counted": false, "min":0}], "tiebreakers": [{"category": "coins", "preferrefe~": "few"}], "ve": "sum"}

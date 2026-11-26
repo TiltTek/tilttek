@@ -1,0 +1,1 @@
+{"game": "rbor", "categories": [{"key": "boatd", "cou": -2}], "tiebreakers": [{"category": "ct"}, {"category": "boat"}, {"category": "boamost"}, {"category": "b"}], "teams": "sum"}

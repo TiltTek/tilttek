@@ -1,0 +1,1 @@
+{"gesture":"deal","players":["p2","p2"],"count":5,"face_up":false,"from":"draw"}

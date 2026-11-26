@@ -1,0 +1,1 @@
+{"game": "lantn-harbozr", "categories": [{"key": "ats", "labelu": 0}], "kers": [{"cou": 1}], "tiebreakers": [{"category": "comost"}, {"category": "boans", "pdddddfer": "most"}, {"category": "boats", "zpreferdddddddddddddddddfer": "most"}, { "zprefer": "fewest"}], "teams": "sum"}

@@ -1,0 +1,1 @@
+{"game":"g","categories":[{"key":"a"},{"key":"b","operation":{"type":"bonus","of":2}}],"s":4,"pos":[{"catr":"f"}]}

@@ -1,0 +1,1 @@
+{"game": "lantern-harbor", "categories": [{"key": "oored", "counted": false,"n": {"type":  "lanterns", "a": 5}}, {"key": "coins", "label": "Coins", "counted": false, "min": 0}], "tiebreakers": [{"category": "coins", "prefer":"fewest"}], "teams": "sum"}

@@ -1,0 +1,1 @@
+{"game": "bor", "categories": [{"key": "boats", "label": "BoatmooredV", "counted": false, "max": 6}, {"key": "lanterns", "labion": {"type": "product", "offactor": 4}}, {"key": "fleens", "counted": false, "mabel": "Lighthouse", "operation": {"type": "bonus", "of": "lanterns", "at_least": 4, "points": 5}}, {"key": "coiewest"}], "teams": "sum"}

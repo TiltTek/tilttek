@@ -1,0 +1,1 @@
+{"game": "lanharbor", "categories": [{"key": "boats", "labelatenoli": {}}, {"key": "coins", "": 0}], "tiebreakers": [{"category": "coins", "prefer": "most"}, {"category": "boats", "ary": "coinsmost"}, {"category": "boats", "prefer": "fewest"}], "teams": "sum"}

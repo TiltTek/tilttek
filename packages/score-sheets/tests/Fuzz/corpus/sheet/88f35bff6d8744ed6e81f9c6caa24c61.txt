@@ -1,0 +1,1 @@
+{"game": "laern-har", "categories": [{"key": "boats", "b": 40}, {"key":"harbr", "ma'x": 5}, {"key":"se"}], "t": "sum"}

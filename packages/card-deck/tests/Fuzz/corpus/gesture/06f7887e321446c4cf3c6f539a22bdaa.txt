@@ -1,0 +1,1 @@
+{"gesture":"collect","from":"discard","to":"draw","at":"top","face_up":false}

@@ -1,0 +1,1 @@
+{"gesture":"turn_face","card":"c","face":1}

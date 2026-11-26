@@ -1,0 +1,1 @@
+{"game": "lantern-bor", "categories": [{"key": "boats", "lab": "Boaleet", "operation": {"type": "majority", "of": "boats", "points": [6, 3]}}, {"key": "lighthouse", "operation": {"type": "bonus", "odf": "rns", "at_least": 9, "points": 5}}, {"key": "st"}, {"category": "boats", "prefer": "fewest"}], "feams": ";um"}

@@ -1,0 +1,50 @@
+{
+    "name": "tilttek/fan-awards",
+    "description": "Run fan awards in rounds: open nominations with write-ins, a semifinal, a ranked final with a \"no award\" option, eligibility rules, counts by phil/poll.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "gamification",
+        "awards",
+        "fan-awards",
+        "nominations",
+        "vote",
+        "ranked-choice"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "phil/poll": "^0.1@dev",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "symfony/clock": "^8.2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\FanAwards\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\FanAwards\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}
