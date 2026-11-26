@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "21432cf7c3aea68ccb0586d1ed27d5d8",
+    "content-hash": "c5a3eacbc057bbf12d97b1994186891f",
     "packages": [],
     "packages-dev": [
         {
@@ -1845,6 +1845,159 @@
             }
         },
         {
+            "name": "phil/checkin",
+            "version": "0.1.0-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/checkin.git",
+                "reference": "e0eb5dfbb352e2d9f13c13c5dc153dd1c376e5ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/checkin/zipball/e0eb5dfbb352e2d9f13c13c5dc153dd1c376e5ff",
+                "reference": "e0eb5dfbb352e2d9f13c13c5dc153dd1c376e5ff",
+                "shasum": ""
+            },
+            "require": {
+                "ext-sodium": "*",
+                "php": ">=8.5",
+                "psr/clock": "^1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\Checkin\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The check-in core of events and venues: a code read at a checkpoint resolved to its credential, decided by an admission policy (opening, closing, entries, anti-passback, re-entry), recorded once per scan in a ledger shared by the devices, and offline manifests of keyed fingerprints with the synchronisation of the journals kept offline",
+            "homepage": "https://ph-il.ca",
+            "keywords": [
+                "admission",
+                "attendance",
+                "check-in",
+                "events",
+                "offline",
+                "ticketing"
+            ],
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/checkin/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/checkin/tree/0.1.0-alpha"
+            },
+            "time": "2026-11-11T06:11:30+00:00",
+            "published-time": "2026-11-11T13:29:48+00:00"
+        },
+        {
+            "name": "phil/checkin-bundle",
+            "version": "0.2.0-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/checkin-bundle.git",
+                "reference": "985cc73184aaa8e22d214366ec9d5c1470963be2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/checkin-bundle/zipball/985cc73184aaa8e22d214366ec9d5c1470963be2",
+                "reference": "985cc73184aaa8e22d214366ec9d5c1470963be2",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "^4.5",
+                "phil/checkin": "^0.1@dev",
+                "php": ">=8.5",
+                "psr/clock": "^1.0",
+                "psr/event-dispatcher": "^1.0",
+                "symfony/config": "^8.2",
+                "symfony/dependency-injection": "^8.2",
+                "symfony/expression-language": "^8.2",
+                "symfony/http-foundation": "^8.2",
+                "symfony/security-core": "^8.2",
+                "symfony/security-csrf": "^8.2"
+            },
+            "require-dev": {
+                "doctrine/doctrine-bundle": "^3.3",
+                "doctrine/orm": "^3.7",
+                "php-webdriver/webdriver": "^1.16",
+                "phpunit/phpunit": "^13.4",
+                "psr/log": "^3.0",
+                "symfony/asset-mapper": "^8.2",
+                "symfony/browser-kit": "^8.2",
+                "symfony/clock": "^8.2",
+                "symfony/console": "^8.2",
+                "symfony/event-dispatcher": "^8.2",
+                "symfony/event-dispatcher-contracts": "^3.6",
+                "symfony/framework-bundle": "^8.2",
+                "symfony/http-kernel": "^8.2",
+                "symfony/panther": "^2.4",
+                "symfony/routing": "^8.2"
+            },
+            "suggest": {
+                "doctrine/orm": "To add the check-in table to the schema the ORM generates",
+                "symfony/asset-mapper": "To serve the desk controller and its stylesheet without a build step",
+                "symfony/event-dispatcher": "To dispatch CheckInRecorded to the listeners of the application",
+                "symfony/routing": "For the endpoints, and their URLs given to the desk controller",
+                "symfony/stimulus-bundle": "For the desk controller"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\CheckinBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "phil/checkin in Symfony: a check-in desk at the door that scans online, keeps working offline, and records each entry once.",
+            "homepage": "https://ph-il.ca",
+            "keywords": [
+                "attendance",
+                "check-in",
+                "offline",
+                "stimulus",
+                "symfony-bundle",
+                "ticketing"
+            ],
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/checkin-bundle/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/checkin-bundle/tree/0.2.0-alpha"
+            },
+            "time": "2026-11-18T22:00:00+00:00",
+            "published-time": "2026-11-19T00:42:09+00:00"
+        },
+        {
             "name": "phil/commerce-bundle",
             "version": "0.5.0-alpha",
             "source": {
@@ -2701,6 +2854,66 @@
             },
             "time": "2026-11-13T15:18:49+00:00",
             "published-time": "2026-11-13T22:45:35+00:00"
+        },
+        {
+            "name": "phil/poll",
+            "version": "0.1.1-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parler-haut-interagir-librement/poll.git",
+                "reference": "a74653c7ecebe8f6182f79fa57d88af706e84e62"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parler-haut-interagir-librement/poll/zipball/a74653c7ecebe8f6182f79fa57d88af706e84e62",
+                "reference": "a74653c7ecebe8f6182f79fa57d88af706e84e62",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phil\\Poll\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philippe Gamache",
+                    "email": "philippe@ph-il.ca",
+                    "homepage": "https://github.com/ph-il",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A voting engine: single, multiple and ranked ballots checked against the rules of a poll, and counted by choices, instant runoff, Borda or Schulze, with shared places, rounds and abstentions, in plain PHP",
+            "homepage": "https://ph-il.ca",
+            "keywords": [
+                "Condorcet",
+                "ballot",
+                "instant-runoff",
+                "poll",
+                "ranked-choice",
+                "vote"
+            ],
+            "support": {
+                "issues": "https://github.com/parler-haut-interagir-librement/poll/issues",
+                "source": "https://github.com/parler-haut-interagir-librement/poll/tree/0.1.1-alpha"
+            },
+            "time": "2026-11-15T22:00:00+00:00",
+            "published-time": "2026-11-16T01:14:48+00:00"
         },
         {
             "name": "phil/privacy-bundle",
@@ -6913,6 +7126,75 @@
             ],
             "time": "2026-09-16T14:15:10+00:00",
             "published-time": "2026-11-04T11:25:36+00:00"
+        },
+        {
+            "name": "symfony/expression-language",
+            "version": "v8.2.0-RC1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/expression-language.git",
+                "reference": "0924f87fb1621d9f78bbb915be2dcd376180db81"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/expression-language/zipball/0924f87fb1621d9f78bbb915be2dcd376180db81",
+                "reference": "0924f87fb1621d9f78bbb915be2dcd376180db81",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4.1",
+                "symfony/cache": "^7.4|^8.0",
+                "symfony/deprecation-contracts": "^2.5|^3",
+                "symfony/service-contracts": "^2.5|^3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\ExpressionLanguage\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides an engine that can compile and evaluate expressions",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/expression-language/tree/v8.2.0-RC1"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-11-24T18:01:43+00:00",
+            "published-time": "2026-11-25T09:35:05+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -11154,12 +11436,15 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "phil/almanac": 20,
+        "phil/checkin": 20,
+        "phil/checkin-bundle": 20,
         "phil/commerce-bundle": 20,
         "phil/content-warnings": 20,
         "phil/content-warnings-bundle": 20,
         "phil/money": 20,
         "phil/open-badges-bundle": 20,
         "phil/paged-media": 20,
+        "phil/poll": 20,
         "phil/privacy-bundle": 20,
         "phil/rate-limit": 20,
         "phil/recurrence": 20,

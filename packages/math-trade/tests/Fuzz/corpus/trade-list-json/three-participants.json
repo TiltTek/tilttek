@@ -1,0 +1,1 @@
+{"format":"tilttek/math-trade","version":1,"participants":[{"id":"alice","offers":[{"id":"a1","game":"azul","wants":["b1",["c1","c2"]]}]},{"id":"bob","offers":[{"id":"b1","wants":["a1"]}]},{"id":"carol","offers":[{"id":"c1","wants":["a1"]},{"id":"c2","wants":[]}]}]}

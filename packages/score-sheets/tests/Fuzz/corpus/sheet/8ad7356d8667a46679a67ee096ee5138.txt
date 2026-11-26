@@ -1,0 +1,1 @@
+{"game":"]","categories":[{"key":"ab","operation":{"type":"bonus","of":"","equals":3,"pinvs":2}}]}

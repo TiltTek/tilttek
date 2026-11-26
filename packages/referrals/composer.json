@@ -1,0 +1,50 @@
+{
+    "name": "tilttek/referrals",
+    "description": "Reward members who bring friends, in points and never in money, paid once when the newcomer really plays, capped and guarded against self-referral.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "gamification",
+        "referrals",
+        "points",
+        "invitations",
+        "community"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "tilttek/exchange": "^0.2@dev",
+        "tilttek/points": "^0.2@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "symfony/clock": "^8.2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Referrals\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Referrals\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

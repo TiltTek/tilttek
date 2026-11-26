@@ -1,0 +1,1 @@
+{"game": "lterf-harbor", "categories": [{"key": "boats", "mmx": 6}, {"key": "labur","operation": {"type": "sum", "of": ["boats", "lantErns"]}}, {"key": "sets"}]}

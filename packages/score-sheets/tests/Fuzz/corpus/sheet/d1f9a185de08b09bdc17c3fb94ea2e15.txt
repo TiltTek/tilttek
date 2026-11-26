@@ -1,0 +1,1 @@
+{"game": "l", "categories": [{"key": "bo", "operation": {"type": "bonus", "of": "lanterns", "at_least": 3, "points":5}}], "teams": "sum"}

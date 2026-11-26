@@ -1,0 +1,1 @@
+{"game":"g","categories":[{"key":"a","m":0,"max":5},{"key":"b","operation":{"":1}}],"teams":"bt"}

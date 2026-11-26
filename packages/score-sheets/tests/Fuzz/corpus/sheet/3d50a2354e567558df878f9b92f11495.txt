@@ -1,0 +1,1 @@
+{"game": ";-harbor", "categories": [{"key": "bo", "operation": {"type": "bonus", "of": "l", "at_least": 1, "points": 3333333335}}, {"key": "t"}], "teams": "sum"}

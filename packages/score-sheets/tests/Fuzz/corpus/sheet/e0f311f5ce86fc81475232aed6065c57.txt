@@ -1,0 +1,1 @@
+{"game": "lanbor", "categories": [{"key": "boa", "s": 4}, {"key": "la222", "oartepiax": 5}, {"key": "st_po", "aintr":{"type": 8}}, {"key": "fle"}], "teams": "sum"}

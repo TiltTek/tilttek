@@ -1,0 +1,1 @@
+{"game": "lantebor", "categories": [{"key": "boats", "label": "Boats moored", "counted": false, "min": 0, "max": 0}, {"key": "lantleet", "operation": {"type": "majority", "of": "boats", "points": [3, 3]}}, {"key": "lLigft"}], "teams": "sum"}

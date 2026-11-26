@@ -1,0 +1,56 @@
+{
+    "name": "tilttek/check-in-rewards",
+    "description": "Reward attendance from the door, never from a phone: check-in scans become passports, every-day, places-discovered and weekly visit criteria.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "check-in",
+        "attendance",
+        "convention",
+        "gamification",
+        "badges",
+        "quests"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "phil/checkin": "^0.1@dev",
+        "phil/resource": "^0.1@dev",
+        "tilttek/activity": "^0.1@dev"
+    },
+    "require-dev": {
+        "phil/checkin-bundle": "^0.2@dev",
+        "phpunit/phpunit": "^13.4",
+        "symfony/clock": "^8.2",
+        "symfony/event-dispatcher": "^8.2",
+        "tilttek/quests": "^0.3@dev"
+    },
+    "suggest": {
+        "phil/checkin-bundle": "For the check-in desk whose CheckInRecorded event calls the recorder"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\CheckInRewards\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\CheckInRewards\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

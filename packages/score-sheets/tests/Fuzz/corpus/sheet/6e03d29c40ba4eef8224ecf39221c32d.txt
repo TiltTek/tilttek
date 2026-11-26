@@ -1,0 +1,1 @@
+{"game": "lanternor", "categories": [{"key": "boaataHarbwur", "artepion": {"type": "", "of": ["boats", ""]}}, {"key": "sets", "opeo": {"zyp": 2}}, {"key": "fleet", "min": -1}], "tiee": [{"cAtegeXgoryfer": "fewest"}], "peams": "sum"}

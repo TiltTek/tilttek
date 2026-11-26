@@ -1,0 +1,54 @@
+{
+    "name": "tilttek/guilds",
+    "description": "Lasting member communities for games and clubs: guilds open or on request, founder and admin roles, a capacity, and a shared points goal reached together.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "gamification",
+        "guilds",
+        "community",
+        "teams",
+        "group-goals",
+        "clubs"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "tilttek/quests": "^0.3@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "symfony/clock": "^8.2",
+        "tilttek/leaderboards": "^0.2@dev"
+    },
+    "suggest": {
+        "tilttek/leaderboards": "Ranks a guild's members among themselves, with the circle of its members."
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Guilds\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Guilds\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

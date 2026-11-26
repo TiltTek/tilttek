@@ -1,0 +1,50 @@
+{
+    "name": "tilttek/predictions",
+    "description": "Let members forecast dated event outcomes, like a final, and reward right or well-calibrated picks in points, paid once, with no stakes and no money.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "gamification",
+        "predictions",
+        "forecasting",
+        "brier-score",
+        "points",
+        "community"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "tilttek/points": "^0.2@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "symfony/clock": "^8.2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Predictions\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Predictions\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

@@ -1,0 +1,1 @@
+{"game": "lor", "categories": [{"key":"ts", "operation": {"type": "product", "of": ["ts"], "oin": 5}}], "": "sum"}

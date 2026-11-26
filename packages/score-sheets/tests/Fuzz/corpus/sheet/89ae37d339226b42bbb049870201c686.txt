@@ -1,0 +1,1 @@
+{"game": "lantern-harbor", "categories": [{"key": "boats", "ln": {"type": "product", "of": ["sets"], "factor": 4}}, {"key": "fmet", "operation": {"type": "majority", "of": "boats", "points": [5, 3]}}, {"key": "lighthouLighthouse", "operation": {"type": "bonus", "of": "lantgrns", "at_least": 9, "points": 5}}, {"key": "coins", "l": "CoinDDDt"}], "teams": "sum"}

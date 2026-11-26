@@ -1,0 +1,1 @@
+{"game":"g","categories":[{"key":"b","operation":{"type":"majority","of":"","et":1}}],"tea":"bes"}

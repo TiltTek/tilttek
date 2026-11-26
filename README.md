@@ -76,6 +76,12 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/game-engine-bundle`](https://github.com/TiltTek/game-engine-bundle) | Game tables in Symfony: opaque seat identifiers, the log in DBAL, a lock, and private Mercure updates. |
 | [`tilttek/table-safety`](https://github.com/TiltTek/table-safety) | Safety tools for tabletop games: lines and veils, anonymous signals, and the credits of each tool. |
 | [`tilttek/table-safety-bundle`](https://github.com/TiltTek/table-safety-bundle) | Table safety in Symfony: screens for lines, veils and signals, the game master's screen with live alerts, anonymous by default. |
+| [`tilttek/check-in-rewards`](https://github.com/TiltTek/check-in-rewards) | Reward attendance from the door, never from a phone: check-in scans become passports, every-day, places-discovered and weekly visit criteria. |
+| [`tilttek/kudos`](https://github.com/TiltTek/kudos) | Members thank each other with fixed, translated messages, capped per day and per member, and never ranked: no public count, generous givers earn badges. |
+| [`tilttek/guilds`](https://github.com/TiltTek/guilds) | Lasting member communities for games and clubs: guilds open or on request, founder and admin roles, a capacity, and a shared points goal reached together. |
+| [`tilttek/referrals`](https://github.com/TiltTek/referrals) | Reward members who bring friends, in points and never in money, paid once when the newcomer really plays, capped and guarded against self-referral. |
+| [`tilttek/predictions`](https://github.com/TiltTek/predictions) | Let members forecast dated event outcomes, like a final, and reward right or well-calibrated picks in points, paid once, with no stakes and no money. |
+| [`tilttek/fan-awards`](https://github.com/TiltTek/fan-awards) | Run fan awards in rounds: open nominations with write-ins, a semifinal, a ranked final with a "no award" option, eligibility rules, counts by phil/poll. |
 
 ### Game building
 
@@ -86,6 +92,28 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/puzzle-builder`](https://github.com/TiltTek/puzzle-builder) | Puzzles for a scenario, checked on the server: normalized and partial answers, bounded guesses, tiered hints and a validated unlock graph. |
 | [`tilttek/escape-room`](https://github.com/TiltTek/escape-room) | Escape rooms on chained puzzles: a countdown, hints that cost time, a host console, bookable sessions and a leaderboard by consent. |
 | [`tilttek/escape-room-bundle`](https://github.com/TiltTek/escape-room-bundle) | Escape rooms in Symfony: rooms, bookings, a host console, live hint screens, countdowns that end on time and a leaderboard by consent. |
+
+### At the table
+
+| Package | Description |
+|---|---|
+| [`tilttek/card-deck`](https://github.com/TiltTek/card-deck) | Card decks for online play: shuffled from a verifiable seed, drawn, dealt and discarded, with each player sent only the cards they may see. |
+| [`tilttek/turn-clock`](https://github.com/TiltTek/turn-clock) | A turn timer for the table: per-player budgets, Fischer or Bronstein increments, delays, days per move, pauses, vacations and overtime. |
+| [`tilttek/conditions`](https://github.com/TiltTek/conditions) | Track conditions on characters during play: how long they last in rounds or time, how they stack and decay, and what they change on the sheet. |
+| [`tilttek/score-sheets`](https://github.com/TiltTek/score-sheets) | Keep score from a sheet declared per game as data: totals, ranks and tie-breakers computed and explained at each entry, team scores, and a blank sheet to print. |
+| [`tilttek/handouts`](https://github.com/TiltTek/handouts) | Reveal handouts to all players or some, now, at a set moment or on a cue during play, and track which revision each player has seen. |
+| [`tilttek/session-prep`](https://github.com/TiltTek/session-prep) | Prepare a game session: scenes, secrets and their clues, NPCs, places, notes and a checklist, with what the table reveals recorded and leftovers carried over. |
+| [`tilttek/session-scheduler`](https://github.com/TiltTek/session-scheduler) | Keep a campaign's sessions on track: recurring dates planned in batches, absences with notice, postponing, substitute game masters and reminders. |
+| [`tilttek/mini-games`](https://github.com/TiltTek/mini-games) | Small games played alone, with a daily game everyone shares, results shared without spoilers and no streak that punishes a missed day. |
+| [`tilttek/tournament`](https://github.com/TiltTek/tournament) | Run tournaments in Swiss rounds, pools or elimination, with fair pairings, players dropping out and tie-breakers declared in order. |
+| [`tilttek/math-trade`](https://github.com/TiltTek/math-trade) | Math trades for games: from everyone's offers and ranked wishes, find the most trades as loops, each gives one and receives one, reproducible from a seed. |
+
+### Calendars
+
+| Package | Description |
+|---|---|
+| [`tilttek/geek-dates`](https://github.com/TiltTek/geek-dates) | Show geek culture days on the right date every year: rules such as "last friday of july", each with its source, community and the day it was checked. |
+| [`tilttek/rpg-calendar-events`](https://github.com/TiltTek/rpg-calendar-events) | Show roleplaying community events on the right date every year, and the day index of a month of daily prompts: rules with their source, ready for quests. |
 
 Every package is at `0.x`: its API may still change between minor versions, as its CHANGELOG records.
 

@@ -1,0 +1,1 @@
+{"game":"","categories":[{"key":"b","opteon":{"points":1}}],"tiebreakers":[{"category":"a","prefer":"f"}]}

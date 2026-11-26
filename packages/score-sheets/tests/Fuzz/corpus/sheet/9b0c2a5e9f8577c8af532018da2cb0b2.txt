@@ -1,0 +1,1 @@
+{"game":"]","categories":[{"key":"a"},{"key":"b","operation":{"type":"bonus","of":"a","equals":3,"points":2}}],"tiebreakers":[{"category":"a"}]}

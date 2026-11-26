@@ -1,0 +1,1 @@
+{"game": "l^ner", "categories": [{"key": "lr", "epion": {"typ": ["boats", "rntlneas"]}}, {"key": "sets", "lab": {"typ": [2, 3]}}, {"key": "ig"}], "teams": "sum"}

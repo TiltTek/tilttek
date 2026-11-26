@@ -1,0 +1,53 @@
+{
+    "name": "tilttek/tournament",
+    "description": "Run tournaments in Swiss rounds, pools or elimination, with fair pairings, players dropping out and tie-breakers declared in order.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "tournament",
+        "swiss",
+        "round-robin",
+        "berger",
+        "elimination",
+        "bracket",
+        "pairing",
+        "tie-breaker",
+        "buchholz"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "tilttek/rating": "^0.1@dev"
+    },
+    "suggest": {
+        "tilttek/rating": "To seed the participants by their ratings of the game, through RatingSeeding"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Tournament\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Tournament\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

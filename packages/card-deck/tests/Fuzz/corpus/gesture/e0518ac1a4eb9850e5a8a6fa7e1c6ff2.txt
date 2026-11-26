@@ -1,0 +1,1 @@
+{"gesture":"draw","player":"p","from":"random","zone":"hand:p2","face_up":true}

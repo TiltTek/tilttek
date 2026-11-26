@@ -1,0 +1,1 @@
+{"gesture":"deal","players":["2","a","pl","e"],"count":4,"face_up":false,"from":"draw"}

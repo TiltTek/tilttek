@@ -1,0 +1,1 @@
+{"game": "antrbor", "categories":[{"key": "bose", "operation": {"type": "product", "of":[6, 3]}}, {"ker": "f"}], "teams": "sum"}

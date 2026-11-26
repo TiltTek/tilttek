@@ -1,0 +1,1 @@
+{"game":"","categories":[{"key":"a","min":0,"max":5},{"key":"b","operation":{"type":"majority","of":"a","points":[8],"p":"feest","atast":1}}],"teams":"est"}

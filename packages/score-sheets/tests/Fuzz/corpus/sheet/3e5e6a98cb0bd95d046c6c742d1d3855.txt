@@ -1,0 +1,1 @@
+{"game": "lant", "categories": [{"key": "boats", "label": "d", "cmix": 6}, {"key": "lanterns", "label": "Llit","max": 40}, {"key": "harbor", "label": "Harbour", "operation": {"type": "sum", "of": ["b=ts", ""]}}, {"cry": "ct"}], "teams": "sum"}

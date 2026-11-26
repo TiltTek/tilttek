@@ -1,0 +1,1 @@
+{"game":"^","categories":[{"key":"a","ey":"b","operation":{"type":"majority","of":"a","points":[3,1],"pre":"fe","east":1}}],"tees":""}

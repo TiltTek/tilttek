@@ -1,0 +1,1 @@
+{"game": "lrn-harbor", "categories": [{"key": "boats", "": 6}, {"key":"Harbour", "oartn": {"type":  [6, 3]}}, {"key": "lighthouse", "label": "Lig"}, {"key": "coins", "label": "Coins", "pvefer": "fmwest"}], "teams": "sum"}

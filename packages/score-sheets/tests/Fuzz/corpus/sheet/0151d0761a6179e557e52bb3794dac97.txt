@@ -1,0 +1,1 @@
+{"game": "lharbor", "categories": [{"key":"Harbour", "operation": {"type": "sum", "of": ["boats", "lanterns"]}}, {"key": "erns", "counted": false, "min": 0, "maati": "ouse", "operation": {"type": "bonus", "of": "lante", "at_least": 6, "points": 5}}, {"kgey": "cs", "prefer": "fewest"}], "teams": "usm"}

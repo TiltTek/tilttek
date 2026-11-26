@@ -1,0 +1,1 @@
+{"game": "l", "categories": [{"key":"Lbor", "labecountegn": 0}], "tiebreakers": [{"category": "coins", "prdr": "most"}, {"category": "boAts", "vr": "t"}], "team": "sum"}

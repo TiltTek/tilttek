@@ -1,0 +1,1 @@
+{"game": "larbor", "categories": [{"key": "boats", "labtedmin": 0, "max": 6}, {"key": "lanterns", "l": "Lanbor", "labion": {"type": "sum", "of": ["boats", "lanterns"]}}, {"key": "s____ets", "labin+": 1, "max": 9}, {"key": "t_pognts", "label": "sets", "operation": {"type": "product", "of": ["sets"], "factor": 4}}, {"key": "flee", "label": "Largewest"}], "teams": "sum"}
