@@ -4,9 +4,7 @@ All notable changes to `tilttek/escape-room-bundle` will be documented in this f
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
-## Unreleased
-
-The next version is 0.2.0-alpha.
+## 0.2.0-alpha - 2026-11-25
 
 The erasure of a member deletes what no longer serves and pseudonymises only what a running game or a booking needs; the
 reason of each choice is in [Privacy](doc/privacy.md#erasure). A `GameStore` or `ScreenStore` of your own implements
