@@ -11,7 +11,10 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\ProcessManager\WebServerManager;
 use Tilttek\AccessibleDice\Tests\Functional\App\TestKernel;
@@ -22,9 +25,9 @@ use Twig\Environment;
  * step how many dice, a roll of a dice tower on the page is announced in the polite live region, the targets are
  * large, nothing is read aloud by default, and the roll moves only without a request for reduced motion.
  *
- * Run apart, with a chromedriver on the path and Stimulus among the browser dependencies of the PHIL UX kit:
+ * Run apart, with the chromedriver of the system on the path and the Stimulus of the npm lock file of this folder:
  *
- *     vendor/bin/phpunit --bootstrap tests/bootstrap.php packages/tilttek-accessible-dice/tests/Browser
+ *     composer test:browser
  */
 #[CoversNothing]
 #[Group('browser')]
@@ -34,6 +37,8 @@ final class AccessibleDiceBrowserTest extends TestCase
 
     private const int PORT = 9183;
 
+    private const string STIMULUS = __DIR__.'/node_modules/@hotwired/stimulus/dist/stimulus.js';
+
     private static ?WebServerManager $server = null;
 
     /** @var array<string, Client> */
@@ -42,20 +47,32 @@ final class AccessibleDiceBrowserTest extends TestCase
     #[Override]
     public static function setUpBeforeClass(): void
     {
-        $stimulus = self::stimulus();
+        if (!ContainerBuilder::willBeAvailable('symfony/event-dispatcher', EventDispatcher::class, ['symfony/dependency-injection'])) {
+            self::markTestSkipped('The event dispatcher is installed for development only: no kernel can boot.');
+        }
 
-        if (null === $stimulus || !class_exists(Client::class)) {
-            return;
+        if (!class_exists(Client::class) || !self::hasChromedriver()) {
+            self::markTestSkipped('The browser suite needs symfony/panther and the chromedriver of the system.');
+        }
+
+        if (!is_file(self::STIMULUS)) {
+            // Run by `composer test:browser`, whose configuration sets BROWSER_SUITE, a missing Stimulus is a failure;
+            // run with the other suites of the package, the suite steps aside.
+            if (false === filter_var($_SERVER['BROWSER_SUITE'] ?? false, \FILTER_VALIDATE_BOOLEAN)) {
+                self::markTestSkipped('Stimulus is missing: `composer test:browser` installs it.');
+            }
+
+            throw new RuntimeException('Stimulus is missing: run `npm ci --ignore-scripts` in '.__DIR__.'.');
         }
 
         $root = sys_get_temp_dir().'/tilttek-accessible-dice-browser';
         $assets = \dirname(__DIR__, 2).'/assets';
 
         if (!is_dir($root.'/lib') && !mkdir($root.'/lib', recursive: true) && !is_dir($root.'/lib')) {
-            return;
+            throw new RuntimeException('The folder '.$root.'/lib cannot be created.');
         }
 
-        copy($stimulus, $root.'/stimulus.js');
+        copy(self::STIMULUS, $root.'/stimulus.js');
         copy($assets.'/src/dice_controller.js', $root.'/dice_controller.js');
         copy($assets.'/src/lib/dice.js', $root.'/lib/dice.js');
         copy($assets.'/styles/accessible-dice.css', $root.'/accessible-dice.css');
@@ -75,14 +92,6 @@ final class AccessibleDiceBrowserTest extends TestCase
         self::$browsers = [];
         self::$server?->quit();
         self::$server = null;
-    }
-
-    #[Override]
-    protected function setUp(): void
-    {
-        if (!self::$server instanceof WebServerManager) {
-            self::markTestSkipped('The browser suite needs symfony/panther and Stimulus among the browser dependencies of the PHIL UX kit.');
-        }
     }
 
     public function testTheExpressionFollowsTheChoice(): void
@@ -197,16 +206,10 @@ final class AccessibleDiceBrowserTest extends TestCase
             HTML;
     }
 
-    private static function stimulus(): ?string
+    private static function hasChromedriver(): bool
     {
-        foreach ([\dirname(__DIR__, 4).'/vendor/phil/ux-kit', \dirname(__DIR__, 2).'/vendor/phil/ux-kit'] as $kit) {
-            $file = $kit.'/tests/Browser/node_modules/@hotwired/stimulus/dist/stimulus.js';
+        $path = getenv('PATH');
 
-            if (is_file($file)) {
-                return $file;
-            }
-        }
-
-        return null;
+        return array_any(explode(\PATH_SEPARATOR, \is_string($path) ? $path : ''), static fn (string $directory): bool => '' !== $directory && is_executable($directory.'/chromedriver'));
     }
 }
