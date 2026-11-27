@@ -35,7 +35,9 @@ Open an issue before a large change, so that its design can be agreed first. The
    its tests. A pull request is merged when every check passes.
 
 The checks are Composer scripts of the root: `composer gates` runs them in order, and each one runs alone, for
-instance `composer phpstan` or `composer test`. To check a package on its own, from its directory:
+instance `composer phpstan` or `composer test`. The suites that drive a real browser run apart, before a release, with
+`composer test:browser`: it installs the Stimulus of each suite from its npm lock file and needs the chromedriver of
+the system on the path. To check a package on its own, from its directory:
 
 ```sh
 composer install

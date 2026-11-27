@@ -214,6 +214,10 @@
         "split": "@php vendor/bin/phil-dev split",
         "taint": "@php vendor/bin/phil-dev taint",
         "test": "@php vendor/bin/phil-dev test",
+        "test:browser": [
+            "npm ci --ignore-scripts --no-audit --no-fund --prefix packages/accessible-dice/tests/Browser",
+            "vendor/bin/phpunit --configuration=phpunit.browser.dist.xml"
+        ],
         "test:integration": "@php vendor/bin/phil-dev test --suite=Integration",
         "test:next": "@php vendor/bin/phil-dev php next",
         "test:services": "@php vendor/bin/phil-dev services test",
@@ -249,6 +253,7 @@
         "split": "The finished packages split to their public repositories; dry run unless --push is given.",
         "taint": "The taint analysis of Psalm on the production code; a script of its own.",
         "test": "The tests with ParaTest, one process per core, or PHPUnit when ParaTest is missing.",
+        "test:browser": "The browser suites of phpunit.browser.dist.xml, with Panther, the chromedriver of the system and the Stimulus of the npm lock file of each suite; a script of its own, run before a release.",
         "test:next": "The tests on the next PHP of the matrix, in its Docker image.",
         "test:services": "The Integration suite against the MySQL, PostgreSQL and Gotenberg of phil-dev services.",
         "twig": "The code style of the Twig templates, with Twig-CS-Fixer.",

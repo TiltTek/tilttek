@@ -4,6 +4,18 @@ All notable changes to `tilttek/accessible-dice` will be documented in this file
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## Unreleased
+
+The next version is 0.1.6-alpha.
+
+Tests only.
+
+### Changed
+
+- The browser suite installs its own Stimulus from the npm lock file of `tests/Browser` and runs with
+  `composer test:browser` in the monorepo: it no longer looks for the browser dependencies of the PHIL UX kit, which
+  the published archive of the kit leaves out, and no longer skips its four tests.
+
 ## 0.1.5-alpha - 2026-11-25
 
 ### Security
