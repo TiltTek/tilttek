@@ -1,0 +1,15 @@
+{
+    "attributes": [
+        {"slug": "strength", "name": "Strength", "abbreviation": "Str"},
+        {"slug": "dexterity", "name": "Dexterity", "abbreviation": "Dex"}
+    ],
+    "skills": [
+        {"slug": "athletics", "name": "Athletics", "description": "Climbing, jumping, swimming."}
+    ],
+    "conditions": [
+        {"slug": "frightened", "name": "Frightened"}
+    ],
+    "traits": [
+        {"slug": "fire", "name": "Fire"}
+    ]
+}

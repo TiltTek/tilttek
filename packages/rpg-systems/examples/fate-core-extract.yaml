@@ -1,0 +1,9 @@
+# Written for the tests: the shape of an extract the Fate Core profile reads, not the text of the SRD.
+skills:
+  - { key: notice, name: Notice, description: Spotting what is there to see. }
+  - { key: will, name: Will }
+approaches:
+  - { key: careful, name: Careful }
+ladder:
+  - { key: fair, name: Fair, description: '+2' }
+  - { key: good, name: Good, description: '+3' }

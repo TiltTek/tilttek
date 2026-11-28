@@ -1,0 +1,15 @@
+{
+    "ability-scores": [
+        {"index": "str", "name": "STR", "full_name": "Strength", "desc": "Bodily power."},
+        {"index": "dex", "name": "DEX", "full_name": "Dexterity"}
+    ],
+    "skills": [
+        {"index": "athletics", "name": "Athletics"}
+    ],
+    "conditions": [
+        {"index": "grappled", "name": "Grappled", "desc": ["Its speed becomes 0."]}
+    ],
+    "magic-schools": [
+        {"index": "evocation", "name": "Evocation"}
+    ]
+}
