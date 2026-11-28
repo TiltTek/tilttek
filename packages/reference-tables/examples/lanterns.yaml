@@ -1,0 +1,64 @@
+# The reference tables of a small game system, written for the examples and the tests.
+format: tilttek-reference-tables/1
+locale: en
+system: lanterns
+source:
+  title: Lanterns Quick Reference
+  licence: CC0-1.0
+  author: The Lanterns writers
+
+tables:
+  - key: reaction
+    names: {en: Reaction, fr: Réaction}
+    description: {en: How a stranger first meets the party., fr: Comment un inconnu accueille le groupe.}
+    category: social
+    page: p. 12
+    die: 2d6
+    columns:
+      - {key: attitude, names: {en: Attitude, fr: Attitude}}
+      - {key: offer, names: {en: Offer, fr: Offre}}
+    rows:
+      - {range: "≤2", attitude: {en: Hostile, fr: Hostile}, offer: {en: Attacks or flees, fr: Attaque ou fuit}}
+      - {range: 3-5, attitude: {en: Wary, fr: Méfiant}, offer: {en: Wants proof, fr: Veut une preuve}}
+      - {range: 6-8, attitude: {en: Uncertain, fr: Incertain}, offer: {en: Listens, fr: Écoute}}
+      - {range: 9-11, attitude: {en: Friendly, fr: Amical}, offer: {en: Shares news, fr: Partage les nouvelles}}
+      - {range: 12+, attitude: {en: Helpful, fr: Serviable}, offer: {en: Offers a hand, fr: Offre son aide}}
+
+  - key: wandering
+    names: {en: Wandering in the old mine, fr: Rencontres dans la vieille mine}
+    category: exploration
+    page: p. 31
+    die: d%
+    columns:
+      - {key: encounter, names: {en: Encounter, fr: Rencontre}}
+      - {key: number, names: {en: Number, fr: Nombre}, kind: dice}
+    rows:
+      - {range: 01-40, encounter: {en: Cave bats, fr: Chauves-souris}, number: 3d6}
+      - {range: 41-70, encounter: {en: Lost miners, fr: Mineurs perdus}, number: 1d4}
+      - {range: 71-95, encounter: {en: Rock crawler, fr: Rampant des roches}, number: "1"}
+      - {range: 96-00, encounter: {en: The lantern ghost, fr: Le fantôme à la lanterne}}
+
+  - key: armor
+    names: {en: Armor, fr: Armures}
+    category: equipment
+    page: p. 20
+    lookup: key
+    columns:
+      - {key: name, names: {en: Armor, fr: Armure}}
+      - {key: defence, names: {en: Defence, fr: Défense}, kind: number}
+      - {key: cost, names: {en: Cost, fr: Coût}, kind: number}
+    rows:
+      - {key: padded, name: {en: Padded coat, fr: Gambison}, defence: 1, cost: 5}
+      - {key: chain, name: {en: Chain shirt, fr: Chemise de mailles}, defence: 3, cost: 50}
+      - {key: plate, name: {en: Plate, fr: Plates}, defence: 5, cost: 400}
+
+  - key: advancement
+    names: {en: Advancement, fr: Progression}
+    category: characters
+    page: p. 8
+    columns:
+      - {key: bonus, names: {en: Bonus, fr: Bonus}, kind: number}
+    rows:
+      - {range: 1-4, bonus: 2}
+      - {range: 5-8, bonus: 3}
+      - {range: 9-12, bonus: 4}
