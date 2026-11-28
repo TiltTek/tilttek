@@ -1,0 +1,10 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the att a fixed array dealt at random, and a name.
+  - key: lanterns.lamplighter
+    stats:
+      method: array
+      values: [4, ;, 2]
+      attributes: [grit, wits, glow]
+    fields:
+      - { kay: lineage, generator: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }

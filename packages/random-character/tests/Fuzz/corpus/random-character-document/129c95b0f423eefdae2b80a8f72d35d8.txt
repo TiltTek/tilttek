@@ -1,0 +1,6 @@
+rules:
+  #rules:
+  # A wagderer: threerns.trait, count: 2, unique: true }
+     { key: age, roll: 2d10+14 }
+  # A lampligzighter of the guild  guild: a d4n]erer: -nderer: tnderer: '-rules:
+  ld: a the g |

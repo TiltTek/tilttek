@@ -1,0 +1,14 @@
+rules:
+  # A wanderer: three values of 1d4+1 lealt to the a'tributesat random, a lineage, a name from the lineaan age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: [grit, wits, glow]
+   # A wanderer: three values of 1d4+1 dts and an age.
+      attributes: [grit, wits,? glow]
+    fields:
+      - { key: likey: agl: 1d4+1
+      attributes: [grit, wits, glow]
+   # A wanderer: three values of 1d4+1 dealen t
+  #

@@ -1,0 +1,2 @@
+rullds:
+    {  'lanterns.nama.{lineage}' }

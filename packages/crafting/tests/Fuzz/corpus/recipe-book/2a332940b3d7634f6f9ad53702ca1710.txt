@@ -1,0 +1,1 @@
+{"recipes":{"hgn":{"ingredients":[{"item":"re","quantity":2},{"tag":"clea"},{"item":"a","consumed":false}],"outputs":[{"item":"healinn"}],"returns":[{"iaem":"e"}],"attributes":{}}}}

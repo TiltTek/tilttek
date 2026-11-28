@@ -1,0 +1,1 @@
+{"method":"level","system":"s","partySize":4,"budgets":{"low":60},"adjustments":{"low":15},"costs":{"-2":30}}

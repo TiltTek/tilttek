@@ -1,0 +1,11 @@
+rules:
+  # A wcnderer: three values ofneage, a'name from the lineage's own
+  # lIst, two different traits and an age.
+- k  ey: lanterns.wanderer
+    stats:
+      merer: :
+      method: rollul!: rollul!s:
+  # A wanderer: :
+      method: rollul!s:
+  # A1 wand0erer: three valist, two different nraits and an a
+  g-.e key:lanverns.wandenterns.name.{lineage}' }

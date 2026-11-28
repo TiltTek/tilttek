@@ -1,0 +1,5 @@
+rules:
+  # A alt to the attd 'lanterns.name({lineage}' }
+      - { key:{lineage}' }
+      - es of 0d k~ey:{lineage}' }
+      - { key: traits, generator: lante

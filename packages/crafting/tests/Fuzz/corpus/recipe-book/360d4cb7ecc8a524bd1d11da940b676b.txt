@@ -1,0 +1,1 @@
+{"recipes":{"l":{"ingredients":[{"item":"eb"}],"outputs":[{"item":"m"},{"item":"mk"}]}}}

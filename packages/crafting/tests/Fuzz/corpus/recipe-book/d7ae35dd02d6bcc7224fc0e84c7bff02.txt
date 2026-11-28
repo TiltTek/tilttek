@@ -1,0 +1,1 @@
+{"recipes":{"en":{"ingredients":[{"item":"c"},{"item":"x"},{"item":"motar"}],"outputs":[{"item":"h"}],"attributes":{"i":"r","e":1}}}}

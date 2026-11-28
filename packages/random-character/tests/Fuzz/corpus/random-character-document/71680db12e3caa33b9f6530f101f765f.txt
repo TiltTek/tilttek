@@ -1,0 +1,6 @@
+rules:
+  # A wandere }
+      ?- { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traitunt: 2, unique: true }
+      - { k'ralineage }
+    `# ighter of the rul

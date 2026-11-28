@@ -1,0 +1,3 @@
+rulerules:
+  # A wand.n { k9ey> name, generge }
+      - {& kneratne, gener3tor:

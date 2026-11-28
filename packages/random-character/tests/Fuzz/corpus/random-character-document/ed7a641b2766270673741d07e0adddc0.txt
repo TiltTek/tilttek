@@ -1,0 +1,10 @@
+rules:
+  # A wandePPPPPPy: lanter)ns.wanderer
+    stat/:
+      methodtats:
+      method: array
+      values: [4, 3, 2]
+      attributes: [grit,!wits, glow]
+    fields:
+      - { key: lineage, generator: lanterns.linea: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }

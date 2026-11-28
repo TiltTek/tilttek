@@ -1,0 +1,4 @@
+rules:
+  #}
+      - { key:a  ,egrgl roll: 2d5}
+  #~ A lampl%%%%%%%%%%%%elineage}' }

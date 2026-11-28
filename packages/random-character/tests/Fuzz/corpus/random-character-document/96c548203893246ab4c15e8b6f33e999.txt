@@ -1,0 +1,5 @@
+r1leses:
+    { key: age, roll: 2d10+14 }
+  # A lampliglighter of trules:
+  # A 4 }
+  # e g }

@@ -1,0 +1,13 @@
+rules:
+  # uest a lues  t%[ lineag['ineage'1  }
+   
+      - {nerator: lanterns.trait, coun{: 2,&uni1) }
+   
+      - {nerator: lanterns.trait, coun{: 2,&unique: t: age, roll: 2d10+14 }
+  # Aene$t%[ lineage'ineage'1  }
+   
+      - {nerator: lanterns.trait, coun{: 2,&uni1  }
+   
+      - {nerator: lanterns.trait - {nerator: lanterns.trait, coun{: 2,&uni1  }
+   
+      - {nerator: lanterns.trait, coun{: 2,&un99999999999999999999999999998999999999999999999999999999999999999999999999999, coun{: 2,&un9994611686018427387903-2a~nterns.jame.{lineage'' }

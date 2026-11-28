@@ -1,0 +1,4 @@
+rules:
+  # A wanderer: threern: true}
+      - { key: age, roll: 1d10+: 'lanteeage}' }
+      - { key:threern }

@@ -1,0 +1,5 @@
+rules:
+  #er: three valuesbutes at rand 'lrns.name.{lineage}' }
+      - { key:{lineage}' }
+      es at rand 'lanterns.namey: age, roil: 2d10+14 }
+  # A lampligterns.name.erns.name.{lineage}' }

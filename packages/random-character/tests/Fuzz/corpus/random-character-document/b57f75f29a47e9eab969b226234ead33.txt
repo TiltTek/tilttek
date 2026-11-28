@@ -1,0 +1,9 @@
+rules:
+ crules:
+  # A wanderer: three valume from the lantendn a ame.
+  - key: lanterns.lamplighter
+    stats:
+      method: array
+      va|ues: [16,or: e values of 1*t, wits, glow]
+    fields:
+  : 'lanterns.name.{lineage}' }m

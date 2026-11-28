@@ -1,0 +1,1 @@
+{"recipes":{"e.h":{"kind":"evolve","ingredients":[{"item":"dg"},{"tag":"f","quantity":4}],"outputs":[{"item":"n"}]}}}

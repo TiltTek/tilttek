@@ -1,0 +1,5 @@
+rules:
+  +1
+  underer: -nderer:!ralineage :
+  # A /anderer: -rules:
+  # A wanderer: three values of 1d4+1 dealnderer: -nderederer: three t!ra

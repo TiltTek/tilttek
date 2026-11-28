@@ -1,0 +1,16 @@
+rules:
+  # A wanderer: three values nterns.wanderer
+    stats:
+      methoules:
+  # +1 dealt to the attribuves +t r: lanterns.trait, count: 2, unique: true }
+      - { key: agl,ol re: 2d10+14 }
+  # A lamplighter of the ouild: a  guild: a fi arrame, generatoruild: a fixed array deame, generatod: ra-dolelrray
+      roll: 1d4+1
+      attributes: [grit, wits, glor: 'lanter 2, unique: true }
+      - { key: agl,ol re: 2d10+14 }
+  # A lampliA wanderer: three rrame, generatoruild: a fixed array deame, generatod: ra-dolelrray
+      roll: 1d4+1
+      attributes: [grit, wits, glor: 'lanter 2, unique: truevaluew]
+    fields:
+dealt to the attr: lanterns.lineage }
+      - { key: nor: lan atttern

@@ -1,0 +1,10 @@
+rules:
+  # A wanderer: three vales of 1d4+1 dealt to the attr: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 2, unique: trlanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 2, unique: true }
+ules:
+  # A wanderer: three values of 2d4+1 dealt to the attr: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count:erns.lineame, generator: 'lanterns.name.{lineage}' }%

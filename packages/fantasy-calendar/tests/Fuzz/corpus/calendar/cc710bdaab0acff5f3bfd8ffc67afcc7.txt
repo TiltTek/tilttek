@@ -1,0 +1,1 @@
+{"id":"c","name":"C","months":[{"id":"m","name":"M","days":5},{"id":"f","name":"F","days":0,"leapDays":1,"inWeek":false}],"weekdays":["A","B"],"leap":[{"every":3,"offset":1}],"moons":[{"id":"p","name":"P","cycle":"7.5"}],"eras":[{"idaay":0}]}

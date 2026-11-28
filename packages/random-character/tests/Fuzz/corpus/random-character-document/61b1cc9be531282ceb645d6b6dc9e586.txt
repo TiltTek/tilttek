@@ -1,0 +1,10 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the attribu1es at random, a lineage, a name from the liplighter
+    stats:
+      method: array
+      values: [4, 3, 2]
+      attributes: [grit, wits, glow]
+    fields:
+      - {values: [4, 3, 2]
+      attanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }

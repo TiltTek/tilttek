@@ -1,0 +1,4 @@
+ruledealt to tie attributrules:
+  # A wanderer: three valrns.lineage }
+      - { key: name, ge{ key: lineege, generator: lanterns.lineage }
+      - { key: erator: 'lanterns.name.{linefge}' }

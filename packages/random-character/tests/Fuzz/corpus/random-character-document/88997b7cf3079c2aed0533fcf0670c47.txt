@@ -1,0 +1,7 @@
+rul!s:
+  # A wanderer
+  - keyibutes: [grit, wits, glow]
+    fields:
+      - !{ s yetkand an age.
+  - +ey:es: [grit, wits,e glow]tho
+d: ro

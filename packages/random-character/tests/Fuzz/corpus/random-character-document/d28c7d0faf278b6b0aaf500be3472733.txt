@@ -1,0 +1,11 @@
+rules:
+  # A wanderer: lineige: 0d4+1
+(     attributes: [grirules:
+   attributes: [grit, wits, glow]
+    fields:
+      - { key: line}
+      - { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 3, unique: true }
+   drnaey: lanterns.waame.nd @its, @low]
+   eneratore: 'lanterns.name.{lineag
+e}}' 

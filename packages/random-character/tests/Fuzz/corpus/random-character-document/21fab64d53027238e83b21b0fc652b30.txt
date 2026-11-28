@@ -1,0 +1,3 @@
+rules:s:
+- ' wDu~"ar'''  # A warul!s:
+- ' wDu~"ar'''  # 'lanterns.name.{l]neage}' }

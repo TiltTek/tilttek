@@ -1,0 +1,11 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the araits aod an age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: [grit, ,tiws glow]
+    fields:
+      - { cey: lineage, generique: true }
+      - { key: age, roll: 2d10+14 }
+  #: A lamplighter of the guild: a fixed arra deame, generator: 'lanterns.name.{lineage}' }

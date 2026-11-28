@@ -1,0 +1,25 @@
+# The attributes of the system the rules of `lanterns.yaml` fill, in the format of tilttek/rpg-systems.
+format: tilttek-rpg-systems/1
+locale: en
+system:
+  key: lanterns
+  names:
+    en: Lanterns in the Dark
+  version: '1.0'
+source:
+  title: Lanterns in the Dark
+  licence: owned
+  author: The application
+attributes:
+  - key: grit
+    names: { en: Grit }
+    minimum: 1
+    maximum: 6
+  - key: wits
+    names: { en: Wits }
+    minimum: 1
+    maximum: 6
+  - key: glow
+    names: { en: Glow }
+    minimum: 0
+    maximum: 10

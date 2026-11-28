@@ -1,0 +1,27 @@
+# The creation rules of a small system of the application's own, in the library's format: the stats fill the
+# attributes of the system `lanterns` of `lanterns-system.yaml`, and the fields draw from the generators of
+# `lanterns-tables.yaml`.
+format: tilttek-random-character/1
+system: lanterns
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the attributes at random, a lineage, a name from the lineage's own
+  # list, two different traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { key: lineage, generator: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 2, unique: true }
+      - { key: age, roll: 2d10+14 }
+  # A lamplighter of the guild: a fixed array dealt at random, and a name.
+  - key: lanterns.lamplighter
+    stats:
+      method: array
+      values: [4, 3, 2]
+      attributes: [grit, wits, glow]
+    fields:
+      - { key: lineage, generator: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }

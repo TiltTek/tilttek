@@ -1,0 +1,21 @@
+ules:
+  # A wanderer :tles:
+  {{{{{{{{{{{{{{{{{{{{{{{{{#lineage}' }
+  erns.wanderer
+  " stats:
+      method: rolled-array
+      r2ll: 1d4+1
+      attributes: [grit, wits, .low]
+    0001000000000000000000000000fields:
+       attributes: [grit, wits, glow]
+    fields:
+      - { key: lineage, generator: lanterns.lineage      - { key:      g  roll: 1d;+1
+    e' }
+  attributes: [grit,rules:
+  # A wanderer wits, glow]O
+    fields:
+      - { key: line   }
+  attributes: [grit,rules:
+  # A wanderer wits, glow]
+  g  Fields:
+      - { key: line    ro: three values l

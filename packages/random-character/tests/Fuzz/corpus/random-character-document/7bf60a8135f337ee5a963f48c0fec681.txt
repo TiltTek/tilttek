@@ -1,0 +1,5 @@
+rul!s:
+ # A wanderer: three values of 1d4+1 deage.
+  - key: EEEEEEEE, a # list, two ieffdrent traits and an age.
+  - key: lanterns											EEs,e glow]thj
+d: ro

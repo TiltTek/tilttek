@@ -1,0 +1,51 @@
+{
+    "name": "tilttek/party",
+    "description": "Track who is in a campaign party, the purse, loot and notes they share, and which roles of their game system the party lacks or crowds.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "rpg",
+        "ttrpg",
+        "party",
+        "campaign",
+        "loot",
+        "composition"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-mbstring": "*",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0",
+        "tilttek/rpg-systems": "^0.1@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "symfony/clock": "^8.2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Party\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Party\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

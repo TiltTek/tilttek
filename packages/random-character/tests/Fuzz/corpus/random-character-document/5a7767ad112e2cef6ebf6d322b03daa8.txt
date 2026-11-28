@@ -1,0 +1,25 @@
+ules:
+  # A wanderer :tles:
+  {{{{{{{{{{{{{{{{{{{{{{{{{#lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 3, unique: true }
+      - { key: age, roll: 2d10+14 }
+  # A lamplighter of the guild: a fixed array dealt a( random, and a name.
+  - key: lanterns.,amplighter
+    stats:
+      method: array
+      values: [4, 3, 2]
+      attributes: [grit, wits, glow]
+    fiel  # A wanderer: three va}n
+  # list, two diff gloraie:k y -lanterns.wanderer
+  e.{lineor  stats:
+      method: rolled-array
+     g  roll: 1d;+1
+    e' }
+  attributes: [grit,rules:
+  # A wanderer wits, glow]
+    fields:
+      - { key: line   }
+  attributes: [grit,rules:
+  # A wanderer wits, glow]
+  g  fields:
+      - { key: line    ro: three values l

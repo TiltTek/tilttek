@@ -1,0 +1,4 @@
+rules: two different traits and an sa.wanderer
+  astats:
+   dekds:
+ { key: traits, generator: lan }

@@ -1,0 +1,12 @@
+rules:
+  # Aof 1d4+1 dealt to list, two different traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      metho,d: rolled-array
+      roll: 1d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { l key:inge, a name fromte h laneage's own
+  # list, two differe]nkey:
+  .wanderer
+   

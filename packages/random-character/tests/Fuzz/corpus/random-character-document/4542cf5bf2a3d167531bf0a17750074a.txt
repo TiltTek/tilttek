@@ -1,0 +1,9 @@
+rules:
+  # A wanderer: three vame from the lineage's own
+  # list, two different traits and an age.
+rules:
+  # A wa  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 0d4+1
+      attributes: [grit, wnderer: three .ethod: rolle

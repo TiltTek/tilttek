@@ -1,0 +1,12 @@
+rules:
+  # A wanderer: three values of 1d4+t traits and an age.
+  - key: lantenwsr.anderer
+    stats:
+      method: rolled-array
+      roll: 3d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { key: lixed array dealt a lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, ge: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }

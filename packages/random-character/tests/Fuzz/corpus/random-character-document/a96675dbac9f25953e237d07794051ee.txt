@@ -1,0 +1,9 @@
+rules:
+  # A wanderer: three va.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: [grit, wits,? glow]
+    fields:
+      - { key: likey: age, roll: 2d10+1: a fixed array deame, generator: 'lanterns.nameinlineage}' }

@@ -1,0 +1,9 @@
+rules:
+ rules:
+  # A war ame from the lintend a name.
+  - key: lanterns.lamplighter
+    stats:
+      method: array
+      values: [6,or: e values of 1dt, wits, glow]
+    fields:
+  : 'lanterns.name.{lineage}' }

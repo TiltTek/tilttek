@@ -1,0 +1,16 @@
+# The versioned sets of the application, with their tiers and rewards. Without stores, definitions and completions
+# are kept in memory: name your own stores before production.
+tilttek_sets:
+    # A Tilttek\Sets\Contract\DefinitionStore, and a CompletionStore that also implements PendingDeliveries.
+    # definition_store: App\Sets\DefinitionStore
+    # completion_store: App\Sets\CompletionStore
+    # Completions whose event was lost are told again, with a delay doubled after each failure.
+    backoff:
+        first_delay: 60
+        longest_delay: 86400
+        report_after: 3
+    # The tilttek_sets schedule, once symfony/scheduler is installed.
+    schedule:
+        frequency: 5 minutes
+        limit: 100
+        # lock: app.sets_delivery_lock

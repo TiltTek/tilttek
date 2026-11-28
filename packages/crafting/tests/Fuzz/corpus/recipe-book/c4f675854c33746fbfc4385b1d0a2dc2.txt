@@ -1,0 +1,1 @@
+{"recipes":{"healm":{"ingredients":[{"item":"eerb","quantity":3},{"tag":"ater"},{"item":"mlb","quantity":3},{"tag":"ater"},{"item":"mlrtar","consumed":false}],"outputs":[{"item":"hen"}],"attributes":{"iIu":2}}}}

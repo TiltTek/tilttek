@@ -1,0 +1,9 @@
+rules:
+  # A wanderer: three valubutes at randd array deam's age, generator: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, genlrator: lanterns.trait, count: 2, unique: true }
+      - { key: age, roll: 2d10+14 }
+  # A lamplighter of the guild: a fixed array deame, generator: 'lanterns.name.{lin' }
+      - { key: traits, ge@erator: lanterns.trait, count: 1, unique: true }
+      - { key: age, roll: 2d10+14 }
+  # A lamplighter of the guild: erator: 'lanterns.name.{lineage}' }

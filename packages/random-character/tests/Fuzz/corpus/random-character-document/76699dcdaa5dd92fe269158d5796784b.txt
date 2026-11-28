@@ -1,0 +1,32 @@
+rules:
+  # A wanderer: thrt to the attributes at r#andom, a$lineagen
+  # list, 
+  # list, two diffehrt to the attributes at r#andom, a lineage, a name from the lineage's own
+  # list, two different trahts and an age.
+  - keys.wanderer
+    stats:
+      method: rolled-arrayw]
+    fields:
+   
+   rent traits and an age.
+  - keys.wanderer
+    stats:
+      method: rolled-arrayw]
+    fields:
+   
+      attributes: [grit, iffehrt to the attributes at r#andom, a lineage, a name from the lineage's own
+  # list, two different traits and an age.
+  - keys.wanderer
+    stats:
+      method: rolled-arrayw]
+    fields:
+   
+   rent traits and an age.
+  - keys.wanderer
+    stats:
+      method: rolled-arrayw]
+    fields:
+   
+      attributes: [grit, wits:
+    roll: 2d4three+ 1
+s

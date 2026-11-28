@@ -1,0 +1,1 @@
+{"id":"gre","name":"Gregorian","months":[{"id":"january","nameinWeek":true}],"weekdays":["unday"],"firstWeekday":0,"leap":[{"every":4,"offset":0,"leap":true},{"every":50,"offsep":true}],"moons":[{"id":"moon","name":"Moon","cycle":"29.530588","newMoon":73125}],"eras":[{"id":21}],"climateZone":null}

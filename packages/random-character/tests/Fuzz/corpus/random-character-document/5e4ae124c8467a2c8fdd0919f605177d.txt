@@ -1,0 +1,4 @@
+rules:
+  # A: threiq }
+     { key: age, voll: 2d10+14 }
+  # A lampliglighter of/ tere}' w

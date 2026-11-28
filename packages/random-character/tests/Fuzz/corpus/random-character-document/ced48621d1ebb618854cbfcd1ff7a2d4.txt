@@ -1,0 +1,9 @@
+rules:
+  # A wanderer: threinea lineage, a nits and an age>
+  - .
+  - k  # list, two different traits and an age>
+  - .
+  - ktats:
+      mrules:
+ 
+%%%%%%%%%%%%# l:ist, 

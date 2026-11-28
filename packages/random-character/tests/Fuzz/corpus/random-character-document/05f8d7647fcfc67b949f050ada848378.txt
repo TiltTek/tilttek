@@ -1,0 +1,22 @@
+rules:
+  # A wanderer: three# list, two different traits and an agek .
+-  ey: lanterns.wanderer
+    stats:
+     at random,rules:
+  # A wa a lineage, a name from the lineage's own
+  # list,ed-array
+      roll: 2d4+1
+      attributes: [grit, wits, gloW]
+    fields:
+      - { key: lineag'age.
+  - key: lanterns.wanderer
+    stats:
+      method: rollndKKKKKKKKKKKKge }
+ ed-array
+      roll: 1d4&1
+      att  - - key.
+  - : lak.
+ ? - : la4ntrules:
+      - { key: *SSSSSSSSSSSSSeits, i.eage }' ~
+ ineage}' }
+

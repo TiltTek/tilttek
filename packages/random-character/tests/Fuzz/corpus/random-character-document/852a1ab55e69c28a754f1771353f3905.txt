@@ -1,0 +1,5 @@
+rules:
+  # A wanderer: threerns.trait, count: 2, unique: true }
+     { key: age, roll: 2d10+14 }
+  # A lampl                                                                        2d10+14 }
+  # A lam}

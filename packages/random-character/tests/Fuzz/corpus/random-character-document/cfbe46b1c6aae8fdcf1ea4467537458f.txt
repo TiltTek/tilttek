@@ -1,0 +1,6 @@
+rules:
+  # A wanderer: ths .lineage }
+      - { key: age }
+      - { key: nineage, erator: lanterns.lineage }
+      - { key: age }
+{lineage}' }

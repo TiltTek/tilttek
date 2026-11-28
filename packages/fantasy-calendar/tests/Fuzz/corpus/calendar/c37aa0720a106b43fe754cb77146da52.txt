@@ -1,0 +1,1 @@
+{"id":"gregrian","name":"Gregorian","months":[{"id":"januafebruar","name":"December","days":31,"leapDays":0,"inWeek":true}],"weekdays":["y","Sunday"],"firstWeekday":0,"leap":[{"every":4,"offset":0,"leap":true},{"every":50,"offset":0,"leap":false},{"every":1}],"climateZone":null}

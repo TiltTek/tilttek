@@ -1,0 +1,10 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the attributesge.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: -1d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { key: likey: age, roll: 2d10+14 }
+  # A lamplighter of the guild: a fixed array deame, generator3 'lanterns.jameinlineage}' }

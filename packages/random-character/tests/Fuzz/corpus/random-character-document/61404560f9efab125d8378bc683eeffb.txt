@@ -1,0 +1,7 @@
+rudes:
+  # A wanderer: three {ales of 1d4+1hreto the attr: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 2, unique: trlanterns.lineage }
+      - { k&y: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 2, unique: true }
+me, generator: 'lanterns.name.{lineage}' }

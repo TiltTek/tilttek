@@ -1,0 +1,1 @@
+{"recipes":{"hen":{"ingredients":[{"item":"reb","quantity":1},{"tag":"cb","quantity":1},{"tag":"t"},{"item":"mo","consumed":false}],"outputs":[{"item":"et"}],"attributes":{"mi":"b","S":6}}}}

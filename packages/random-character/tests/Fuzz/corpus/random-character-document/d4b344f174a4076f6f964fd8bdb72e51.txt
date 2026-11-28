@@ -1,0 +1,3 @@
+res:
+  #r: thrge's own
+   -  # A w

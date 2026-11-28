@@ -1,0 +1,4 @@
+rules:
+  # A wanderer: three vtaluesbutes at rand 'lanterns.name.{lineage}' }
+      - { kor: lanterns.trait, count: 1,& traits, generator: lanterns.trait, count3: 1,& unique: drue }
+      - { 

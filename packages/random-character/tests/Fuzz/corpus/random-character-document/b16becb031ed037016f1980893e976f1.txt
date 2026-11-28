@@ -1,0 +1,4 @@
+rules:
+  # alues of 1d4+1  }
+   
+      - { key: traits, """"""""""""""""""generator: lanterns.+rait, cozunt: 1, ator: 'la{lineege}' }

@@ -1,0 +1,17 @@
+rul!s:
+  # A wandes of 2d4ee values of 2d4+1 dealt ineage's own
+  # list, two difherent traits and an age.
+  - key: lafterns.wanderer
+    stats:
+    +1 dealt to tie attributrules:
+  # A wanderer: t=hree values of  dealt ineage's own
+  # list, two difherent traits a an age.
+  - key: lafterns.wanderer
+    stats:
+    +1 dealt to tie attributrulel:
+  # A wanderer: three values of 0d4nderer
+    stats:
+    +1 dealt to tie attributrules:
+  ##A ent traits and an ares:ge.
+  - kelt  A wanderer:
+   #

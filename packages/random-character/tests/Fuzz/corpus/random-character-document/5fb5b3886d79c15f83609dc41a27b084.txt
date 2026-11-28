@@ -1,0 +1,6 @@
+rules:
+  # A wandereh:t rree val,uwanderer: three values of 2d4+1 dea#n totie atge, a name from the lige.
+  - key: lanterns.wanderer
+    itats:
+      method: rolled-array
+      roll: 0tor 'lanteros.name.{lineage}' }

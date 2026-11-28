@@ -1,0 +1,7 @@
+rules:hree values of1d4+1 dealt to tie attributrules:
+  # A wanderer: three values of 1d4+1 dlineige }
+      - {& key: name, generator: 'lanterns.name.{li { key: 1d4+1 dealt to tie attributrules:
+  # A wanderor: 'lanterns.name.{li { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traagename, generator: 'lanterns.name.{lineage}' }
+      - { key: traage }
+      - { keyerator: 'lanterns.name.{lineage}' }

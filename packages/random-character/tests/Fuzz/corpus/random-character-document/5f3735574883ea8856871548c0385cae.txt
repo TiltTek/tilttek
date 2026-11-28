@@ -1,0 +1,6 @@
+rules:
+  # A: three values of 1d4+unique: true }
+  "  - { key: agrule[s:
+  # A wanderer: threrulei, .trait, cs:
+  # A wanderer: three valnount: 0, othe l aineage'ge.
+- #s 

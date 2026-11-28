@@ -1,0 +1,4 @@
+rules:
+  # uest a lues  t%[ lin 
+      - {nerator: lan lanterns.trait, coun{: 2,&u 2d10+14 }
+  #ator: 'tnrenlas.jame.{lineage' }

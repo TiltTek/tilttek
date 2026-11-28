@@ -1,0 +1,14 @@
+rules:
+  # A whree valou sef 1d4+1 dealt to the attributes at random, a lineage, a name from thej
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: &[griineage }
+      -{k e y: name, genthree values ndom, a lineage, a name from then
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: &[gr)ineage }
+erato)r: 'lant' }

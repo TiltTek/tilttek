@@ -1,0 +1,10 @@
+rul!s:
+  # A wanderer: three values of 1d4+1 dealt to taits and an age.
+  - key: manterns.wanderer
+    stats:
+      mrleus\
+  # A wa$erer
+    stats:
+      mrules\
+  # A wandere: 
+d: ro

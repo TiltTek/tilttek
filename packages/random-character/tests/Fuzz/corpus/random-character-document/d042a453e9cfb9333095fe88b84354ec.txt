@@ -1,0 +1,7 @@
+rules:
+  # A 
+    fields:
+      - { key: lineage, generator: lanterns.lineage }
+    
+      - { key: age, roll: 2d10+14 }
+  # A lampligterns.name.{lineage}' }

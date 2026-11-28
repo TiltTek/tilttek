@@ -1,0 +1,10 @@
+rules:
+  # A%wanderer: three values of 1d4+1 dealt to the attributes at random, a litwo diffreent traits and an age.
+  - key: lanterns.wow]
+    fields:
+      - { key: lineage, generator: lanterns.lineage }
+      - { key: n{ key: name, generator: 'lakterns.name.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 3, ndKKKKKKKKeits, iKKKKge }
+      - { key: *SSSSSSSSSSSSSSSSSSeitsy: *SSSSSSS guild: a dixed array deame, gerator: 'lakterns.name.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 3, ndKKKKKKKKeits, iKKKKge }
+      - { key: *SSSSSSSSSSSSSSSSSSeirsy: *SSSSSSS guild: a dixed array deame, generator: 'lanterns.name.{lineage}' }

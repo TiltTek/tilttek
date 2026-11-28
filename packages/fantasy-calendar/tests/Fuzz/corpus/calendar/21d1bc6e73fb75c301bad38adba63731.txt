@@ -1,0 +1,1 @@
+{"id":"grn","name":"ergGorian","months":[{"id":"january","name":"JOctoer","days":7,"leapDays":0,"inWeek":22}],"climateZone":null}

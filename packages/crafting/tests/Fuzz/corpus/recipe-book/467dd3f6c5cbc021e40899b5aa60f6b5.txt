@@ -1,0 +1,1 @@
+{"recipes":{"he":{"ingredients":[{"item":"reb","quantity":1},{"tag":"cle","consumed":false}],"outputs":[{"item":"heet"}],"attributes":{"mi":"b","qm":"r","S":6}}}}

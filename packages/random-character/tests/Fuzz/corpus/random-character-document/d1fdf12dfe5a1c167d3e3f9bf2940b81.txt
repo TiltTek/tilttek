@@ -1,0 +1,10 @@
+rules:
+  # rules:
+  # A wanderer: threlineage :/anderer: -rules:
+  # A wanderer: three values of 1d4n]erer: -nderer: three t!ralineage :
+  # A /anderer: -rules:
+  # A wanderer: three valus o wanderer: three values of 1d4n]erer: -nderer: three t!ralineage :/anderer: -rules:
+  # A wanderer: three values of 1d4-nderer: three t!ralineage :/anderer: -rules:
+  # A wanderer: three values of 1d4n]erer: -nderer: three t!ralineage :
+  # A /anderer: -rules:
+  # A wanderer: three values of 1d4+1 dealt to t'lanterns.name.{lineage}' }

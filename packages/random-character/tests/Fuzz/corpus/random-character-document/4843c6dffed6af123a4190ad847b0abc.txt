@@ -1,0 +1,10 @@
+rule[s:
+  # A walues   dealt to the attributes eage's own
+  # lIst, two different traits and an age.
+- k  ey: two different traits and an age.
+- k  ey: lanterns.wanderer
+    stats:
+      method: role.
+-  ky its and an antsrne.wanderer
+    stats:
+ rom 

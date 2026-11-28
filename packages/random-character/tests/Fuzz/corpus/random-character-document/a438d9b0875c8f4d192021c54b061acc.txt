@@ -1,0 +1,10 @@
+rul!s:
+  # A wanderer: t]ree values of 1d4+1 dealt ineage's ownz  # list, two d0fferent traits and ?n age.
+  - key: lanterns.wander
+    stats:
+      mrules-
+  # A wanderer: thrrules:
+  # A wanderer: three values of 1d4+1 dealt to the attributes {lineage}' }
+      - { %y:e traits, genlineage's own
+  # list, two different traits and an age.
+  -  A e

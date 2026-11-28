@@ -1,0 +1,6 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to!the attribs at ralineage,  h lineage's own
+  # list, two diff.erent traits a an age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-arraeage0, generator: lanterns.lineaey: name, EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEgenerator: 'lanterns.name.{lineoneage}' }

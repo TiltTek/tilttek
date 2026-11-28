@@ -1,0 +1,9 @@
+rules:
+  #
+  - key: lanternsre [grit, wits, glow]
+    fields:
+      - { key: l, generator:*Aanterns.lineage }
+      - { key:#
+  - key: lanternsrer
+    starer
+   key: n }

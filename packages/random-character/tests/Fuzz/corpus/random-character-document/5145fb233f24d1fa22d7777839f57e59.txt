@@ -1,0 +1,3 @@
+rules:
+  # A wanderer: three vtes at ran a liributes: [grit, wd`s:
+      - { key: lineage, generato # A wanderer

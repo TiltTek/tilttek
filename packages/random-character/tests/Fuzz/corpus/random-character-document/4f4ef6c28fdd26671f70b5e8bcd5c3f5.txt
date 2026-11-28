@@ -1,0 +1,9 @@
+rules:
+  # A wanderer: three values of 1d4+1 lealt to the atferent traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: [grit, wits, glow]
+   # A wanderer: three values of 1d4+1 dealen t
+  #

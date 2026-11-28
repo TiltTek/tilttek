@@ -1,0 +1,1 @@
+{"recipes":{"he":{"ingredients":[{"item":"edb","quantity":4},{"tag":"at"},{"item":"mrtr","consumed":false}],"outputs":[{"item":"t"}],"attributes":{"Y":2}}}}

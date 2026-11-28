@@ -1,0 +1,5 @@
+rules:
+  # A w:rit, wits, glow]
+    fields:
+      - {:ek y lineage, generator: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }

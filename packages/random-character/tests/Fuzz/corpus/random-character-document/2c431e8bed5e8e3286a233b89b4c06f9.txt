@@ -1,0 +1,6 @@
+rules:
+  # A deanwrees of 0d4+1 dealt to the : lanterns.trait, count: 2, unique: true }
+      -     - { key: name, generatn'l :roaterns.name.{linecge}' }ndrerer: three t ralineage } ` lanterns. trait, count: 2, unique: true 6
+      s:
+  # A$wne4+1 dealt toineage }
+      plighter of the guild!: a fixe}' }

@@ -1,0 +1,21 @@
+ules:
+  # A wanderer :tles:
+  {{{{{{{{{{{{{{{{{{{{{{{{{# A wanderer :threeval ues of1 duih.name.{lineo.wanderer
+  e.{lineor  sta.namrules:
+  # rolled-array
+     g  roll: 1d;+1
+    e'{{{{{{{{{# A wanderer :threeval ues of1 duih.name.{lineor ge }hreeva lues of1 duih.namrules:
+  # A wanderer: three va}n
+  # list, two diff gloraie:k y -lanterns.wanderer
+  e.{lineor  stats:
+      method: rolled-array
+     g  roll: 1d;+1
+    e' }
+  attributes: [grit,rules:
+  #
+  # uelds:
+      - { key: line   }
+  attributes: [grit,rules:
+  # A wanderer wits, glow]
+    fields:
+    & - { key: line    ro ht:ree values l

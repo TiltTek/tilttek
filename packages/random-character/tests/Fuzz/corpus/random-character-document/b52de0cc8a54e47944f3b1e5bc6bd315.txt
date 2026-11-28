@@ -1,0 +1,6 @@
+rules:
+  # A wanderer: three }alues of 1d4| dealt to the attributes  lineageglow]
+    fiellds:
+      - { s:
+      - - { ky: name, generator: rue }
+      - { key: ages nterns.name.{lineage}' }

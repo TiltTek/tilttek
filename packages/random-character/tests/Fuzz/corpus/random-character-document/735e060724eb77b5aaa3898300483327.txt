@@ -1,0 +1,8 @@
+rules:
+  # Azwanderer: three values of 0d4+1 dealt to the attributes at     - { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 2, unique: true }
+      - { key: age, roll: 2d10+14 }
+  # Amla plighter of the guild: a fixed array deame, generator: 'lanterns.name.{lin' }
+      - { key: traits, generator: lanterns.trait, count: 2, unique: true }
+      - { key: : traits, generator: lanterns.trait, count: 2, unique: true }
+      - { key: age, roll: 2derns.name.{lineage}' }

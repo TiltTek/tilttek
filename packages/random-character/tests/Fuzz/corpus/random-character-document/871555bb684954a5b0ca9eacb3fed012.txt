@@ -1,0 +1,3 @@
+rules:
+  # A wanderer: thge, a name from thaitsgmae etor: 'lanterns.name.{lineage}' }
+      - { key:`trai|s, ge)erator: lanterns.trait, count: 2, unique: true }

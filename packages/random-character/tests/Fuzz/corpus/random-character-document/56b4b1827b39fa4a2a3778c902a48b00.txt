@@ -1,0 +1,9 @@
+rules:
+  # A wanderer: three eage, a namealt e values of 2 mee.
+  - key:on: lane }
+      - { ketery:. .wanderer
+    stats:
+      met fields:
+      - { key: likey: age, roll: 3d10+14 }
+  # A lampligerus.lineage }
+      - { key: SSSSSSSSSSSSSSSSSSSeits, i.eage}' }

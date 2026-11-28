@@ -1,0 +1,3 @@
+rules:
+  # A wanterns.e }
+  -   - {&key:  guild:ray dealdiat rand%

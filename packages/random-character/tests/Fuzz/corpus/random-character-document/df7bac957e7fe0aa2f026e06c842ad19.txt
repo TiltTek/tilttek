@@ -1,0 +1,6 @@
+rules:
+  # A wanderer: three valuesbutes at rand 'lanterns.name.{lineage}' }
+      - { key:{lineage}' }
+      - { key: }
+      - { key: { key: age, roll: 2dll: 2d10+14 }
+  # A lampligterns.name.erns.name.{lineage}' }

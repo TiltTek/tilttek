@@ -1,0 +1,11 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the attributes at random,butes: [grit, name from the linea_e's own
+  # list, two different traits and an age.
+  - key: lanterderer
+    stats:
+      method: rolled-array
+      roll: -1d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { fey: likey: age, roll: 2d10+14 }
+  # A lamplighter of the guild: aneage}' }

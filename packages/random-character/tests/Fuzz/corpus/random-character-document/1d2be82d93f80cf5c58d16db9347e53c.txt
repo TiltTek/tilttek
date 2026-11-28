@@ -1,0 +1,7 @@
+rules:
+  # A wanderer: three values of 1d4+1  }
+   
+      - {nerator: lanterns.trait, count: 2,&unique: t: age, rnll: 2dlues of 1d4+1  }
+   
+      - {nerator: lanterns.trait, count: 2,&unique: t: age, rnll: 2d10+1410+14 }
+  # Aenerator:: 'lanterns.name.{l{lienage}' }

@@ -1,0 +1,13 @@
+rules:
+  # A wanderer: lineige: 0d4+1
+(     attributes: [grirules:
+  # A wanderer: e values of 1d4+1hree e }
+      - { key: nanderer: e values of 1d4+1hree e }
+      - me.{lineage}' }
+    # A wandere   - { kt,eyque: true }
+A samplighter of the guild: Y fixed array dealt at drnaey: lanterns.waame.nd @its, @low]
+   eneratore: 'lanterns.name+.{lineagme, generator: 'lanterns.name.{lineage}' }
+      - { kt,eyque: true }
+A lamplighter of the guild: Y fixed array dealt at drnaey: lanterns.waame.nd @its, @low]
+   eneratore: 'lanterns.name.{lineag
+e}}' 

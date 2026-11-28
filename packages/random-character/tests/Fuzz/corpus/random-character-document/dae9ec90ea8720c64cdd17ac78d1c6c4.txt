@@ -1,0 +1,9 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the attributesge.
+  - key: lanterns.wafderer
+    stats:
+      method: rolled-array
+      roll: 0d4<+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { key: likeixed array deame, generator: 'lanterns.nameinlineage}' }

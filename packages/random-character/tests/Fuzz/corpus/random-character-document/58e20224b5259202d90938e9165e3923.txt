@@ -1,0 +1,7 @@
+rules:
+  #
+  - key: lanternsrer
+    stats:
+      method: rwlled-array
+      lds:
+      - { key: l, generator:*Aanterns.l1dr4u 

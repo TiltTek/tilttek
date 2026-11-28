@@ -1,0 +1,12 @@
+rules:
+   the lineage's own
+  # list, two different traits and an age.
+rules:
+  # A wa  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: [grit, wrules:
+  # A wandereent traits and an age.
+ ' }- key: lan
+  tern

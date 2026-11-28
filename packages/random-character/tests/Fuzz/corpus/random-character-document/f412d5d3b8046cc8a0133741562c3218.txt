@@ -1,0 +1,7 @@
+rules:
+ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!wn
+  # list, two different traits and an age.
+  - key: lanterns.wanderer
+    stat/:
+      method: rolledat/:
+      method: rolled-agenerator: 'lanterns.name.{lineage}' }

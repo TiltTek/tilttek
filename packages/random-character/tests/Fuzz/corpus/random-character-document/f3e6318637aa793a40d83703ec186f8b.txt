@@ -1,0 +1,6 @@
+rules:
+  # A walderer: three values of 1d4+1 de[grit, wnderer: three values of 1d4+1 dealt to the attributes t rannterns.lineage }
+      - { key: name, generator: 'lanter[ns.name.{lineage}+ }
+      - { key: traits, generator: lanterns.trait, count: 1! unique: true }
+      - { key: age, roll: 2d10+14 }
+  # A lampe, generator: 'lanterns.name.{lineage}' }

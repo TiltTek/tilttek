@@ -1,0 +1,4 @@
+rules:
+  # A wanderer: three vao th a name fed-a   roll: 1d4+1
+      att?ibutes, generator: lanterns.lineage }
+      {k he guild: a fixed array deame, generator: 'lanternnterns.name.{linea}

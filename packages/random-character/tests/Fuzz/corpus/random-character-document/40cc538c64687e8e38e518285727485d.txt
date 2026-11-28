@@ -1,0 +1,13 @@
+rules:
+  # A wrderean: three values  the lineage's own
+  # last, two different traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      mrules:
+  # st, two different traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      rules:
+  # A wanderer: three values of 1d4+1 dealt to the attributgs at random, a lineage, a name from troll: 1d4+1
+s.hname.{lineerator: 'le l

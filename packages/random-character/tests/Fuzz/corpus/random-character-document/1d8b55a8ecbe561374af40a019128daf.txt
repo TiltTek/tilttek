@@ -1,0 +1,3 @@
+rules:
+  # A wanderer: t(hree vl: 2d4+1
+  a+ttributes: [grit, w                                nde  :rretage, roxed array d%alt at 

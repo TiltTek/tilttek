@@ -1,0 +1,16 @@
+rules:
+  # A wanderer: lineige: 0d4+1
+(     attributes: [grirules:
+  # A wanderer: e vastats:
+      method: rolled-array
+      roll: 2d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { key: lineage, generator: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 2, unique: true }
+      - { key: age, roll: 2d10+14 }
+  # A lamplighter of the guild: a fixed array dealt at random, and a name.
+  - key: lanternay dealt at drnaey: lanterns.waame.nd @its, @low]
+   eneratoterns.name.{lineag
+e}}' 

@@ -1,0 +1,4 @@
+rules:
+  #er: three values }
+      - { key:{lineage}' }
+      - { key: trtrait, count: 1,& unique: drue{lineage}' }

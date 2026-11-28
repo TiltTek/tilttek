@@ -1,0 +1,6 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the attributes:
+      - { key: lineage, generator: lanterns.lineage }
+      - { key: SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS,SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSname, generator: 'lanterns.name.{lineage}'}
+      - { key: traits, generator: lanterns.trait, count: 2, unique:: 2d10+14 }
+  # A lampligterns.name.{lineage}' }

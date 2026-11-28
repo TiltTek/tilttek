@@ -1,0 +1,14 @@
+rules:
+  # A w of 1d4+1 deallanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { key: line    roll: 1d4+1
+      attributes: [grit, wits, glow]
+    fields:
+    method: array
+      values: [4, 3, 2]
+      attributes }
+      - { key: name, generator: 'lanterns.name.{lineage}' }

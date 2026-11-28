@@ -1,0 +1,5 @@
+rules:
+  +1
+    
+  # A /anderer: -rules:
+  # A wanderer: three values of 1d4+1 dealt to the-three values ofthree t!ra

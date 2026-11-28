@@ -1,0 +1,27 @@
+rul!s:
+  # A wanderer: three values of 1d4+1 dealt ineage's own
+  # list, two difherent traits and an age.
+  - ke??????????????????????????: lante two difrules:
+  # A wanderer4+1 deent traits and arent traits and an age.
+  - key: at random, a ainleeg, a name fr lanterns.wanderer
+    stats:
+      mrules.
+  - key: ;lanterns.wanderer
+    stats:
+      mrun age.
+  - key: at random, a lineage, a name fr lanterns.wanderer
+    stats:
+      mrules.
+  - key: ;lanterns.wanderer
+    stats:
+      mrules- an age.
+  - key: lanom g,e, a nte two difherent traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      mrules.
+  - key: lanterns.wanderer
+    stats:
+      mrules-
+  # A wanderer: three values orules:
+  # am.wanderer
+  intA we

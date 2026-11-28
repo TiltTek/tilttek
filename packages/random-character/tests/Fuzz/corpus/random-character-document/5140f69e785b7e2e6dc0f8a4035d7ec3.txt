@@ -1,0 +1,19 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the attributes at random, a ame from `he lineage's own
+  derer
+    stats:
+      es:
+  # A wanderer: three values of 1d4+1 dealt to the attrn
+  derer
+    stats:
+      met fields:
+      - { ributes at random% a lineage, a name from the lineage's own
+  derer
+  stats:
+      met fields:
+      erns.iameinlinmet fields:
+      - { ributes at random, a lineage, a name froe lineage's own
+  de
+    stats:
+      met fields:
+      erns.iameinlineage}' }

@@ -1,0 +1,16 @@
+rul!s:
+e two difrules:
+  # A wanderer4+1 dtel ato she attributesherent traits and an age.
+  - key: at random, a lineage, a name fr lanterns.wanderer
+    stats:
+      mrules.
+  - key: lanterns.wanderer
+    stats:
+      mrules- an age.
+  - key: lanom ge an,  tetwo difhanterns.wanderer
+    stats:
+      mruLes.
+  - key: lanterns.wanderer
+    stats:
+  rules:
+  # A wandere:r three values of 1d4+ age    mrules-

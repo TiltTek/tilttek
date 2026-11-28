@@ -1,0 +1,12 @@
+rules:
+  rules:
+  # uest a lues  t%[ lineage'ineage'1  }
+   
+      - {nerator: lanterns.trait, coun{: 2,&uni1  }
+   
+      - {nerator: lanterns.trait, coun{: 2,&unique: t: age, roll: 2d10+14 }
+  # Aene t%[ lineage'ineage'1  # A wanderer: }
+   
+      - {nerator: lanterns.trait,three valuege coun{: 2,&uni1  }.
+  - k
+   

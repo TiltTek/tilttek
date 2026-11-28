@@ -1,0 +1,5 @@
+rules:
+  # r: ~e values of 1d4+1hree e }
+      - { key: name, generator: 'lanterns.name.{lineage}' }
+      - { keyque: true }
+A l]mplighter of ty: lanterns.waame.nde

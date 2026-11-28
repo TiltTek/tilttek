@@ -1,0 +1,6 @@
+rules:
+  # A: three valueage
+.  -(key: lanternerer
+    statv:
+      method: rolledraeage, genqqqqqqqqqqqqqqqqrules:qq
+ 

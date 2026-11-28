@@ -1,0 +1,16 @@
+ules:
+  # A wanderer :tles:
+  {{{ of the guild: a fixed array dealt a( rs:
+      method: array
+      values: [4, 3, 2]
+      attributes: [grit, wits, glow]
+    fiel  # A waAnderer: three va}n
+  # list, two drules:
+  # A wanderer: three valuey of 0dandkm, rul!s:
+  # A wanderer: thre r age.
+  - key: lant  # n age: rollets, glow]
+    fiel  # A waAnderer: three va}n
+  # list, two drules:
+  # A wanderer: three values of 0dandkm,.
+   a lineage, a name iff gl/raie-:k y -lanter$ns.ganderer
+  e.{lineor #st +ey:es:

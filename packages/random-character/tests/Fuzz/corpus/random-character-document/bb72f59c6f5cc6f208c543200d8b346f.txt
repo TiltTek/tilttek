@@ -1,0 +1,9 @@
+rues:
+  # A erer: three valuesalues of 1do the alanterns.li'sce.
+  - key: lanterns.erer
+    stats:
+      met fields:
+      - { key: likey: age, `o,l: 3d10+14 }
+  # A la}
+      - { key: e}' }ag
+e

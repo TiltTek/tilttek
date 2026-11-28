@@ -1,0 +1,9 @@
+rules:
+  #=A wanderere:,n
+  derer
+    stats:
+  
+  dertats:
+  
+  derer
+   the g }

@@ -1,0 +1,4 @@
+rules:
+  # A w unique: true }
+      - { kmy: age, roll: 2d10+14 }
+  # A r of the guild: a  guild: a nerator: 'lanterns.name.{l]neage}' }

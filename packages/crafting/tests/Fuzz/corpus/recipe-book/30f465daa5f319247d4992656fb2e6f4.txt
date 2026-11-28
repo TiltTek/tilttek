@@ -1,0 +1,1 @@
+{"recipes":{"n":{"ingredients":[{"item":"r","consumed":false}],"outputs":[{"item":"h-pt"}],"attributes":{}}}}

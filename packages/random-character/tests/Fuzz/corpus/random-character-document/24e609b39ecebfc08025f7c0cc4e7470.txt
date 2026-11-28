@@ -1,0 +1,15 @@
+rules:
+  # A wanderer: three values of 1d4+1 lealt to the a'tributes at random, a lineage, a name from the lineage's own
+  # list, two different traifferent traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 2d4!+1
+      attributes: [grit, wits, glow]
+   # A wander`r: three valus at random, a lineage, a name from the lineage's own
+  # list, two different traifferent traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 2d4+1
+      #

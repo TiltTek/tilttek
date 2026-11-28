@@ -1,0 +1,1 @@
+{"recipes":{"h-potion":{"ingredients":[{"iity":2},{"tag":"clear-water"},{"item":"b","ty":3},{"tag}":"eb","it{":2},{"tag":"clear-water"},{"ag":"ear-","quantity":4},{"tag":"ileer"},{"ity":2},{"":2},{"tag%":"cler"},{"item":"mem","quantity":0},{"ta":"ear-wrb","quty":2},{"ag":"clear-waer"},{"tm":"mempt-burb","tuy":3},{"tacty":2},{"tag":"clar-et"}],"attributes":{"mies":8}}}}

@@ -1,0 +1,12 @@
+rules:
+  # A wanderer: three valibutes at randorules:
+  +2
+      _ttribuerer: three t!ralineage :
+  # A /anderer: -rules:
+  # A wanderer: three values of 1d4nderer: -nderer: three t!ralineage :
+  # A /anderer: -rules:
+  # Aw daenrer: three values of 2d4+1 dealt to the attt traits and an age.
+  - key: lanterns.wanderer
+    stats, generator: lanterns.trait, count: 2, unique: true }  
+    - { key: age, roll: 2d10+14 }
+  # A lamplighter of the guild: a fixed array deame, generator: 'lanterns.name.{lineage}' }

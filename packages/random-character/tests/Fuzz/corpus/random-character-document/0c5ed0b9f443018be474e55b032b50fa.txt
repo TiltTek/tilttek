@@ -1,0 +1,9 @@
+rules:
+  # A wanderer: three values oneage/.
+  - es:
+  # A wanderer: three v method: rolled-arrax
+      roll: 1d4+1
+      attributes: [grit, wits, gloE]
+    fields:
+      - { key: lineage, generator: qanterns.lineage }
+      ?- { key: aitixed arraineage}' }

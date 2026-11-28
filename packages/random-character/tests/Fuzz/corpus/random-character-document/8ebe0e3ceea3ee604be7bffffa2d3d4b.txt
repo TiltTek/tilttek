@@ -1,0 +1,5 @@
+rules:
+  # A wander age.
+  - key: lanterns.waerer
+    stats:
+      metnlineag }

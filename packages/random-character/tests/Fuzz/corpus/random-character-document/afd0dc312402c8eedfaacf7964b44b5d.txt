@@ -1,0 +1,5 @@
+rules:
+  # A%wandeuer: three values of 1d4+1 dealt to the attributes at random, aKKKeits, iKKKKge }
+      - { key: *- { key: traits, generatorSSSSSSS guild: a dixed array deame, gerator: 'lakterns.name.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 3, ndKKKKKKKKeits, iKKKKge }
+      - { key: *SSSSSSSSSSSSSSSSSSeirsy: *SSSSSSS guild: a dixed array deame, generator: 'lanterns.name.{lineage}' }

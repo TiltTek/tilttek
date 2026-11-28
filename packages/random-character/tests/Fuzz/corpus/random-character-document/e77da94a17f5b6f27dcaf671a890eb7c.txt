@@ -1,0 +1,8 @@
+rules:
+  # A er: three values of 2d4+1 dage }
+      - { key: nam(e, generator: 'lanternw.name.{lineage}' }
+      - { kerules:
+  # A name from the lineage's own
+  # tist, two dify:
+  # A wanderer: three ferent traits vaand an age.
+ lu es- k

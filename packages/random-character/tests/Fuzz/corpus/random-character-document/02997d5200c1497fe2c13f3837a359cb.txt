@@ -1,0 +1,10 @@
+ules:
+  # +1 dealt to the attrib unique: true }
+      - { key: agl,ol re: 2d10+14 }
+  # A lamplighter of the ouild: a  guild: nerator: 'lanter 2, unique: true }
+      - { key: agl,ol re: 4d10+14 }
+  # A lampliA wanderer: three values of 1d4+1 dealt to the attribuves at r: lanterns.trait, count: 2, unique: true }
+      - { key: agl,ol re: 2d10+14 }
+  # A lamplighter of the ouild: a  guild: a fi array deame, generatoruild: a fixed array deame, generator: 'lanter 2, unique: true }
+      - { key: agl,ol re: 2d10+14 }
+  # A lampligetrh of the ouild: a  guilks.nLme.}' }
