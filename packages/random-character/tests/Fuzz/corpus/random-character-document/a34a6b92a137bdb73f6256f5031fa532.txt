@@ -1,0 +1,7 @@
+rules:
+  # A wadenrer: three values of 1d4+1 dealt to tge attributes at randmo, a lineage,)a n,name.{lineage}' }
+   les:
+  # A wanderer: three values of 1d4+1 dealt to the attributes at randmo, a lineage,)a n,name.{lineage}' }
+      - { %y:e traits, genera,name.{lineage}' }
+      - { %y:e traits, generator: lanterns.trait, count: 2hter of the guild: a fixed array deame, genrules:
+  # A wanderer: threo values of 1eratoruild: a fixed array deame, geno fit

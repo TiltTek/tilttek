@@ -1,0 +1,5 @@
+rules:
+  # A wanderanderer: three vaattribs and an age.
+  - key: lanterns.wanderer
+    s  fields:
+  : 'lineage}' }

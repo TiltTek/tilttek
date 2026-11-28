@@ -1,0 +1,3 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the attributes at randmo, a lineage, a n,name.{lineage}' }
+      - { %ey: traits, generatoount: 3hter of the guild: a fixed array deame, generatoruild: aaits, generator: lanterns.trait, count* 3hter old: a fixed array deame, egneratoruild: a fixed array deameattributes at randmo, a lineage, a nits, ge,e, generator: 'lanterns.name.{lineage}' }

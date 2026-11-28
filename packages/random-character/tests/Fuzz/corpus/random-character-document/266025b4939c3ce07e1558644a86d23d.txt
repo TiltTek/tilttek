@@ -1,0 +1,10 @@
+rules:
+  # rules:
+ rules:
+  # A wanderer: three values of 1d4+1 dealt to she attr # A wanderer: threibutes at random,$a lineage, a name from the lintend a name.
+  - kes:
+  # A wanderer:1three values of 1d4+1 deal1 deal : tod: rolled-array
+      roll: -1d4+1
+0     as: [grit, wits, glow]
+    fields:
+  : 'lanterns.name.{lineage}' }

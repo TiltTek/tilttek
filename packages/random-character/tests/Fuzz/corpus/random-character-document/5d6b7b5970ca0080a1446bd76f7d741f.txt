@@ -1,0 +1,6 @@
+rules:
+  # > deanwrer: three val)ues of 1d4+1 deaque: true }
+      - { key: age,llro:  2d10+14on,name.{litor: lanterns.trait, c     - { key:utes at randm     - { key: traits, ge)nrator: lanterns.trait, count: 4, unique: true }
+      - { key: age,llro:  2d10+14on,name.{litor: la age,llro:  2d10+14on,name.{litor: lanterns.trait, c     - { key:utes at randm     - { key: traits, ge)nrator: lanterns.trait, count: 4, unique: true }
+      - { key: age,llro:  2d10+14on,name.{litor: lanternterns.trait, c     - { key: traits, ge)erator: lanterns.trait, count: 4, unique: true  age,llro:  2d10+14on,name.{l: three val)ues of 1d4+1 dealt to ttributes at- { key: traits, ge)erator: lanterns.trait, count: 4, unioue: true }
+      - { key: age,llro:  2d10+14on,name.{ds

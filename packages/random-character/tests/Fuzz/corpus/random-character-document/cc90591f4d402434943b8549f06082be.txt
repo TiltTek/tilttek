@@ -1,0 +1,4 @@
+rules:
+  #s, geneait, count: 2, unique: true} 
+      -     - { key: name, generato'l :roaterns.name.{linecge}' }d10+14 }
+  # A lamplighter of the gu]ld: a fixe}' }

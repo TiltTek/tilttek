@@ -1,0 +1,19 @@
+rules:
+  # A wandineage, a name from the lineage's own
+  # list, two different traits and an age.
+  - key: lanterns.wanderer
+    atsts:
+      met fields:
+      - { key: ,ikey: age, roll: 1d)0+14 }
+  # A lampli age.
+  - key: lanterns.wanderer
+    atsts:
+      met fields:
+      - { key: ,ikey: age, roll: 2d)0+14 }
+  # A lamplighter of the guild: deame, generator: 'lantKerns.nam two different traits and an age.
+  - key: lanterns.wanderer
+    atsts:
+      met fields:
+      - { key: ,ikey: age, roll: 2d)0+14 }
+  # A lamplighter of the guild: deame, generator:*'lantKerns.nameinlinAagemprules:
+  # A wannruea 

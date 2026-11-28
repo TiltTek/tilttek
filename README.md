@@ -68,6 +68,9 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/writing-goals`](https://github.com/TiltTek/writing-goals) | An author's writing goals: a target in words or pages, a plan on a curve, a daily quota recomputed from what remains, no streak counted. |
 | [`tilttek/seasonal-events`](https://github.com/TiltTek/seasonal-events) | Yearly seasons by RFC 5545 rule, with their contents and the multipliers they announce. |
 | [`tilttek/sets`](https://github.com/TiltTek/sets) | Versioned sets with tiers and rewards: a neutral building block that collections and badges build on. |
+| [`tilttek/sets-bundle`](https://github.com/TiltTek/sets-bundle) | Use tilttek/sets in Symfony: stores chosen by configuration, and completions whose event was lost sent again by a command or a schedule. |
+| [`tilttek/celebrations`](https://github.com/TiltTek/celebrations) | Celebrate each reward a member earns exactly once: an inbox that gathers achievements from any package, groups them and honours reduced motion. |
+| [`tilttek/crafting`](https://github.com/TiltTek/crafting) | Item recipes kept as data: combine or evolve items, by code or by tag, see what is missing before crafting, and craft once per request, all or nothing. |
 | [`tilttek/stickers`](https://github.com/TiltTek/stickers) | Stickers placed on surfaces, with limits per surface and per holder, and moderation. |
 | [`tilttek/bingo`](https://github.com/TiltTek/bingo) | Bingo with cards drawn from a server secret, printed cards that can be verified, and wins checked on the server. |
 | [`tilttek/raffle`](https://github.com/TiltTek/raffle) | Raffles with one chance per entrant and none for sale: the entrant list is fixed and hashed first, and anyone can check the draw was fair. |
@@ -107,6 +110,33 @@ then split into its own **read-only** repository, from which Composer installs i
 | [`tilttek/mini-games`](https://github.com/TiltTek/mini-games) | Small games played alone, with a daily game everyone shares, results shared without spoilers and no streak that punishes a missed day. |
 | [`tilttek/tournament`](https://github.com/TiltTek/tournament) | Run tournaments in Swiss rounds, pools or elimination, with fair pairings, players dropping out and tie-breakers declared in order. |
 | [`tilttek/math-trade`](https://github.com/TiltTek/math-trade) | Math trades for games: from everyone's offers and ranked wishes, find the most trades as loops, each gives one and receives one, reproducible from a seed. |
+| [`tilttek/tavern-games`](https://github.com/TiltTek/tavern-games) | Classic dice and card games for a tavern table online, turn by turn: fair dice and shuffles, each player sent only their own cards. |
+
+### Role-playing games
+
+| Package | Description |
+|---|---|
+| [`tilttek/rpg-systems`](https://github.com/TiltTek/rpg-systems) | Describe a role-playing game system once so every tool reads it: attributes, rolls, terms, translations, and the source and licence of every record. |
+| [`tilttek/reference-tables`](https://github.com/TiltTek/reference-tables) | Look up a game system's reference tables during play, by key or by range, or roll them with their die; each table keeps its source, licence and page. |
+| [`tilttek/rules-lookup`](https://github.com/TiltTek/rules-lookup) | Search the rules of a game system, SRD included, in the reader's language: every result shows the source and licence it comes from. |
+| [`tilttek/random-character`](https://github.com/TiltTek/random-character) | Roll a ready-to-play character by the creation rules a game system declares: attributes in their bounds, names and traits from tables, replayable from a seed. |
+| [`tilttek/encounter`](https://github.com/TiltTek/encounter) | Prepare game encounters balanced by the difficulty rules each game system declares, then hand the combatants to any initiative tracker. |
+| [`tilttek/initiative-cards`](https://github.com/TiltTek/initiative-cards) | Turn order dealt from a card deck each round: hidden combatants, defeated ones faded and skipped, players ending their own turns and naming who goes next. |
+| [`tilttek/party`](https://github.com/TiltTek/party) | Track who is in a campaign party, the purse, loot and notes they share, and which roles of their game system the party lacks or crowds. |
+| [`tilttek/inventory`](https://github.com/TiltTek/inventory) | Track what characters and parties carry in play: item quantities, containers, who holds what, weight or slots by the system's rules, and a change log. |
+| [`tilttek/downtime`](https://github.com/TiltTek/downtime) | Track what characters do between sessions: activities the game system declares, with their days, costs and outcomes, in a log per character. |
+| [`tilttek/factions`](https://github.com/TiltTek/factions) | Track where the party and each character stand with the factions of a campaign: named tiers, ranks, relations between factions, every change with its reason. |
+| [`tilttek/table-rules`](https://github.com/TiltTek/table-rules) | Keep a table's house rules versioned, accepted by each player and re-accepted when they change, with what changed between versions; system-neutral. |
+| [`tilttek/grid`](https://github.com/TiltTek/grid) | Measure, snap and align game maps exactly: square, hex and isometric grids with coordinates, distances, lines of sight and areas of effect, without floats. |
+
+### Game collections and game nights
+
+| Package | Description |
+|---|---|
+| [`tilttek/game-catalog`](https://github.com/TiltTek/game-catalog) | Keep one catalogue of board and role-playing games: open database identifiers, errata, member corrections kept apart, and collections imported by file. |
+| [`tilttek/game-shelf`](https://github.com/TiltTek/game-shelf) | Know which games each member owns, trades and wants: copies with their statuses, a wishlist in their own order, private notes, collection import and CSV export. |
+| [`tilttek/play-log`](https://github.com/TiltTek/play-log) | Log who played which game, when, how long, with scores and winners; players stay anonymous until they confirm, and statistics per member or group. |
+| [`tilttek/game-night`](https://github.com/TiltTek/game-night) | Run the game nights of a club or store: tables and seats, sign-ups with a guest and a waiting list, games picked for the players and the time, a vote. |
 
 ### Calendars
 
@@ -114,6 +144,7 @@ then split into its own **read-only** repository, from which Composer installs i
 |---|---|
 | [`tilttek/geek-dates`](https://github.com/TiltTek/geek-dates) | Show geek culture days on the right date every year: rules such as "last friday of july", each with its source, community and the day it was checked. |
 | [`tilttek/rpg-calendar-events`](https://github.com/TiltTek/rpg-calendar-events) | Show roleplaying community events on the right date every year, and the day index of a month of daily prompts: rules with their source, ready for quests. |
+| [`tilttek/fantasy-calendar`](https://github.com/TiltTek/fantasy-calendar) | Keep time in an imaginary world: its own months, weeks, leap years, moons, eras and seasons, linked calendars, ages, reminders and a date that moves on. |
 
 Every package is at `0.x`: its API may still change between minor versions, as its CHANGELOG records.
 

@@ -1,0 +1,8 @@
+rules:
+  # A wanderer: three velferent traits and an age.
+  - key:RRRRRRRRRRRRRRRRR&lanterns.wanderLr
+    stats:
+      method: rol~led-array
+      roll: 1d4+1
+      attributes: [gliwits,e glov]tho
+d: ro

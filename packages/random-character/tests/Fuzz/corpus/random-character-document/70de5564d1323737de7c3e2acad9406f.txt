@@ -1,0 +1,6 @@
+rules:
+  # A wanderer: three values s own
+  # list, two different traits lanterns.lineage }
+      - { key: name, generator: 'lanterns,name.{lineage}' }
+      - { %ey: traiunique: true }
+      - { key: age, r  - { %ey: traits, generator: lanterns.tra+7erns.name.{lineage}' }

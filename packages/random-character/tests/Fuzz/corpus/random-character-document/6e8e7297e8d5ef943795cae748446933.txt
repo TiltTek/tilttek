@@ -1,0 +1,11 @@
+rules:
+  # A wuesof 1d4+1 dealt to the attrir
+    stats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: [grit, wits, glglow]
+    fields:
+      - { key: lineage, generator: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, generator: lae from thait, co: 4d10+14 }
+  # A lampligterns.name.{lineage}' }

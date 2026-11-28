@@ -1,0 +1,25 @@
+rules:
+  # A wanderer: three values of 2d4+1 aits and an age.
+  - key:; lanterns.wanderer
+    stats:
+      method: rolle;-array
+      roll: 1d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { key: likey: age, roll: 2d1f the guild: a fixed aame, generator: 'lanterns.manei and an age.
+  - key:; lanterns.wanderer
+    stats:
+      method: rolle;-array
+      roll: 0d4+1
+      attribute [grit, wits, glow]
+    fields:
+      - { key: likey: age, roll: 2d1f the guild: a fixed atame, generator: 'lanterns.manei and an age.
+  - key:; lanterns.wanderer
+    statm:
+      method: rolle;-array
+      roll: 1d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { key: likey: age, s: [grit, wits, glow]
+    fields:
+      - { key: likey: age, roll: 2d1f the guild:nameinlineagens.nameinlineage}' }

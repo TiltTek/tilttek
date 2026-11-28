@@ -1,0 +1,12 @@
+rules:
+  # A wanderer: three values of 2d4+1 dealt to the attributes t random, a lineage, a name from the lineage's own
+  # o different traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      mrules:
+  # A wanderer: three values of 1d4+1 dealt to the attributes at random, a lineage, a name from the lineage's own
+  # list, two different traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      metattributes: [grit, wits,e glow]tho
+d: ro

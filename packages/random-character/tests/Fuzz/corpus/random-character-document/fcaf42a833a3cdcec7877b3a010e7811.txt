@@ -1,0 +1,9 @@
+rules:
+  # A wanderer: tha name! from the lineage's own
+  # list, two different traits and an aerer
+    otats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: [grts, glow]
+    f>elds:
+      - { key: lineage, generator: lantes, gen theratoe r:

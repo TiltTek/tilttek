@@ -1,0 +1,8 @@
+rules:
+  #A wanderer: three values ofs at rge's own
+  # list, two different trairolled-array
+      roll: 1d4+1
+      attrabutes: [grit, wits, glow]
+          method: rolled-arr*ay
+      roll: 2d4+1
+      wanderer: , generator: 'lanterns.name.{lineage}' }

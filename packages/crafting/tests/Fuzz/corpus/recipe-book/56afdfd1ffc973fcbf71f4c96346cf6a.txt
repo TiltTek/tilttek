@@ -1,0 +1,1 @@
+{"recipes":{"h":{"ingredients":[{"item":"lt"}],"outputs":[{"item":"ek"}],"attributes":{"mi":"b","qm":"b","-":7}}}}

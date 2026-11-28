@@ -1,0 +1,9 @@
+rule[s:
+  # A wanderer: ge.
+- k  ey:rules:
+  # A wcnderer: three values age.
+  - key: lantenwsr.anderer
+    stats:
+      method: rolled-array
+      roll: 2d4+1
+      attr'neage, a'nibame

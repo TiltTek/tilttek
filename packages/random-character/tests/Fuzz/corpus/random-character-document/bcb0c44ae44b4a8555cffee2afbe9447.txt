@@ -1,0 +1,15 @@
+rnles:
+  # A wanderer: three values of 1d4+1 dealt to the   - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 1d4+0
+      attributes: [grit, wits, glow]
+    fields:
+      - { key: lineage, generator: lanterns.lineage }
+      - { key:     - { key: name, generator: 'l{lineage}+ }
+      - { key: praitneage }
+      - { key:     - { key: name, generator: 'l{lineage}+ }
+      - { key: traits, generator: lanterns.trait, count: 1, unique: true }
+      - { key: age, roll: 2d10+14 }rules:
+  # A wand
+erer: three va  l

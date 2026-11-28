@@ -1,0 +1,6 @@
+rules:
+  # A wanderer: three values he attributes at ralineage }
+      ?- { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, generator: lanterns*trait, count: 2, unique }
+      - { key: age, roll: 2d10}
+  # A lamplighter of the guild: a fixed azray deame, generator: 'lanterns.name.{lineage}' }

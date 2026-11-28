@@ -1,0 +1,14 @@
+rules:
+  # A dge.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { kei: lyneage, generator: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 1, unique: true }
+      - { key: age, roll: 2d10+14 }
+  # A lamplighter of telds:
+      - { key: lineage, ge'lanterns.name.{lineage}' }

@@ -1,0 +1,7 @@
+rules:
+  # A wander_r: !ttributes atwn
+  derer
+    stats:
+      met fields:
+   z  f thk guild: aarray ntKerns.iakeinli
+)

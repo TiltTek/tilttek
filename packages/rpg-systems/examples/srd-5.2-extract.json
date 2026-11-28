@@ -1,0 +1,24 @@
+{
+    "ability-scores": [
+        {"index": "str", "name": "STR", "full_name": "Strength", "desc": ["Physical might."]},
+        {"index": "dex", "name": "DEX", "full_name": "Dexterity", "desc": ["Agility and reflexes."]},
+        {"index": "con", "name": "CON", "full_name": "Constitution"},
+        {"index": "int", "name": "INT", "full_name": "Intelligence"},
+        {"index": "wis", "name": "WIS", "full_name": "Wisdom"},
+        {"index": "cha", "name": "CHA", "full_name": "Charisma"}
+    ],
+    "skills": [
+        {"index": "acrobatics", "name": "Acrobatics"},
+        {"index": "sleight-of-hand", "name": "Sleight of Hand"}
+    ],
+    "conditions": [
+        {"index": "blinded", "name": "Blinded", "desc": ["The creature cannot see.", "Its sight-based checks fail."]},
+        {"index": "prone", "name": "Prone", "desc": "The creature lies on the ground."}
+    ],
+    "damage-types": [
+        {"index": "fire", "name": "Fire"}
+    ],
+    "monsters": [
+        {"index": "left-out", "name": "A table the profile does not name"}
+    ]
+}

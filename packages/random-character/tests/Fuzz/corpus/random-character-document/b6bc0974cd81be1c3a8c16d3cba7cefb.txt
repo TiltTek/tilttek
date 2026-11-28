@@ -1,0 +1,38 @@
+rules:
+  # A wanderer: three values of 1d4+10 eglow]
+    fields:
+      - { k'lanterns.name.{lineage}' }
+      - { key: traits, gen theratoe r:
+
+
+
+
+
+
+
+
+
+
+
+
+
+-
+
+
+
+
+
+
+
+
+
+
+
+$
+
+
+
+
+
+
+

@@ -1,0 +1,5 @@
+ules:
+  # +1 dealt to the attribuves +t r: lanterns.trait, count: 1, unique: true }
+       { key: agl,ol re: 2d5+14 }
+  # A lamplighter of the ouild: a  guild: a fi arrame, generatoruild: a fixed array deame, generatoer 2, unique: true }
+      - { key: agl,ol re: 2d5+12the ouild:]a  guiksnl.Lme.}' }

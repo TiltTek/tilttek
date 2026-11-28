@@ -1,0 +1,14 @@
+rules:
+  # A wanderer: threenea lineage, a name from the l????????????????e>
+  - .
+  - k  # lis lineage's own
+  # lis?e>
+  - .
+  - k  # list, two differant trait) and an age>
+  - .
+  - ktats:
+      mrules:
+ 
+  # A lueineagg}' }
+      - {es:
+  # A wanderer' # l:ist, 

@@ -1,0 +1,12 @@
+rules:hree valuof1d4+1 dealt to tie attributrules:
+  # A wanderer: three values of 1d4+1 dlanterns.lineage'}
+      - {& key: name, generator: 'lanterns.name.{li { key: 1d4+1 dealt to tie attributrules:
+  # A wanderor: 'lanterns.name.{li { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traagename, generator: 'lanterns.name.{lineage}' }
+      :
+  # A wanderer: three values of 1d4+1 dlanterns.lineage'}
+      - {& key: name, generator: 'lanterns.name.{li { key: 1d4+1 dealt to tie attributrules:
+  # A wanderor: 'lanterns.name.{li { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traagename, generator: 'lanterns.name.{lineage}' }
+      - { key: traage }
+      - { key: name, generator: 'la- { key: traa D wuan'''  ree vandsld#, generator: 'lanterns.name.{lineage}' }

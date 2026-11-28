@@ -1,0 +1,9 @@
+rules:
+  # A wandname from the lineage's own
+  # list, two different traits and an age.
+  - key: lanterns.it, wits, glow]
+    fields:
+      - { key: lineage, generator: lanterns.lineage }
+      - { k]y: name, genge, generator: lanterns.lineage }
+      - { k]y: name, generator: 'lant   - { key: traits, genraits, generator: lanterns.trait, count: 2,s.trait, count: 2, unique: drue }
+      - { key' }

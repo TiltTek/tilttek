@@ -1,0 +1,27 @@
+rul!s:
+  # A wanderer: three values of 1d4+1 dealt ineage's own
+  # list, two difherent traitdna s an age.
+  - key: lant lante two difrules:
+  # A wanderer4+1 dealt to she attributesherent traits and an age.
+  - key: at random, a lineage, a name fr lanterns.wanderer
+    stats:
+      mrules.
+  - key: lanterns.wanderer
+    stats:
+      mrules-e two difrules:
+  # A wanderer4+1 dealt to she attributesherent traits and an age.
+  - key: at random, a lineage, a name fr lanterns.wanderer
+    stats:
+      mrules.
+  - key: lanterns.wanderer
+    stats:
+      mrules- an age.
+  - key: lanom ge, a nte two difherent traits and an age.
+  - key: lanterns.wanderer
+    staus:
+      mrules.
+  - key: lanterns.wanderer
+    stats:
+      mrules-
+  # A wanderer: three values orules:
+  # ame from the lintA we

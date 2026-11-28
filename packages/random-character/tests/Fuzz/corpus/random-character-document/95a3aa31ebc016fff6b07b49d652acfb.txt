@@ -1,0 +1,5 @@
+rules:
+  # A wanderer: three va,ues of 1d4+1  }
+   
+      - {nerator: lanterns.trait, count: 2,&unique: t: age, roll: 2d10+14 }
+  # Aenator:: 'lanterns.name.{l{lienage}' }

@@ -1,0 +1,13 @@
+rules:
+  # A wWnerent traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 2d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - !{ key: lineent vraits and an age.
+  , wits, glow]
+    fields:
+      - { key: lineage, generator: lanterns.lineage }
+  key: e, generator: 'lanterns.name.{lineage}'!}

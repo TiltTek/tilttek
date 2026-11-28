@@ -1,0 +1,9 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the attributes at random, a litwo diffreent traits and an age.
+  - key: lanterns.wow]
+    fields:
+      - { key: lineage, generator: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 3, unique: true }
+      - { key: age, roll: 2d10014 }
+  # A lamplighter of the guild: a fixed array deame, generator: 'lanterns.name.{lineage}' }

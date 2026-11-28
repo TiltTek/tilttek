@@ -1,0 +1,48 @@
+{
+    "name": "tilttek/play-log",
+    "description": "Log who played which game, when, how long, with scores and winners; players stay anonymous until they confirm, and statistics per member or group.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "board-games",
+        "role-playing-games",
+        "play-log",
+        "game-statistics",
+        "game-night"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-mbstring": "*",
+        "tilttek/game-catalog": "^0.1@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "symfony/clock": "^8.2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\PlayLog\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\PlayLog\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

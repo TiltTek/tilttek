@@ -1,0 +1,1 @@
+{"recipes":{"hen":{"ingredients":[{"item":"-eb","quantity":4},{"tag":"-water"},{"item":"mr","consumed":false}],"outputs":[{"item":"eoton"}],"returns":[{"item":"mket"}],"attributes":{"mi":"rrb","ttynutes":2}}}}

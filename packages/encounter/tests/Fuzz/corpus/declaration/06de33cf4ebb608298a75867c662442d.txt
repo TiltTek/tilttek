@@ -1,0 +1,1 @@
+{"method":"budget","system":"s","bands":["low"],"budgets":{"1":{"low":598}},"costs":{"1":25},"multipliers":[{"from":4,"percent":75}]}

@@ -1,0 +1,5 @@
+rules:
+  # A wanderer: thme.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 2, unique: tru key: lineage, generator: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{li [anterns.rtrait, count: 2, uniules:
+  # A wandereque:r

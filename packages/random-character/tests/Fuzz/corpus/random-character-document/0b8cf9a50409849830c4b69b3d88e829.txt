@@ -1,0 +1,4 @@
+rules:
+  # A wanderer: threvae lues o wanderer: three values of 1d4n]erer: -nderer: three t!ralineage :/anderer: -rules:
+  # A wanderer: three values of 1d4n]erer: --nderer: -rules:
+  # A wanderer: threeealme, generator: 'lanterns.name.{lineage}' }

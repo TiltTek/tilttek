@@ -1,0 +1,7 @@
+rules:
+  # lintend a name.
+ "- key: lant\r+tesme. anodrm, a lineage,a anm e from gen  aa,m* from the lintend a name.
+ "- key: lant\rns.lamplighter
+    stats:
+     _method: array
+    ` values: [5,orantge}' }

@@ -1,0 +1,30 @@
+# The tables the creation rules of `lanterns.yaml` draw from, in the format of tilttek/generator.
+lists:
+  lanterns.lineage:
+    source: Lanterns in the Dark
+    licence: owned
+    entries:
+      - river
+      - ash
+      - hollow
+  lanterns.name.river:
+    entries: [Maren, Tobin, Isla, Corin]
+  lanterns.name.ash:
+    entries: [Kesh, Varra, Dunmo, Sil]
+  lanterns.name.hollow:
+    entries: [Pell, Wyn, Orrin, Tamsa]
+  lanterns.trait:
+    source: Lanterns in the Dark
+    licence: owned
+    entries: [patient, reckless, curious, gentle, stubborn, wry]
+generators:
+  lanterns.lineage:
+    templates: "{{ pick('lanterns.lineage') }}"
+  lanterns.name.river:
+    templates: "{{ pick('lanterns.name.river') }}"
+  lanterns.name.ash:
+    templates: "{{ pick('lanterns.name.ash') }}"
+  lanterns.name.hollow:
+    templates: "{{ pick('lanterns.name.hollow') }}"
+  lanterns.trait:
+    templates: "{{ pick('lanterns.trait') }}"

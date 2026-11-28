@@ -1,0 +1,7 @@
+rules:
+  # A wan'd
+ "- key: lant\r+telant\rns.lamplighter
+    ss:
+  
+  - key.
+  - : lantkeA  ` values: [4,o|antge}' }

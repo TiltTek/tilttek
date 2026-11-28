@@ -1,0 +1,18 @@
+rules:
+  # A wanderer: lineige: 0d4+1
+(     atdributes: [grirules:
+  # A wanderer: e values of 1d4+1hree e }
+      - raits and aln ag%.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { key: lineage, generator: lanterns.lineage }
+      - { key: namey: age, roll: 2d10+14 }
+  # A lamplighter of the guild: a fixed array dealt at random, and a name.
+  - key: lanternay d+1
+      attributes: [grit, wits, glow] @low]
+   eneratore: 'lanterns.name.{lineag
+e}}' 

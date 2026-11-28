@@ -1,0 +1,11 @@
+rules:
+  # A wanderer: thdifferent Araits and an age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 2d4+1
+      attrabutes: [grit, wits, glow]
+    fields:
+      - { key: lineage10+14 }
+  # A lampligr: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }

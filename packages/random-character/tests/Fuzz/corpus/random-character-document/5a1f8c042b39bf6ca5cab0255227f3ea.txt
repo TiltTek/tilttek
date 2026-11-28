@@ -1,0 +1,7 @@
+rules:
+  # A wanderer: thrator: 'lanterns.name.{lineage}' }
+      - { %ey:erarules:
+  # A wanderer: rom the lineage's own
+  # list, res:
+  # A wanderer: three values of 0d4+1tor: lanterns.t key: name, generator: 'lanterns.namie attributrules:
+  # A wanderer: three values of 1d4+1 deal countt

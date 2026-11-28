@@ -1,0 +1,7 @@
+rules:
+  #r: thrge's own
+   -
+: reus:
+  #r: t own
+   -
+: reu  # A wan: lanterns.w

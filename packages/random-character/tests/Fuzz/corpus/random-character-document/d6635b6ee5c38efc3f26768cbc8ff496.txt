@@ -1,0 +1,21 @@
+rul!s:
+  # A wanderer: three values of 1d4+1 dealt ineage's own
+  # list, two difherent traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      mrules-
+  # A wanderer: three values orul!s:
+  # A wanderer: three values of 1d4+1 dealt ineage's own
+  # list, two difherent traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      mrules-
+  # A wanderer: three values of'0d4+1 de values of 1d4+1 dealt ineage's own
+  # list, two difherent traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      mrules-
+  # A wanderer: three values orul!s:
+  # A wanderer: three values of 1d4+1 dealt ineage's own
+  # list, two diferent traitttributes: [grit, wits,e glow]tho
+d: ro

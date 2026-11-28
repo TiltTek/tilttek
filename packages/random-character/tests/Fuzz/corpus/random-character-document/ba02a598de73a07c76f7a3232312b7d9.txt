@@ -1,0 +1,8 @@
+rul!s:
+  # A wanderer: thre random, a me from tge.
+  - key: lanterns.was own
+  # list( two different traits and&an age.
+  - key: lanterns.ws qwnneage'and&an age.
+  - key: lanterns.wan's own
+  # lisSt, rom the lineage's own
+  # list t,wo to

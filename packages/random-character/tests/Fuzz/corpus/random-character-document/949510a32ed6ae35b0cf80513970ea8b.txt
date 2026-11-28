@@ -1,0 +1,4 @@
+rules:
+  # A wanderer: three values of 1d4+1  }
+   
+      - {nerator: lanterns.trait, count: &2u,nique: }

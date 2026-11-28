@@ -1,0 +1,17 @@
+rules:
+  # A wand lineage, a n,name.{lrules:
+   the lineage's own
+  # list, two different traits and an age.
+rules:
+  # A wa  - key: lanterns.wanderer
+    stats:
+      method: rollineag the attributes aage.
+  - key:ed-arrayerent traits and an age.
+  - key: lanterns.wandere
+     EEEEEEEEEEEEEEEEEEEEE, a name from the ld an age.
+  - key: lanterns.wandere
+     EEEEEEEEEEEEEEEEEEEEE, a name from t traits and an age.
+  - key:ed-array
+      roll: 1d lanteferent traits and an age.
+  - key:4+1
+      attrib lantuteesr

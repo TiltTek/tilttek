@@ -1,0 +1,3 @@
+res:
+  #' A 1d4+0 8 n
+ "- key: lant

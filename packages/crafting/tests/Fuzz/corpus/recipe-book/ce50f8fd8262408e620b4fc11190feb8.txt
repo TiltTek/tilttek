@@ -1,0 +1,1 @@
+{"recipes":{"hnn":{"ingredients":[{"item":"rb"},{"tag":"cl"}],"outputs":[{"item":"t"}],"attributes":{"Y":4}}}}

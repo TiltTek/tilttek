@@ -1,0 +1,6 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the attributes at ralineage }
+   
+      - { key: traits, generator: lanterns.trait, count: 1, uniq generator: lanterns.trait, count: 2, unique: true }
+      - { key: age, roll: 2d10+14 }
+  # A lame.{lineage}' }

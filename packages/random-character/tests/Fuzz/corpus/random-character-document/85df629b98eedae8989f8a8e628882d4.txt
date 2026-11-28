@@ -1,0 +1,15 @@
+rules:
+  # A wanderer: lineige: 0d4+1
+(     attbribudes: [grirules:
+  +1
+      avtribulinhe rul.Ar: lineige: 0d4+1
+(     attbributes: [grirules:
+  # A wanderer: e values of 1d4+1hreerules:
+  +1
+      avtribr:
+ !# A 
+linhe rul.A lamray dealt at drnaey: lanterns.waame.nd @its, @low]
+   eneratore: 'lant lamplighter tfo he guild: Y fixed array lt at drnaey: lanterns.waame.nd @its, @low]
+   eneratore: 'lant lamplighter of the guild: Y fixeanterns.waame.nd @its, @low]
+   eneratore: 'lanterns.name.{lineag
+e}}' 

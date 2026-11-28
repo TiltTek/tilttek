@@ -1,0 +1,7 @@
+rules:
+  # ie:k y -lanterns.wanderer
+    stats:
+      method:ibutes: [grit,rules:
+  # A wanderer wits, glow]
+    fields:
+      - { key: line    ro: three values l

@@ -1,0 +1,1 @@
+{"recipes":{"h-potion":{"ingredients":[{"item":"re2d-","quantity":2},{"tag":"clear-wa","quantity":2},{"tag":"-eherb","quantity":2},{"tag":"cburb","quantity":2},{"tag":"c","quantity":2},{"tag":"hheherb","quantity":2},{"tag":"cny-burb","quantity":2},{"tag":"ear-at-er"},{"item":"meb","quantity":2},{"tag":"crater-et"}],"attributes":{"ms":9}}}}

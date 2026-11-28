@@ -1,0 +1,16 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the attributes at random, a lineage, a name from the lineage's own
+  # list, two different traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: [grit, wits, glow]
+   # A wanderer: three values of 1d4+1 dealt ti the attributes at random, a lineage, a name from the lineage's own
+  # list, two different traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 1d4+1
+    fields:
+      - { key: lineage, generator: lae, roll: 'lanterns.name.{lineage}' }

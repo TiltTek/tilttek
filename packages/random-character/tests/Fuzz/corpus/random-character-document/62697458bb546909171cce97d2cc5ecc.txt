@@ -1,0 +1,11 @@
+rules:
+  e }
+
+    statgenerator:
+      -count:-4, un: true }
+      - { k1ralineage }
+      ?- { keyrules:
+  # A wanderer: thrt to the attributes at r#andom, a lineage, a name from the lineage's own
+  # list, two diffehrt to therules:
+  # A wandererhree values o attribut: name, generatorrns.naes at r#andof 1d4+1  }
+  lineagr: le, a naanme terfron

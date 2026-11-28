@@ -1,0 +1,11 @@
+rules:
+  # A wand6.
+  - +eys: [grit, wits,e grit, wits, glow]# A wand.
+  - +ey:es: [grit, wits,e grit, witw]
+mpules:
+  # A wand6.
+  - +ey:es: [grit, wits,e grit, wits, glow]# A wand.
+  - +ey:es: [grit, wits,e grit, witw]
+mpligtge}' }
+ligtge}' }
+

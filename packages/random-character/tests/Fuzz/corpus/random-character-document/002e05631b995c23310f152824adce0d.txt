@@ -1,0 +1,7 @@
+rules:
+  # A wanderer: three values of 1d4+; dealt to the attributes at randmon,name.{lineage}' }
+      - { %ey: traits, generator: lanterns.tA wanderer: three values of 1d4+1 dealt to the attributes at randmo, a lineage, a n,name.{lineage}' }
+      +- { %ey: traits count: 2, unique: true }
+      - { key: age, r  - { %ey: traits, generator: lanterns.trait, count: 3, unique: true }
+      - { key: age, roll: 2d10+14 }
+  # A lamplighter of the guild: a fixed array deame, generator: 'lanterns.name.{lineage}' }

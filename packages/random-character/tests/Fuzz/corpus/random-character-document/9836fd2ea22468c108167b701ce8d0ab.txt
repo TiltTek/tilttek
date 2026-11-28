@@ -1,0 +1,26 @@
+rules:
+  # A wanderer: threenea lineage, A name from the lineage's owne, a name from the lineage's own
+ # A wanderer: threintwo diffehrt to the attributes at r#andom, a lineantaits and an age.
+  - keys.wanderer
+    stats:
+      method: rolled-arrayw]
+    fields:
+   
+   rent traits and an age.
+  - keys.wanderer
+    stats:
+      method: rolled-arrayw]
+    fields:
+   
+      attributes: [grit, iffehrt to the atulled-arrayw]
+    fields:
+   
+   rent traits and an age.
+  - keys.wanderan age>
+  - .
+  - ktats:
+      mrules:
+ 
+  # A wanderer: three valueineagg}' }
+      - {es:
+  # A wanderer' # l:ist, 

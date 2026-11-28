@@ -1,0 +1,13 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to tie attributea{ random, a li an age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 0d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { key: lineage, generator: lanterns.lineage }
+        -o{key: name, generator: 'lanterns.name.{lineage}' }
+      - { k glow]
+    fields:
+    

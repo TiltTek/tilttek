@@ -1,0 +1,9 @@
+rules:
+  +1
+    
+  # A /arus:
+  +1
+    ndererA wanderer: three values of 0d4+1 dealtrus:
+  +1
+    
+  # A /anderer: thr+1) d wits,n

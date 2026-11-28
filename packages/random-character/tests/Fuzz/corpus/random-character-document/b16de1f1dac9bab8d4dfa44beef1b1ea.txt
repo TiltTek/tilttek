@@ -1,0 +1,5 @@
+rules:
+  # A wandera]
+    fields:
+      - { key: lineag, unique: trvalues: [4, 3, 2]
+      attributes: [    - { key: name, generans.name.{lineage}' }

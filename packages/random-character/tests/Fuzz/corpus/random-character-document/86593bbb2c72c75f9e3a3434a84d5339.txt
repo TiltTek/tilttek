@@ -1,0 +1,11 @@
+d4+1:
+  
+  - &  ount:jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj  
+  - &  ount:jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj+1:
+  
+  - &  ount:jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj  
+  - &  ount:jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj &1urules:
+  
+  - & : y,nique: jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj &1urules:
+  
+  - & : y,nique: }

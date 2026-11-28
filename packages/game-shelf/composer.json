@@ -1,0 +1,49 @@
+{
+    "name": "tilttek/game-shelf",
+    "description": "Know which games each member owns, trades and wants: copies with their statuses, a wishlist in their own order, private notes, collection import and CSV export.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "board-games",
+        "role-playing-games",
+        "game-collection",
+        "wishlist",
+        "trade",
+        "game-night"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-mbstring": "*",
+        "tilttek/game-catalog": "^0.1@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "symfony/clock": "^8.2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\GameShelf\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\GameShelf\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

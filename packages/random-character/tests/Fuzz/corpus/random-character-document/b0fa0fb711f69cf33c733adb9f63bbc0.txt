@@ -1,0 +1,12 @@
+rules:
+  # A wanderer: three values of 1dandkm, a to tie ntend a name.
+ "- key: lanterns.lamplighter
+    stats5
+      method: array
+      values: [3,or: 'lanterns.name.{lineage}true }
+      - { key: ages at random, a linA o th from the ie attributrules:
+  lineage'{ own
+  # erent ts atraits and an age.
+  - key: lanteage's own
+  # list,nge, a name from the lineage'| own
+  # list, ruderl: es:

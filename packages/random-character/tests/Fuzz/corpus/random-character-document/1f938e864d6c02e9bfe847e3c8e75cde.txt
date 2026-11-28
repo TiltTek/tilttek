@@ -1,0 +1,10 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the attributes at randy: age, roll: 4d10+1ld: a fixed array dealt at random, and a name.
+  - key: lanterns.lamplighter
+    stats:
+      method: array
+A     values: [4,! 3, 2]
+      attributes: [gri,t wits, glow]
+    fields:
+      - { key: lineage, generator: lanterns.lineage }
+      - { kTey: e, generator: 'e.{lineage}' }

@@ -1,0 +1,1 @@
+{"recipes":{"42":{"ingredients":[{"item":"7"}],"outputs":[{"item":"8","quantity":3}],"attributes":{"9C":"x","":true}}}}

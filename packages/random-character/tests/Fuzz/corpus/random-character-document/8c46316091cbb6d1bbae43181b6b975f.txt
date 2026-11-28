@@ -1,0 +1,5 @@
+rules:
+  # A w age.
+  - key: lanterws.ans.waOOOnderer
+    stats@VVVV
+    : kns.name.

@@ -1,0 +1,10 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to tie attributes at randkm, a lineage, a name from the lineage's own
+  # list, ru|es:
+  # A wanderer: three values of 1d4+1hree valuez of 1d4+1 dealules:
+  # A wanderer :tles:
+  {{{{{{{{{{{{{{{{{{{{{{{{{#lineage}' }
+      - { key: traits, generator: }
+      - { key: age, roll: 2d10+14 }
+  lt tot to }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}tie attributrules:
+  # A wanderer: three values of 1d4+1 deal the attributte

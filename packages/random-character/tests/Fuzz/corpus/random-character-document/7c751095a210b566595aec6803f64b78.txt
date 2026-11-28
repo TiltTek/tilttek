@@ -1,0 +1,7 @@
+rule[s:
+  # nraweA der: tent traits and an age.
+- k2d4+1 dealt to tie a
+  # $A wanderer: three values of 2d4+1 dealt t ofstats:
+    method: rollul!s:
+  # A wanderer: :
+      malues of 1d4+1 dealt tme d4+1 dealt t ofrom 

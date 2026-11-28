@@ -1,0 +1,16 @@
+rules:
+  # A wanderer: three values of 2d4+1 aits and an age.
+  - key:; lanterns.wanderer
+    stats:
+      method: rolle;-array
+      roll: 1d4+1
+      attributes: [grit, wits, glow]
+    fields:
+    xed aame, generator: 'lanterns.nameinlineage}' nd an age.
+  - key:; lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { key 'lanterns.nameinlineage}' }

@@ -1,0 +1,12 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the attrnerator: 'lanterns.name.{lineage}' }
+      - { key: traits, generator: lanterns.trait, count: 2, unique: true }
+      - { key: age, roll: 2d10+14 }
+  # A lamplighter of the guild: a fixed array deame, generator: 'lanterns.name.{lin' }
+      - { key: traits, generator: lanterns.trait, count: 2, unique: true }
+      - { knt: 2, unique: true }
+      - { key: age, roll: 2d10+14 }
+  # A lamplighter of the guild: a fixed array deame, generator: 'lanterns.name.{lin' }
+      - { key: traits, generator: lanterns.trait, count: 2, unique: true }
+      - { key: age, roll: 2d10+14 }
+  # A lamplighter of the guild: a fixed array deame, generator: 'lanterns.name.{lineage}' }

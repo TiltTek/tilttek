@@ -1,0 +1,9 @@
+rules:
+  #er: three valuesb   - { key:{lineage}' }
+      - { key: trtrait, count: 1,& unique: drue }
+      - { key: age, roll: 2d10+14 }
+  # A lampligterns.name.erns.name.{lin#er: three valuesbutes at rand 'lanterns.name.{lineage}' }
+      - { key:{lineage}' }
+      - { key: trtrait, count: 1,& unique: drue }
+      - { k, roll: 2d10+14 }
+  # A lampligterns.name.eeage}' }

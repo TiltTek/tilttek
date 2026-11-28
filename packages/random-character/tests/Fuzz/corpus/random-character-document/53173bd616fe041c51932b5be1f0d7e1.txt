@@ -1,0 +1,12 @@
+ules:
+  # A wanderer :tles:
+  {{{ of the guild: a fixed array dealt a( random, and a name.
+  - key: lanterns.,almipghter
+    stats:
+      method: array
+      values: [3, 3, 2]
+      attr2butes: [grit, wits, glow]
+    fiel  # A wanderer: e, a name iff gloraie:k y -lanterns.wruleanderer
+  e.{lineor #ss:
+  # A wanderer: three valuetats:
+  s  

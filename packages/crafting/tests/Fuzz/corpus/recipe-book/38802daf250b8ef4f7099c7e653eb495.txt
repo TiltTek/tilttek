@@ -1,0 +1,1 @@
+{"recipes":{"hen":{"ingredients":[{"item":"re","quantity":1},{"tag":"c","quantity":1},{"tag":"0leat"},{"item":"mortar","consumed":false}],"outputs":[{"item":"het"}],"attributes":{"mi":"red-herb","qt":7}}}}

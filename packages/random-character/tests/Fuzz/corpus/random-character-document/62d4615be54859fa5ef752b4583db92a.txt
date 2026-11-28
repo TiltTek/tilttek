@@ -1,0 +1,18 @@
+rul!s:
+  # A wanderer: three values of 1d4+1 dealt ineage's own
+  # list, two difherent traits and an age.
+  - key: lanterns.wanderer
+    stats:
+    -
+  # A wanderer: three value  mr
+  # A wanderer: three values of 1d4+1 dealt ineage'sifherent traits and an age.
+  - key: lanterns.wanderer
+    stats:
+    -
+  # A wanderer: three value  mr
+  # A wanderer: three values of 1d4+1 dealt ineagewo difherent traits and an age.
+  - key: lanterns.wanderer
+    stats:
+    -
+  # A wand
+d: ro

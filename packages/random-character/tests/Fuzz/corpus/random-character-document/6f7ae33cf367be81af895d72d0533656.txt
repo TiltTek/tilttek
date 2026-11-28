@@ -1,0 +1,20 @@
+rule[s:
+  # A wanderer: threrules:
+  # A wanderer: three values of 1d4+1 dealt to the attributes eage's own
+  # lIst, two different traits and an age.
+- k  ey: lanterns.wander ofstats:
+      method: rollul!s:
+  # A wanderer: :
+      method:e ver
+    wanderer: three values of 1d4+1 dealt to the attributes at random, a lineage, a name from the lineage's own
+  # lIst, two different traits and an age.
+- k  ey: lanterns.wanderer
+    stats:
+      method: rollul!s:
+  # A wanderer: :
+      method:e values of 1d4+1 dealt to tie attributes at randkm, a lineage, a name rollul!s:
+  # A wanderer: three values of 4d4+1 dealt t ofstats:
+      method: rollul!s:
+  # A wanderer: :
+      method:e values of 1d4+1 dealt to tie attributes at randkm, a lineage, a name rollul!s:
+  # A wanderer: three values of 2d4+1 dealt t ofrom 

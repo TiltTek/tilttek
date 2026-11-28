@@ -1,0 +1,4 @@
+rules:
+  # A oter em.
+ "- ke,y: lantern naem
+ "- er eight      method=r

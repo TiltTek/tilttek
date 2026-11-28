@@ -1,0 +1,9 @@
+rules:
+  # A wandme.
+  - key: lanterns.lamplighter
+    stats:
+      method: array
+      values: [4, 3, 2]
+      attributes: [grit, wits, gl:
+      - { key: lineage, generator: "anterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }

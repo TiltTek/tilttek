@@ -1,0 +1,10 @@
+rules:
+  # Ae guild: a fixed array dealt at random, and a name.
+  - key: lanterns.lamplighter
+    stats:
+      method: array
+      values: [4, 3, aaaa2]
+      attributes: [g wits, glow]
+    fields:
+      - { key: lineage, generator: lanterns.linea }
+      - { key: name, generator: 'lanterns.name.{lineage}' }

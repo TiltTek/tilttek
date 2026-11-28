@@ -1,0 +1,8 @@
+rules:
+  #rules:
+  #  e: truu }
+     { key: age, roll: 3d10+14 }
+  # A lampliglighter a  guild: h ner.{lor: 'lanterns.name.{l]ne}':}
+n,n
+ter:
+  [4, g }

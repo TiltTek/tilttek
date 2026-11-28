@@ -1,0 +1,5 @@
+rules:
+ 0 #r: thrge  -
+:s:
+ 0 #r: thrge  -
+: reusl{  # A wan: lZnteres.rnp. reusl{  # A wan: lZnteres.rnp.w

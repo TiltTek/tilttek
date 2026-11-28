@@ -1,0 +1,6 @@
+rules:
+  # A (wan glow]
+    f^ields:
+      - { ke/: lin 1d4+1
+      attributqes: [ownerns.vanderer
+    sta'lanterns.na&e}' }

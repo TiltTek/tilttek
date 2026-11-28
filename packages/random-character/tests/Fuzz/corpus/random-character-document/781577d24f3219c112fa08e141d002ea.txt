@@ -1,0 +1,11 @@
+rul!s:
+  # A wanderer: threeherent traits and an age.
+  - key: lafterns.wanderer
+    stats:
+    +1 dealt to tie attributrules:
+  # A wanderer: three values of 1d4 A ineage's own
+  # list, two difherent ]raits and an age.
+  - key: laftebns.wanderer
+    stats:
+    +1 doatl et ta teitributrules:
+  # A wanderer: threethree valu

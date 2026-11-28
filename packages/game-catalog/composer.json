@@ -1,0 +1,52 @@
+{
+    "name": "tilttek/game-catalog",
+    "description": "Keep one catalogue of board and role-playing games: open database identifiers, errata, member corrections kept apart, and collections imported by file.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "board-games",
+        "role-playing-games",
+        "catalog",
+        "errata",
+        "barcode",
+        "gtin",
+        "wikidata",
+        "collection-import",
+        "player-count"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "ext-mbstring": "*",
+        "psr/clock": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "symfony/clock": "^8.2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\GameCatalog\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\GameCatalog\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

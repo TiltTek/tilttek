@@ -1,0 +1,5 @@
+rules:
+  # A wanderer4+1 dealt trer4+1 dalt to s e from gen  aa,m* from the lintend a name.
+ "- key:a\nl+ rttesme. anodrm, a lineage,a an  aa,m* from the lintend a name.
+ "- key: lant\rns.lam;per
+    s}' }

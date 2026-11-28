@@ -1,0 +1,7 @@
+rules:
+  +0
+    rus:
+  +0
+    
+  -ruules:t to 
+thehe 

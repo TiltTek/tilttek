@@ -1,0 +1,1 @@
+{"recipes":{"healon":{"ingredients":[{"item":"rb"},{"tag":"c"},{"item":"mr","consumed":false}],"outputs":[{"item":"h"}],"returns":[{"item":"eket"}],"attributes":{"m":5}}}}

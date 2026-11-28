@@ -1,0 +1,13 @@
+rul!s:
+  # A wandereand an age.
+  - key: lanterns.wa7derer
+    stats:
+ 
+      mrules-
+  # A wande
+  - key: lanterns.wanderer
+    stats:
+      mrules.
+  - key: lanterns.wanderer
+    stats:
+      ro

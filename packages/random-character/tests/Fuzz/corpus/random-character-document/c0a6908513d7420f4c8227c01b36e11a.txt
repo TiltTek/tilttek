@@ -1,0 +1,6 @@
+rs:
+  # A wanderer4+1 dealt to intend$ .
+ "- key lants-lampligrter
+    stats:
+      method: ar
+      valuelues: [4,or: 'lantge}' }

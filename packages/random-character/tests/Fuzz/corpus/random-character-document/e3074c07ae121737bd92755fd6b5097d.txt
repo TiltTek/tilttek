@@ -1,0 +1,22 @@
+rule[s:
+  # A wanderer: threrules:
+  # A wanderer: three values of 1d4+1 dearule[s:
+  # A wanderer: ge.
+- k  ey:rules:
+  # A wcnderer: three values ofrules:
+  # A wanderer: three values of 1d4+1 dealt to the atom, a lineage, a name from the lineage's own
+  # list, tw odifferent traits and an age.
+  - key: lantenwsr.anderer
+    stats:
+      method: rolled-array
+      roll: 2d4+1
+      attrneage, a'nibame ey: lanterns.wanderer
+    stats:
+      method: rollul!s:
+  # A wanderer: :
+      method:e values of 1d4+1 dealt to tie attributes at randkm, a lineage, a name rollul!s:
+  # A wanderer: three values of 4d4+1 dealt t ofstats:
+      method: rollul!s:
+  # A wanderer: :
+      method:e values of 1d4+1 dealt to tie attributes at randkm, a lineage, a name rollul!s:
+  # A wanderer: three values of 2d4+1 dealt t ofrom 

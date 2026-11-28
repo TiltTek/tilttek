@@ -1,0 +1,23 @@
+# The Spanish texts of the system, laid over it by SystemReader::load(), with the source of the translation.
+format: tilttek-rpg-systems/1
+kind: localisation
+system: lanterns
+locale: es
+source:
+  title: Linternas en la oscuridad, traducción
+  licence: CC-BY-4.0
+  attribution: Spanish translation of Lanterns in the Dark by the translators of the application, under CC BY 4.0.
+name: Linternas en la oscuridad
+attributes:
+  grit: { name: Temple, abbreviation: TMP }
+  wits: { name: Ingenio, abbreviation: ING }
+dice:
+  action: Tirada de acción
+terms:
+  condition.shaken: { name: Conmocionado }
+variants:
+  long-night: { name: La larga noche }
+difficulties:
+  check: { name: Dificultad de una acción, bands: { easy: Fácil, hard: Difícil } }
+roles:
+  bearer: { name: Portador de la linterna }

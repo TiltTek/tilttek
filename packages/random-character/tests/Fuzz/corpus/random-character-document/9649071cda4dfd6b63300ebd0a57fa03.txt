@@ -1,0 +1,6 @@
+ules:
+les:
+  # A wanderer: three valuee, a n,name.{lineage}' }
+      - { %ey: trai at randmo, a lineage, a n,name.{lineage}' }
+      - { %ey: traits, gampligage, r/ll: 2dlanterns.name.{liname, genereaatoruild: a fixe\ge}'  array deame, generator: 'la}nterns.name.{l
+ineage}' }

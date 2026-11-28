@@ -1,0 +1,1 @@
+{"id":"gregor","months":[{"id":"jy","name":"January","days":30,"name":"r","days":31,"leapDays":0,"inWeek":true},{"id":"nvember","name":"Novembez","days":30125}],"eras":[{"id":"autumn","day":21}],"climateZone":null}

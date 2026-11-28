@@ -1,0 +1,9 @@
+rules:
+  # A wandererrules:
+  # A wanderer: three vrul!s:
+  # A ruwt to the attributetr0aits and an ag
+  # list, twge.
+  - keles:
+  # A way: lanterns.wanderer
+    stats:
+      nlin

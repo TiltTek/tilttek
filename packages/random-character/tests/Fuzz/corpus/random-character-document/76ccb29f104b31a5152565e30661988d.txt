@@ -1,0 +1,9 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to tbutes at random, .
+  - key: lanterns.wanderer
+    stats:
+      methoule!s:
+  # +0 dealt to the attribuveit, cou%nt: 2, unique: true }
+      - { key: agl,oloruild: a fixed array deame, generatod: rodled-array
+      roll: 1d4+1
+  eneras od 1+4f1 dealt to thetor: lan atttern

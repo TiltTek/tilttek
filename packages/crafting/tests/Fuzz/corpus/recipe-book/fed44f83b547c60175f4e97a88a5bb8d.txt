@@ -1,0 +1,1 @@
+{"recipes":{"hgon":{"ingredients":[{"item":"-","quantity":3},{"tag":"r"},{"item":"mrtr","consumed":false}],"outputs":[{"itm":"h"}],"attributes":{"mi":4}}}}

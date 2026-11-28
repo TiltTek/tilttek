@@ -1,0 +1,6 @@
+rules:
+  #rules:
+  #  2, unique: truu }
+     { key: age, roll: 3d10+14 }
+  # A laa =guild: a ner.{lor: ' 
+  # A /a

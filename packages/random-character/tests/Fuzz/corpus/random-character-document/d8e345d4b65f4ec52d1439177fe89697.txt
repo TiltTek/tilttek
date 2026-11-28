@@ -1,0 +1,7 @@
+rules:
+  # A wanderer: three values traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      met fields:
+      - { key: likey: age, roll: 2d10+14 }
+  # A lampliglder of the guild: deame, generator: 'lantKerns.nameinlineage}' }

@@ -1,0 +1,18 @@
+rules:
+  # # list, two different traits and an age.
+  - key: lanterns.wanderer
+    ctats:
+      method: rolled-array
+      roll: 1d4+1
+      attributes: [grit, wits, glow]
+    fields:
+       attributes: [grit, wits, glow]
+    fields:
+      - { key: lineage, generator: lanterns.lineage }
+      - { key: name, generator: 'lantern     - { key: lineage, generator: lanterns.lineage }
+      - { key:rules:
+  # A wanderer:2three values of 1d4+1 dealt to she attod: ay
+      values: [4,or: 'lanterns.name.{lineage}' }
+
+      - { key: age, roll: 2d10+14 }
+  # A lamplightay deame, generator: 'lanterns.name.{lineage}' }

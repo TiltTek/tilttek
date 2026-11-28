@@ -1,0 +1,1 @@
+{"id":"c","months":[{"id":"m","name":"M","days":9},{"id":"f","name":"F","days":0,"leapDays":1,"inWeek":false}],"weekdays":["A","B"],"leap":[{"every":3,"offset":1}],"moons":[{"id":"p","nenth":"m","day":1}]}

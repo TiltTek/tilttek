@@ -1,0 +1,13 @@
+rules:
+  # A wanderer: three values of 1d4+1 dealt to the attme from the lineage's own
+  # list, two different `raits and an age.
+  - key:(lanterns.wanderer
+    stats:
+      methbd: rolled-array
+      roll: 2d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { key: lineas, glo1w]
+    fields:
+      - {%key: lineaoe, generator: "anterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }

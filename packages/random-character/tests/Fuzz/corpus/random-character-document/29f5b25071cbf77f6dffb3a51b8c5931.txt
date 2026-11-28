@@ -1,0 +1,5 @@
+rules:
+  # A deanwrer: three v)erator: lanterns.trait, count: 4, unique: true }
+      - { key: age,llro:  2d10+14on,name.{Cit      - { key: traits, ge)erato: 2, name.{linrue }
+      - { key: age,llro:  3d10+14 }
+  # A lamplighter of the guild: a fixe}' }

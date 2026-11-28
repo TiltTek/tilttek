@@ -1,0 +1,79 @@
+# A small system of the application's own, in the library's format: every record takes the document's source unless it
+# states its own.
+format: tilttek-rpg-systems/1
+locale: en
+system:
+  key: lanterns
+  names:
+    en: Lanterns in the Dark
+    fr: Lanternes dans le noir
+  version: '1.0'
+source:
+  title: Lanterns in the Dark
+  licence: owned
+  author: The application
+attributes:
+  - key: grit
+    names: { en: Grit, fr: Cran }
+    abbreviations: { en: GRT, fr: CRN }
+    descriptions:
+      en: Holding on when everything says to let go.
+    minimum: 1
+    maximum: 6
+  - key: wits
+    names: { en: Wits, fr: Esprit }
+    abbreviations: { en: WIT, fr: ESP }
+    minimum: 1
+    maximum: 6
+  - key: glow
+    names: { en: Glow, fr: Lueur }
+    minimum: 0
+    maximum: 10
+dice:
+  - key: action
+    notation: 2d6
+    names: { en: Action roll, fr: Jet d'action }
+  - key: desperate
+    notation: 3d6kl2
+    names: { en: Desperate roll, fr: Jet désespéré }
+terms:
+  - key: condition.shaken
+    category: condition
+    names: { en: Shaken, fr: Ébranlé }
+    descriptions:
+      en: The next action roll keeps the two lowest of three dice.
+  - key: condition.lit
+    category: condition
+    names: { en: Lit, fr: Éclairé }
+  - key: range.near
+    category: range
+    names: { en: Near, fr: Proche }
+variants:
+  - key: long-night
+    names: { en: The long night, fr: La longue nuit }
+    descriptions:
+      en: A lantern's glow falls by one more at each scene.
+difficulties:
+  - key: check
+    names: { en: Difficulty of an action, fr: Difficulté d'une action }
+    method: check
+    bands:
+      - { key: easy, names: { en: Easy, fr: Facile }, number: 6 }
+      - { key: hard, names: { en: Hard, fr: Difficile }, number: 9 }
+      - { key: desperate, names: { en: Desperate, fr: Désespérée }, number: 11 }
+  - key: encounter
+    names: { en: Threat of a scene, fr: Menace d'une scène }
+    method: budget
+    bands:
+      - { key: calm, names: Calm }
+      - { key: tense, names: Tense }
+    numbers:
+      budgets:
+        1: { calm: 2, tense: 4 }
+        2: { calm: 3, tense: 6 }
+      costs: { 1/2: 1, 1: 2, 2: 4 }
+roles:
+  - key: bearer
+    names: { en: Lantern bearer, fr: Porte-lanterne }
+  - key: watcher
+    names: { en: Watcher, fr: Guetteur }

@@ -1,0 +1,2 @@
+ruless:
+      - { !kgy:deame, ^eneratayxed ar' }

@@ -1,0 +1,10 @@
+rules:
+  # A wanderer: three values of 0d4+1 deal different traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      roll: 0d4+1
+      attributes: [gri""""""""""""""""""""""t, wits, glow]
+    fields:
+      - { key: ikey: age, roll: 2d10+14 }
+  # A lamtor: 'lanterns.nameinlineage}' }

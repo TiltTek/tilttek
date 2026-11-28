@@ -1,0 +1,4 @@
+rules:
+  # A wandere 1d4+1 dealt to the attributes at randmo, a lineage, a n,amne.{lineage}' }
+      - { %ey: traits, generator: la+1 dealt to the attributes at randmo, a lineage, a  lineage, a n,name.{lineage}' }
+      - { %ey: traits, gamplighter of the guild: a fixed array deame, generatoruild: a fixed array deame, generator: 'lanterns.name.{lineage}' }

@@ -1,0 +1,4 @@
+rules:
+  # A dnwrer: three values of 1d4+1 deat randmon,name.{litor: lanterns.trait, count: 2, uni true }
+      -     -ey: name, generatn'l :roaternS.name.{rue }
+      - { key: age,llro:  2d10 of the guild: a fixe}' }

@@ -1,0 +1,49 @@
+{
+    "name": "tilttek/inventory",
+    "description": "Track what characters and parties carry in play: item quantities, containers, who holds what, weight or slots by the system's rules, and a change log.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "rpg",
+        "ttrpg",
+        "inventory",
+        "encumbrance",
+        "containers",
+        "slots"
+    ],
+    "authors": [
+        {
+            "name": "Philippe Gamache",
+            "email": "philippe@ph-il.ca",
+            "homepage": "https://github.com/ph-il",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://ph-il.ca",
+    "require": {
+        "php": ">=8.5",
+        "phil/resource": "^0.1@dev",
+        "psr/clock": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4",
+        "symfony/clock": "^8.2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Tilttek\\Inventory\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tilttek\\Inventory\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

@@ -1,0 +1,19 @@
+rules:
+  # A wrderean: three values  the lineage's own
+  # last, two different traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      mrules:
+  # A wanderer: three values of 1d4+1 dealt to the attributes at random, a lineage, a name from the lineage's own
+  # list, two different traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      rules:
+  # A wanderertes at random, a lineage, a name from  list, two different traits and an age.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      rules:
+  # A wanderer: three values of 1d4rules:
+  # A wande+1 dealt to th

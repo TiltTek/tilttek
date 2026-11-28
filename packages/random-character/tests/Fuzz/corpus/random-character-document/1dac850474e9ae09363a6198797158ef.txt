@@ -1,0 +1,6 @@
+rules:
+  # A wanderluege.
+  - key:lanterns.wanderer
+    stats:
+      mrules:
+  # A tes s.name.{lineage}' }

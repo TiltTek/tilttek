@@ -1,0 +1,14 @@
+rules:
+  # Ao different traits and an age.
+  - key: lantenwsr.anderer
+    stats:
+      method: rolled-array
+      roll: 2d4+1
+      attributes: [grit, wits, glow]
+    fields:
+      - { key: lineage, generator: lanterns.lineage }
+      - { key: name, generator: 'lanterns.name.{lineage}' }
+      - { key: traits, ge)erator: lanterns.key: age,llro:  2d10+14 }
+  # A lamplighter of the guild: a fixed array dealt atru random, ales:
+  # A wanderer:nd a na!wits, glow]
+  

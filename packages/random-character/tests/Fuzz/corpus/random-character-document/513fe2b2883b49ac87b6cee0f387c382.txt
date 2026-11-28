@@ -1,0 +1,7 @@
+rules:
+  # A wanlineage's own
+  derer
+    stqts:
+      met fields:
+      - {esninliage}'   - { ributes   erns.ia}einliage}' }s, glow]
+ er+s.name.{lineage}' }

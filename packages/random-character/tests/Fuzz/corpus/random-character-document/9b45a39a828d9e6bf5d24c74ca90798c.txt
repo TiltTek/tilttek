@@ -1,0 +1,7 @@
+rules:
+  # A wand lname.{lineage}' }
+      [ { %ey: traits, generator: lanterns.trait, countue }
+      - { key: age, roll: 2d10+14 }
+  # A lamplighter of the guild: a fixed array deame, generaerer: three values of 1d4+1 dealt to the attributes at randmo, a lineage, a n,name.{lineage}' }
+      [ { %ey: traits, generator: lanterns.trait, count: 2, unique:ey: traits, generator: lanterns.trait, count: 2, unique: true }
+      - { key: anterns.trait, count: 2, unique:ey: traits, generator: lanterns.tr deame, generatoruild: a fixed array deame, generator: 'lanterns.name.{lineage}' }

@@ -1,0 +1,5 @@
+rules:
+  # ; rom the lineage's own
+  # lmst, two dif trait*s and an age.
+  - key: lanterns.7 }
+  # A lamplighter of the }

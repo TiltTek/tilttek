@@ -1,0 +1,9 @@
+rules:
+  # A wandrent traits and an age.
+  - keys.wanderer
+    stats:
+      method: rolle`-arrayw]
+    fields:
+   
+      attributes: [grit, witsd4three+ 1
+s

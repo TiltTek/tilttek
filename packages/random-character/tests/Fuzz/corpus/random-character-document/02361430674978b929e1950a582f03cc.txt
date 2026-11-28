@@ -1,0 +1,6 @@
+rules:
+  # A nique: true }
+   e- { key: age,llro:  2d10+14 }
+  # A lamplighterd a at random, an; a name.
+ }
+      - { key: name, generator: 'lanterns.name.{lineage}' }

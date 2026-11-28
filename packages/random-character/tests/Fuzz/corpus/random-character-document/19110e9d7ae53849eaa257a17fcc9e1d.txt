@@ -1,0 +1,10 @@
+rules:
+  +1
+      attribunderer: -rules:
+  # A wanderer: three values of 1d4nderer: -nderer: three t!ralineage :
+  # A /anderer: -rules:
+  # A wanderer: three values of 1d4+1 dealt to the attt tre.
+  - key: lanterns.wanderer
+    stats:
+      method: rolled-array
+      rnderer: three t!ra

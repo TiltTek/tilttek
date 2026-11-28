@@ -1,0 +1,6 @@
+rules:
+  #' A rom the lineage'ent traits and an age.
+  - kernawrer
+    stats:
+      method: rolled-array
+   erns.name.{lineage}' r
